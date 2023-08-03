@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:vertica://172.26.33.19:5433/CDW
+    username: emr
+    password: emr1127!
+    driver-class-name: com.vertica.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.VerticaDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
