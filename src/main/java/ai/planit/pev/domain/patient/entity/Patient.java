@@ -2,6 +2,7 @@ package ai.planit.pev.domain.patient.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table(schema = "ODS", name = "S_PCTPCPAM")
+@Immutable
 @Getter
 @Setter
 public class Patient {
