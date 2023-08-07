@@ -4,9 +4,3 @@ spring:
     username: emr
     password: emr1127!
     driver-class-name: com.vertica.jdbc.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.VerticaDialect
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
