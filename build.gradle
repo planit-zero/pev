@@ -27,6 +27,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1'
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'com.vertica.jdbc:vertica-jdbc:11.0.2-0'
     runtimeOnly files('src/main/libs/VerticaDialect.jar')

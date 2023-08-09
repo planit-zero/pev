@@ -1,6 +1,9 @@
 spring:
   datasource:
+    driver-class-name: com.vertica.jdbc.Driver
     url: jdbc:vertica://172.26.33.19:5433/CDW
     username: emr
     password: emr1127!
-    driver-class-name: com.vertica.jdbc.Driver
+mybatis:
+  mapper-locations: mapper/*.xml
+  type-aliases-package: ai.planit.pev.domain.**.dto
