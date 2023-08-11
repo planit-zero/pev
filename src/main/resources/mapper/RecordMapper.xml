@@ -73,13 +73,17 @@
              , T.OP_EXPT_REG_ID AS opExptRegId
         ]]>
         FROM (
-        <if test="recordType.contains('DR')">
-            <include refid="getMedicalDetailListByCondition"/>
-            UNION ALL
-            <if test="recordDetailType.contains('D005')">
+        <foreach collection="recordType" item="record" separator="UNION ALL">
+            <if test="record.equals('DR')">
+                <include refid="getMedicalDetailListByCondition"/>
+                UNION ALL
                 <include refid="getSurgeryDetailListByCondition"/>
+                UNION ALL
+                <include refid="getDischargeDetailListByCondition"/>
+                UNION ALL
+                <include refid="getAnesthesiaDetailListByCondition"/>
             </if>
-        </if>
+        </foreach>
         ) T
         <![CDATA[
                  LEFT OUTER JOIN ODS.S_CCCCCSTE COMN
@@ -140,7 +144,6 @@
         <![CDATA[
           AND A.LST_YN = 'Y'
           AND A.MDRC_DC_TP_CD = 'C'
-          AND INSTR(#{recordType}, 'DR') > 0
           AND NOT EXISTS(SELECT 1
                          FROM ODS.S_MRFMFORM
                          WHERE MDFM_ID = A.MDFM_ID
@@ -160,7 +163,8 @@
         , NULL AS ITEM_TYPE
         /* D007, D020 관련 특수 조건 관련 해결 필요 */
         , NULL AS ITEM_NM
-        , NVL(B.OP_DTM, A.MDF_REC_DTM) AS WRITING_DATE
+        /*, NVL(B.OP_DTM, A.MDF_REC_DTM) AS WRITING_DATE*/
+        , A.MDF_REC_DTM AS WRITING_DATE
         , A.WRTR_DEPT_CD AS WRITING_DEPT_CD
         , NULL AS WRITING_DEPT_NM
         , A.WK_STF_NO AS WRITER_STF_NO
@@ -187,11 +191,6 @@
         LEFT OUTER JOIN ODS.S_MRDDRONE B
         ON A.MDRC_ID = B.MDRC_ID
         AND A.MDRC_FOM_SEQ = B.MDRC_FOM_SEQ
-        AND B.OPRC_ELMT_CLS_CD = '17'
-        AND ((B.OP_DTM::DATE IS NOT NULL AND
-        B.OP_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE)
-        OR (B.OP_DTM::DATE IS NULL AND
-        A.MDF_REC_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE))
         WHERE A.PT_NO = #{ptNo}
         AND A.MDFM_CLS_CD = 'D005'
         AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
@@ -203,7 +202,11 @@
         <![CDATA[
         AND A.LST_YN = 'Y'
         AND A.MDRC_DC_TP_CD = 'C'
-        AND INSTR(#{recordType}, 'DR') > 0
+        AND B.OPRC_ELMT_CLS_CD = '17'
+        AND ((B.OP_DTM::DATE IS NOT NULL AND
+        B.OP_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE)
+        OR (B.OP_DTM::DATE IS NULL AND
+        A.MDF_REC_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE))
         AND NOT EXISTS(SELECT 1
         FROM ODS.S_MRFMFORM
         WHERE MDFM_ID = A.MDFM_ID
@@ -215,6 +218,121 @@
         WHERE W.STF_NO = A.WRT_STF_NO
         AND W.OCTY_TP_CD IN ('Z06')
         )
+        ]]>
+    </sql>
+    <sql id="getDischargeDetailListByCondition">
+        <![CDATA[
+        SELECT 'DR'                                                                             AS RECORD_TYPE
+        , A.MDFM_CLS_CD                                                                    AS RECORD_DETAIL_TYPE
+        , NULL                                                                             AS ITEM_TYPE
+        /* D007, D020 관련 특수 조건 관련 해결 필요 */
+        , NULL                                                                             AS ITEM_NM
+        , NVL(B.DS_DT, A.MDF_REC_DTM)                                                      AS WRITING_DATE
+        , A.WRTR_DEPT_CD                                                                   AS WRITING_DEPT_CD
+        , NULL                                                                             AS WRITING_DEPT_NM
+        , A.WK_STF_NO                                                                      AS WRITER_STF_NO
+        , NULL                                                                             AS WRITER_NM
+        , NULL                                                                             AS KEY_ID
+        , A.PACT_ID                                                                        AS PACT_ID
+        , A.PACT_TP_CD                                                                     AS PACT_TP_CD
+        , ROW_NUMBER()
+        OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS SORT_SEQ
+        , NULL                                                                             AS NOTE
+        , A.MDRC_FOM_SEQ                                                                   AS PRINT_SEQ
+        , A.MDRC_ID
+        , A.MDFM_ID
+        , NULL                                                                             AS EXAM_KEY
+        , NULL                                                                             AS PACS_IMG_IPTN_CD
+        , NULL                                                                             AS ACCS_ID
+        , NULL                                                                             AS RECTYPE
+        , NULL                                                                             AS GENE_EXM_YN
+        , CASE WHEN A.MDRC_WRT_STS_CD > 10 THEN 'Y' END                                       MDRC_WRT_STS_CD_YN
+        , A.MDRC_FOM_SEQ
+        , NULL                                                                             AS OP_EXPT_REG_ID
+        , A.MDFM_CLS_DTL_CD                                                                AS COMN_CD
+        FROM ODS.S_MRDDRECM A
+        LEFT OUTER JOIN (SELECT Q.PT_NO   AS PT_NO
+        , Q.PACT_ID AS PACT_ID
+        , Q.DS_DTM  AS DS_DT
+        FROM ODS.S_ACPPRAAM Q
+        WHERE Q.PT_NO = #{ptNo}
+        UNION ALL
+        SELECT Q.PT_NO    AS PT_NO
+        , Q.PACT_ID  AS PACT_ID
+        , Q.CHOT_DTM AS DS_DT
+        FROM ODS.S_ACPPRETM Q
+        WHERE Q.PT_NO = #{ptNo}
+        ) B
+        ON A.PT_NO = B.PT_NO
+        AND A.PACT_ID = B.PACT_ID
+        WHERE A.PT_NO = #{ptNo}
+        AND A.MDFM_CLS_CD = 'D006' /* 퇴원기록 */
+        AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
+        ]]>
+        <if test="deptType == 'MEDICAL'">AND A.PT_MED_DEPT_CD = #{deptCd}</if>
+        <if test="deptType == 'WRITER'">AND A.WRTR_DEPT_CD = #{deptCd}</if>
+        <if test="writerType == 'SELF'">AND A.WK_SID = #{writerStfNo}</if>
+        <if test="writerType == 'SEARCH'">AND A.WK_STF_NO = #{writerStfNo}</if>
+        <![CDATA[
+        AND A.LST_YN = 'Y'
+        AND A.MDRC_DC_TP_CD = 'C'
+        AND ((B.DS_DT::DATE IS NOT NULL AND
+        B.DS_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE AND
+        A.PT_NO = B.PT_NO AND A.PACT_ID = B.PACT_ID)
+        OR (B.DS_DT::DATE IS NULL AND
+        A.MDF_REC_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE))
+        AND NOT EXISTS(SELECT 1
+        FROM ODS.S_MRFMFORM
+        WHERE MDFM_ID = A.MDFM_ID
+        AND MDFM_FOM_SEQ = A.MDFM_FOM_SEQ
+        AND MDFM_CLS_CD = 'D020'
+        AND MDFM_APY_CTRA_CD = 4)
+        AND NOT EXISTS(SELECT 'Y'
+        FROM ODS.S_CNLRRUSD W
+        WHERE W.STF_NO = A.WRT_STF_NO
+        AND W.OCTY_TP_CD IN ('Z06')
+        )
+        ]]>
+    </sql>
+    <sql id="getAnesthesiaDetailListByCondition">
+        <![CDATA[
+        SELECT 'DR'                                                                     AS RECORD_TYPE
+             , B.MDFM_CLS_CD                                                            AS RECORD_DETAIL_TYPE
+             , NULL                                                                     AS ITEM_TYPE
+             , NULL                                                                     AS ITEM_NM
+             , A.OP_EXPT_DT                                                             AS WRITING_DATE
+             , NULL                                                                     AS WRITING_DEPT_CD
+             , NULL                                                                     AS WRITING_DEPT_NM
+             , B.LSH_STF_NO                                                             AS WRITER_STF_NO
+             , NULL                                                                     AS WRITER_NM
+             , NULL                                                                     AS KEY_ID
+             , NULL                                                                     AS PACT_ID
+             , NULL                                                                     AS PACT_TP_CD
+             , ROW_NUMBER() OVER (PARTITION BY A.OP_EXPT_DT ORDER BY A.OP_EXPT_DT DESC) AS SORT_SEQ
+             , NULL                                                                     AS NOTE
+             , NULL                                                                     AS PRINT_SEQ
+             , NULL                                                                     AS MDRC_ID
+             , NULL                                                                     AS MDFM_ID
+             , NULL                                                                     AS EXAM_KEY
+             , NULL                                                                     AS PACS_IMG_IPTN_CD
+             , NULL                                                                     AS ACCS_ID
+             , NULL                                                                     AS RECTYPE
+             , NULL                                                                     AS GENE_EXM_YN
+             , 'Y'                                                                      AS MDRC_WRT_STS_CD_YN
+             , NULL                                                                     AS MDRC_FOM_SEQ
+             , A.OP_EXPT_REG_ID                                                         AS OP_EXPT_REG_ID
+             , B.MDFM_CLS_DTL_CD                                                        AS COMN_CD
+        FROM ODS.S_MRDDRARD A
+                 INNER JOIN ODS.S_MRDDRAFE B ON A.OP_EXPT_REG_ID = B.OP_EXPT_REG_ID AND B.AFCHG_ANRM_REC_VAL_ID IS NULL
+                 INNER JOIN ODS.S_MOOOPPAM C ON C.OP_EXPT_REG_ID = A.OP_EXPT_REG_ID
+        WHERE A.PT_NO = #{ptNo}
+          AND A.LSH_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+          AND B.LSH_DTM = (SELECT MAX(LSH_DTM)
+                           FROM ODS.S_MRDDRAFE D
+                           WHERE D.OP_EXPT_REG_ID = B.OP_EXPT_REG_ID
+                             AND D.MDFM_CLS_CD = B.MDFM_CLS_CD
+                             AND D.AFCHG_ANRM_REC_VAL_ID IS NULL)
+        GROUP BY B.MDFM_CLS_CD, B.MDFM_CLS_DTL_CD, A.OP_EXPT_DT, B.LSH_STF_NO, A.OP_EXPT_REG_ID
         ]]>
     </sql>
 </mapper>

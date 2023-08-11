@@ -10,7 +10,7 @@ public class DetailRequestDTO {
     private String searchFromDate;
     private String searchToDate;
     private String pactTpCd;
-    private String recordType;
+    private String[] recordType;
     private String recordDetailType;
     private String deptType;
     private String deptCd;
