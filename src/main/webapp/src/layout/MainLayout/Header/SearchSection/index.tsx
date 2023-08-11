@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
-import { Avatar, Box, Card, Grid, InputAdornment, OutlinedInput, Popper } from '@mui/material';
+import { Avatar, Box, Button, Card, Grid, InputAdornment, OutlinedInput, Popper } from '@mui/material';
 
 // third-party
 import PopupState, { bindPopper, bindToggle } from 'material-ui-popup-state';
@@ -159,7 +159,7 @@ const SearchSection = () => {
                     id="input-search-header"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    placeholder="Search"
+                    placeholder="가명화 환자 ID 를 입력 후 조회 버튼을 눌러주세요."
                     startAdornment={
                         <InputAdornment position="start">
                             <IconSearch stroke={1.5} size="16px" color={theme.palette.grey[500]} />
@@ -167,9 +167,9 @@ const SearchSection = () => {
                     }
                     endAdornment={
                         <InputAdornment position="end">
-                            <HeaderAvatarStyle variant="rounded">
-                                <IconAdjustmentsHorizontal stroke={1.5} size="20px" />
-                            </HeaderAvatarStyle>
+                            <Button variant={'contained'} size={'small'}>
+                                조회
+                            </Button>
                         </InputAdornment>
                     }
                     aria-describedby="search-helper-text"

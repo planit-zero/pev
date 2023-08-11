@@ -20,6 +20,8 @@ import { JWTProvider as AuthProvider } from 'contexts/JWTContext';
 // import { AWSCognitoProvider as AuthProvider } from 'contexts/AWSCognitoContext';
 // import { Auth0Provider as AuthProvider } from 'contexts/Auth0Context';
 
+import 'devextreme/dist/css/dx.material.blue.light.css';
+
 // ==============================|| APP ||============================== //
 
 const App = () => {

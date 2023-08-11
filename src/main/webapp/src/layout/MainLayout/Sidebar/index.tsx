@@ -1,18 +1,12 @@
-import { memo, useMemo } from 'react';
+import * as React from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Box, Drawer, Stack, useMediaQuery } from '@mui/material';
-
-// third-party
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import { Box, Drawer, useMediaQuery } from '@mui/material';
 
 // project imports
-import MenuCard from './MenuCard';
-import MenuList from '../MenuList';
 import LogoSection from '../LogoSection';
 import MiniDrawerStyled from './MiniDrawerStyled';
-import Chip from 'ui-component/extended/Chip';
 
 import LAYOUT_CONST from 'constant';
 import useConfig from 'hooks/useConfig';
@@ -20,6 +14,7 @@ import { drawerWidth } from 'store/constant';
 
 import { useDispatch, useSelector } from 'store';
 import { openDrawer } from 'store/slices/menu';
+import RecordTabs from '../../../pev-component/record-tabs/RecordTabs';
 
 // ==============================|| SIDEBAR DRAWER ||============================== //
 
@@ -31,9 +26,9 @@ const Sidebar = () => {
     const dispatch = useDispatch();
     const { drawerOpen } = useSelector((state) => state.menu);
 
-    const { layout, drawerType } = useConfig();
+    const { drawerType } = useConfig();
 
-    const logo = useMemo(
+    const logo = React.useMemo(
         () => (
             <Box sx={{ display: 'flex', p: 2 }}>
                 <LogoSection />
@@ -42,42 +37,8 @@ const Sidebar = () => {
         []
     );
 
-    const drawerContent = (
-        <>
-            <MenuList />
-            {layout === LAYOUT_CONST.VERTICAL_LAYOUT && drawerOpen && <MenuCard />}
-            {layout === LAYOUT_CONST.VERTICAL_LAYOUT && drawerOpen && (
-                <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
-                    <Chip label={process.env.REACT_APP_VERSION} disabled chipcolor="secondary" size="small" sx={{ cursor: 'pointer' }} />
-                </Stack>
-            )}
-        </>
-    );
-
-    const drawerSX = {
-        paddingLeft: drawerOpen ? '16px' : 0,
-        paddingRight: drawerOpen ? '16px' : 0,
-        marginTop: drawerOpen ? 0 : '20px'
-    };
-
-    const drawer = useMemo(
-        () => (
-            <>
-                {matchDownMd ? (
-                    <Box sx={drawerSX}>{drawerContent}</Box>
-                ) : (
-                    <PerfectScrollbar
-                        component="div"
-                        style={{
-                            height: !matchUpMd ? 'calc(100vh - 56px)' : 'calc(100vh - 88px)',
-                            ...drawerSX
-                        }}
-                    >
-                        {drawerContent}
-                    </PerfectScrollbar>
-                )}
-            </>
-        ),
+    const drawer = React.useMemo(
+        () => <RecordTabs />,
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [matchUpMd, drawerOpen, drawerType]
     );
@@ -116,4 +77,4 @@ const Sidebar = () => {
     );
 };
 
-export default memo(Sidebar);
+export default React.memo(Sidebar);
