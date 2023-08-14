@@ -32,7 +32,7 @@
            , ODS.S_CCCCCSTE B
            , ODS.S_MRFMFORM C
         WHERE 1 = 1
-          AND A.PT_NO = #{ptNo}
+          /* AND A.PT_NO = #{ptNo} */
           AND A.LST_YN = 'Y'
           AND A.MDRC_DC_TP_CD = 'C'
           AND A.MDFM_CLS_CD IN ('D009', 'D035')
@@ -129,7 +129,8 @@
              , NULL                                                                             AS OP_EXPT_REG_ID
              , A.MDFM_CLS_DTL_CD                                                                AS COMN_CD
         FROM ODS.S_MRDDRECM A
-        WHERE A.PT_NO = #{ptNo}
+        WHERE 1=1
+          /* AND A.PT_NO = #{ptNo} */
           AND A.MDFM_CLS_CD NOT IN ('D005', 'D006') /* 수술, 퇴원 기록 제외 */
           AND ((A.MDFM_CLS_CD IN ('D001', 'D002', 'D003', 'D004', 'D031') AND
                 A.MED_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE)
@@ -191,7 +192,8 @@
         LEFT OUTER JOIN ODS.S_MRDDRONE B
         ON A.MDRC_ID = B.MDRC_ID
         AND A.MDRC_FOM_SEQ = B.MDRC_FOM_SEQ
-        WHERE A.PT_NO = #{ptNo}
+        WHERE 1=1
+        /* AND A.PT_NO = #{ptNo} */
         AND A.MDFM_CLS_CD = 'D005'
         AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
         ]]>
@@ -265,7 +267,8 @@
         ) B
         ON A.PT_NO = B.PT_NO
         AND A.PACT_ID = B.PACT_ID
-        WHERE A.PT_NO = #{ptNo}
+        WHERE 1=1
+        /* AND A.PT_NO = #{ptNo} * /
         AND A.MDFM_CLS_CD = 'D006' /* 퇴원기록 */
         AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
         ]]>
@@ -325,7 +328,8 @@
         FROM ODS.S_MRDDRARD A
                  INNER JOIN ODS.S_MRDDRAFE B ON A.OP_EXPT_REG_ID = B.OP_EXPT_REG_ID AND B.AFCHG_ANRM_REC_VAL_ID IS NULL
                  INNER JOIN ODS.S_MOOOPPAM C ON C.OP_EXPT_REG_ID = A.OP_EXPT_REG_ID
-        WHERE A.PT_NO = #{ptNo}
+        WHERE 1=1
+          /* AND A.PT_NO = #{ptNo} */
           AND A.LSH_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
           AND B.LSH_DTM = (SELECT MAX(LSH_DTM)
                            FROM ODS.S_MRDDRAFE D
