@@ -4,7 +4,7 @@ export interface IRecordDetailP {
     searchToDate: string;
     pactTpCd: string;
     recordType: string[];
-    recordDetailType: string;
+    recordDetailType: string[];
     deptType: string;
     deptCd: string;
     writerType: string;
