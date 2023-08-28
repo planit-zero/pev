@@ -336,7 +336,7 @@
         , DEPT.DEPT_NM AS writingDeptNm
         , NULL AS writerStfNo
         , NULL AS writerNm
-        , A.ORD_ID AS keyId
+        , NULL AS keyId
         , NULL AS pactId
         , DECODE(A.MED_PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpCd
         , NULL AS sortSeq
@@ -363,6 +363,6 @@
         <if test="deptType == 'MEDICAL'">AND A.PT_HME_DEPT_CD = #{deptCd}</if>
         <if test="deptType == 'WRITER'">AND A.PBSO_DEPT_CD = #{deptCd}</if>
         AND A.MED_PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.MED_PACT_TP_CD, #{pactTpCd})
-        GROUP BY A.ORD_ID, A.PT_NO, A.ORD_DT, A.PT_HME_DEPT_CD, DEPT.DEPT_NM, A.MED_PACT_TP_CD
+        GROUP BY A.PT_NO, A.ORD_DT, A.PT_HME_DEPT_CD, DEPT.DEPT_NM, A.MED_PACT_TP_CD
     </select>
 </mapper>
