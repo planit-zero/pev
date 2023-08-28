@@ -189,3 +189,17 @@
 .ReactModal__Overlay {
     z-index: 99999 !important;
 }
+
+/* DevExtreme Override */
+.dx-datagrid .dx-datagrid-table .dx-header-row > td {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.dx-datagrid .dx-row > td {
+    padding: 8px 16px;
+}
+
+.dx-editor-cell .dx-texteditor .dx-texteditor-input {
+    height: 35px;
+}

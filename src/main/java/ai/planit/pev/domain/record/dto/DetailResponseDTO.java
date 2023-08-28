@@ -20,15 +20,15 @@ public class DetailResponseDTO {
     private String pactTpCd;
     private int sortSeq;
     private String note;
-    private int printSeq;
-    private int mdrcId;
     private int mdfmId;
+    private int mdfmFomSeq;
+    private int mdrcId;
+    private int mdrcFomSeq;
     private String examKey;
     private String pacsImgIptnCd;
     private String accsId;
     private String recType;
     private String geneExmYn;
     private String mdrcWrtStsCdYn;
-    private int mdrcFomSeq;
     private String opExptRegId;
 }

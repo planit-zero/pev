@@ -1,6 +1,7 @@
 package ai.planit.pev.domain.record.controller;
 
 import ai.planit.pev.domain.record.dto.CertificateDTO;
+import ai.planit.pev.domain.record.dto.DeptInfoDTO;
 import ai.planit.pev.domain.record.dto.DetailRequestDTO;
 import ai.planit.pev.domain.record.dto.DetailResponseDTO;
 import ai.planit.pev.domain.record.service.RecordService;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/record")
+@RequestMapping("/api/record")
 public class RecordController {
     private final RecordService recordService;
 
@@ -24,5 +25,10 @@ public class RecordController {
     @PostMapping("/detail")
     public ResponseEntity<List<DetailResponseDTO>> getDetailListByCondition(@RequestBody DetailRequestDTO detailRequestDTO) {
         return ResponseEntity.ok().body(recordService.getDetailListByCondition(detailRequestDTO));
+    }
+
+    @GetMapping("/info/dept")
+    public ResponseEntity<List<DeptInfoDTO>> getDeptInfo() {
+        return ResponseEntity.ok().body(recordService.getDeptInfoList());
     }
 }
