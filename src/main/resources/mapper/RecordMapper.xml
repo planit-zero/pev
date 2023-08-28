@@ -229,7 +229,7 @@
         , STFF.STF_NM AS writerNm
         , NULL AS keyId
         , A.PACT_ID AS pactId
-        , A.PACT_TP_CD AS pactTpCd
+        , DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpCd,
         , ROW_NUMBER()
         OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq
         , NULL AS note
@@ -327,31 +327,31 @@
                  A.OP_EXPT_REG_ID
     </select>
     <select id="getOrderRecordListByCondition" parameterType="DetailRequestDTO" resultType="DetailResponseDTO">
-        SELECT 'OR'                                             AS recordType
-        , 'OR'                                                  AS recordDetailType
-        , '처방'                                                  AS itemType
+        SELECT 'OR' AS recordType
+        , 'OR' AS recordDetailType
+        , '처방' AS itemType
         , '처방' || '(' || TO_CHAR(A.ORD_DT, 'YYYY-MM-DD') || ')' AS itemNm
-        , A.ORD_DT                                              AS writingDate
-        , A.PT_HME_DEPT_CD                                      AS writingDeptCd
-        , DEPT.DEPT_NM                                          AS writingDeptNm
-        , NULL                                                  AS writerStfNo
-        , NULL                                                  AS writerNm
-        , A.ORD_ID                                              AS keyId
-        , NULL                                                  AS pactId
-        , A.MED_PACT_TP_CD                                      AS pactTpCd
-        , NULL                                                  AS sortSeq
-        , NULL                                                  AS note
-        , NULL                                                  AS mdfmId
-        , NULL                                                  AS mdfmFomSeq
-        , NULL                                                  AS mdrcId
-        , NULL                                                  AS mdrcFomSeq
-        , NULL                                                  AS examKey
-        , NULL                                                  AS pacsImgIptnCd
-        , NULL                                                  AS accsId
-        , NULL                                                  AS recType
-        , NULL                                                  AS geneExmYn
-        , NULL                                                  AS mdrcWrtStsCdYn
-        , NULL                                                  AS opExptRegId
+        , A.ORD_DT AS writingDate
+        , A.PT_HME_DEPT_CD AS writingDeptCd
+        , DEPT.DEPT_NM AS writingDeptNm
+        , NULL AS writerStfNo
+        , NULL AS writerNm
+        , A.ORD_ID AS keyId
+        , NULL AS pactId
+        , DECODE(A.MED_PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpCd,
+        , NULL AS sortSeq
+        , NULL AS note
+        , NULL AS mdfmId
+        , NULL AS mdfmFomSeq
+        , NULL AS mdrcId
+        , NULL AS mdrcFomSeq
+        , NULL AS examKey
+        , NULL AS pacsImgIptnCd
+        , NULL AS accsId
+        , NULL AS recType
+        , NULL AS geneExmYn
+        , NULL AS mdrcWrtStsCdYn
+        , NULL AS opExptRegId
         FROM ODS.S_MOOORPTD A
         LEFT OUTER JOIN ODS.S_PDEDBMSM DEPT ON A.PT_HME_DEPT_CD = DEPT.DEPT_CD
         WHERE 1=1
