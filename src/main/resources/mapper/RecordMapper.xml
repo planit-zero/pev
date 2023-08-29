@@ -10,7 +10,6 @@
         ]]>
     </select>
     <select id="getCertificateListByPtNo" parameterType="java.lang.String" resultType="CertificateDTO">
-        <![CDATA[
         SELECT 'DR'                                                                                            AS recordType
              , B.COMN_CD_NM                                                                                    AS itemType
              , C.MDFM_NM                                                                                       AS itemNm
@@ -50,7 +49,6 @@
           AND C.MDFM_ID = A.MDFM_ID
           AND C.MDFM_FOM_SEQ = A.MDFM_FOM_SEQ
         ORDER BY REC_DTM DESC
-        ]]>
     </select>
     <select id="getMedicalRecordListByCondition" parameterType="DetailRequestDTO" resultType="DetailResponseDTO">
         SELECT 'DR' AS recordType,
@@ -89,6 +87,10 @@
         WHERE 1 = 1
         AND A.PT_NO = #{ptNo}
         AND A.MDFM_CLS_CD NOT IN ('D005', 'D006', 'D007')
+        AND A.MDFM_CLS_CD IN
+        <foreach collection="detailType" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
         AND (
         (A.MDFM_CLS_CD IN ('D001', 'D002', 'D003', 'D004', 'D031') AND
         A.MED_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE)
@@ -229,7 +231,7 @@
         , STFF.STF_NM AS writerNm
         , NULL AS keyId
         , A.PACT_ID AS pactId
-        , DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpCd,
+        , DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpCd
         , ROW_NUMBER()
         OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq
         , NULL AS note
@@ -316,7 +318,10 @@
                  LEFT OUTER JOIN ODS.S_CNLRRUSD STFF ON B.LSH_STF_NO = STFF.STF_NO
         WHERE 1 = 1
           AND A.PT_NO = #{ptNo}
-          AND B.MDFM_CLS_CD = #{detailType}
+          AND B.MDFM_CLS_CD IN
+          <foreach collection="detailType" item="item" index="index" separator="," open="(" close=")">
+              #{item}
+          </foreach>
           AND A.LSH_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
           AND B.LSH_DTM = (SELECT MAX(LSH_DTM)
                            FROM ODS.S_MRDDRAFE D

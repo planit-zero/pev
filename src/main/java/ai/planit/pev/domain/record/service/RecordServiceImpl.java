@@ -34,12 +34,9 @@ public class RecordServiceImpl implements RecordService {
         List<DetailResponseDTO> detailListByCondition = new ArrayList<>();
 
         List<String> recordTypeList = new ArrayList<>(Arrays.asList(detailRequestDTO.getRecordType()));
-        List<String> recordDetailTypeList = new ArrayList<>(Arrays.asList(detailRequestDTO.getRecordDetailType()));
 
         // 진료기록
-        if (recordTypeList.contains("DR")) {
-            detailListByCondition.addAll(getMedicalRecordList(recordDetailTypeList, detailRequestDTO));
-        }
+        detailListByCondition.addAll(getMedicalRecordList(recordTypeList, detailRequestDTO));
 
         // 간호
 
@@ -63,21 +60,21 @@ public class RecordServiceImpl implements RecordService {
         return detailListByCondition;
     }
 
-    private List<DetailResponseDTO> getMedicalRecordList(List<String> recordDetailTypeList, DetailRequestDTO detailRequestDTO) {
+    private List<DetailResponseDTO> getMedicalRecordList(List<String> recordTypeList, DetailRequestDTO detailRequestDTO) {
         List<DetailResponseDTO> medicalRecordList = new ArrayList<>();
 
         // 진료기록 - 수술기록
-        if (recordDetailTypeList.contains("D005")) {
+        if (recordTypeList.contains("D005")) {
             medicalRecordList.addAll(recordDAO.getSurgeryRecordListByCondition(detailRequestDTO));
         }
 
         // 진료기록 - 퇴원기록
-        if (recordDetailTypeList.contains("D006")) {
+        if (recordTypeList.contains("D006")) {
             medicalRecordList.addAll(recordDAO.getDischargeRecordListByCondition(detailRequestDTO));
         }
 
         // 진료기록 - 타과의뢰
-        if (recordDetailTypeList.contains("D007")) {
+        if (recordTypeList.contains("D007")) {
             List<DetailResponseDTO> departmentRecordListByCondition = recordDAO.getDepartmentRecordListByCondition(detailRequestDTO);
 
             for (DetailResponseDTO departmentRecord : departmentRecordListByCondition) {
@@ -91,21 +88,34 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 진료기록 - 마취기록
-        if (recordDetailTypeList.contains("D010")) {
-            detailRequestDTO.setDetailType("D010");
+        if (recordTypeList.contains("D010")) {
+            String[] detailType = { "D010" };
+            detailRequestDTO.setDetailType(detailType);
             medicalRecordList.addAll(recordDAO.getAnesthesiaRecordListByCondition(detailRequestDTO));
         }
 
         // 진료기록 - 마취 전 상태평가
-        if (recordDetailTypeList.contains("D011")) {
-            detailRequestDTO.setDetailType("D011");
+        if (recordTypeList.contains("D011")) {
+            String[] detailType = { "D011" };
+            detailRequestDTO.setDetailType(detailType);
             medicalRecordList.addAll(recordDAO.getAnesthesiaRecordListByCondition(detailRequestDTO));
         }
 
-        // 진료기록 - 그외
-//        if (recordDetailTypeList.contains("D0")) {
-//            detailListByCondition.addAll(recordDAO.getMedicalRecordListByCondition(detailRequestDTO));
-//        }
+        List<String> generalTypeList = recordTypeList
+                .stream()
+                .filter(type -> !type.equals("D005"))
+                .filter(type -> !type.equals("D006"))
+                .filter(type -> !type.equals("D007"))
+                .filter(type -> !type.equals("D010"))
+                .filter(type -> !type.equals("D011"))
+                .collect(Collectors.toList());
+
+        // 진료기록 - 일반
+        if (generalTypeList.size() > 0) {
+            String[] detailType = generalTypeList.toArray(new String[0]);
+            detailRequestDTO.setDetailType(detailType);
+            medicalRecordList.addAll(recordDAO.getMedicalRecordListByCondition(detailRequestDTO));
+        }
 
         return medicalRecordList;
     }

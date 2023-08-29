@@ -15,10 +15,9 @@ public class DetailRequestDTO {
     private String searchToDate;
     private String pactTpCd;
     private String[] recordType;
-    private String[] recordDetailType;
     private String deptType;
     private String deptCd;
     private String writerType;
     private String writerStfNo;
-    private String detailType;
+    private String[] detailType;
 }

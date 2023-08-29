@@ -16,16 +16,15 @@ import {
     RadioGroup,
     Select,
     SelectChangeEvent,
-    Stack,
     TextField,
     Typography
 } from '@mui/material';
 import { Square, Bookmark, Search } from '@mui/icons-material';
-import { DataGrid } from 'devextreme-react';
+import { DataGrid, TreeView } from 'devextreme-react';
 import { Column, FilterRow, Scrolling, Selection } from 'devextreme-react/data-grid';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { IRecordDetailP } from '../../pev-interface/IRecordDetail';
+import { IRecordDetailP, IRecordType } from '../../pev-interface/IRecordDetail';
 import dayjs, { ManipulateType } from 'dayjs';
 import { TDatePeriod } from '../../pev-type/TDatePeriod';
 import { TPactTpCd } from '../../pev-type/TPactTpCd';
@@ -44,7 +43,6 @@ const TabItemDetail = () => {
         searchToDate: dayjs().add(-1, 'day').format('YYYY-MM-DD'),
         pactTpCd: TPactTpCd.ALL,
         recordType: [TRecord.DR],
-        recordDetailType: [],
         deptType: TDept.ALL,
         deptCd: '',
         writerType: TWriter.ALL
@@ -147,11 +145,88 @@ const TabItemDetail = () => {
             .catch((error) => {});
     };
 
+    const initialRecordTypes: IRecordType[] = [
+        {
+            id: 'DR',
+            name: '진료기록',
+            selected: true,
+            items: [
+                { id: 'D000', name: 'PI', selected: true, items: [] },
+                { id: 'D001', name: '외래초진', selected: true, items: [] },
+                { id: 'D002', name: '외래경과', selected: true, items: [] },
+                { id: 'D003', name: '입원초진', selected: true, items: [] },
+                { id: 'D004', name: '입원경과', selected: true, items: [] },
+                { id: 'D005', name: '수술기록', selected: true, items: [] },
+                { id: 'D006', name: '퇴원기록', selected: true, items: [] },
+                { id: 'D007', name: '타과의뢰', selected: true, items: [] },
+                { id: 'D008', name: '타과회신', selected: true, items: [] },
+                { id: 'D009', name: '진단서/의뢰서', selected: true, items: [] },
+                { id: 'D010', name: '마취기록', selected: true, items: [] },
+                { id: 'D011', name: '마취전평가', selected: true, items: [] },
+                { id: 'D020', name: '과별서식', selected: true, items: [] },
+                { id: 'D021', name: '산부인과 진통기록', selected: true, items: [] },
+                { id: 'D022', name: '산부인과 배란유도기록', selected: true, items: [] },
+                { id: 'D023', name: '정신건강의학과 진단평가', selected: true, items: [] },
+                { id: 'D024', name: '치주과 평가', selected: true, items: [] },
+                { id: 'D030', name: '의무기록표지', selected: true, items: [] },
+                { id: 'D031', name: '응급기록', selected: true, items: [] },
+                { id: 'D032', name: '직무중 신체 손상 보고서', selected: true, items: [] },
+                { id: 'D033', name: '동의서', selected: true, items: [] },
+                { id: 'D034', name: '평가지', selected: true, items: [] },
+                { id: 'D035', name: '산재진단서', selected: true, items: [] },
+                { id: 'D036', name: '법정전염병서식', selected: true, items: [] },
+                { id: 'D037', name: 'Blue Sheet', selected: true, items: [] },
+                { id: 'D038', name: '다학제회신기록', selected: true, items: [] },
+                { id: 'D039', name: '의료의 질 향상을 위한 점검표', selected: true, items: [] },
+                { id: 'D040', name: '산모결과지', selected: true, items: [] },
+                { id: 'D041', name: '폐암적정성평가 치료 전 체크리스트', selected: true, items: [] },
+                { id: 'D042', name: '대장암 수술전 검사 체크리스트', selected: true, items: [] },
+                { id: 'D043', name: 'DRG 적정성 평가 점검표', selected: true, items: [] },
+                { id: 'D044', name: 'CC Attribute', selected: true, items: [] },
+                { id: 'E003', name: '출력서식', selected: true, items: [] }
+            ]
+        },
+        { id: 'OR', name: '처방', selected: false, items: [] },
+        { id: 'NR', name: '간호기록', selected: false, items: [] },
+        {
+            id: 'EX',
+            name: '검사',
+            selected: false,
+            items: [
+                { id: 'EX_PICTURE', name: '영상검사', selected: false, items: [] },
+                { id: 'EX_PATHOLOGY', name: '병리검사', selected: false, items: [] },
+                { id: 'EX_SPECIMEN', name: '검체검사', selected: false, items: [] },
+                { id: 'EX_FUNCTION', name: '기능검사', selected: false, items: [] }
+            ]
+        },
+        { id: 'SC', name: '스캔 자료', selected: false, items: [] },
+        { id: 'SR', name: '특성화 기록', selected: false, items: [] }
+    ];
+
+    const [recordTypes, setRecordTypes] = React.useState<IRecordType[]>(initialRecordTypes);
+
+    const RecordTypeItemRender = (item: IRecordType) => {
+        return item.name;
+    };
+
+    const treeViewRef = React.useRef<TreeView>(null);
+
+    const handleTreeViewSelectionChanged = (e: any) => {
+        if (treeViewRef && treeViewRef.current) {
+            const selectedNodes = treeViewRef.current.instance.getSelectedNodes().map((node) => node.key);
+
+            setDetailForm({
+                ...detailForm,
+                recordType: selectedNodes
+            });
+        }
+    };
+
     return (
         <React.Fragment>
             <Grid container sx={{ mt: 2, height: 'calc(100% - 81px)' }}>
-                <Grid item xs={12} height={'325px'} display={'flex'}>
-                    <Grid item xs={9} sx={{ pr: 1 }}>
+                <Grid item xs={12} height={'300px'} display={'flex'}>
+                    <Grid item xs={8} sx={{ pr: 1 }}>
                         <Box display={'flex'} alignItems={'center'}>
                             <Bookmark color={'primary'} fontSize={'small'} />
                             <Typography variant={'body1'}>조회조건</Typography>
@@ -266,17 +341,6 @@ const TabItemDetail = () => {
                                         </RadioGroup>
                                     </Grid>
                                 </Grid>
-                                <Grid container>
-                                    <Grid item xs={2} display={'flex'} alignItems={'center'}>
-                                        <Square color={'primary'} sx={{ width: 10, mr: 1 }} />
-                                        <Typography variant={'body1'}>상세유형</Typography>
-                                    </Grid>
-                                    <Grid item xs={10} display={'flex'} alignItems={'center'} gap={0.5}>
-                                        <Select fullWidth size={'small'}>
-                                            <MenuItem>상세 유형을 선택하세요.</MenuItem>
-                                        </Select>
-                                    </Grid>
-                                </Grid>
                                 <Grid container display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
                                     <Button
                                         variant={'contained'}
@@ -291,128 +355,27 @@ const TabItemDetail = () => {
                             </Box>
                         </Paper>
                     </Grid>
-                    <Grid item xs={3} sx={{ pl: 1 }}>
+                    <Grid item xs={4} sx={{ pl: 1 }}>
                         <Box display={'flex'} alignItems={'center'}>
                             <Bookmark color={'primary'} fontSize={'small'} />
                             <Typography variant={'body1'}>기록유형</Typography>
                         </Box>
                         <Divider sx={{ mt: 1 }} />
                         <Paper sx={{ mt: 1, p: 1, height: 'calc(100% - 37px)', borderRadius: 0 }} elevation={1}>
-                            <FormGroup>
-                                <Grid container>
-                                    <Grid item xs={12}>
-                                        <FormControlLabel
-                                            sx={{ height: 30 }}
-                                            control={
-                                                <Checkbox
-                                                    size={'small'}
-                                                    value={TRecord.DR}
-                                                    checked={detailForm.recordType.includes(TRecord.DR)}
-                                                    onChange={handleCheckboxChange}
-                                                />
-                                            }
-                                            label={<Typography variant={'caption'}>진료기록</Typography>}
-                                        />
-                                    </Grid>
-                                    <Divider sx={{ width: '100%', mt: 0.5, mb: 0.5 }} />
-                                    <Grid container>
-                                        <Grid item xs={5}>
-                                            <FormControlLabel
-                                                sx={{ height: 30 }}
-                                                control={
-                                                    <Checkbox
-                                                        size={'small'}
-                                                        value={TRecord.OR}
-                                                        checked={detailForm.recordType.includes(TRecord.OR)}
-                                                        onChange={handleCheckboxChange}
-                                                    />
-                                                }
-                                                label={<Typography variant={'caption'}>처방</Typography>}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={7}>
-                                            <Stack>
-                                                <FormControlLabel
-                                                    sx={{ height: 30 }}
-                                                    control={<Checkbox size={'small'} />}
-                                                    label={<Typography variant={'caption'}>수행사인 포함</Typography>}
-                                                />
-                                                <FormControlLabel
-                                                    sx={{ height: 30 }}
-                                                    control={<Checkbox size={'small'} />}
-                                                    label={<Typography variant={'caption'}>이력 포함</Typography>}
-                                                />
-                                            </Stack>
-                                        </Grid>
-                                    </Grid>
-                                    <Divider sx={{ width: '100%', mt: 0.5, mb: 0.5 }} />
-                                    <Grid container>
-                                        <Grid item xs={5}>
-                                            <FormControlLabel
-                                                sx={{ height: 30 }}
-                                                control={
-                                                    <Checkbox
-                                                        size={'small'}
-                                                        value={TRecord.NR}
-                                                        checked={detailForm.recordType.includes(TRecord.NR)}
-                                                        onChange={handleCheckboxChange}
-                                                    />
-                                                }
-                                                label={<Typography variant={'caption'}>간호기록</Typography>}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={7}>
-                                            <FormControlLabel
-                                                sx={{ height: 30 }}
-                                                control={<Checkbox size={'small'} />}
-                                                label={<Typography variant={'caption'}>취소수진 포함</Typography>}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    <Divider sx={{ width: '100%', mt: 0.5, mb: 0.5 }} />
-                                    <Grid item xs={12}>
-                                        <FormControlLabel
-                                            sx={{ height: 30 }}
-                                            control={
-                                                <Checkbox
-                                                    size={'small'}
-                                                    value={TRecord.EX}
-                                                    checked={detailForm.recordType.includes(TRecord.EX)}
-                                                    onChange={handleCheckboxChange}
-                                                />
-                                            }
-                                            label={<Typography variant={'caption'}>검사</Typography>}
-                                        />
-                                    </Grid>
-                                    <Divider sx={{ width: '100%', mt: 0.5, mb: 0.5 }} />
-                                    <Grid item xs={12}>
-                                        <FormControlLabel
-                                            sx={{ height: 30 }}
-                                            control={
-                                                <Checkbox
-                                                    size={'small'}
-                                                    value={TRecord.SC}
-                                                    checked={detailForm.recordType.includes(TRecord.SC)}
-                                                    onChange={handleCheckboxChange}
-                                                />
-                                            }
-                                            label={<Typography variant={'caption'}>스캔자료</Typography>}
-                                        />
-                                    </Grid>
-                                    <Divider sx={{ width: '100%', mt: 0.5, mb: 0.5 }} />
-                                    <Grid item xs={12}>
-                                        <FormControlLabel
-                                            sx={{ height: 30 }}
-                                            control={<Checkbox size={'small'} />}
-                                            label={<Typography variant={'caption'}>특성화 기록</Typography>}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </FormGroup>
+                            <TreeView
+                                ref={treeViewRef}
+                                items={recordTypes}
+                                selectNodesRecursive={true}
+                                selectByClick={true}
+                                showCheckBoxesMode={'normal'}
+                                selectionMode={'multiple'}
+                                itemRender={RecordTypeItemRender}
+                                onSelectionChanged={handleTreeViewSelectionChanged}
+                            />
                         </Paper>
                     </Grid>
                 </Grid>
-                <Grid item xs={12} sx={{ mt: 2, height: 'calc(100% - 325px)' }}>
+                <Grid item xs={12} sx={{ mt: 2, height: 'calc(100% - 300px)' }}>
                     <Box display={'flex'} alignItems={'center'}>
                         <Grid container>
                             <Grid item xs={2} display={'flex'} alignItems={'center'}>

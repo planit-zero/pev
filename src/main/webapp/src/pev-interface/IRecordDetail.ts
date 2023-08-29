@@ -4,7 +4,6 @@ export interface IRecordDetailP {
     searchToDate: string;
     pactTpCd: string;
     recordType: string[];
-    recordDetailType: string[];
     deptType: string;
     deptCd: string;
     writerType: string;
@@ -33,4 +32,12 @@ export interface IRecordDetailR {
     accsId: string;
     recType: string;
     geneExmYn: string;
+}
+
+export interface IRecordType {
+    id: string
+    name: string
+    selected: boolean
+    items: IRecordType[]
+
 }
