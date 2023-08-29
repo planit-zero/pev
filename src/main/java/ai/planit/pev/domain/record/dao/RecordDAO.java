@@ -1,14 +1,13 @@
 package ai.planit.pev.domain.record.dao;
 
-import ai.planit.pev.domain.record.dto.CertificateDTO;
-import ai.planit.pev.domain.record.dto.DeptInfoDTO;
-import ai.planit.pev.domain.record.dto.DetailRequestDTO;
-import ai.planit.pev.domain.record.dto.DetailResponseDTO;
+import ai.planit.pev.domain.record.dto.*;
 
 import java.util.List;
 
 public interface RecordDAO {
     List<DeptInfoDTO> getDeptInfoList();
+
+    List<RecordXmlFormResponseDTO> getRecordXmlForm(RecordXmlFormRequestDTO recordXmlFormRequestDTO);
 
     List<CertificateDTO> getCertificateListByPtNo(String ptNo);
 

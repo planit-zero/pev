@@ -9,6 +9,17 @@
         ORDER BY SORT_SEQ
         ]]>
     </select>
+    <select id="getRecordXmlForm" parameterType="RecordXmlFormRequestDTO" resultType="RecordXmlFormResponseDTO">
+        SELECT MDFM_ID AS mdfmId,
+               MDFM_FOM_SEQ AS mdfmFormSeq,
+               MDFM_SCTN_SEQ AS mdfmSctnSeq,
+               SCTN_DGN_META_LDAT AS sctnDgnMetaLdat
+        FROM ODS.S_MRFMFSCD
+        WHERE 1=1
+          AND MDFM_ID = #{mdfmId}
+          AND MDFM_FOM_SEQ = #{mdfmFomSeq}
+        ORDER BY MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ
+    </select>
     <select id="getCertificateListByPtNo" parameterType="java.lang.String" resultType="CertificateDTO">
         SELECT 'DR'                                                                                            AS recordType
              , B.COMN_CD_NM                                                                                    AS itemType
@@ -115,7 +126,7 @@
         A.MDFM_CLS_CD AS recordDetailType,
         COMN.COMN_CD_NM AS itemType,
         COMN.COMN_CD_NM AS itemNm,
-        NVL(B.OP_DTM, A.MDF_REC_DTM) AS writingDate,
+        NVL(B.OP_DTM::DATE, A.MDF_REC_DTM::DATE) AS writingDate,
         A.WRTR_DEPT_CD AS writingDeptCd,
         DEPT.DEPT_NM AS writingDeptNm,
         A.WRT_STF_NO AS writerStfNo,
@@ -224,7 +235,7 @@
         , A.MDFM_CLS_CD AS recordDetailType
         , COMN.COMN_CD_NM AS itemType
         , COMN.COMN_CD_NM AS itemNm
-        , NVL(B.DS_DT, A.MDF_REC_DTM) AS writingDate
+        , NVL(B.DS_DT, A.MDF_REC_DTM::DATE) AS writingDate
         , A.WRTR_DEPT_CD AS writingDeptCd
         , DEPT.DEPT_NM AS writingDeptNm
         , A.WK_STF_NO AS writerStfNo

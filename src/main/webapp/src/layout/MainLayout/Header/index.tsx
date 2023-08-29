@@ -43,7 +43,7 @@ const Header = () => {
                 }}
             >
                 <Box component="span" display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={1}>
-                    <IconReportMedical />
+                    <IconReportMedical color={'#3f51b5'} />
                     <Typography sx={{ fontSize: 'h3.fontSize', fontWeight: 'bold' }}>가명화 EMR Viewer</Typography>
                 </Box>
                 {/*{(layout === LAYOUT_CONST.VERTICAL_LAYOUT || (layout === LAYOUT_CONST.HORIZONTAL_LAYOUT && matchDownMd)) && (*/}

@@ -1,9 +1,6 @@
 package ai.planit.pev.domain.record.dao;
 
-import ai.planit.pev.domain.record.dto.CertificateDTO;
-import ai.planit.pev.domain.record.dto.DeptInfoDTO;
-import ai.planit.pev.domain.record.dto.DetailRequestDTO;
-import ai.planit.pev.domain.record.dto.DetailResponseDTO;
+import ai.planit.pev.domain.record.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,6 +15,11 @@ public class RecordDAOImpl implements RecordDAO {
     @Override
     public List<DeptInfoDTO> getDeptInfoList() {
         return sqlSessionTemplate.selectList("getDeptInfoList");
+    }
+
+    @Override
+    public List<RecordXmlFormResponseDTO> getRecordXmlForm(RecordXmlFormRequestDTO recordXmlFormRequestDTO) {
+        return sqlSessionTemplate.selectList("getRecordXmlForm", recordXmlFormRequestDTO);
     }
 
     @Override

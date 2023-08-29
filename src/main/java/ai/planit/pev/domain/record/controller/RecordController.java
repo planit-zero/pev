@@ -1,9 +1,6 @@
 package ai.planit.pev.domain.record.controller;
 
-import ai.planit.pev.domain.record.dto.CertificateDTO;
-import ai.planit.pev.domain.record.dto.DeptInfoDTO;
-import ai.planit.pev.domain.record.dto.DetailRequestDTO;
-import ai.planit.pev.domain.record.dto.DetailResponseDTO;
+import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.domain.record.service.RecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +27,10 @@ public class RecordController {
     @GetMapping("/info/dept")
     public ResponseEntity<List<DeptInfoDTO>> getDeptInfo() {
         return ResponseEntity.ok().body(recordService.getDeptInfoList());
+    }
+
+    @PostMapping("/data/medical")
+    public ResponseEntity<List<RecordDataResponseDTO>> getRecordData(@RequestBody RecordDataRequestDTO recordDataRequestDTO) {
+        return ResponseEntity.ok().body(recordService.getRecordData(recordDataRequestDTO));
     }
 }

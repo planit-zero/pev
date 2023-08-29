@@ -1,13 +1,14 @@
 package ai.planit.pev.domain.record.service;
 
 import ai.planit.pev.domain.record.dao.RecordDAO;
-import ai.planit.pev.domain.record.dto.CertificateDTO;
-import ai.planit.pev.domain.record.dto.DeptInfoDTO;
-import ai.planit.pev.domain.record.dto.DetailRequestDTO;
-import ai.planit.pev.domain.record.dto.DetailResponseDTO;
+import ai.planit.pev.domain.record.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -22,6 +23,58 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public List<DeptInfoDTO> getDeptInfoList() {
         return recordDAO.getDeptInfoList();
+    }
+
+    @Override
+    public List<RecordDataResponseDTO> getRecordData(RecordDataRequestDTO recordDataRequestDTO) {
+        List<RecordDataResponseDTO> recordDataList = new ArrayList<>();
+
+        for (DetailResponseDTO detailResponseDTO : recordDataRequestDTO.getTargets()) {
+            RecordDataResponseDTO recordDataResponseDTO = new RecordDataResponseDTO();
+
+            recordDataResponseDTO.setMdfmId(detailResponseDTO.getMdfmId());
+            recordDataResponseDTO.setMdfmFomSeq(detailResponseDTO.getMdfmFomSeq());
+            recordDataResponseDTO.setMdrcId(detailResponseDTO.getMdrcId());
+            recordDataResponseDTO.setMdrcFomSeq(detailResponseDTO.getMdrcFomSeq());
+
+            // 데이터 취득
+
+            // xml 목록 취득
+            RecordXmlFormRequestDTO recordXmlFormRequestDTO = new RecordXmlFormRequestDTO();
+
+            recordXmlFormRequestDTO.setMdfmId(detailResponseDTO.getMdfmId());
+            recordXmlFormRequestDTO.setMdfmFomSeq(detailResponseDTO.getMdfmFomSeq());
+
+            List<RecordXmlFormResponseDTO> recordXmlFormResponseDTOList = recordDAO.getRecordXmlForm(recordXmlFormRequestDTO);
+
+            List<RecordSectionDTO> recordSectionDTOList = new ArrayList<>();
+
+            for (RecordXmlFormResponseDTO recordXmlFormResponseDTO : recordXmlFormResponseDTOList) {
+                // xml -> DTO 변환
+                try {
+                    JAXBContext jaxbContext = JAXBContext.newInstance(RecordSectionDTO.class);
+                    Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+                    RecordSectionDTO recordSectionDTO = (RecordSectionDTO) unmarshaller.unmarshal(new StringReader(recordXmlFormResponseDTO.getSctnDgnMetaLdat()));
+                    recordSectionDTO.setMdfmSctnSeq(recordXmlFormResponseDTO.getMdfmSctnSeq());
+
+                    // DTO - 데이터 병합
+//                    for (RecordItemDTO recordItemDTO : recordSectionDTO.getItems()) {
+//
+//                    }
+
+                    recordSectionDTOList.add(recordSectionDTO);
+
+                } catch (JAXBException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            recordDataResponseDTO.setSections(recordSectionDTOList);
+            recordDataList.add(recordDataResponseDTO);
+        }
+
+        return recordDataList;
     }
 
     @Override
