@@ -1,6 +1,6 @@
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Box, useMediaQuery } from '@mui/material';
+import { Avatar, Box, Typography, useMediaQuery } from '@mui/material';
 
 // project imports
 import LAYOUT_CONST from 'constant';
@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'store';
 import { openDrawer } from 'store/slices/menu';
 
 // assets
-import { IconMenu2 } from '@tabler/icons';
+import { IconMenu2, IconReportMedical } from '@tabler/icons';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
@@ -42,8 +42,9 @@ const Header = () => {
                     }
                 }}
             >
-                <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
-                    <LogoSection />
+                <Box component="span" display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={1}>
+                    <IconReportMedical />
+                    <Typography sx={{ fontSize: 'h3.fontSize', fontWeight: 'bold' }}>가명화 EMR Viewer</Typography>
                 </Box>
                 {/*{(layout === LAYOUT_CONST.VERTICAL_LAYOUT || (layout === LAYOUT_CONST.HORIZONTAL_LAYOUT && matchDownMd)) && (*/}
                 {/*    <Avatar*/}
