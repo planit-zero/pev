@@ -24,15 +24,15 @@ import { DataGrid, TreeView } from 'devextreme-react';
 import { Column, FilterRow, Scrolling, Selection } from 'devextreme-react/data-grid';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { IRecordDetailP, IRecordType } from '../../pev-interface/IRecordDetail';
+import { IRecordDetailP, IRecordDetailR, IRecordType } from '../../pev-interface/IRecordDetail';
 import dayjs, { ManipulateType } from 'dayjs';
 import { TDatePeriod } from '../../pev-type/TDatePeriod';
 import { TPactTpCd } from '../../pev-type/TPactTpCd';
 import { TDept } from '../../pev-type/TDept';
 import { TWriter } from '../../pev-type/TWriter';
-import { TRecord } from '../../pev-type/TRecord';
 import { useGetDeptInfoListQuery, useGetDetailListByConditionMutation } from '../../pev-service/RecordService';
 import { IRecordDeptInfo } from '../../pev-interface/IRecordInfo';
+import { setTargetRecords } from '../../store/pev-slices/record';
 
 const TabItemDetail = () => {
     const { data: deptInfoList, isLoading: isDeptInfoListLoading } = useGetDeptInfoListQuery();
@@ -199,6 +199,22 @@ const TabItemDetail = () => {
                 recordType: selectedNodes
             });
         }
+    };
+
+    const [selectedGridData, setSelectedGridData] = React.useState<IRecordDetailR[]>([]);
+
+    const handleGridSelectionChanged = (e: any) => {
+        if (e && e.selectedRowsData) {
+            setSelectedGridData(e.selectedRowsData);
+        }
+    };
+
+    const handleDataRetrieve = () => {
+        if (selectedGridData.length === 0) {
+            return;
+        }
+
+        setTargetRecords(selectedGridData);
     };
 
     return (
@@ -393,7 +409,7 @@ const TabItemDetail = () => {
                                         control={<Checkbox size={'small'} />}
                                         label={<Typography variant={'caption'}>검체 한글명 병기</Typography>}
                                     />
-                                    <Button variant={'contained'} startIcon={<Search />} size={'small'}>
+                                    <Button variant={'contained'} startIcon={<Search />} size={'small'} onClick={handleDataRetrieve}>
                                         조회
                                     </Button>
                                 </FormGroup>
@@ -407,6 +423,7 @@ const TabItemDetail = () => {
                         showBorders={true}
                         showColumnLines={true}
                         showRowLines={true}
+                        onSelectionChanged={handleGridSelectionChanged}
                     >
                         <FilterRow visible={true} />
                         <Column dataField={'pactTpCd'} caption={'환자구분'} alignment={'center'} width={100} />
