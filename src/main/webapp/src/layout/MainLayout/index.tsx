@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'store';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
+import RecordViewer from '../../pev-component/record-viewer/RecordViewer';
 
 interface MainStyleProps {
     theme: Theme;
@@ -143,9 +144,7 @@ const MainLayout = () => {
             {/* main content */}
             <Main theme={theme} open={drawerOpen} layout={layout}>
                 <Container maxWidth={container ? 'lg' : false} {...(!container && { sx: { px: { xs: 0 } } })}>
-                    {/* breadcrumb */}
-                    <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
-                    <Outlet />
+                    <RecordViewer />
                 </Container>
             </Main>
             <Customization />

@@ -17,6 +17,7 @@ import kanbanReducer from './slices/kanban';
 import menuReducer from './slices/menu';
 import recordReducer from './pev-slices/record';
 import { recordApi } from '../pev-service/RecordService';
+import { recordExceptionApi } from '../pev-service/RecordExceptionService';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
@@ -40,7 +41,8 @@ const reducer = combineReducers({
     user: userReducer,
     menu: menuReducer,
     record: recordReducer,
-    [recordApi.reducerPath]: recordApi.reducer
+    [recordApi.reducerPath]: recordApi.reducer,
+    [recordExceptionApi.reducerPath]: recordExceptionApi.reducer
 });
 
 export default reducer;

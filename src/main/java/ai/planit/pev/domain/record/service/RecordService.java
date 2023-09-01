@@ -7,6 +7,8 @@ import java.util.List;
 public interface RecordService {
     List<DeptInfoDTO> getDeptInfoList();
 
+    RecordFormInfoResponseDTO getRecordFormInfo(RecordFormInfoRequestDTO recordFormInfoRequestDTO);
+
     List<RecordDataResponseDTO> getRecordData(RecordDataRequestDTO recordDataRequestDTO);
 
     List<CertificateDTO> getCertificateListByPtNo(String ptNo);

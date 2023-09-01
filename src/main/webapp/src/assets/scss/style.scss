@@ -211,3 +211,38 @@
 .dx-checkbox-indeterminate .dx-checkbox-icon {
     background-color: #3f51b5;
 }
+
+/* Record Form */
+.record-header {
+    font-style: italic;
+
+    &.normal {
+        font-weight: bold;
+        color: #9491db;
+    }
+
+    &.date {
+        font-weight: normal;
+        color: #91b1db;
+    }
+}
+
+.record-footer {
+    &.writer {
+        font-weight: bold;
+        color: #4cbded;
+    }
+}
+
+.record-form-basic-text {
+    &.title {
+        font-weight: bold;
+        color: #4cbded;
+    }
+
+    &.content {
+        font-weight: normal;
+    }
+}
+
+/* Record Element */

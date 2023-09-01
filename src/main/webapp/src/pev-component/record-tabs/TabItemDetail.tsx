@@ -434,7 +434,7 @@ const TabItemDetail = () => {
                         <Column dataField={'writerNm'} caption={'작성자'} width={85} alignment={'center'} />
                         <Column dataField={'mdrcWrtStsCdYn'} caption={'서명'} alignment={'center'} width={75} />
                         <Scrolling mode={'virtual'} />
-                        <Selection mode={'multiple'} />
+                        <Selection mode={'multiple'} showCheckBoxesMode={'onClick'} />
                     </DataGrid>
                 </Grid>
             </Grid>

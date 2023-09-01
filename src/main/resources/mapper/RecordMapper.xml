@@ -20,6 +20,96 @@
           AND MDFM_FOM_SEQ = #{mdfmFomSeq}
         ORDER BY MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ
     </select>
+    <select id="getRecordValueList" parameterType="RecordValueRequestDTO" resultType="RecordValueResponseDTO">
+        SELECT K.MDRC_ID AS mdrcId,
+               K.MDRC_FOM_SEQ AS mdrcFomSeq,
+               K.MDFM_CPEM_ID AS mdfmCpemId,
+               K.MDFM_CPEM_NO AS mdfmCpemNo, -- ID
+               K.MDRC_CMPS_SEQ AS mdrcCmpsSeq,
+               K.REC_VAL_SEQ AS recValSeq,
+               K.MDFM_ELMT_CCLS_CD AS mdfmElmtCclsCd,
+               K.MDFM_ELMT_OPTP_CD AS mdfmElmtOptpCd,
+               K.SGKY_NO AS sgkyNo,
+               K.MGPT_TP_CHR_VAL AS mgptTpChrVal,
+               K.VALUE_TYPE AS valueType, -- IF
+               V.MDFM_ELMT_INPT_CNTE AS mdfmElmtInptCnte, -- V면
+               V.MDFM_ELMT_INPT_TAG_CNTE AS mdfmElmtInptTagCnte,
+               LV.DCST_LDAT AS dcstLdat, -- LV면
+               LV.FSRC_DCST_LDAT AS fsrcDcstLdat,
+               LV.FCHG_DCST_LDAT AS fchgDcstLdat,
+               LV.IMG_TMPL_PATH_NM AS imgTmplPathNm,
+               LV.IMG_NOAT_CNTE AS imgNoatCnte,
+               LV.INTG_IMG_FILE_PATH_NM AS intgImgFilePathNm
+        FROM (
+                 SELECT MDRC_ID,
+                        MDRC_FOM_SEQ,
+                        MDFM_CPEM_ID,
+                        MDFM_CPEM_NO,
+                        MDRC_CMPS_SEQ,
+                        REC_VAL_SEQ,
+                        MDFM_ELMT_CCLS_CD,
+                        MDFM_ELMT_OPTP_CD,
+                        SGKY_NO,
+                        MGPT_TP_CHR_VAL,
+                        'V' AS VALUE_TYPE
+                 FROM ODS.S_MRDDRECE
+                 WHERE 1 = 1
+                   AND MDRC_ID = #{mdrcId}
+                   AND MDRC_FOM_SEQ = #{mdrcFomSeq}
+                 UNION ALL
+                 SELECT MDRC_ID,
+                        MDRC_FOM_SEQ,
+                        MDFM_CPEM_ID,
+                        MDFM_CPEM_NO,
+                        MDRC_CMPS_SEQ,
+                        REC_VAL_SEQ,
+                        MDFM_ELMT_CCLS_CD,
+                        MDFM_ELMT_OPTP_CD,
+                        SGKY_NO,
+                        MGPT_TP_CHR_VAL,
+                        'LV' AS VALUE_TYPE
+                 FROM ODS.S_MRDDRLFE
+                 WHERE 1 = 1
+                   AND MDRC_ID = #{mdrcId}
+                   AND MDRC_FOM_SEQ = #{mdrcFomSeq}
+             ) K
+                 LEFT OUTER JOIN (
+            SELECT MDRC_ID,
+                   MDRC_FOM_SEQ,
+                   MDFM_CPEM_ID,
+                   MDFM_CPEM_NO,
+                   MDFM_ELMT_INPT_CNTE,
+                   MDFM_ELMT_INPT_TAG_CNTE
+            FROM ODS.S_MRDDRECE
+            WHERE 1 = 1
+              AND MDRC_ID = #{mdrcId}
+              AND MDRC_FOM_SEQ = #{mdrcFomSeq}
+        ) V
+                                 ON K.MDRC_ID = V.MDRC_ID
+                                     AND K.MDRC_FOM_SEQ = V.MDRC_FOM_SEQ
+                                     AND K.MDFM_CPEM_ID = V.MDFM_CPEM_ID
+                                     AND K.MDFM_CPEM_NO = V.MDFM_CPEM_NO
+                 LEFT OUTER JOIN (
+            SELECT MDRC_ID,
+                   MDRC_FOM_SEQ,
+                   MDFM_CPEM_ID,
+                   MDFM_CPEM_NO,
+                   DCST_LDAT,
+                   FSRC_DCST_LDAT,
+                   FCHG_DCST_LDAT,
+                   IMG_TMPL_PATH_NM,
+                   IMG_NOAT_CNTE,
+                   INTG_IMG_FILE_PATH_NM
+            FROM ODS.S_MRDDRLFE
+            WHERE 1 = 1
+              AND MDRC_ID = #{mdrcId}
+              AND MDRC_FOM_SEQ = #{mdrcFomSeq}
+        ) LV
+                                 ON K.MDRC_ID = LV.MDRC_ID
+                                     AND K.MDRC_FOM_SEQ = LV.MDRC_FOM_SEQ
+                                     AND K.MDFM_CPEM_ID = LV.MDFM_CPEM_ID
+                                     AND K.MDFM_CPEM_NO = LV.MDFM_CPEM_NO
+    </select>
     <select id="getCertificateListByPtNo" parameterType="java.lang.String" resultType="CertificateDTO">
         SELECT 'DR'                                                                                            AS recordType
              , B.COMN_CD_NM                                                                                    AS itemType
@@ -380,5 +470,22 @@
         <if test="deptType == 'WRITER'">AND A.PBSO_DEPT_CD = #{deptCd}</if>
         AND A.MED_PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.MED_PACT_TP_CD, #{pactTpCd})
         GROUP BY A.PT_NO, A.ORD_DT, A.PT_HME_DEPT_CD, DEPT.DEPT_NM, A.MED_PACT_TP_CD
+    </select>
+    <select id="getRecordFormInfo" parameterType="RecordFormInfoRequestDTO" resultType="RecordFormInfoResponseDTO">
+        SELECT A.MDRC_ID AS mdrcId,
+               A.MDRC_FOM_SEQ AS mdrcFomSeq,
+               A.MDFM_CLS_CD AS mdfmClsCd,
+               COMN.COMN_CD_NM AS itemType,
+               TO_CHAR(MDF_REC_DTM, 'YYYY-MM-DD') AS writingDate,
+               TO_CHAR(MDF_REC_DTM, 'YYYY-MM-DD HH:MI') AS writingDateTime,
+               WRT_DEPT.DEPT_NM AS writingDeptNm,
+               MED_DEPT.DEPT_NM AS medDeptNm,
+               STFF.STF_NM AS writerNm
+        FROM ODS.S_MRDDRECM A
+                 LEFT OUTER JOIN ODS.S_CCCCCSTE COMN ON COMN.COMN_GRP_CD = 'RDO062' AND A.MDFM_CLS_DTL_CD = COMN.COMN_CD
+                 LEFT OUTER JOIN ODS.S_PDEDBMSM WRT_DEPT ON A.WRTR_DEPT_CD = WRT_DEPT.DEPT_CD
+                 LEFT OUTER JOIN ODS.S_PDEDBMSM MED_DEPT ON A.PT_MED_DEPT_CD = MED_DEPT.DEPT_CD
+                 LEFT OUTER JOIN ODS.S_CNLRRUSD STFF ON A.WRT_STF_NO = STFF.STF_NO
+        WHERE MDRC_ID = #{mdrcId} AND MDRC_FOM_SEQ = #{mdrcFomSeq}
     </select>
 </mapper>

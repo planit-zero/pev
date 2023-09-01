@@ -29,6 +29,11 @@ public class RecordController {
         return ResponseEntity.ok().body(recordService.getDeptInfoList());
     }
 
+    @PostMapping("/info/form")
+    public ResponseEntity<RecordFormInfoResponseDTO> getRecordFormInfo(@RequestBody RecordFormInfoRequestDTO recordFormInfoRequestDTO) {
+        return ResponseEntity.ok().body(recordService.getRecordFormInfo(recordFormInfoRequestDTO));
+    }
+
     @PostMapping("/data/medical")
     public ResponseEntity<List<RecordDataResponseDTO>> getRecordData(@RequestBody RecordDataRequestDTO recordDataRequestDTO) {
         return ResponseEntity.ok().body(recordService.getRecordData(recordDataRequestDTO));

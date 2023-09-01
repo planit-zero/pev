@@ -7,7 +7,11 @@ import java.util.List;
 public interface RecordDAO {
     List<DeptInfoDTO> getDeptInfoList();
 
+    RecordFormInfoResponseDTO getRecordFormInfo(RecordFormInfoRequestDTO recordFormInfoRequestDTO);
+
     List<RecordXmlFormResponseDTO> getRecordXmlForm(RecordXmlFormRequestDTO recordXmlFormRequestDTO);
+
+    List<RecordValueResponseDTO> getRecordValueList(RecordValueRequestDTO recordValueRequestDTO);
 
     List<CertificateDTO> getCertificateListByPtNo(String ptNo);
 

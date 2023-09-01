@@ -7,13 +7,16 @@ import { persistStore } from 'redux-persist';
 // project imports
 import rootReducer from './reducer';
 import { recordApi } from '../pev-service/RecordService';
+import { recordExceptionApi } from '../pev-service/RecordExceptionService';
 
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
-        return getDefaultMiddleware({ serializableCheck: false, immutableCheck: false }).concat(recordApi.middleware);
+        return getDefaultMiddleware({ serializableCheck: false, immutableCheck: false })
+            .concat(recordApi.middleware)
+            .concat(recordExceptionApi.middleware);
     }
 });
 

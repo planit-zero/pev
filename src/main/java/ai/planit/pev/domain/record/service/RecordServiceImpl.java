@@ -9,10 +9,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,10 +23,16 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    public RecordFormInfoResponseDTO getRecordFormInfo(RecordFormInfoRequestDTO recordFormInfoRequestDTO) {
+        return recordDAO.getRecordFormInfo(recordFormInfoRequestDTO);
+    }
+
+    @Override
     public List<RecordDataResponseDTO> getRecordData(RecordDataRequestDTO recordDataRequestDTO) {
         List<RecordDataResponseDTO> recordDataList = new ArrayList<>();
 
         for (DetailResponseDTO detailResponseDTO : recordDataRequestDTO.getTargets()) {
+            // 기본 정보 세팅
             RecordDataResponseDTO recordDataResponseDTO = new RecordDataResponseDTO();
 
             recordDataResponseDTO.setMdfmId(detailResponseDTO.getMdfmId());
@@ -38,6 +41,12 @@ public class RecordServiceImpl implements RecordService {
             recordDataResponseDTO.setMdrcFomSeq(detailResponseDTO.getMdrcFomSeq());
 
             // 데이터 취득
+            RecordValueRequestDTO recordValueRequestDTO = new RecordValueRequestDTO();
+
+            recordValueRequestDTO.setMdrcId(detailResponseDTO.getMdrcId());
+            recordValueRequestDTO.setMdrcFomSeq(detailResponseDTO.getMdrcFomSeq());
+
+            List<RecordValueResponseDTO> recordValueResponseDTOList = recordDAO.getRecordValueList(recordValueRequestDTO);
 
             // xml 목록 취득
             RecordXmlFormRequestDTO recordXmlFormRequestDTO = new RecordXmlFormRequestDTO();
@@ -59,9 +68,24 @@ public class RecordServiceImpl implements RecordService {
                     recordSectionDTO.setMdfmSctnSeq(recordXmlFormResponseDTO.getMdfmSctnSeq());
 
                     // DTO - 데이터 병합
-//                    for (RecordItemDTO recordItemDTO : recordSectionDTO.getItems()) {
-//
-//                    }
+                    for (RecordItemDTO recordItemDTO : recordSectionDTO.getItems()) {
+                        List<RecordValueResponseDTO> recordValueList = recordValueResponseDTOList
+                                .stream()
+                                .filter(value -> value.getMdfmCpemNo().equals(recordItemDTO.getId()))
+                                .collect(Collectors.toList());
+
+                        if (recordValueList.size() > 0) {
+                            RecordValueResponseDTO recordValue = recordValueList.get(0);
+
+                            if ("V".equals(recordValue.getValueType())) {
+                                recordItemDTO.setValue(recordValue.getMdfmElmtInptCnte());
+                            }
+
+                            if ("LV".equals(recordValue.getValueType())) {
+                                recordItemDTO.setValue(recordValue.getDcstLdat());
+                            }
+                        }
+                    }
 
                     recordSectionDTOList.add(recordSectionDTO);
 
@@ -142,14 +166,14 @@ public class RecordServiceImpl implements RecordService {
 
         // 진료기록 - 마취기록
         if (recordTypeList.contains("D010")) {
-            String[] detailType = { "D010" };
+            String[] detailType = {"D010"};
             detailRequestDTO.setDetailType(detailType);
             medicalRecordList.addAll(recordDAO.getAnesthesiaRecordListByCondition(detailRequestDTO));
         }
 
         // 진료기록 - 마취 전 상태평가
         if (recordTypeList.contains("D011")) {
-            String[] detailType = { "D011" };
+            String[] detailType = {"D011"};
             detailRequestDTO.setDetailType(detailType);
             medicalRecordList.addAll(recordDAO.getAnesthesiaRecordListByCondition(detailRequestDTO));
         }

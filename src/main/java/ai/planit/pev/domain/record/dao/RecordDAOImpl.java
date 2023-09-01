@@ -18,8 +18,18 @@ public class RecordDAOImpl implements RecordDAO {
     }
 
     @Override
+    public RecordFormInfoResponseDTO getRecordFormInfo(RecordFormInfoRequestDTO recordFormInfoRequestDTO) {
+        return sqlSessionTemplate.selectOne("getRecordFormInfo", recordFormInfoRequestDTO);
+    }
+
+    @Override
     public List<RecordXmlFormResponseDTO> getRecordXmlForm(RecordXmlFormRequestDTO recordXmlFormRequestDTO) {
         return sqlSessionTemplate.selectList("getRecordXmlForm", recordXmlFormRequestDTO);
+    }
+
+    @Override
+    public List<RecordValueResponseDTO> getRecordValueList(RecordValueRequestDTO recordValueRequestDTO) {
+        return sqlSessionTemplate.selectList("getRecordValueList", recordValueRequestDTO);
     }
 
     @Override
