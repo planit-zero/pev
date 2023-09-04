@@ -156,16 +156,16 @@ const RecordFormBasicSurgeryException = (props: RecordFormBasicSurgeryExceptionP
             )}
             {!surgeryDefaultValueList && (
                 <React.Fragment>
-                    <Skeleton width={'50%'} height={20} />
+                    <Skeleton width={'30%'} height={20} />
                     <Skeleton width={'50%'} height={50} variant={'rectangular'} />
                     <br />
-                    <Skeleton width={'50%'} height={20} />
+                    <Skeleton width={'30%'} height={20} />
                     <Skeleton width={'50%'} height={50} variant={'rectangular'} />
                     <br />
-                    <Skeleton width={'50%'} height={20} />
+                    <Skeleton width={'30%'} height={20} />
                     <Skeleton width={'50%'} height={50} variant={'rectangular'} />
                     <br />
-                    <Skeleton width={'50%'} height={50} variant={'rectangular'} />
+                    <Skeleton width={'30%'} height={50} variant={'rectangular'} />
                 </React.Fragment>
             )}
         </React.Fragment>
