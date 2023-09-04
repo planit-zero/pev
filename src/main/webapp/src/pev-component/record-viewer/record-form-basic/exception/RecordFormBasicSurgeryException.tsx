@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { IRecordFormInfoR } from '../../../../pev-interface/IRecordInfo';
 import { useGetSurgeryDefaultValueListMutation } from '../../../../pev-service/RecordExceptionService';
-import { Box, Typography } from '@mui/material';
-import { ISurgeryDefaultValue } from '../../../../pev-interface/IRecordException';
+import { Box, Skeleton, Typography } from '@mui/material';
 
 type RecordFormBasicSurgeryExceptionProps = {
     recordFormInfo: IRecordFormInfoR;
@@ -153,6 +152,20 @@ const RecordFormBasicSurgeryException = (props: RecordFormBasicSurgeryExceptionP
                                 }
                             })}
                     </Box>
+                </React.Fragment>
+            )}
+            {!surgeryDefaultValueList && (
+                <React.Fragment>
+                    <Skeleton width={'50%'} height={20} />
+                    <Skeleton width={'50%'} height={50} variant={'rectangular'} />
+                    <br />
+                    <Skeleton width={'50%'} height={20} />
+                    <Skeleton width={'50%'} height={50} variant={'rectangular'} />
+                    <br />
+                    <Skeleton width={'50%'} height={20} />
+                    <Skeleton width={'50%'} height={50} variant={'rectangular'} />
+                    <br />
+                    <Skeleton width={'50%'} height={50} variant={'rectangular'} />
                 </React.Fragment>
             )}
         </React.Fragment>
