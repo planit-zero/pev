@@ -52,8 +52,6 @@ public class FormServiceImpl implements FormService {
         sections.add(0, getHeaderSection(formSheet));
         sections.add(getFooterSection(formSheet));
 
-        // TODO: Footer
-
         return sections;
     }
 
