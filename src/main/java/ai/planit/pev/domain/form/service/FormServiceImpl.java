@@ -84,7 +84,10 @@ public class FormServiceImpl implements FormService {
 
         }
 
-        entity.setAttributes(getFormAttributes(elementsBySection, entity.getId()));
+        List<FormAttribute> attributes = getFormAttributes(elementsBySection, entity.getId());
+
+        entity.setHasAttributes(attributes.size() > 0);
+        entity.setAttributes(attributes);
         entity.setValues(getFormValues(elementsBySection, entity.getId()));
 
         return entity;
