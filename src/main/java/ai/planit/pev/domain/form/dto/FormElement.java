@@ -15,6 +15,7 @@ public class FormElement {
     private String defaultValue;
 
     public void setElement(FormElement element) {
+        this.sectionSeq = element.getSectionSeq();
         this.id = element.getId();
         this.parentId = element.getParentId();
         this.classType = element.getClassType();

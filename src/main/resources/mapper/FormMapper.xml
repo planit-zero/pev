@@ -6,7 +6,9 @@
                A.MDRC_FOM_SEQ AS mdrcFomSeq,
                A.MDFM_ID AS mdfmId,
                A.MDFM_FOM_SEQ AS mdfmFomSeq,
-               A.MDF_REC_DTM AS writingDate,
+               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemNm,
+               A.MDF_REC_DTM::DATE AS writingDate,
+               A.MDF_REC_DTM AS writingDateTime,
                (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
                (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
                (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm
@@ -32,8 +34,25 @@
                MDFM_CPEM_CNTE AS value,
        ELMT_BSC_CNTE AS defaultValue
         FROM ODS.S_MRFMFCID A
-        WHERE MDFM_ID = #{mdfmId}
-          AND MDFM_FOM_SEQ = #{mdfmFomSeq}
+        WHERE MDFM_ID = ${mdfmId}
+          AND MDFM_FOM_SEQ = ${mdfmFomSeq}
         ORDER BY sectionSeq, id, parentId
+    </select>
+    <select id="getFormValueData" parameterType="FormValueIdentifier" resultType="FormValueData">
+        SELECT A.MDFM_ELMT_INPT_CNTE AS mdfmElmtInptCnte
+        FROM ODS.S_MRDDRECE A
+        WHERE A.MDRC_ID = ${mdrcId}
+          AND A.MDRC_FOM_SEQ = ${mdrcFomSeq}
+          AND A.MDFM_CPEM_ID = #{mdfmCpemId}
+        ORDER BY A.REC_VAL_SEQ
+    </select>
+    <select id="getFormValueLargeData" parameterType="FormValueIdentifier" resultType="FormValueLargeData">
+        SELECT A.DCST_LDAT AS dcstLdat,
+               A.INTG_IMG_FILE_PATH_NM AS intgImgFilePathNm
+        FROM ODS.S_MRDDRLFE A
+        WHERE A.MDRC_ID = ${mdrcId}
+          AND A.MDRC_FOM_SEQ = ${mdrcFomSeq}
+          AND A.MDFM_CPEM_ID = #{mdfmCpemId}
+        ORDER BY A.REC_VAL_SEQ
     </select>
 </mapper>

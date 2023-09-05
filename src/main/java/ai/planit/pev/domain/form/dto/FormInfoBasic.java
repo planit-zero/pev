@@ -10,7 +10,9 @@ public class FormInfoBasic {
     private int mdrcFomSeq;
     private int mdfmId;
     private int mdfmFomSeq;
+    private String itemNm;
     private String writingDate;
+    private String writingDateTime;
     private String writingDeptNm;
     private String ptMedDeptNm;
     private String writerNm;

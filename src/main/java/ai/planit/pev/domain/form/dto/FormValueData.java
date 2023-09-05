@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FormSectionIdentifier extends FormIdentifier {
-    private int mdfmSctnSeq;
+public class FormValueData {
+    private String mdfmElmtInptCnte;
 }

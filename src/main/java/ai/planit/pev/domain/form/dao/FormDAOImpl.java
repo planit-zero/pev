@@ -1,9 +1,6 @@
 package ai.planit.pev.domain.form.dao;
 
-import ai.planit.pev.domain.form.dto.FormElement;
-import ai.planit.pev.domain.form.dto.FormIdentifier;
-import ai.planit.pev.domain.form.dto.FormInfoBasic;
-import ai.planit.pev.domain.form.dto.FormSection;
+import ai.planit.pev.domain.form.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,5 +22,13 @@ public class FormDAOImpl implements FormDAO {
 
     public List<FormElement> getFormElements(FormIdentifier identifier) {
         return sqlSessionTemplate.selectList("getFormElements", identifier);
+    }
+
+    public List<FormValueData> getFormValueData(FormValueIdentifier valueIdentifier) {
+        return sqlSessionTemplate.selectList("getFormValueData", valueIdentifier);
+    }
+
+    public List<FormValueLargeData> getFormValueLargeData(FormValueIdentifier valueIdentifier) {
+        return sqlSessionTemplate.selectList("getFormValueLargeData", valueIdentifier);
     }
 }

@@ -15,7 +15,9 @@ public class FormSheet extends FormInfoBasic {
         this.setMdfmFomSeq(formInfoBasic.getMdfmFomSeq());
         this.setMdrcId(formInfoBasic.getMdrcId());
         this.setMdrcFomSeq(formInfoBasic.getMdrcFomSeq());
+        this.setItemNm(formInfoBasic.getItemNm());
         this.setWritingDate(formInfoBasic.getWritingDate());
+        this.setWritingDateTime(formInfoBasic.getWritingDateTime());
         this.setWritingDeptNm(formInfoBasic.getWritingDeptNm());
         this.setPtMedDeptNm(formInfoBasic.getPtMedDeptNm());
         this.setWriterNm(formInfoBasic.getWriterNm());

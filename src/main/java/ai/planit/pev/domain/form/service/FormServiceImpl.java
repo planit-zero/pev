@@ -35,21 +35,89 @@ public class FormServiceImpl implements FormService {
 
         FormInfoBasic formInfoBasic = formDAO.getFormBasicInfo(identifier);
         formSheet.setBasicInfo(formInfoBasic);
-        formSheet.setSections(getFormSections(identifier));
+        formSheet.setSections(getFormSections(identifier, formSheet));
 
         return formSheet;
     }
 
-    private List<FormSection> getFormSections(FormIdentifier identifier) {
+    private List<FormSection> getFormSections(FormIdentifier identifier, FormSheet formSheet) {
         List<FormSection> sections = formDAO.getFormSections(identifier);
         List<FormElement> elements = formDAO.getFormElements(identifier);
 
         for (FormSection section : sections) {
             List<FormElement> elementsBySection = getFormElementBySection(elements, section);
-            section.setEntities(getFormEntitiesInElements(elementsBySection));
+            section.setEntities(getFormEntities(identifier, elementsBySection));
         }
 
+        sections.add(0, getHeaderSection(formSheet));
+        sections.add(getFooterSection(formSheet));
+
+        // TODO: Footer
+
         return sections;
+    }
+
+    private FormSection getHeaderSection(FormSheet formSheet) {
+        FormSection headerSection = new FormSection();
+
+        headerSection.setMdfmId(formSheet.getMdfmId());
+        headerSection.setMdfmFormSeq(formSheet.getMdfmFomSeq());
+        headerSection.setMdfmSctnSeq(-99);
+
+        List<FormEntity> headerEntities = new ArrayList<>();
+
+        // 1. 서식지명 (작성일자)
+        FormEntity entity1 = getFakeEntity(formSheet.getItemNm(), String.format("(%s)", formSheet.getWritingDate()));
+        headerEntities.add(entity1);
+
+        // 2. 작성과
+        FormEntity entity2 = getFakeEntity("작성과:", formSheet.getWritingDeptNm());
+        headerEntities.add(entity2);
+
+        // 3. 수진과
+        FormEntity entity3 = getFakeEntity("수진과:", formSheet.getPtMedDeptNm());
+        headerEntities.add(entity3);
+
+        headerSection.setEntities(headerEntities);
+
+        return headerSection;
+    }
+
+    private FormSection getFooterSection(FormSheet formSheet) {
+        FormSection footerSection = new FormSection();
+
+        footerSection.setMdfmId(formSheet.getMdfmId());
+        footerSection.setMdfmFormSeq(formSheet.getMdfmFomSeq());
+        footerSection.setMdfmSctnSeq(-99);
+
+        List<FormEntity> footerEntities = new ArrayList<>();
+
+        // 1. 작성자
+        FormEntity entity1 = getFakeEntity("작성자", formSheet.getWriterNm());
+        footerEntities.add(entity1);
+
+        // 2. 작성시간
+        FormEntity entity2 = getFakeEntity("작성시간", formSheet.getWritingDateTime());
+        footerEntities.add(entity2);
+
+        footerSection.setEntities(footerEntities);
+
+        return footerSection;
+    }
+
+    private FormEntity getFakeEntity(String entityStr, String valueStr) {
+        FormEntity entity = new FormEntity();
+
+        entity.setValue(entityStr);
+
+        List<FormValue> formValues = new ArrayList<>();
+        FormValue formValue = new FormValue();
+        formValue.setValue(valueStr);
+        formValues.add(formValue);
+
+        entity.setValues(formValues);
+
+        return entity;
     }
 
     private List<FormElement> getFormElementBySection(List<FormElement> elements, FormSection section) {
@@ -59,7 +127,7 @@ public class FormServiceImpl implements FormService {
                 .collect(Collectors.toList());
     }
 
-    private List<FormEntity> getFormEntitiesInElements(List<FormElement> elementsBySection) {
+    private List<FormEntity> getFormEntities(FormIdentifier identifier, List<FormElement> elementsBySection) {
         List<FormEntity> entities = new ArrayList<>();
 
         List<FormElement> entityElements = elementsBySection
@@ -68,14 +136,14 @@ public class FormServiceImpl implements FormService {
                 .collect(Collectors.toList());
 
         for (FormElement entityElement : entityElements) {
-            FormEntity entity = getFormEntity(elementsBySection, entityElement);
+            FormEntity entity = getFormEntity(identifier, elementsBySection, entityElement);
             entities.add(entity);
         }
 
         return entities;
     }
 
-    private FormEntity getFormEntity(List<FormElement> elementsBySection, FormElement entityElement) {
+    private FormEntity getFormEntity(FormIdentifier identifier, List<FormElement> elementsBySection, FormElement entityElement) {
         FormEntity entity = new FormEntity();
         entity.setElement(entityElement);
 
@@ -84,16 +152,16 @@ public class FormServiceImpl implements FormService {
 
         }
 
-        List<FormAttribute> attributes = getFormAttributes(elementsBySection, entity.getId());
+        List<FormAttribute> attributes = getFormAttributes(identifier, elementsBySection, entity.getId());
 
         entity.setHasAttributes(attributes.size() > 0);
         entity.setAttributes(attributes);
-        entity.setValues(getFormValues(elementsBySection, entity.getId()));
+        entity.setValues(getFormValues(identifier, elementsBySection, entity.getId()));
 
         return entity;
     }
 
-    private List<FormAttribute> getFormAttributes(List<FormElement> elementsBySection, String parentId) {
+    private List<FormAttribute> getFormAttributes(FormIdentifier identifier, List<FormElement> elementsBySection, String parentId) {
         List<FormAttribute> attributes = new ArrayList<>();
 
         List<FormElement> attributeElements = elementsBySection
@@ -102,21 +170,21 @@ public class FormServiceImpl implements FormService {
                 .collect(Collectors.toList());
 
         for (FormElement attributeElement : attributeElements) {
-            FormAttribute attribute = getFormAttribute(elementsBySection, attributeElement);
+            FormAttribute attribute = getFormAttribute(identifier, elementsBySection, attributeElement);
             attributes.add(attribute);
         }
 
         return attributes;
     }
 
-    private FormAttribute getFormAttribute(List<FormElement> elementsBySection, FormElement attributeElement) {
+    private FormAttribute getFormAttribute(FormIdentifier identifier, List<FormElement> elementsBySection, FormElement attributeElement) {
         FormAttribute attribute = new FormAttribute();
         attribute.setElement(attributeElement);
-        attribute.setValues(getFormValues(elementsBySection, attribute.getId()));
+        attribute.setValues(getFormValues(identifier, elementsBySection, attribute.getId()));
         return attribute;
     }
 
-    private List<FormValue> getFormValues(List<FormElement> elementsBySection, String parentId) {
+    private List<FormValue> getFormValues(FormIdentifier identifier, List<FormElement> elementsBySection, String parentId) {
         List<FormValue> values = new ArrayList<>();
 
         List<FormElement> valueElements = elementsBySection
@@ -125,18 +193,38 @@ public class FormServiceImpl implements FormService {
                 .collect(Collectors.toList());
 
         for (FormElement valueElement : valueElements) {
-            FormValue value = getFormValue(valueElement);
+            FormValue value = getFormValue(identifier, valueElement);
             values.add(value);
         }
 
         return values;
     }
 
-    private FormValue getFormValue(FormElement valueElement) {
+    private FormValue getFormValue(FormIdentifier identifier, FormElement valueElement) {
         FormValue formValue = new FormValue();
         formValue.setElement(valueElement);
 
-        // TODO: VALUE 실제 값 세팅
+        FormValueIdentifier valueIdentifier = new FormValueIdentifier();
+
+        valueIdentifier.setMdrcId(identifier.getMdrcId());
+        valueIdentifier.setMdrcFomSeq(identifier.getMdrcFomSeq());
+        valueIdentifier.setMdfmCpemId(valueElement.getId());
+
+        List<FormValueData> valueDataList = formDAO.getFormValueData(valueIdentifier);
+
+        if (valueDataList.size() > 0) {
+            // TODO: 테이블 등 다중 값을 가지고 있는 경우 추후 처리 필요
+            formValue.setValue(valueDataList.get(0).getMdfmElmtInptCnte());
+            return formValue;
+        }
+
+        List<FormValueLargeData> valueLargeDataList = formDAO.getFormValueLargeData(valueIdentifier);
+
+        if (valueLargeDataList.size() > 0) {
+            // TODO: 테이블 등 다중 값을 가지고 있는 경우 추후 처리 필요
+            formValue.setValue(valueLargeDataList.get(0).getDcstLdat());
+        }
+
         return formValue;
     }
 }
