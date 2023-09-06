@@ -19,6 +19,7 @@
     <select id="getFormSections" parameterType="FormIdentifier" resultType="FormSection">
         SELECT A.MDFM_ID AS mdfmId,
                A.MDFM_FOM_SEQ AS mdfmFomSeq,
+               A.MDFM_CLS_CD AS mdfmClsCd,
                A.MDFM_SCTN_SEQ AS mdfmSctnSeq
         FROM ODS.S_MRFMFSCD A
         WHERE A.MDFM_ID = ${mdfmId}

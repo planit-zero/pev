@@ -3,6 +3,7 @@ package ai.planit.pev.domain.form.service;
 import ai.planit.pev.domain.form.constant.FormClassType;
 import ai.planit.pev.domain.form.dao.FormDAO;
 import ai.planit.pev.domain.form.dto.*;
+import ai.planit.pev.domain.form.utility.FormUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FormServiceImpl implements FormService {
     private final FormDAO formDAO;
+    private final FormFixedSectionService formFixedSectionService;
 
     public FormContentResponse getFormContent(FormContentRequest formContentRequest) {
         FormContentResponse formContentResponse = new FormContentResponse();
@@ -45,6 +47,12 @@ public class FormServiceImpl implements FormService {
         List<FormElement> elements = formDAO.getFormElements(identifier);
 
         for (FormSection section : sections) {
+            if (section.getMdfmSctnSeq() == -1) {
+                FormSection fixedSection = formFixedSectionService.getFixedSection(identifier, section);
+                section.setEntities(fixedSection.getEntities());
+                continue;
+            }
+
             List<FormElement> elementsBySection = getFormElementBySection(elements, section);
             section.setEntities(getFormEntities(identifier, elementsBySection));
         }
@@ -65,15 +73,15 @@ public class FormServiceImpl implements FormService {
         List<FormEntity> headerEntities = new ArrayList<>();
 
         // 1. 서식지명 (작성일자)
-        FormEntity entity1 = getFakeEntity(formSheet.getItemNm(), String.format("(%s)", formSheet.getWritingDate()));
+        FormEntity entity1 = FormUtility.getFakeEntity(formSheet.getItemNm(), String.format("(%s)", formSheet.getWritingDate()));
         headerEntities.add(entity1);
 
         // 2. 작성과
-        FormEntity entity2 = getFakeEntity("작성과:", formSheet.getWritingDeptNm());
+        FormEntity entity2 = FormUtility.getFakeEntity("작성과:", formSheet.getWritingDeptNm());
         headerEntities.add(entity2);
 
         // 3. 수진과
-        FormEntity entity3 = getFakeEntity("수진과:", formSheet.getPtMedDeptNm());
+        FormEntity entity3 = FormUtility.getFakeEntity("수진과:", formSheet.getPtMedDeptNm());
         headerEntities.add(entity3);
 
         headerSection.setEntities(headerEntities);
@@ -91,31 +99,16 @@ public class FormServiceImpl implements FormService {
         List<FormEntity> footerEntities = new ArrayList<>();
 
         // 1. 작성자
-        FormEntity entity1 = getFakeEntity("작성자", formSheet.getWriterNm());
+        FormEntity entity1 = FormUtility.getFakeEntity("작성자", formSheet.getWriterNm());
         footerEntities.add(entity1);
 
         // 2. 작성시간
-        FormEntity entity2 = getFakeEntity("작성시간", formSheet.getWritingDateTime());
+        FormEntity entity2 = FormUtility.getFakeEntity("작성시간", formSheet.getWritingDateTime());
         footerEntities.add(entity2);
 
         footerSection.setEntities(footerEntities);
 
         return footerSection;
-    }
-
-    private FormEntity getFakeEntity(String entityStr, String valueStr) {
-        FormEntity entity = new FormEntity();
-
-        entity.setValue(entityStr);
-
-        List<FormValue> formValues = new ArrayList<>();
-        FormValue formValue = new FormValue();
-        formValue.setValue(valueStr);
-        formValues.add(formValue);
-
-        entity.setValues(formValues);
-
-        return entity;
     }
 
     private List<FormElement> getFormElementBySection(List<FormElement> elements, FormSection section) {
@@ -144,11 +137,6 @@ public class FormServiceImpl implements FormService {
     private FormEntity getFormEntity(FormIdentifier identifier, List<FormElement> elementsBySection, FormElement entityElement) {
         FormEntity entity = new FormEntity();
         entity.setElement(entityElement);
-
-        // TODO: Entity ID 에 따른 하드코딩 처리
-        if (entityElement.getSectionSeq() == -1) {
-
-        }
 
         List<FormAttribute> attributes = getFormAttributes(identifier, elementsBySection, entity.getId());
 

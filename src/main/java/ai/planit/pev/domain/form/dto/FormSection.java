@@ -10,6 +10,7 @@ import java.util.List;
 public class FormSection {
     private int mdfmId;
     private int mdfmFormSeq;
+    private String mdfmClsCd;
     private int mdfmSctnSeq;
     private List<FormEntity> entities;
 }
