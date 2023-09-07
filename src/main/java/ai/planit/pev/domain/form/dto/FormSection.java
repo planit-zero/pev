@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 public class FormSection {
     private int mdfmId;
-    private int mdfmFormSeq;
+    private int mdfmFomSeq;
     private String mdfmClsCd;
     private int mdfmSctnSeq;
     private List<FormEntity> entities;

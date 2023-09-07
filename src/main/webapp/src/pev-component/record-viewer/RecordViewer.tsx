@@ -1,28 +1,38 @@
 import * as React from 'react';
 import { useSelector } from '../../store';
 import { Backdrop, Box, CircularProgress } from '@mui/material';
-import RecordSheet from './RecordSheet';
-import { useGetRecordDataListMutation } from '../../pev-service/RecordService';
+import { useGetFormContentMutation } from '../../pev-service/FormService';
+import { IFormContentP } from '../../pev-interface/IForm';
+import FormSheet from './form/FormSheet';
 
 type RecordViewerProps = {};
 
 const RecordViewer = (props: RecordViewerProps) => {
     const { targetRecords } = useSelector((state) => state.record);
 
-    const [getRecordDataList, { data: dataList, isLoading }] = useGetRecordDataListMutation();
+    const [getFormContent, { data: formContent, isLoading }] = useGetFormContentMutation();
 
     React.useEffect(() => {
-        if (targetRecords.length > 0) {
-            getRecordDataList({ targets: targetRecords });
-        }
+        const payload: IFormContentP = {
+            identifiers: targetRecords.map((record) => {
+                return {
+                    mdrcId: record.mdrcId,
+                    mdrcFomSeq: record.mdrcFomSeq,
+                    mdfmId: record.mdfmId,
+                    mdfmFomSeq: record.mdfmFomSeq
+                };
+            })
+        };
+
+        getFormContent(payload);
     }, [targetRecords]);
 
     return (
         <React.Fragment>
             <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-                {dataList &&
-                    dataList.map((data, idx) => {
-                        return <RecordSheet key={idx} data={data} />;
+                {formContent &&
+                    formContent.sheets.map((sheet, idx) => {
+                        return <FormSheet key={idx} sheet={sheet} />;
                     })}
             </Box>
             <Backdrop open={isLoading} sx={{ color: (theme) => theme.palette.primary.main, zIndex: (theme) => theme.zIndex.modal + 1 }}>

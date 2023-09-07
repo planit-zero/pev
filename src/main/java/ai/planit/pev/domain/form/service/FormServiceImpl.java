@@ -67,21 +67,21 @@ public class FormServiceImpl implements FormService {
         FormSection headerSection = new FormSection();
 
         headerSection.setMdfmId(formSheet.getMdfmId());
-        headerSection.setMdfmFormSeq(formSheet.getMdfmFomSeq());
+        headerSection.setMdfmFomSeq(formSheet.getMdfmFomSeq());
         headerSection.setMdfmSctnSeq(-99);
 
         List<FormEntity> headerEntities = new ArrayList<>();
 
         // 1. 서식지명 (작성일자)
-        FormEntity entity1 = FormUtility.getFakeEntity(formSheet.getItemNm(), String.format("(%s)", formSheet.getWritingDate()));
+        FormEntity entity1 = FormUtility.getFakeEntity(true, formSheet.getItemNm(), String.format("(%s)", formSheet.getWritingDate()));
         headerEntities.add(entity1);
 
         // 2. 작성과
-        FormEntity entity2 = FormUtility.getFakeEntity("작성과:", formSheet.getWritingDeptNm());
+        FormEntity entity2 = FormUtility.getFakeEntity(true, "작성과:", formSheet.getWritingDeptNm());
         headerEntities.add(entity2);
 
         // 3. 수진과
-        FormEntity entity3 = FormUtility.getFakeEntity("수진과:", formSheet.getPtMedDeptNm());
+        FormEntity entity3 = FormUtility.getFakeEntity(true, "수진과:", formSheet.getPtMedDeptNm());
         headerEntities.add(entity3);
 
         headerSection.setEntities(headerEntities);
@@ -93,17 +93,17 @@ public class FormServiceImpl implements FormService {
         FormSection footerSection = new FormSection();
 
         footerSection.setMdfmId(formSheet.getMdfmId());
-        footerSection.setMdfmFormSeq(formSheet.getMdfmFomSeq());
-        footerSection.setMdfmSctnSeq(-99);
+        footerSection.setMdfmFomSeq(formSheet.getMdfmFomSeq());
+        footerSection.setMdfmSctnSeq(99);
 
         List<FormEntity> footerEntities = new ArrayList<>();
 
         // 1. 작성자
-        FormEntity entity1 = FormUtility.getFakeEntity("작성자", formSheet.getWriterNm());
+        FormEntity entity1 = FormUtility.getFakeEntity(true, "작성자", formSheet.getWriterNm());
         footerEntities.add(entity1);
 
         // 2. 작성시간
-        FormEntity entity2 = FormUtility.getFakeEntity("작성시간", formSheet.getWritingDateTime());
+        FormEntity entity2 = FormUtility.getFakeEntity(true, "작성시간", formSheet.getWritingDateTime());
         footerEntities.add(entity2);
 
         footerSection.setEntities(footerEntities);

@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class FormEntity extends FormElement {
+    private boolean inline;
     private boolean hasAttributes;
     private List<FormAttribute> attributes;
     private List<FormValue> values;

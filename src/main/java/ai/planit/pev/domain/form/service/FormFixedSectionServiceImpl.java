@@ -94,13 +94,13 @@ public class FormFixedSectionServiceImpl implements FormFixedSectionService {
 
         List<FormEntity> entities = new ArrayList<>();
 
-        entities.add(FormUtility.getFakeEntity("수술명", String.format("%s\r\n(%s)", opNm, opNmSub)));
-        entities.add(FormUtility.getFakeEntity("수술전 진단명", String.format("%s\r\n(%s)", preOpDgnsNm, preOpDgnsNmSub)));
-        entities.add(FormUtility.getFakeEntity("수술후 진단명", String.format("%s\r\n(%s)", postOpDgnsNm, postOpDgnsNmSub)));
-        entities.add(FormUtility.getFakeEntity("마취종류 :", anstKndNm));
-        entities.add(FormUtility.getFakeEntity("수술일자 :", opDt));
-        entities.add(FormUtility.getFakeEntity("집도의 :", pfdrStfNm));
-        entities.add(FormUtility.getFakeEntity("보조의 :", atdrStfNm));
+        entities.add(FormUtility.getFakeEntity(false, "수술명", String.format("%s\r\n(%s)", opNm, opNmSub)));
+        entities.add(FormUtility.getFakeEntity(false, "수술전 진단명", String.format("%s\r\n(%s)", preOpDgnsNm, preOpDgnsNmSub)));
+        entities.add(FormUtility.getFakeEntity(false, "수술후 진단명", String.format("%s\r\n(%s)", postOpDgnsNm, postOpDgnsNmSub)));
+        entities.add(FormUtility.getFakeEntity(true, "마취종류 :", anstKndNm));
+        entities.add(FormUtility.getFakeEntity(true, "수술일자 :", opDt));
+        entities.add(FormUtility.getFakeEntity(true, "집도의 :", pfdrStfNm));
+        entities.add(FormUtility.getFakeEntity(true, "보조의 :", atdrStfNm));
 
         section.setEntities(entities);
 

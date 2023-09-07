@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FormUtility {
-    public static FormEntity getFakeEntity(String entityStr, String valueStr) {
+    public static FormEntity getFakeEntity(boolean inline, String entityStr, String valueStr) {
         FormEntity entity = new FormEntity();
 
+        entity.setInline(inline);
         entity.setValue(entityStr);
 
         List<FormValue> formValues = new ArrayList<>();

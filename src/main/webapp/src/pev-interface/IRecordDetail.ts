@@ -25,8 +25,10 @@ export interface IRecordDetailR {
     sortSeq: number;
     note: string;
     printSeq: number;
-    mdrcId: string;
-    mdfmId: string;
+    mdrcId: number;
+    mdrcFomSeq: number;
+    mdfmId: number;
+    mdfmFomSeq: number;
     examKey: string;
     pacsImgIptnCd: string;
     accsId: string;

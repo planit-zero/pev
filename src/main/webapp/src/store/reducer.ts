@@ -18,6 +18,7 @@ import menuReducer from './slices/menu';
 import recordReducer from './pev-slices/record';
 import { recordApi } from '../pev-service/RecordService';
 import { recordExceptionApi } from '../pev-service/RecordExceptionService';
+import { formApi } from '../pev-service/FormService';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
@@ -42,7 +43,8 @@ const reducer = combineReducers({
     menu: menuReducer,
     record: recordReducer,
     [recordApi.reducerPath]: recordApi.reducer,
-    [recordExceptionApi.reducerPath]: recordExceptionApi.reducer
+    [recordExceptionApi.reducerPath]: recordExceptionApi.reducer,
+    [formApi.reducerPath]: formApi.reducer
 });
 
 export default reducer;
