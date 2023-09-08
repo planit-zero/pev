@@ -53,8 +53,14 @@ export interface FormIdentifier {
     mdfmFomSeq: number;
 }
 
+export interface IRecordIdentifier {
+    recordType: string;
+    recordDetailType: string;
+    keyId: string;
+}
+
 export interface IFormContentP {
-    identifiers: FormIdentifier[];
+    identifiers: IRecordIdentifier[];
 }
 
 export interface IFormContentR {

@@ -16,10 +16,9 @@ const RecordViewer = (props: RecordViewerProps) => {
         const payload: IFormContentP = {
             identifiers: targetRecords.map((record) => {
                 return {
-                    mdrcId: record.mdrcId,
-                    mdrcFomSeq: record.mdrcFomSeq,
-                    mdfmId: record.mdfmId,
-                    mdfmFomSeq: record.mdfmFomSeq
+                    recordType: record.recordType,
+                    recordDetailType: record.recordDetailType,
+                    keyId: record.keyId
                 };
             })
         };

@@ -4,6 +4,7 @@ import ai.planit.pev.domain.form.constant.FormClassType;
 import ai.planit.pev.domain.form.dao.FormDAO;
 import ai.planit.pev.domain.form.dto.*;
 import ai.planit.pev.domain.form.utility.FormUtility;
+import ai.planit.pev.domain.record.dto.RecordIdentifier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,10 @@ public class FormServiceImpl implements FormService {
 
         List<FormSheet> formSheetList = new ArrayList<>();
 
-        for (FormIdentifier identifier : formContentRequest.getIdentifiers()) {
+        for (RecordIdentifier recordIdentifier : formContentRequest.getIdentifiers()) {
+            FormIdentifier identifier = new FormIdentifier();
+            identifier.convertFromRecordIdentifier(recordIdentifier);
+
             FormSheet formSheet = getFormSheet(identifier);
             formSheetList.add(formSheet);
         }

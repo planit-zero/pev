@@ -6,20 +6,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FormIdentifier {
-    private int mdrcId;
-    private int mdrcFomSeq;
-    private int mdfmId;
-    private int mdfmFomSeq;
+public class FormIdentifierOrder {
+    private String ptNo;
+    private String ordDt;
+    private String medPactTpCd;
 
     public void convertFromRecordIdentifier(RecordIdentifier identifier) {
         try {
             String[] keyIdArr = identifier.getKeyId().split("_");
 
-            this.mdrcId = Integer.parseInt(keyIdArr[0]);
-            this.mdrcFomSeq = Integer.parseInt(keyIdArr[1]);
-            this.mdfmId = Integer.parseInt(keyIdArr[2]);
-            this.mdfmFomSeq = Integer.parseInt(keyIdArr[3]);
+            this.ptNo = keyIdArr[0];
+            this.ordDt = keyIdArr[1];
+            this.medPactTpCd = keyIdArr[2];
         } catch (Exception e) {
             e.printStackTrace();
         }

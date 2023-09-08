@@ -56,4 +56,5 @@
           AND A.MDFM_CPEM_ID = #{mdfmCpemId}
         ORDER BY A.REC_VAL_SEQ
     </select>
+    <select id="getFormData"></select>
 </mapper>
