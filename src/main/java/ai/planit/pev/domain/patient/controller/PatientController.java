@@ -15,7 +15,7 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping("")
-    public ResponseEntity<?> getPatientInfo(@RequestParam("ptNo") String ptNo) {
-        return ResponseEntity.ok().body(patientService.getPatientInfo(ptNo));
+    public ResponseEntity<?> getPatient(@RequestParam("ptNo") String ptNo) {
+        return ResponseEntity.ok().body(patientService.getPatient(ptNo));
     }
 }

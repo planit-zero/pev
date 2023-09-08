@@ -1,7 +1,7 @@
 package ai.planit.pev.domain.patient.service;
 
-import ai.planit.pev.domain.patient.dto.PatientDTO;
+import ai.planit.pev.domain.patient.dto.Patient;
 
 public interface PatientService {
-    PatientDTO getPatientInfo(String ptNo);
+    Patient getPatient(String ptNo);
 }

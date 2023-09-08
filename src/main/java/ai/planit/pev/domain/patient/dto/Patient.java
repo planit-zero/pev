@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class PatientDTO {
+public class Patient {
     private String ptNo; // 가명화 환자 ID
     private String ptNm; // 환자명
     private String sexTpCd; // 성별
