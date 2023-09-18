@@ -13,7 +13,10 @@ public enum ErrorType {
 
     // RID
     RID_CONNECTION_TIMEOUT(408, "가명화 시스템에 연결할 수 없습니다."),
-    CONVERT_GID_TO_PID_FAILED(500, "환자병록번호 변환에 실패했습니다.")
+    CONVERT_GID_TO_PID_FAILED(500, "환자병록번호 변환에 실패했습니다."),
+
+    // Record
+    PID_NOT_FOUND_IN_SESSION(400, "가명화 환자 ID로 환자를 먼저 조회해 주세요.")
     ;
 
     private final int status;

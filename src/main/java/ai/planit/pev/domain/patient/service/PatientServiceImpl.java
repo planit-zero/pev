@@ -6,6 +6,7 @@ import ai.planit.pev.core.webclient.PevWebClient;
 import ai.planit.pev.domain.patient.dao.PatientDAO;
 import ai.planit.pev.domain.patient.dto.IdentifiedPatient;
 import ai.planit.pev.domain.patient.dto.Patient;
+import ai.planit.pev.utility.PevStringUtil;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class PatientServiceImpl implements PatientService {
 
 
     public Patient getPatient(HttpSession session, String gid) {
-        if (isGidNotExists(gid)) {
+        if (PevStringUtil.isStringEmpty(gid)) {
             throw new BaseException(ErrorType.GID_NOT_FOUND);
         }
 
@@ -41,10 +42,6 @@ public class PatientServiceImpl implements PatientService {
         if (patient == null) throw new BaseException(ErrorType.PATIENT_NOT_FOUND);
 
         return patient;
-    }
-
-    private boolean isGidNotExists(String gid) {
-        return gid == null || gid.replace(" ", "").equals("");
     }
 
     private String convertGidToPid(String gid) {

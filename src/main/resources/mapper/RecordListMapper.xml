@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RecordListMapper">
+    <select id="getMedicalRecordList" parameterType="ai.planit.pev.domain.record.dto.Record$Request" resultType="ai.planit.pev.domain.record.dto.Record$Response">
+        SELECT 'DR' AS recordType,
+        A.MDFM_CLS_CD AS recordDetailType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType,
+        CASE
+            WHEN A.MDFM_CLS_CD = 'D020'
+                THEN (SELECT Z.MDFM_NM FROM ODS.S_MRFMFORM Z WHERE Z.MDFM_ID = A.MDFM_ID AND Z.MDFM_FOM_SEQ = A.MDFM_FOM_SEQ)
+            ELSE (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD)
+            END AS itemNm,
+        CASE
+        WHEN A.MDFM_CLS_CD IN ('D001', 'D002', 'D003', 'D004', 'D031') THEN A.MED_DT
+        ELSE A.MDF_REC_DTM::DATE END AS writingDate,
+        A.WRTR_DEPT_CD AS writingDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
+        A.WRT_STF_NO AS writerStfNo,
+        (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
+        A.MDRC_ID || '_' || A.MDRC_FOM_SEQ || '_' || A.MDFM_ID || '_' || A.MDFM_FOM_SEQ AS keyId,
+        A.PACT_ID AS pactId,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpCd,
+        ROW_NUMBER()
+        OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
+        NULL AS note,
+        A.MDFM_ID AS mdfmId,
+        A.MDFM_FOM_SEQ AS mdfmFomSeq,
+        A.MDRC_ID AS mdrcId,
+        A.MDRC_FOM_SEQ AS mdrcFomSeq,
+        NULL AS examKey,
+        NULL AS pacsImgIptnCd,
+        NULL AS accsId,
+        NULL AS recType,
+        NULL AS geneExmYn,
+        CASE WHEN A.MDRC_WRT_STS_CD <![CDATA[>]]> 10 THEN 'Y' END AS mdrcWrtStsCdYn,
+        NULL AS opExptRegId
+        FROM ODS.S_MRDDRECM A
+        WHERE A.PT_NO = #{ptNo}
+        AND A.MDFM_CLS_CD NOT IN ('D005', 'D006', 'D007', 'D010', 'D011')
+        AND A.MDFM_CLS_CD IN
+        <foreach collection="queryTargets" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        AND (
+        (A.MDFM_CLS_CD IN ('D001', 'D002', 'D003', 'D004', 'D031') AND
+        A.MED_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE)
+        OR
+        (A.MDFM_CLS_CD NOT IN ('D001', 'D002', 'D003', 'D004', 'D031') AND
+        A.MDF_REC_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE)
+        )
+        AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
+        AND A.LST_YN = 'Y'
+        AND A.MDRC_DC_TP_CD = 'C'
+        <if test="deptType == 'MEDICAL'">AND A.PT_MED_DEPT_CD = #{deptCd}</if>
+        <if test="deptType == 'WRITER'">AND A.WRTR_DEPT_CD = #{deptCd}</if>
+        <if test="writerType == 'SELF'">AND A.WK_SID = #{writerStfNo}</if>
+        <if test="writerType == 'SEARCH'">AND A.WK_STF_NO = #{writerStfNo}</if>
+        AND NOT EXISTS(SELECT 1 FROM ODS.S_MRFMFORM Z WHERE A.MDFM_ID = Z.MDFM_ID AND A.MDFM_FOM_SEQ = Z.MDFM_FOM_SEQ
+        AND Z.MDFM_CLS_CD = 'D020' AND Z.MDFM_APY_CTRA_CD = 4)
+        AND NOT EXISTS(SELECT 1 FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO AND Z.OCTY_TP_CD = 'Z06')
+        ORDER BY writingDate DESC, sortSeq
+    </select>
+</mapper>
