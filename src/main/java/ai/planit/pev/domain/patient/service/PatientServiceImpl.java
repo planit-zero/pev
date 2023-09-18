@@ -31,6 +31,10 @@ public class PatientServiceImpl implements PatientService {
 
 
     public Patient getPatient(HttpSession session, String gid) {
+        if (!isGidExists(gid)) {
+            throw new BaseException(ErrorType.GID_NOT_FOUND);
+        }
+
         String pid = convertGidToPid(gid);
         session.setAttribute("pev-pid", pid);
 
@@ -38,6 +42,10 @@ public class PatientServiceImpl implements PatientService {
         if (patient == null) throw new BaseException(ErrorType.PATIENT_NOT_FOUND);
 
         return patient;
+    }
+
+    private boolean isGidExists(String gid) {
+        return gid != null && gid.replace(" ", "").equals("");
     }
 
     private String convertGidToPid(String gid) {
