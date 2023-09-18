@@ -4,8 +4,7 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.core.webclient.PevWebClient;
 import ai.planit.pev.domain.patient.dao.PatientDAO;
-import ai.planit.pev.domain.patient.dto.DecryptP;
-import ai.planit.pev.domain.patient.dto.DecryptR;
+import ai.planit.pev.domain.patient.dto.IdentifiedPatient;
 import ai.planit.pev.domain.patient.dto.Patient;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,7 @@ public class PatientServiceImpl implements PatientService {
 
 
     public Patient getPatient(HttpSession session, String gid) {
-        if (!isGidExists(gid)) {
+        if (isGidNotExists(gid)) {
             throw new BaseException(ErrorType.GID_NOT_FOUND);
         }
 
@@ -44,14 +43,14 @@ public class PatientServiceImpl implements PatientService {
         return patient;
     }
 
-    private boolean isGidExists(String gid) {
-        return gid != null && gid.replace(" ", "").equals("");
+    private boolean isGidNotExists(String gid) {
+        return gid == null || gid.replace(" ", "").equals("");
     }
 
     private String convertGidToPid(String gid) {
         WebClient webClient = PevWebClient.getWebClient(RID_URL, ErrorType.RID_CONNECTION_TIMEOUT);
 
-        DecryptP decryptP = DecryptP.builder()
+        IdentifiedPatient.Request identifiedPatientRequest = IdentifiedPatient.Request.builder()
                 .gid(gid)
                 .irbNo("PEV-CONVERT-GID-TO-PID")
                 .stfNo("CHUCK")
@@ -60,21 +59,21 @@ public class PatientServiceImpl implements PatientService {
                 .deptNm("플랜잇")
                 .build();
 
-        DecryptR decryptR = webClient.post()
+        IdentifiedPatient.Response identifiedPatient = webClient.post()
                 .uri(RID_DECRYPT_API_URI)
                 .acceptCharset(StandardCharsets.UTF_8)
-                .body(BodyInserters.fromValue(decryptP))
+                .body(BodyInserters.fromValue(identifiedPatientRequest))
                 .retrieve()
                 .onStatus(HttpStatus::is5xxServerError, this::throwRidServerError)
                 .onStatus(HttpStatus::is4xxClientError, this::throwRidServerError)
-                .bodyToMono(DecryptR.class)
+                .bodyToMono(IdentifiedPatient.Response.class)
                 .block();
 
-        if (decryptR == null || decryptR.getPtNo() == null) {
+        if (identifiedPatient == null || identifiedPatient.getPtNo() == null) {
             throw new BaseException(ErrorType.CONVERT_GID_TO_PID_FAILED);
         }
 
-        return decryptR.getPtNo();
+        return identifiedPatient.getPtNo();
     }
 
     private Mono<? extends Throwable> throwRidServerError(ClientResponse response) {
