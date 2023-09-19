@@ -36,6 +36,8 @@ public class Record {
         private String pactId;
         private String pactTpCd;
         private String pactTpNm;
+        private String ptMedDeptCd;
+        private String ptMedDeptNm;
         private int sortSeq;
         private String note;
         private int mdfmId;
@@ -48,6 +50,6 @@ public class Record {
         private String recType;
         private String geneExmYn;
         private String mdrcWrtStsCdYn;
-        private String opExptRegId;
+        private int opExptRegId;
     }
 }

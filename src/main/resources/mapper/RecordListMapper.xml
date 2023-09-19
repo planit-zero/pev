@@ -25,6 +25,8 @@
         A.PACT_ID AS pactId,
         A.PACT_TP_CD AS pactTpCd,
         DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MED_DEPT_CD AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
         ROW_NUMBER()
         OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
         NULL AS note,
@@ -83,6 +85,8 @@
         A.PACT_ID AS pactId,
         A.PACT_TP_CD AS pactTpCd,
         DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MED_DEPT_CD AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
         ROW_NUMBER()
         OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
         NULL AS note,
@@ -131,7 +135,10 @@
         , (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm
         , NULL AS keyId
         , A.PACT_ID AS pactId
-        , DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpCd
+        , A.PACT_TP_CD AS pactTpCd
+        , DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm
+        , A.PT_MED_DEPT_CD AS ptMedDeptCd
+        , (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm
         , ROW_NUMBER()
         OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq
         , NULL AS note
@@ -201,7 +208,10 @@
         (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
         NULL AS keyId,
         A.PACT_ID AS pactId,
-        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpCd,
+        A.PACT_TP_CD AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MED_DEPT_CD AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
         ROW_NUMBER()
         OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
         NULL AS note,
@@ -248,6 +258,9 @@
         , NULL AS keyId
         , NULL AS pactId
         , NULL AS pactTpCd
+        , NULL AS pactTpNm
+        , NULL AS ptMedDeptCd
+        , NULL AS ptMedDeptNm
         , ROW_NUMBER() OVER (PARTITION BY A.OP_EXPT_DT ORDER BY A.OP_EXPT_DT DESC) AS sortSeq
         , NULL AS note
         , NULL AS mdfmId
