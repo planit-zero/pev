@@ -126,8 +126,10 @@
             resultType="ai.planit.pev.domain.record.dto.Record$Response">
         SELECT 'DR' AS recordType
         , A.MDFM_CLS_CD AS recordDetailType
-        , (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType
-        , (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemNm
+        , (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD)
+        AS itemType
+        , (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD)
+        AS itemNm
         , NVL(B.DS_DT::DATE, A.MDF_REC_DTM::DATE) AS writingDate
         , A.WRTR_DEPT_CD AS writingDeptCd
         , (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm
@@ -248,8 +250,10 @@
             resultType="ai.planit.pev.domain.record.dto.Record$Response">
         SELECT 'DR' AS recordType
         , B.MDFM_CLS_CD AS recordDetailType
-        , (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = B.MDFM_CLS_DTL_CD) AS itemType
-        , (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = B.MDFM_CLS_DTL_CD) AS itemNm
+        , (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = B.MDFM_CLS_DTL_CD)
+        AS itemType
+        , (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = B.MDFM_CLS_DTL_CD)
+        AS itemNm
         , A.OP_EXPT_DT AS writingDate
         , NULL AS writingDeptCd
         , NULL AS writingDeptNm
@@ -288,6 +292,47 @@
         WHERE D.OP_EXPT_REG_ID = B.OP_EXPT_REG_ID
         AND D.MDFM_CLS_CD = B.MDFM_CLS_CD
         AND D.AFCHG_ANRM_REC_VAL_ID IS NULL)
-        GROUP BY B.MDFM_CLS_CD, B.MDFM_CLS_DTL_CD, itemType, itemNm, A.OP_EXPT_DT, B.LSH_STF_NO, writerNm, A.OP_EXPT_REG_ID
+        GROUP BY B.MDFM_CLS_CD, B.MDFM_CLS_DTL_CD, itemType, itemNm, A.OP_EXPT_DT, B.LSH_STF_NO, writerNm,
+        A.OP_EXPT_REG_ID
+    </select>
+    <select id="getOrderRecordList"
+            parameterType="ai.planit.pev.domain.record.dto.Record$Request"
+            resultType="ai.planit.pev.domain.record.dto.Record$Response">
+        SELECT 'OR' AS recordType
+        , 'OR' AS recordDetailType
+        , '처방' AS itemType
+        , '처방' || '(' || TO_CHAR(A.ORD_DT, 'YYYY-MM-DD') || ')' AS itemNm
+        , A.ORD_DT AS writingDate
+        , A.PT_HME_DEPT_CD AS writingDeptCd
+        , (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_HME_DEPT_CD) AS writingDeptNm
+        , NULL AS writerStfNo
+        , NULL AS writerNm
+        , NULL AS keyId
+        , NULL AS pactId
+        , A.MED_PACT_TP_CD AS pactTpCd
+        , DECODE(A.MED_PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm
+        , NULL AS sortSeq
+        , NULL AS note
+        , NULL AS mdfmId
+        , NULL AS mdfmFomSeq
+        , NULL AS mdrcId
+        , NULL AS mdrcFomSeq
+        , NULL AS examKey
+        , NULL AS pacsImgIptnCd
+        , NULL AS accsId
+        , NULL AS recType
+        , NULL AS geneExmYn
+        , NULL AS mdrcWrtStsCdYn
+        , NULL AS opExptRegId
+        FROM ODS.S_MOOORPTD A
+        WHERE A.PT_NO = #{ptNo}
+        AND A.ORD_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+        AND A.PT_HME_DEPT_CD IS NOT NULL
+        AND A.ODDSC_TP_CD IN ('C', 'D')
+        AND A.ORD_GRP_CD NOT IN ('06', '08')
+        <if test="deptType == 'MEDICAL'">AND A.PT_HME_DEPT_CD = #{deptCd}</if>
+        <if test="deptType == 'WRITER'">AND A.PBSO_DEPT_CD = #{deptCd}</if>
+        AND A.MED_PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.MED_PACT_TP_CD, #{pactTpCd})
+        GROUP BY A.PT_NO, A.MED_PACT_TP_CD, A.ORD_DT, A.PT_HME_DEPT_CD, writingDeptNm
     </select>
 </mapper>

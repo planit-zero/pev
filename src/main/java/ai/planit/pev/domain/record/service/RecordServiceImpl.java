@@ -57,9 +57,9 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 처방
-//        if (searchTargetList.contains("OR")) {
-//            recordList.addAll(recordListDAO.getOrderRecordList(request));
-//        }
+        if (searchTargetList.contains("OR")) {
+            recordList.addAll(recordListDAO.getOrderRecordList(request));
+        }
 
         // TODO: 검사기록 목록 연동
 
