@@ -2,6 +2,7 @@ package ai.planit.pev.domain.record.service;
 
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
+import ai.planit.pev.domain.record.constant.RecordTargetType;
 import ai.planit.pev.domain.record.dao.RecordListDAO;
 import ai.planit.pev.domain.record.dto.Record;
 import ai.planit.pev.utility.PevStringUtil;
@@ -21,7 +22,9 @@ public class RecordServiceImpl implements RecordService {
 
     private final RecordListDAO recordListDAO;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public List<Record.Response> getRecordList(HttpSession session, Record.Request request) {
         String pid = (String) session.getAttribute("pev-pid");
 
@@ -49,7 +52,7 @@ public class RecordServiceImpl implements RecordService {
         // 진료기록
         List<String> medicalRecordTargets = searchTargetList
                 .stream()
-                .filter(target -> target.startsWith("D0"))
+                .filter(target -> target.startsWith(RecordTargetType.MEDICAL_RECORD.getCode()))
                 .collect(Collectors.toList());
 
         if (medicalRecordTargets.size() > 0) {
@@ -57,14 +60,14 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 처방
-        if (searchTargetList.contains("OR")) {
+        if (searchTargetList.contains(RecordTargetType.ORDER_RECORD.getCode())) {
             recordList.addAll(recordListDAO.getOrderRecordList(request));
         }
 
         // 검사
         List<String> examRecordTargets = searchTargetList
                 .stream()
-                .filter(target -> target.startsWith("EX_"))
+                .filter(target -> target.startsWith(RecordTargetType.EXAM_RECORD.getCode()))
                 .collect(Collectors.toList());
 
         if (examRecordTargets.size() > 0) {
@@ -89,7 +92,7 @@ public class RecordServiceImpl implements RecordService {
     /**
      * 진료기록 목록 조회
      *
-     * @param request 조회할 기록 목록의 상세 조건
+     * @param request              조회할 기록 목록의 상세 조건
      * @param medicalRecordTargets 조회할 진료기록의 상세 정보
      * @return 데이터베이스에서 조회한 진료기록의 상세 목록
      */
@@ -97,42 +100,47 @@ public class RecordServiceImpl implements RecordService {
         List<Record.Response> medicalRecordList = new ArrayList<>();
 
         // 진료기록 - 수술기록
-        if (medicalRecordTargets.contains("D005")) {
-            String[] queryTargets = {"D005"};
+        if (medicalRecordTargets.contains(RecordTargetType.MEDICAL_SURGERY.getCode())) {
+            String[] queryTargets = {RecordTargetType.MEDICAL_SURGERY.getCode()};
             request.setQueryTargets(queryTargets);
 
             medicalRecordList.addAll(recordListDAO.getSurgeryRecordList(request));
         }
 
         // 진료기록 - 퇴원기록
-        if (medicalRecordTargets.contains("D006")) {
-            String[] queryTargets = {"D006"};
+        if (medicalRecordTargets.contains(RecordTargetType.MEDICAL_DISCHARGE.getCode())) {
+            String[] queryTargets = {RecordTargetType.MEDICAL_DISCHARGE.getCode()};
             request.setQueryTargets(queryTargets);
 
             medicalRecordList.addAll(recordListDAO.getDischargeRecordList(request));
         }
 
         // 진료기록 - 타과의뢰
-        if (medicalRecordTargets.contains("D007")) {
-            String[] queryTargets = {"D007"};
+        if (medicalRecordTargets.contains(RecordTargetType.MEDICAL_REQUEST.getCode())) {
+            String[] queryTargets = {RecordTargetType.MEDICAL_REQUEST.getCode()};
             request.setQueryTargets(queryTargets);
 
             medicalRecordList.addAll(recordListDAO.getRequestRecordList(request));
         }
 
         // 진료기록 - 마취기록, 마취 전 평가
-        if (medicalRecordTargets.contains("D010") || medicalRecordTargets.contains("D011")) {
-            String[] queryTargets = {"D010", "D011"};
+        if (medicalRecordTargets
+                .contains(RecordTargetType.MEDICAL_ANESTHESIA.getCode())
+                || medicalRecordTargets.contains(RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode())) {
+            String[] queryTargets = {
+                    RecordTargetType.MEDICAL_ANESTHESIA.getCode(),
+                    RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode()
+            };
 
-            if (!medicalRecordTargets.contains("D010")) {
+            if (!medicalRecordTargets.contains(RecordTargetType.MEDICAL_ANESTHESIA.getCode())) {
                 queryTargets = Arrays.stream(queryTargets)
-                        .filter(target -> !target.equals("D010"))
+                        .filter(target -> !target.equals(RecordTargetType.MEDICAL_ANESTHESIA.getCode()))
                         .toArray(String[]::new);
             }
 
-            if (!medicalRecordTargets.contains("D011")) {
+            if (!medicalRecordTargets.contains(RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode())) {
                 queryTargets = Arrays.stream(queryTargets)
-                        .filter(target -> !target.equals("D011"))
+                        .filter(target -> !target.equals(RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode()))
                         .toArray(String[]::new);
             }
 
@@ -143,11 +151,11 @@ public class RecordServiceImpl implements RecordService {
 
         // 진료기록 - 일반
         List<String> generalTypeList = medicalRecordTargets.stream()
-                .filter(type -> !type.equals("D005"))
-                .filter(type -> !type.equals("D006"))
-                .filter(type -> !type.equals("D007"))
-                .filter(type -> !type.equals("D010"))
-                .filter(type -> !type.equals("D011"))
+                .filter(type -> !type.equals(RecordTargetType.MEDICAL_SURGERY.getCode()))
+                .filter(type -> !type.equals(RecordTargetType.MEDICAL_DISCHARGE.getCode()))
+                .filter(type -> !type.equals(RecordTargetType.MEDICAL_REQUEST.getCode()))
+                .filter(type -> !type.equals(RecordTargetType.MEDICAL_ANESTHESIA.getCode()))
+                .filter(type -> !type.equals(RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode()))
                 .collect(Collectors.toList());
 
         if (generalTypeList.size() > 0) {
@@ -163,7 +171,7 @@ public class RecordServiceImpl implements RecordService {
     /**
      * 검사기록 목록 조회
      *
-     * @param request 조회할 기록 목록의 상세 조건
+     * @param request           조회할 기록 목록의 상세 조건
      * @param examRecordTargets 조회할 검사기록의 상세 정보
      * @return 데이터베이스에서 조회한 검사기록의 상세 목록
      */
@@ -171,22 +179,22 @@ public class RecordServiceImpl implements RecordService {
         List<Record.Response> examRecordList = new ArrayList<>();
 
         // 영상검사
-        if (examRecordTargets.contains("EX_PICTURE")) {
+        if (examRecordTargets.contains(RecordTargetType.EXAM_PICTURE.getCode())) {
             examRecordList.addAll(recordListDAO.getExamPictureRecordList(request));
         }
 
         // 병리검사
-        if (examRecordTargets.contains("EX_PATHOLOGY")) {
+        if (examRecordTargets.contains(RecordTargetType.EXAM_PATHOLOGY.getCode())) {
 
         }
 
         // 검체검사
-        if (examRecordTargets.contains("EX_SPECIMEN")) {
+        if (examRecordTargets.contains(RecordTargetType.EXAM_SPECIMEN.getCode())) {
 
         }
 
         // 기능검사
-        if (examRecordTargets.contains("EX_FUNCTION")) {
+        if (examRecordTargets.contains(RecordTargetType.EXAM_FUNCTION.getCode())) {
 
         }
 
