@@ -195,7 +195,7 @@ public class RecordServiceImpl implements RecordService {
 
         // 기능검사
         if (examRecordTargets.contains(RecordTargetType.EXAM_FUNCTION.getCode())) {
-
+            examRecordList.addAll(recordListDAO.getExamFunctionRecordList(request));
         }
 
         return examRecordList;

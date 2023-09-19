@@ -463,4 +463,50 @@
           AND A.ACPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
           AND A.RSLT_BRFG_YN = 'Y'
     </select>
+    <select id="getExamFunctionRecordList"
+            parameterType="ai.planit.pev.domain.record.dto.Record$Request"
+            resultType="ai.planit.pev.domain.record.dto.Record$Response">
+        SELECT 'EX'                                                          AS recordType
+             , 'EX_FUNCTION'                                                 AS recordDetailType
+             , '기능검사'                                                        AS itemType
+             , A.EXM_CD_NM                                                   AS itemNm
+             , M.PHTG_DTM                                                    AS writingDate
+             , C.PT_HME_DEPT_CD                                              AS writingDeptCd
+             , (SELECT Z.DEPT_NM
+                FROM ODS.S_PDEDBMSM Z
+                WHERE Z.DEPT_CD = C.PT_HME_DEPT_CD)                          AS writingDeptNm
+             , NULL                                                          AS writerStfNo
+             , NULL                                                          AS writerNm
+             , M.IPTN_NO                                                     AS keyId
+             , C.PACT_ID                                                     AS pactId
+             , C.PACT_TP_CD                                                  AS pactTpCd
+             , DECODE(C.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL)   AS pactTpNm
+             , NULL                                                          AS ptMedDeptCd
+             , NULL                                                          AS ptMedDeptNm
+             , NULL                                                          AS sortSeq
+             , NULL                                                          AS note
+             , NULL                                                          AS mdfmId
+             , NULL                                                          AS mdfmFomSeq
+             , NULL                                                          AS mdrcId
+             , NULL                                                          AS mdrcFomSeq
+             , M.IPTN_NO                                                     AS examKey
+             , DECODE(M.PACS_IMG_IPTN_YN, 'Y', DECODE((SELECT Z.USE_YN
+                                                       FROM ODS.S_MSERMZED Z
+                                                       WHERE Z.ORD_CD = M.ORD_CD
+                                                         AND Z.EXCP_CTG_CD = '007'
+                                                      ), 'Y', 'C', 'P'), '') AS pacsImgIptnCd
+             , M.ACCS_ID                                                     AS accsId
+             , NULL                                                          AS recType
+             , NULL                                                          AS geneExmYn
+             , NULL                                                          AS mdrcWrtStsCdYn
+             , NULL                                                          AS opExptRegId
+        FROM ODS.S_MSERMAAD M
+                 INNER JOIN ODS.S_MSERMMMC A ON M.ORD_CD = A.EXM_CD
+                 INNER JOIN ODS.S_MOOOREXM C ON M.ORD_ID = C.ORD_ID
+        WHERE M.PT_NO = #{ptNo}
+          AND M.ORD_CTG_CD NOT IN ('BR1', 'BN1', 'BTR')
+          AND M.PHTG_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+          AND C.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', C.PACT_TP_CD, #{pactTpCd})
+          AND M.EXM_PRGR_STS_CD IN ('N', 'D')
+    </select>
 </mapper>
