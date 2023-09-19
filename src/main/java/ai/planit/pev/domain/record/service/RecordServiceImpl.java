@@ -185,7 +185,7 @@ public class RecordServiceImpl implements RecordService {
 
         // 병리검사
         if (examRecordTargets.contains(RecordTargetType.EXAM_PATHOLOGY.getCode())) {
-
+            examRecordList.addAll(recordListDAO.getExamPathologyRecordList(request));
         }
 
         // 검체검사

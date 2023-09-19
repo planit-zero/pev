@@ -15,10 +15,10 @@ public enum RecordTargetType {
     ORDER_RECORD("OR", "처방기록"),
 
     EXAM_RECORD("EX_", "검사기록"),
-    EXAM_PICTURE("EXAM_PICTURE", "영상검사"),
-    EXAM_PATHOLOGY("EXAM_PATHOLOGY", "병리검사"),
-    EXAM_SPECIMEN("EXAM_SPECIMEN", "검체검사"),
-    EXAM_FUNCTION("EXAM_FUNCTION", "기능검사"),
+    EXAM_PICTURE("EX_PICTURE", "영상검사"),
+    EXAM_PATHOLOGY("EX_PATHOLOGY", "병리검사"),
+    EXAM_SPECIMEN("EX_SPECIMEN", "검체검사"),
+    EXAM_FUNCTION("EX_FUNCTION", "기능검사"),
 
     NURS_RECORD("NR", "간호기록"),
 

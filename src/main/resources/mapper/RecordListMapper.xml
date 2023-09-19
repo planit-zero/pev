@@ -378,4 +378,46 @@
           AND M.HSP_TP_CD = C.HSP_TP_CD
           AND C.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', C.PACT_TP_CD, #{pactTpCd})
     </select>
+    <select id="getExamPathologyRecordList"
+            parameterType="ai.planit.pev.domain.record.dto.Record$Request"
+            resultType="ai.planit.pev.domain.record.dto.Record$Response">
+        SELECT 'EX'                                                                      AS recordType
+             , 'EX_PATHOLOGY'                                                            AS recordDetailType
+             , '병리검사'                                                                    AS itemType
+             , B.EXM_CTG_NM || DECODE(A.MAIN_PKRG_NM, NULL, NULL, ' ' || A.MAIN_PKRG_NM) AS itemNm
+             , A.ACPT_DTM                                                                AS writingDate
+             , A.MED_DEPT_CD                                                             AS writingDeptCd
+             , (SELECT Z.DEPT_NM
+                FROM ODS.S_PDEDBMSM Z
+                WHERE Z.DEPT_CD = A.MED_DEPT_CD)                                         AS writingDeptNm
+             , NULL                                                                      AS writerStfNo
+             , NULL                                                                      AS writerNm
+             , A.PTHL_NO                                                                 AS keyId
+             , D.PACT_ID                                                                 AS pactId
+             , D.PACT_TP_CD                                                              AS pactTpCd
+             , DECODE(D.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL)               AS pactTpNm
+             , NULL                                                                      AS ptMedDeptCd
+             , NULL                                                                      AS ptMedDeptNm
+             , NULL                                                                      AS sortSeq
+             , NULL                                                                      AS note
+             , NULL                                                                      AS mdfmId
+             , NULL                                                                      AS mdfmFomSeq
+             , NULL                                                                      AS mdrcId
+             , NULL                                                                      AS mdrcFomSeq
+             , A.PTHL_NO                                                                 AS examKey
+             , NULL                                                                      AS pacsImgIptnCd
+             , NULL                                                                      AS accsId
+             , NULL                                                                      AS recType
+             , NULL                                                                      AS geneExmYn
+             , NULL                                                                      AS mdrcWrtStsCdYn
+             , NULL                                                                      AS opExptRegId
+        FROM ODS.S_MSEPMPMD A
+                 INNER JOIN ODS.S_MSELMCTC B ON A.EXM_CTG_CD = B.EXM_CTG_CD
+                 INNER JOIN ODS.S_MSELMCED C ON A.SPCM_NO = C.SPCM_NO
+                 INNER JOIN ODS.S_MOOOREXM D ON C.ORD_ID = D.ORD_ID
+        WHERE A.PT_NO = #{ptNo}
+          AND A.ACPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+          AND A.PLEX_PRGR_STS_CD IN ('N', 'D', 'C')
+          AND D.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', D.PACT_TP_CD, #{pactTpCd})
+    </select>
 </mapper>
