@@ -72,6 +72,7 @@ public class RecordServiceImpl implements RecordService {
     private List<Record.Response> getMedicalRecordList(Record.Request request, List<String> searchTargetList) {
         List<Record.Response> medicalRecordList = new ArrayList<>();
 
+        // 수술기록
         if (searchTargetList.contains("D005")) {
             String[] queryTargets = {"D005"};
             request.setQueryTargets(queryTargets);
@@ -79,20 +80,23 @@ public class RecordServiceImpl implements RecordService {
             medicalRecordList.addAll(recordListDAO.getSurgeryRecordList(request));
         }
 
+        // 퇴원기록
         if (searchTargetList.contains("D006")) {
             String[] queryTargets = {"D006"};
             request.setQueryTargets(queryTargets);
 
-//            medicalRecordList.addAll(recordListDAO.getDischargeRecordList(request));
+            medicalRecordList.addAll(recordListDAO.getDischargeRecordList(request));
         }
 
+        // 타과의뢰
         if (searchTargetList.contains("D007")) {
             String[] queryTargets = {"D007"};
             request.setQueryTargets(queryTargets);
 
-//            medicalRecordList.addAll(recordListDAO.getDepartmentRecordList(request));
+            medicalRecordList.addAll(recordListDAO.getRequestRecordList(request));
         }
 
+        // 마취기록, 마취 전 평가
         if (searchTargetList.contains("D010") || searchTargetList.contains("D011")) {
             String[] queryTargets = {"D010", "D011"};
 
@@ -110,9 +114,10 @@ public class RecordServiceImpl implements RecordService {
 
             request.setQueryTargets(queryTargets);
 
-//            medicalRecordList.addAll(recordListDAO.getAnesthesiaRecordList(request));
+            medicalRecordList.addAll(recordListDAO.getAnesthesiaRecordList(request));
         }
 
+        // 진료기록 일반
         List<String> generalTypeList = searchTargetList.stream()
                 .filter(type -> !type.equals("D005"))
                 .filter(type -> !type.equals("D006"))

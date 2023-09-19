@@ -21,18 +21,18 @@ public class RecordListDAOImpl implements RecordListDAO {
         return sqlSessionTemplate.selectList("getSurgeryRecordList", request);
     }
 
-//    public List<Record.Response> getDepartmentRecordList(Record.Request request) {
-//        return sqlSessionTemplate.selectList("getDepartmentRecordList", request);
-//    }
-//
-//    public List<Record.Response> getDischargeRecordList(Record.Request request) {
-//        return sqlSessionTemplate.selectList("getDischargeRecordList", request);
-//    }
-//
-//    public List<Record.Response> getAnesthesiaRecordList(Record.Request request) {
-//        return sqlSessionTemplate.selectList("getAnesthesiaRecordList", request);
-//    }
-//
+    public List<Record.Response> getDischargeRecordList(Record.Request request) {
+        return sqlSessionTemplate.selectList("getDischargeRecordList", request);
+    }
+
+    public List<Record.Response> getRequestRecordList(Record.Request request) {
+        return sqlSessionTemplate.selectList("getRequestRecordList", request);
+    }
+
+    public List<Record.Response> getAnesthesiaRecordList(Record.Request request) {
+        return sqlSessionTemplate.selectList("getAnesthesiaRecordList", request);
+    }
+
 //    public List<Record.Response> getOrderRecordList(Record.Request request) {
 //        return sqlSessionTemplate.selectList("getOrderRecordList", request);
 //    }
