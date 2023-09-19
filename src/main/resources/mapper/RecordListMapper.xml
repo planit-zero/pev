@@ -335,4 +335,47 @@
         AND A.MED_PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.MED_PACT_TP_CD, #{pactTpCd})
         GROUP BY A.PT_NO, A.MED_PACT_TP_CD, A.ORD_DT, A.PT_HME_DEPT_CD, writingDeptNm
     </select>
+    <select id="getExamPictureRecordList"
+            parameterType="ai.planit.pev.domain.record.dto.Record$Request"
+            resultType="ai.planit.pev.domain.record.dto.Record$Response">
+        SELECT 'EX'                                                               AS recordType
+             , 'EX_PICTURE'                                                       AS recordDetailType
+             , '영상검사'                                                             AS itemType
+             , A.EXM_CD_NM                                                        AS itemNm
+             , M.PHTG_DTM                                                         AS writingDate
+             , C.PT_HME_DEPT_CD                                                   AS writingDeptCd
+             , (SELECT Z.DEPT_NM
+                FROM ODS.S_PDEDBMSM Z
+                WHERE Z.DEPT_CD = C.PT_HME_DEPT_CD AND Z.HSP_TP_CD = C.HSP_TP_CD) AS writingDeptNm
+             , NULL                                                               AS writerStfNo
+             , NULL                                                               AS writerNm
+             , M.IPTN_NO                                                          AS keyId
+             , C.PACT_ID                                                          AS pactId
+             , C.PACT_TP_CD                                                       AS pactTpCd
+             , DECODE(C.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL)        AS pactTpNm
+             , NULL                                                               AS ptMedDeptCd
+             , NULL                                                               AS ptMedDeptNm
+             , NULL                                                               AS sortSeq
+             , NULL                                                               AS note
+             , NULL                                                               AS mdfmId
+             , NULL                                                               AS mdfmFomSeq
+             , NULL                                                               AS mdrcId
+             , NULL                                                               AS mdrcFomSeq
+             , M.IPTN_NO                                                          AS examKey
+             , NULL                                                               AS pacsImgIptnCd
+             , NULL                                                               AS accsId
+             , NULL                                                               AS recType
+             , NULL                                                               AS geneExmYn
+             , NULL                                                               AS mdrcWrtStsCdYn
+             , NULL                                                               AS opExptRegId
+        FROM ODS.S_MSERMAAD M
+                 INNER JOIN ODS.S_MSERMMMC A ON A.EXM_CD = M.ORD_CD
+                 INNER JOIN ODS.S_MOOOREXM C ON M.ORD_ID = C.ORD_ID
+        WHERE M.PT_NO = #{ptNo}
+          AND M.PHTG_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+          AND M.ORD_CTG_CD IN ('BR1', 'BN1', 'BTR')
+          AND M.EXM_PRGR_STS_CD IN ('N', 'D')
+          AND M.HSP_TP_CD = C.HSP_TP_CD
+          AND C.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', C.PACT_TP_CD, #{pactTpCd})
+    </select>
 </mapper>

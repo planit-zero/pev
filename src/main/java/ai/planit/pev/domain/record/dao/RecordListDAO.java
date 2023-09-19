@@ -53,4 +53,12 @@ public interface RecordListDAO {
      * @return 처방 목록
      */
     List<Record.Response> getOrderRecordList(Record.Request request);
+
+    /**
+     * 영상검사 목록 조회
+     *
+     * @param request 조회할 기록 목록의 상세 조건
+     * @return 영상검사 목록
+     */
+    List<Record.Response> getExamPictureRecordList(Record.Request request);
 }

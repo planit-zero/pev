@@ -36,7 +36,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     /**
-     * 기록 종류별 기록 목록 가져오기
+     * 기록 종류별 기록 목록 조회
      *
      * @param request 조회할 기록 목록의 상세 조건
      * @return 데이터베이스에서 조회한 기록 목록
@@ -53,7 +53,7 @@ public class RecordServiceImpl implements RecordService {
                 .collect(Collectors.toList());
 
         if (medicalRecordTargets.size() > 0) {
-            recordList.addAll(getMedicalRecordList(request, searchTargetList));
+            recordList.addAll(getMedicalRecordList(request, medicalRecordTargets));
         }
 
         // 처방
@@ -61,7 +61,15 @@ public class RecordServiceImpl implements RecordService {
             recordList.addAll(recordListDAO.getOrderRecordList(request));
         }
 
-        // TODO: 검사기록 목록 연동
+        // 검사
+        List<String> examRecordTargets = searchTargetList
+                .stream()
+                .filter(target -> target.startsWith("EX_"))
+                .collect(Collectors.toList());
+
+        if (examRecordTargets.size() > 0) {
+            recordList.addAll(getExamRecordList(request, examRecordTargets));
+        }
 
         // TODO: 간호기록 목록 연동
 
@@ -78,11 +86,18 @@ public class RecordServiceImpl implements RecordService {
         return recordList;
     }
 
-    private List<Record.Response> getMedicalRecordList(Record.Request request, List<String> searchTargetList) {
+    /**
+     * 진료기록 목록 조회
+     *
+     * @param request 조회할 기록 목록의 상세 조건
+     * @param medicalRecordTargets 조회할 진료기록의 상세 정보
+     * @return 데이터베이스에서 조회한 진료기록의 상세 목록
+     */
+    private List<Record.Response> getMedicalRecordList(Record.Request request, List<String> medicalRecordTargets) {
         List<Record.Response> medicalRecordList = new ArrayList<>();
 
         // 진료기록 - 수술기록
-        if (searchTargetList.contains("D005")) {
+        if (medicalRecordTargets.contains("D005")) {
             String[] queryTargets = {"D005"};
             request.setQueryTargets(queryTargets);
 
@@ -90,7 +105,7 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 진료기록 - 퇴원기록
-        if (searchTargetList.contains("D006")) {
+        if (medicalRecordTargets.contains("D006")) {
             String[] queryTargets = {"D006"};
             request.setQueryTargets(queryTargets);
 
@@ -98,7 +113,7 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 진료기록 - 타과의뢰
-        if (searchTargetList.contains("D007")) {
+        if (medicalRecordTargets.contains("D007")) {
             String[] queryTargets = {"D007"};
             request.setQueryTargets(queryTargets);
 
@@ -106,16 +121,16 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 진료기록 - 마취기록, 마취 전 평가
-        if (searchTargetList.contains("D010") || searchTargetList.contains("D011")) {
+        if (medicalRecordTargets.contains("D010") || medicalRecordTargets.contains("D011")) {
             String[] queryTargets = {"D010", "D011"};
 
-            if (!searchTargetList.contains("D010")) {
+            if (!medicalRecordTargets.contains("D010")) {
                 queryTargets = Arrays.stream(queryTargets)
                         .filter(target -> !target.equals("D010"))
                         .toArray(String[]::new);
             }
 
-            if (!searchTargetList.contains("D011")) {
+            if (!medicalRecordTargets.contains("D011")) {
                 queryTargets = Arrays.stream(queryTargets)
                         .filter(target -> !target.equals("D011"))
                         .toArray(String[]::new);
@@ -127,7 +142,7 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 진료기록 - 일반
-        List<String> generalTypeList = searchTargetList.stream()
+        List<String> generalTypeList = medicalRecordTargets.stream()
                 .filter(type -> !type.equals("D005"))
                 .filter(type -> !type.equals("D006"))
                 .filter(type -> !type.equals("D007"))
@@ -143,5 +158,38 @@ public class RecordServiceImpl implements RecordService {
         }
 
         return medicalRecordList;
+    }
+
+    /**
+     * 검사기록 목록 조회
+     *
+     * @param request 조회할 기록 목록의 상세 조건
+     * @param examRecordTargets 조회할 검사기록의 상세 정보
+     * @return 데이터베이스에서 조회한 검사기록의 상세 목록
+     */
+    private List<Record.Response> getExamRecordList(Record.Request request, List<String> examRecordTargets) {
+        List<Record.Response> examRecordList = new ArrayList<>();
+
+        // 영상검사
+        if (examRecordTargets.contains("EX_PICTURE")) {
+            examRecordList.addAll(recordListDAO.getExamPictureRecordList(request));
+        }
+
+        // 병리검사
+        if (examRecordTargets.contains("EX_PATHOLOGY")) {
+
+        }
+
+        // 검체검사
+        if (examRecordTargets.contains("EX_SPECIMEN")) {
+
+        }
+
+        // 기능검사
+        if (examRecordTargets.contains("EX_FUNCTION")) {
+
+        }
+
+        return examRecordList;
     }
 }
