@@ -69,4 +69,12 @@ public interface RecordListDAO {
      * @return 병리검사 목록
      */
     List<Record.Response> getExamPathologyRecordList(Record.Request request);
+
+    /**
+     * 검체검사 목록 조회
+     *
+     * @param request 조회할 기록 목록의 상세 조건
+     * @return 검체검사 목록
+     */
+    List<Record.Response> getExamSpecimenRecordList(Record.Request request);
 }

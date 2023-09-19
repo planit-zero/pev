@@ -52,4 +52,9 @@ public class RecordListDAOImpl implements RecordListDAO {
     public List<Record.Response> getExamPathologyRecordList(Record.Request request) {
         return sqlSessionTemplate.selectList("getExamPathologyRecordList", request);
     }
+
+    /** {@inheritDoc} */
+    public List<Record.Response> getExamSpecimenRecordList(Record.Request request) {
+        return sqlSessionTemplate.selectList("getExamSpecimenRecordList", request);
+    }
 }

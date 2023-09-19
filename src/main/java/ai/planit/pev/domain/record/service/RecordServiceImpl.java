@@ -190,7 +190,7 @@ public class RecordServiceImpl implements RecordService {
 
         // 검체검사
         if (examRecordTargets.contains(RecordTargetType.EXAM_SPECIMEN.getCode())) {
-
+            examRecordList.addAll(recordListDAO.getExamSpecimenRecordList(request));
         }
 
         // 기능검사

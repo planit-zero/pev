@@ -338,36 +338,37 @@
     <select id="getExamPictureRecordList"
             parameterType="ai.planit.pev.domain.record.dto.Record$Request"
             resultType="ai.planit.pev.domain.record.dto.Record$Response">
-        SELECT 'EX'                                                               AS recordType
-             , 'EX_PICTURE'                                                       AS recordDetailType
-             , '영상검사'                                                             AS itemType
-             , A.EXM_CD_NM                                                        AS itemNm
-             , M.PHTG_DTM                                                         AS writingDate
-             , C.PT_HME_DEPT_CD                                                   AS writingDeptCd
+        SELECT 'EX'                                                        AS recordType
+             , 'EX_PICTURE'                                                AS recordDetailType
+             , '영상검사'                                                      AS itemType
+             , A.EXM_CD_NM                                                 AS itemNm
+             , M.PHTG_DTM::DATE                                            AS writingDate
+             , C.PT_HME_DEPT_CD                                            AS writingDeptCd
              , (SELECT Z.DEPT_NM
                 FROM ODS.S_PDEDBMSM Z
-                WHERE Z.DEPT_CD = C.PT_HME_DEPT_CD AND Z.HSP_TP_CD = C.HSP_TP_CD) AS writingDeptNm
-             , NULL                                                               AS writerStfNo
-             , NULL                                                               AS writerNm
-             , M.IPTN_NO                                                          AS keyId
-             , C.PACT_ID                                                          AS pactId
-             , C.PACT_TP_CD                                                       AS pactTpCd
-             , DECODE(C.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL)        AS pactTpNm
-             , NULL                                                               AS ptMedDeptCd
-             , NULL                                                               AS ptMedDeptNm
-             , NULL                                                               AS sortSeq
-             , NULL                                                               AS note
-             , NULL                                                               AS mdfmId
-             , NULL                                                               AS mdfmFomSeq
-             , NULL                                                               AS mdrcId
-             , NULL                                                               AS mdrcFomSeq
-             , M.IPTN_NO                                                          AS examKey
-             , NULL                                                               AS pacsImgIptnCd
-             , NULL                                                               AS accsId
-             , NULL                                                               AS recType
-             , NULL                                                               AS geneExmYn
-             , NULL                                                               AS mdrcWrtStsCdYn
-             , NULL                                                               AS opExptRegId
+                WHERE Z.DEPT_CD = C.PT_HME_DEPT_CD
+                  AND Z.HSP_TP_CD = C.HSP_TP_CD)                           AS writingDeptNm
+             , NULL                                                        AS writerStfNo
+             , NULL                                                        AS writerNm
+             , M.IPTN_NO                                                   AS keyId
+             , C.PACT_ID                                                   AS pactId
+             , C.PACT_TP_CD                                                AS pactTpCd
+             , DECODE(C.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm
+             , NULL                                                        AS ptMedDeptCd
+             , NULL                                                        AS ptMedDeptNm
+             , NULL                                                        AS sortSeq
+             , NULL                                                        AS note
+             , NULL                                                        AS mdfmId
+             , NULL                                                        AS mdfmFomSeq
+             , NULL                                                        AS mdrcId
+             , NULL                                                        AS mdrcFomSeq
+             , M.IPTN_NO                                                   AS examKey
+             , NULL                                                        AS pacsImgIptnCd
+             , NULL                                                        AS accsId
+             , NULL                                                        AS recType
+             , NULL                                                        AS geneExmYn
+             , NULL                                                        AS mdrcWrtStsCdYn
+             , NULL                                                        AS opExptRegId
         FROM ODS.S_MSERMAAD M
                  INNER JOIN ODS.S_MSERMMMC A ON A.EXM_CD = M.ORD_CD
                  INNER JOIN ODS.S_MOOOREXM C ON M.ORD_ID = C.ORD_ID
@@ -385,7 +386,7 @@
              , 'EX_PATHOLOGY'                                                            AS recordDetailType
              , '병리검사'                                                                    AS itemType
              , B.EXM_CTG_NM || DECODE(A.MAIN_PKRG_NM, NULL, NULL, ' ' || A.MAIN_PKRG_NM) AS itemNm
-             , A.ACPT_DTM                                                                AS writingDate
+             , A.ACPT_DTM::DATE                                                          AS writingDate
              , A.MED_DEPT_CD                                                             AS writingDeptCd
              , (SELECT Z.DEPT_NM
                 FROM ODS.S_PDEDBMSM Z
@@ -419,5 +420,47 @@
           AND A.ACPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
           AND A.PLEX_PRGR_STS_CD IN ('N', 'D', 'C')
           AND D.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', D.PACT_TP_CD, #{pactTpCd})
+    </select>
+    <select id="getExamSpecimenRecordList"
+            parameterType="ai.planit.pev.domain.record.dto.Record$Request"
+            resultType="ai.planit.pev.domain.record.dto.Record$Response">
+        SELECT DISTINCT 'EX'                                                        AS recordType
+                      , 'EX_SPECIMEN'                                               AS recordDetailType
+                      , '검체검사'                                                      AS itemType
+                      , Q.ORD_SLIP_CTG_NM || DECODE(M.EMRG_YN, 'Y', '[EM]', '')     AS itemNm
+                      , A.ACPT_DTM::DATE                                            AS writingDate
+                      , M.MTD_DEPT_CD                                               AS writingDeptCd
+                      , (SELECT Z.DEPT_NM
+                         FROM ODS.S_PDEDBMSM Z
+                         WHERE Z.DEPT_CD = M.MTD_DEPT_CD)                           AS writingDeptNm
+                      , NULL                                                        AS writerStfNo
+                      , NULL                                                        AS writerNm
+                      , A.MED_EXM_CTG_CD                                            AS keyId
+                      , NULL                                                        AS pactId
+                      , M.PACT_TP_CD                                                AS pactTpCd
+                      , DECODE(M.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm
+                      , NULL                                                        AS ptMedDeptCd
+                      , NULL                                                        AS ptMedDeptNm
+                      , NULL                                                        AS sortSeq
+                      , NULL                                                        AS note
+                      , NULL                                                        AS mdfmId
+                      , NULL                                                        AS mdfmFomSeq
+                      , NULL                                                        AS mdrcId
+                      , NULL                                                        AS mdrcFomSeq
+                      , A.SPCM_NO                                                   AS examKey
+                      , NULL                                                        AS pacsImgIptnCd
+                      , NULL                                                        AS accsId
+                      , NULL                                                        AS recType
+                      , (SELECT DECODE(Z.GENE_EXM_PRNT_RTC_YN, 'Y', 'Y', '')
+                         FROM ODS.S_MSELMEBM Z
+                         WHERE Z.EXM_CD = A.EXM_CD)                                 AS geneExmYn
+                      , NULL                                                        AS mdrcWrtStsCdYn
+                      , NULL                                                        AS opExptRegId
+        FROM ODS.S_MSELMAID A
+                 LEFT OUTER JOIN ODS.S_MSELMCED M ON A.SPCM_NO = M.SPCM_NO
+                 LEFT OUTER JOIN ODS.S_CCOOCCSC Q ON A.MED_EXM_CTG_CD = Q.ORD_SLIP_CTG_CD
+        WHERE A.PT_NO = #{ptNo}
+          AND A.ACPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+          AND A.RSLT_BRFG_YN = 'Y'
     </select>
 </mapper>
