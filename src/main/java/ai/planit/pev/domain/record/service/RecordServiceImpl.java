@@ -76,7 +76,7 @@ public class RecordServiceImpl implements RecordService {
             String[] queryTargets = {"D005"};
             request.setQueryTargets(queryTargets);
 
-//            medicalRecordList.addAll(recordListDAO.getSurgeryRecordList(request));
+            medicalRecordList.addAll(recordListDAO.getSurgeryRecordList(request));
         }
 
         if (searchTargetList.contains("D006")) {

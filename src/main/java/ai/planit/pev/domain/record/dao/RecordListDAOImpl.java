@@ -17,10 +17,10 @@ public class RecordListDAOImpl implements RecordListDAO {
         return sqlSessionTemplate.selectList("getMedicalRecordList", request);
     }
 
-//    public List<Record.Response> getSurgeryRecordList(Record.Request request) {
-//        return sqlSessionTemplate.selectList("getSurgeryRecordList", request);
-//    }
-//
+    public List<Record.Response> getSurgeryRecordList(Record.Request request) {
+        return sqlSessionTemplate.selectList("getSurgeryRecordList", request);
+    }
+
 //    public List<Record.Response> getDepartmentRecordList(Record.Request request) {
 //        return sqlSessionTemplate.selectList("getDepartmentRecordList", request);
 //    }

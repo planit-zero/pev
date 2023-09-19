@@ -36,7 +36,7 @@ public class Record {
         private String pactId;
         private String pactTpCd;
         private String pactTpNm;
-        private String sortSeq;
+        private int sortSeq;
         private String note;
         private int mdfmId;
         private int mdfmFomSeq;
