@@ -22,4 +22,9 @@ public class RecordController {
     public ResponseEntity<?> getRecordList(HttpSession session, @RequestBody Record.Request request) {
         return ResponseEntity.ok().body(recordService.getRecordList(session, request));
     }
+
+    @PostMapping("sheet")
+    public ResponseEntity<?> getRecordSheet(HttpSession session, @RequestBody Record.Response record) {
+        return ResponseEntity.ok().body(recordService.getRecordSheet(session, record));
+    }
 }

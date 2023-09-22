@@ -1,6 +1,7 @@
 package ai.planit.pev.domain.record.service;
 
 import ai.planit.pev.domain.record.dto.Record;
+import ai.planit.pev.domain.record.dto.RecordSheet;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -15,4 +16,6 @@ public interface RecordService {
      * @return 데이터베이스에서 조회한 기록 목록
      */
     List<Record.Response> getRecordList(HttpSession session, Record.Request request);
+
+    RecordSheet getRecordSheet(HttpSession session, Record.Response record);
 }

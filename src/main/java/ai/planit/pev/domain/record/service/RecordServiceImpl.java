@@ -2,9 +2,11 @@ package ai.planit.pev.domain.record.service;
 
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
+import ai.planit.pev.domain.order.service.OrderService;
 import ai.planit.pev.domain.record.constant.RecordTargetType;
 import ai.planit.pev.domain.record.dao.RecordListDAO;
 import ai.planit.pev.domain.record.dto.Record;
+import ai.planit.pev.domain.record.dto.RecordSheet;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,12 @@ import java.util.stream.Collectors;
 public class RecordServiceImpl implements RecordService {
 
     private final RecordListDAO recordListDAO;
+    private final OrderService orderService;
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<Record.Response> getRecordList(HttpSession session, Record.Request request) {
         String pid = (String) session.getAttribute("pev-pid");
 
@@ -199,5 +203,11 @@ public class RecordServiceImpl implements RecordService {
         }
 
         return examRecordList;
+    }
+
+    @Override
+    public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
+        // TODO: 기록 종류에 따른 분기 필요함
+        return orderService.getRecordSheet(session, record);
     }
 }
