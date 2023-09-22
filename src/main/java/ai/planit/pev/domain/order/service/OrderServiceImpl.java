@@ -20,6 +20,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderDAO orderDAO;
 
+    /** {@inheritDoc} */
     @Override
     public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
         String pid = (String) session.getAttribute("pev-pid");
@@ -35,6 +36,13 @@ public class OrderServiceImpl implements OrderService {
         return recordSheet;
     }
 
+    /**
+     * 처방기록의 섹션 조회 및 섹션 목록 생성
+     *
+     * @param pid 환자병록번호
+     * @param record 조회할 기록 정보
+     * @return 처방기록의 RecordSection 목록
+     */
     private List<RecordSection> getRecordSections(String pid, Record.Response record) {
         List<RecordSection> recordSections = new ArrayList<>();
 
@@ -52,6 +60,14 @@ public class OrderServiceImpl implements OrderService {
         return recordSections;
     }
 
+    /**
+     * 처방기록의 섹션 생성
+     *
+     * @param pid 환자병록번호
+     * @param record 조회할 기록 정보
+     * @param orderSection 처방기록의 섹션 정보
+     * @return 처방기록의 RecordSection
+     */
     private RecordSection getRecordSection(String pid, Record.Response record, OrderSection.Response orderSection) {
         RecordSection recordSection = new RecordSection();
 
@@ -67,6 +83,14 @@ public class OrderServiceImpl implements OrderService {
         return recordSection;
     }
 
+    /**
+     * 처방기록의 섹션별 컨텐츠 RecordEntity 생성
+     *
+     * @param pid 환자병록번호
+     * @param record 조회할 기록 정보
+     * @param orderSection 처방기록의 섹션 정보
+     * @return 처방기록의 섹션별 컨텐츠 RecordEntity
+     */
     private RecordEntity getOrderContentEntity(String pid, Record.Response record, OrderSection.Response orderSection) {
         RecordEntity entity = new RecordEntity();
 
@@ -84,6 +108,12 @@ public class OrderServiceImpl implements OrderService {
         return entity;
     }
 
+    /**
+     * 처방기록의 섹션별 데이터 조회 및 RecordValue 목록 생성
+     *
+     * @param request 환자병록번호, 환자구분코드, 처방일자, 처방적용목적코드, 최초등록직원번호
+     * @return 처방기록의 섹션별 컨텐츠 RecordValue 목록
+     */
     private List<RecordValue> getOrderContentValues(OrderData.Request request) {
         List<RecordValue> values = new ArrayList<>();
 
@@ -99,6 +129,12 @@ public class OrderServiceImpl implements OrderService {
         return values;
     }
 
+    /**
+     * 처방기록의 섹션별 작성자 RecordEntity 생성
+     *
+     * @param orderSection 처방기록의 섹션 정보
+     * @return 처방기록의 섹션별 작성자 RecordEntity
+     */
     private RecordEntity getOrderWriterEntity(OrderSection.Response orderSection) {
         RecordEntity entity = new RecordEntity();
 

@@ -13,11 +13,13 @@ import java.util.List;
 public class OrderDAOImpl implements OrderDAO {
     private final SqlSessionTemplate sqlSessionTemplate;
 
+    /** {@inheritDoc} */
     @Override
     public List<OrderSection.Response> getOrderSectionList(OrderSection.Request request) {
         return sqlSessionTemplate.selectList("getOrderSectionList", request);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<OrderData.Response> getOrderDataList(OrderData.Request request) {
         return sqlSessionTemplate.selectList("getOrderDataList", request);
