@@ -13,11 +13,13 @@ import java.util.List;
 public class SpecimenDAOImpl implements SpecimenDAO {
     private final SqlSessionTemplate sqlSessionTemplate;
 
+    /** {@inheritDoc} */
     @Override
     public SpecimenInfo.Response getSpecimenInfo(SpecimenInfo.Request request) {
         return sqlSessionTemplate.selectOne("getSpecimenInfo", request);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<SpecimenData.Response> getSpecimenData(SpecimenData.Request request) {
         return sqlSessionTemplate.selectList("getSpecimenData", request);

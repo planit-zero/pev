@@ -21,6 +21,7 @@ import java.util.List;
 public class SpecimenServiceImpl implements SpecimenService {
     private final SpecimenDAO specimenDAO;
 
+    /** {@inheritDoc} */
     @Override
     public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
         String pid = (String) session.getAttribute("pev-pid");
@@ -36,6 +37,13 @@ public class SpecimenServiceImpl implements SpecimenService {
         return recordSheet;
     }
 
+    /**
+     * 검체검사 기록의 섹션 목록 생성
+     *
+     * @param pid 환자병록번호
+     * @param record 조회할 기록 정보
+     * @return 검체검사 섹션 목록
+     */
     private List<RecordSection> getRecordSections(String pid, Record.Response record) {
         SpecimenInfo.Request request = new SpecimenInfo.Request();
         request.setPtNo(pid);
@@ -58,6 +66,12 @@ public class SpecimenServiceImpl implements SpecimenService {
         return sections;
     }
 
+    /**
+     * 검체검사 기록의 검사 분류 정보 섹션 생성
+     *
+     * @param specimenInfo 검체검사 기록 정보
+     * @return 검체검사 검사 분류 정보 섹션
+     */
     private RecordSection getSpecimenCategorySection(SpecimenInfo.Response specimenInfo) {
         RecordSection recordSection = new RecordSection();
 
@@ -70,6 +84,13 @@ public class SpecimenServiceImpl implements SpecimenService {
         return recordSection;
     }
 
+    /**
+     * 검체검사 기록의 검사결과 섹션 생성
+     *
+     * @param pid 환자병록번호
+     * @param record 조회할 기록 정보
+     * @return 검체검사 기록 검사결과 섹션
+     */
     private RecordSection getSpecimenResultSection(String pid, Record.Response record) {
         RecordSection recordSection = new RecordSection();
 
@@ -84,6 +105,12 @@ public class SpecimenServiceImpl implements SpecimenService {
         return recordSection;
     }
 
+    /**
+     * 검체검사 기록의 검사결과 엔티티 생성
+     *
+     * @param specimenDataList 검체검사 기록의 검사결과 데이터 목록
+     * @return 검체검사 기록 검사결과 엔티티
+     */
     private List<RecordEntity> getSpecimenResultEntities(List<SpecimenData.Response> specimenDataList) {
         List<RecordEntity> entities = new ArrayList<>();
 
@@ -133,6 +160,12 @@ public class SpecimenServiceImpl implements SpecimenService {
         return entities;
     }
 
+    /**
+     * 검체검사 기록의 보고자 섹션 생성
+     *
+     * @param specimenInfo 검체검사 기록 정보
+     * @return 검체검사 기록 보고자 섹션
+     */
     private RecordSection getSpecimenReporterSection(SpecimenInfo.Response specimenInfo) {
         RecordSection recordSection = new RecordSection();
 
