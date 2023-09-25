@@ -7,6 +7,7 @@ import ai.planit.pev.domain.record.constant.RecordTargetType;
 import ai.planit.pev.domain.record.dao.RecordListDAO;
 import ai.planit.pev.domain.record.dto.Record;
 import ai.planit.pev.domain.record.dto.RecordSheet;
+import ai.planit.pev.domain.specimen.service.SpecimenService;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class RecordServiceImpl implements RecordService {
 
     private final RecordListDAO recordListDAO;
     private final OrderService orderService;
+    private final SpecimenService specimenService;
 
     /**
      * {@inheritDoc}
@@ -207,7 +209,16 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
-        // TODO: 기록 종류에 따른 분기 필요함
-        return orderService.getRecordSheet(session, record);
+        // 처방기록
+        if (record.getRecordDetailType().equals(RecordTargetType.ORDER_RECORD.getCode())) {
+            return orderService.getRecordSheet(session, record);
+        }
+
+        // 검체검사
+        if (record.getRecordDetailType().equals(RecordTargetType.EXAM_SPECIMEN.getCode())) {
+            return specimenService.getRecordSheet(session, record);
+        }
+
+        return null;
     }
 }
