@@ -3,7 +3,7 @@
 <mapper namespace="PatientMapper">
     <select id="getPatient" parameterType="java.lang.String" resultType="Patient">
         <![CDATA[
-        SELECT A.PT_NO                                             AS id,
+        SELECT REGEXP_REPLACE(A.PT_NO, '.', '*')                   AS id,
                REGEXP_REPLACE(A.PT_NM, '.', '*', 2)                AS name,
                DECODE(A.SEX_TP_CD, 'M', '남성', 'F', '여성', '미상')     AS gender,
                REGEXP_REPLACE(A.PT_BRDY_DT::VARCHAR, '\d', '*', 8) AS dob

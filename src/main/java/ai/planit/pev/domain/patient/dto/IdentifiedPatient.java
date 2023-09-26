@@ -2,13 +2,14 @@ package ai.planit.pev.domain.patient.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 public class IdentifiedPatient {
 
     @Getter
     @Setter
-    @Builder
+    @NoArgsConstructor
     public static class Request {
         private String gid;
         private String irbNo;

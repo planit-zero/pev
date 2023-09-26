@@ -19,6 +19,7 @@ import recordReducer from './pev-slices/record';
 import { recordApi } from '../pev-service/RecordService';
 import { recordExceptionApi } from '../pev-service/RecordExceptionService';
 import { formApi } from '../pev-service/FormService';
+import { patientApi } from '../pev-service/PatientService';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
@@ -44,7 +45,8 @@ const reducer = combineReducers({
     record: recordReducer,
     [recordApi.reducerPath]: recordApi.reducer,
     [recordExceptionApi.reducerPath]: recordExceptionApi.reducer,
-    [formApi.reducerPath]: formApi.reducer
+    [formApi.reducerPath]: formApi.reducer,
+    [patientApi.reducerPath]: patientApi.reducer
 });
 
 export default reducer;

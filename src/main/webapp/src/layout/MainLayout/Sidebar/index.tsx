@@ -14,7 +14,7 @@ import { drawerWidth } from 'store/constant';
 
 import { useDispatch, useSelector } from 'store';
 import { openDrawer } from 'store/slices/menu';
-import RecordTabs from '../../../pev-component/record-tabs/RecordTabs';
+import RecordFinder from '../../../pev-component/record-finder/RecordFinder';
 
 // ==============================|| SIDEBAR DRAWER ||============================== //
 
@@ -38,7 +38,7 @@ const Sidebar = () => {
     );
 
     const drawer = React.useMemo(
-        () => <RecordTabs />,
+        () => <RecordFinder />,
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [matchUpMd, drawerOpen, drawerType]
     );

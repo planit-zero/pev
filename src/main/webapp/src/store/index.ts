@@ -9,6 +9,7 @@ import rootReducer from './reducer';
 import { recordApi } from '../pev-service/RecordService';
 import { recordExceptionApi } from '../pev-service/RecordExceptionService';
 import { formApi } from '../pev-service/FormService';
+import { patientApi } from '../pev-service/PatientService';
 
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
@@ -18,7 +19,8 @@ const store = configureStore({
         return getDefaultMiddleware({ serializableCheck: false, immutableCheck: false })
             .concat(recordApi.middleware)
             .concat(recordExceptionApi.middleware)
-            .concat(formApi.middleware);
+            .concat(formApi.middleware)
+            .concat(patientApi.middleware);
     }
 });
 

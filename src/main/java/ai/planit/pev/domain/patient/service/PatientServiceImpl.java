@@ -30,12 +30,12 @@ public class PatientServiceImpl implements PatientService {
     private final static String RID_DECRYPT_API_URI = "/api/psd/decrypt";
 
 
-    public Patient getPatient(HttpSession session, String gid) {
-        if (PevStringUtil.isStringEmpty(gid)) {
+    public Patient getPatient(HttpSession session, IdentifiedPatient.Request request) {
+        if (PevStringUtil.isStringEmpty(request.getGid())) {
             throw new BaseException(ErrorType.GID_NOT_FOUND);
         }
 
-        String pid = convertGidToPid(gid);
+        String pid = convertGidToPid(request.getGid());
         session.setAttribute("pev-pid", pid);
 
         Patient patient = patientDAO.getPatient(pid);
@@ -47,14 +47,13 @@ public class PatientServiceImpl implements PatientService {
     private String convertGidToPid(String gid) {
         WebClient webClient = PevWebClient.getWebClient(RID_URL, ErrorType.RID_CONNECTION_TIMEOUT);
 
-        IdentifiedPatient.Request identifiedPatientRequest = IdentifiedPatient.Request.builder()
-                .gid(gid)
-                .irbNo("PEV-CONVERT-GID-TO-PID")
-                .stfNo("CHUCK")
-                .stfNm("김창호")
-                .deptCd("PHC")
-                .deptNm("플랜잇")
-                .build();
+        IdentifiedPatient.Request identifiedPatientRequest = new IdentifiedPatient.Request();
+        identifiedPatientRequest.setGid(gid);
+        identifiedPatientRequest.setIrbNo("PEV-CONVERT-GID-TO-PID");
+        identifiedPatientRequest.setStfNo("CHUCK");
+        identifiedPatientRequest.setStfNm("김창호");
+        identifiedPatientRequest.setDeptCd("PHC");
+        identifiedPatientRequest.setDeptNm("플랜잇");
 
         IdentifiedPatient.Response identifiedPatient = webClient.post()
                 .uri(RID_DECRYPT_API_URI)

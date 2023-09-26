@@ -1,12 +1,10 @@
 package ai.planit.pev.domain.patient.controller;
 
+import ai.planit.pev.domain.patient.dto.IdentifiedPatient;
 import ai.planit.pev.domain.patient.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -16,8 +14,8 @@ import javax.servlet.http.HttpSession;
 public class PatientController {
     private final PatientService patientService;
 
-    @GetMapping("")
-    public ResponseEntity<?> getPatient(HttpSession session, @RequestParam String gid) {
-        return ResponseEntity.ok().body(patientService.getPatient(session, gid));
+    @PostMapping("gid")
+    public ResponseEntity<?> getPatient(HttpSession session, @RequestBody IdentifiedPatient.Request request) {
+        return ResponseEntity.ok().body(patientService.getPatient(session, request));
     }
 }

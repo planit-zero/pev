@@ -1,182 +1,118 @@
-import { useState } from 'react';
+import * as React from 'react';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
-import { Avatar, Box, Button, Card, Grid, InputAdornment, OutlinedInput, Popper } from '@mui/material';
-
-// third-party
-import PopupState, { bindPopper, bindToggle } from 'material-ui-popup-state';
-
-// project imports
-import Transitions from 'ui-component/extended/Transitions';
+import { Box, Button, InputAdornment, OutlinedInput, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 // assets
-import { IconAdjustmentsHorizontal, IconSearch, IconX } from '@tabler/icons';
+import { IconSearch } from '@tabler/icons';
 import { shouldForwardProp } from '@mui/system';
-
-// styles
-const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
-    zIndex: 1100,
-    width: '99%',
-    top: '-55px !important',
-    padding: '0 12px',
-    [theme.breakpoints.down('sm')]: {
-        padding: '0 10px'
-    }
-}));
+import { IPatientGidP, IPatientR } from '../../../../pev-interface/IPatient';
+import { useGetPatientWithGidMutation } from '../../../../pev-service/PatientService';
 
 const OutlineInputStyle = styled(OutlinedInput, { shouldForwardProp })(({ theme }) => ({
-    width: 434,
-    marginLeft: 16,
+    width: 320,
     paddingLeft: 16,
     paddingRight: 16,
     '& input': {
         background: 'transparent !important',
         paddingLeft: '4px !important'
-    },
-    [theme.breakpoints.down('lg')]: {
-        width: 250
-    },
-    [theme.breakpoints.down('md')]: {
-        width: '100%',
-        marginLeft: 4,
-        background: theme.palette.mode === 'dark' ? theme.palette.dark[800] : '#fff'
     }
 }));
-
-const HeaderAvatarStyle = styled(Avatar, { shouldForwardProp })(({ theme }) => ({
-    ...theme.typography.commonAvatar,
-    ...theme.typography.mediumAvatar,
-    background: theme.palette.mode === 'dark' ? theme.palette.dark.main : theme.palette.secondary.light,
-    color: theme.palette.mode === 'dark' ? theme.palette.secondary.main : theme.palette.secondary.dark,
-    '&:hover': {
-        background: theme.palette.mode === 'dark' ? theme.palette.secondary.main : theme.palette.secondary.dark,
-        color: theme.palette.mode === 'dark' ? theme.palette.secondary.light : theme.palette.secondary.light
-    }
-}));
-
-interface Props {
-    value: string;
-    setValue: (value: string) => void;
-    popupState: any;
-}
-
-// ==============================|| SEARCH INPUT - MOBILE||============================== //
-
-const MobileSearch = ({ value, setValue, popupState }: Props) => {
-    const theme = useTheme();
-
-    return (
-        <OutlineInputStyle
-            id="input-search-header"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="Search"
-            startAdornment={
-                <InputAdornment position="start">
-                    <IconSearch stroke={1.5} size="16px" color={theme.palette.grey[500]} />
-                </InputAdornment>
-            }
-            endAdornment={
-                <InputAdornment position="end">
-                    <HeaderAvatarStyle variant="rounded">
-                        <IconAdjustmentsHorizontal stroke={1.5} size="20px" />
-                    </HeaderAvatarStyle>
-                    <Box sx={{ ml: 2 }}>
-                        <Avatar
-                            variant="rounded"
-                            sx={{
-                                ...theme.typography.commonAvatar,
-                                ...theme.typography.mediumAvatar,
-                                background: theme.palette.mode === 'dark' ? theme.palette.dark.main : theme.palette.orange.light,
-                                color: theme.palette.orange.dark,
-                                '&:hover': {
-                                    background: theme.palette.orange.dark,
-                                    color: theme.palette.orange.light
-                                }
-                            }}
-                            {...bindToggle(popupState)}
-                        >
-                            <IconX stroke={1.5} size="20px" />
-                        </Avatar>
-                    </Box>
-                </InputAdornment>
-            }
-            aria-describedby="search-helper-text"
-            inputProps={{ 'aria-label': 'weight' }}
-        />
-    );
-};
-
-// ==============================|| SEARCH INPUT ||============================== //
 
 const SearchSection = () => {
     const theme = useTheme();
-    const [value, setValue] = useState('');
+
+    const [mode, setMode] = React.useState<string>('gid');
+
+    const ModeSelector = () => {
+        const handleModeChange = (event: React.MouseEvent<HTMLElement>, modeValue: string) => {
+            setMode(modeValue);
+        };
+
+        return (
+            <Box>
+                <ToggleButtonGroup color={'primary'} value={mode} exclusive={true} onChange={handleModeChange}>
+                    <ToggleButton value={'gid'}>가명화 환자 ID</ToggleButton>
+                    <ToggleButton value={'rid'}>연구별 익명 ID</ToggleButton>
+                </ToggleButtonGroup>
+            </Box>
+        );
+    };
+
+    const [patient, setPatient] = React.useState<IPatientR | null>(null);
+
+    const GidSearchPanel = () => {
+        const [gid, setGid] = React.useState<string>('G010000741553');
+
+        const [getPatientWithGid, { isLoading: gidLoading }] = useGetPatientWithGidMutation();
+
+        const handleGidSearch = () => {
+            getPatientWithGid({ gid: gid })
+                .unwrap()
+                .then((data) => setPatient(data))
+                .catch((error) => {
+                    setPatient(null);
+                    alert(error.data.message);
+                });
+        };
+
+        return (
+            <OutlineInputStyle
+                id="input-search-header"
+                value={gid}
+                onChange={(e) => setGid(e.target.value)}
+                placeholder="가명화 환자 ID 를 입력하세요."
+                startAdornment={
+                    <InputAdornment position="start">
+                        <IconSearch stroke={1.5} size="16px" color={theme.palette.grey[500]} />
+                    </InputAdornment>
+                }
+                endAdornment={
+                    <InputAdornment position="end">
+                        <Button variant={'contained'} size={'small'} onClick={handleGidSearch} disabled={gidLoading}>
+                            조회
+                        </Button>
+                    </InputAdornment>
+                }
+                aria-describedby="search-helper-text"
+                inputProps={{ 'aria-label': 'weight' }}
+            />
+        );
+    };
 
     return (
-        <>
-            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-                <PopupState variant="popper" popupId="demo-popup-popper">
-                    {(popupState) => (
-                        <>
-                            <Box sx={{ ml: 2 }}>
-                                <HeaderAvatarStyle variant="rounded" {...bindToggle(popupState)}>
-                                    <IconSearch stroke={1.5} size="19.2px" />
-                                </HeaderAvatarStyle>
-                            </Box>
-                            <PopperStyle {...bindPopper(popupState)} transition>
-                                {({ TransitionProps }) => (
-                                    <>
-                                        <Transitions type="zoom" {...TransitionProps} sx={{ transformOrigin: 'center left' }}>
-                                            <Card
-                                                sx={{
-                                                    background: theme.palette.mode === 'dark' ? theme.palette.dark[900] : '#fff',
-                                                    [theme.breakpoints.down('sm')]: {
-                                                        border: 0,
-                                                        boxShadow: 'none'
-                                                    }
-                                                }}
-                                            >
-                                                <Box sx={{ p: 2 }}>
-                                                    <Grid container alignItems="center" justifyContent="space-between">
-                                                        <Grid item xs>
-                                                            <MobileSearch value={value} setValue={setValue} popupState={popupState} />
-                                                        </Grid>
-                                                    </Grid>
-                                                </Box>
-                                            </Card>
-                                        </Transitions>
-                                    </>
-                                )}
-                            </PopperStyle>
-                        </>
-                    )}
-                </PopupState>
+        <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+            <Box display={'flex'} alignItems={'center'} gap={1}>
+                <ModeSelector />
+                <Box display={'flex'} alignItems={'center'} gap={1}>
+                    <GidSearchPanel />
+                </Box>
             </Box>
-            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-                <OutlineInputStyle
-                    id="input-search-header"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    placeholder="가명화 환자 ID 를 입력 후 조회 버튼을 눌러주세요."
-                    startAdornment={
-                        <InputAdornment position="start">
-                            <IconSearch stroke={1.5} size="16px" color={theme.palette.grey[500]} />
-                        </InputAdornment>
-                    }
-                    endAdornment={
-                        <InputAdornment position="end">
-                            <Button variant={'contained'} size={'small'}>
-                                조회
-                            </Button>
-                        </InputAdornment>
-                    }
-                    aria-describedby="search-helper-text"
-                    inputProps={{ 'aria-label': 'weight' }}
-                />
-            </Box>
-        </>
+            {patient && (
+                <Box
+                    sx={{
+                        p: 2,
+                        height: '100%',
+                        color: 'white',
+                        fontSize: 'h4.fontSize',
+                        backgroundColor: '#3f51b5',
+                        borderRadius: 1,
+                        boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)'
+                    }}
+                >
+                    <span>
+                        <strong>환자명:</strong> {patient.name}&emsp;
+                    </span>
+                    <span>
+                        <strong>성별:</strong> {patient.gender}&emsp;
+                    </span>
+                    <span>
+                        <strong>생년월일:</strong> {patient.dob}
+                    </span>
+                </Box>
+            )}
+        </Box>
     );
 };
 

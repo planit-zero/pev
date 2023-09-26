@@ -147,7 +147,6 @@ const MainLayout = () => {
                     <RecordViewer />
                 </Container>
             </Main>
-            <Customization />
         </Box>
     );
 };
