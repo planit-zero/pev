@@ -3,6 +3,7 @@ package ai.planit.pev.domain.record.service;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.order.service.OrderService;
+import ai.planit.pev.domain.pathology.service.PathologyService;
 import ai.planit.pev.domain.picture.service.PictureService;
 import ai.planit.pev.domain.record.constant.RecordTargetType;
 import ai.planit.pev.domain.record.dao.RecordListDAO;
@@ -28,6 +29,7 @@ public class RecordServiceImpl implements RecordService {
     private final OrderService orderService;
     private final SpecimenService specimenService;
     private final PictureService pictureService;
+    private final PathologyService pathologyService;
 
     /**
      * {@inheritDoc}
@@ -224,6 +226,11 @@ public class RecordServiceImpl implements RecordService {
         // 영상검사
         if (record.getRecordDetailType().equals(RecordTargetType.EXAM_PICTURE.getCode())) {
             return pictureService.getRecordSheet(session, record);
+        }
+
+        // 병리검사
+        if (record.getRecordDetailType().equals(RecordTargetType.EXAM_PATHOLOGY.getCode())) {
+            return pathologyService.getRecordSheet(session, record);
         }
 
         return null;
