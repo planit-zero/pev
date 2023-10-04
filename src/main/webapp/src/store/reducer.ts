@@ -16,6 +16,7 @@ import cartReducer from './slices/cart';
 import kanbanReducer from './slices/kanban';
 import menuReducer from './slices/menu';
 import recordReducer from './pev-slices/record';
+import environmentReducer from './pev-slices/environment';
 import { recordApi } from '../pev-service/RecordService';
 import { recordExceptionApi } from '../pev-service/RecordExceptionService';
 import { formApi } from '../pev-service/FormService';
@@ -43,6 +44,7 @@ const reducer = combineReducers({
     user: userReducer,
     menu: menuReducer,
     record: recordReducer,
+    environment: environmentReducer,
     [recordApi.reducerPath]: recordApi.reducer,
     [recordExceptionApi.reducerPath]: recordExceptionApi.reducer,
     [formApi.reducerPath]: formApi.reducer,

@@ -10,6 +10,7 @@ import { recordApi } from '../pev-service/RecordService';
 import { recordExceptionApi } from '../pev-service/RecordExceptionService';
 import { formApi } from '../pev-service/FormService';
 import { patientApi } from '../pev-service/PatientService';
+import { ErrorLogger } from '../pev-service/ErrorLogger';
 
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
@@ -17,6 +18,7 @@ const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({ serializableCheck: false, immutableCheck: false })
+            .concat(ErrorLogger)
             .concat(recordApi.middleware)
             .concat(recordExceptionApi.middleware)
             .concat(formApi.middleware)

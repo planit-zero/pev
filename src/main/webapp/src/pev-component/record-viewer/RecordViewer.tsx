@@ -13,17 +13,17 @@ const RecordViewer = (props: RecordViewerProps) => {
     const [getFormContent, { data: formContent, isLoading }] = useGetFormContentMutation();
 
     React.useEffect(() => {
-        const payload: IFormContentP = {
-            identifiers: targetRecords.map((record) => {
-                return {
-                    recordType: record.recordType,
-                    recordDetailType: record.recordDetailType,
-                    keyId: record.keyId
-                };
-            })
-        };
-
-        getFormContent(payload);
+        // const payload: IFormContentP = {
+        //     identifiers: targetRecords.map((record) => {
+        //         return {
+        //             recordType: record.recordType,
+        //             recordDetailType: record.recordDetailType,
+        //             keyId: record.keyId
+        //         };
+        //     })
+        // };
+        //
+        // getFormContent(payload);
     }, [targetRecords]);
 
     return (

@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'store';
 // assets
 import { IconChevronRight } from '@tabler/icons';
 import RecordViewer from '../../pev-component/record-viewer/RecordViewer';
+import CommonSnackbar from '../../pev-component/common/CommonSnackbar';
 
 interface MainStyleProps {
     theme: Theme;
@@ -134,6 +135,9 @@ const MainLayout = () => {
             <AppBar enableColorOnDark position="fixed" color="inherit" elevation={0} sx={{ bgcolor: theme.palette.background.default }}>
                 {header}
             </AppBar>
+
+            {/* snackbar */}
+            <CommonSnackbar />
 
             {/* horizontal menu-list bar */}
             {layout === LAYOUT_CONST.HORIZONTAL_LAYOUT && !matchDownMd && <HorizontalBar />}

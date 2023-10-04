@@ -51,10 +51,7 @@ const SearchSection = () => {
             getPatientWithGid({ gid: gid })
                 .unwrap()
                 .then((data) => setPatient(data))
-                .catch((error) => {
-                    setPatient(null);
-                    alert(error.data.message);
-                });
+                .catch(() => setPatient(null));
         };
 
         return (
