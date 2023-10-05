@@ -58,7 +58,8 @@ const Sidebar = () => {
                             width: drawerWidth,
                             background: theme.palette.background.default,
                             color: theme.palette.text.primary,
-                            borderRight: 'none'
+                            borderRight: 'none',
+                            height: '100vh'
                         }
                     }}
                     ModalProps={{ keepMounted: true }}

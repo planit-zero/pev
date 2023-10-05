@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box } from '@mui/material';
+import { Backdrop, Box, CircularProgress } from '@mui/material';
 import ConditionFinderPanel from './ConditionFinderPanel';
 import ConditionFinderGrid from './ConditionFinderGrid';
 import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { TPactTpCd } from '../../../pev-type/TPactTpCd';
 import { TDept } from '../../../pev-type/TDept';
 import { TWriter } from '../../../pev-type/TWriter';
+import { useGetRecordListMutation } from '../../../pev-service/RecordService';
 
 const ConditionFinder = () => {
     const initialSearchCondition: ISearchCondition = {
@@ -32,16 +33,30 @@ const ConditionFinder = () => {
         setSearchCondition(nextSearchCondition);
     };
 
+    // for debugging
     React.useEffect(() => {
         console.log('searchCondition', searchCondition);
     }, [searchCondition]);
 
+    const [getRecordList, { data: recordList, isLoading: isRecordListLoading }] = useGetRecordListMutation();
+
+    const handleListSearch = () => {
+        getRecordList(searchCondition);
+    };
+
     return (
         <Box sx={{ p: 1, width: '100%', height: 'calc(100% - 60px)' }}>
+            <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isRecordListLoading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
             {/*조건 설정 패널*/}
-            <ConditionFinderPanel searchCondition={searchCondition} onSearchConditionChange={handleSearchConditionChange} />
+            <ConditionFinderPanel
+                searchCondition={searchCondition}
+                onSearchConditionChange={handleSearchConditionChange}
+                onListSearch={handleListSearch}
+            />
             {/*목록 조회 그리드*/}
-            <ConditionFinderGrid searchCondition={searchCondition} />
+            <ConditionFinderGrid recordList={recordList || []} />
         </Box>
     );
 };

@@ -21,3 +21,29 @@ export interface ISearchConditionKeyValue {
     key: string;
     value: string | string[] | null;
 }
+
+export interface IRecord {
+    recordType: string;
+    recordDetailType: string;
+    itemType: string;
+    itemNm: string;
+    writingDate: string;
+    writingDeptCd: string;
+    writingDeptNm: string;
+    writerStfNo: string
+    writerNm: string;
+    keyId: string;
+    pactId: string;
+    pactTpCd: string;
+    sortSeq: number;
+    note: string;
+    mdfmId: number;
+    mdfmFomSeq: number;
+    mdrcId: number;
+    mdrcFomSeq: number;
+    examKey: string;
+    pacsImgIptnCd: string;
+    accsId: string;
+    recType: string;
+    geneExmYn: string;
+}

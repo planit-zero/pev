@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Box, Button, Divider, Typography } from '@mui/material';
 import { Bookmark } from '@mui/icons-material';
-import { ISearchCondition } from '../../../pev-interface/IRecord';
+import { IRecord } from '../../../pev-interface/IRecord';
 import { DataGrid } from 'devextreme-react';
 import { Column, FilterRow, Scrolling, Selection } from 'devextreme-react/data-grid';
 import SearchIcon from '@mui/icons-material/Search';
 
 type ConditionFinderGridProps = {
-    searchCondition: ISearchCondition;
+    recordList: IRecord[];
 };
 
 const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
@@ -26,11 +26,18 @@ const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
             </Box>
             <Divider sx={{ mt: 1, mb: 1 }} />
             <Box width={'100%'} height={'calc(100% - 48px)'}>
-                <DataGrid height={'100%'} showBorders={true} showColumnLines={true} showRowLines={true} noDataText={''}>
+                <DataGrid
+                    dataSource={props.recordList}
+                    height={'100%'}
+                    showBorders={true}
+                    showColumnLines={true}
+                    showRowLines={true}
+                    noDataText={''}
+                >
                     <FilterRow visible={true} />
                     <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={100} />
                     <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={100} />
-                    <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} width={200} />
+                    <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} />
                     <Column dataField={'writingDate'} caption={'작성일자'} width={120} alignment={'center'} />
                     <Column dataField={'writingDeptNm'} caption={'작성과'} width={100} alignment={'center'} />
                     <Column dataField={'writerNm'} caption={'작성자'} width={85} alignment={'center'} />

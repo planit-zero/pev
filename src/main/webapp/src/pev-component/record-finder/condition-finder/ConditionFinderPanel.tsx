@@ -12,6 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 type ConditionFinderPanelProps = {
     searchCondition: ISearchCondition;
     onSearchConditionChange: (conditions: ISearchConditionKeyValue[]) => void;
+    onListSearch: () => void;
 };
 
 const ConditionFinderPanel = (props: ConditionFinderPanelProps) => {
@@ -55,7 +56,7 @@ const ConditionFinderPanel = (props: ConditionFinderPanelProps) => {
                     onSearchConditionChange={props.onSearchConditionChange}
                 />
                 <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-                    <Button variant={'contained'} size={'small'} startIcon={<SearchIcon fontSize="small" />}>
+                    <Button variant={'contained'} size={'small'} startIcon={<SearchIcon fontSize="small" />} onClick={props.onListSearch}>
                         목록 조회
                     </Button>
                 </Box>

@@ -14,7 +14,7 @@ const RecordFinder = (props: RecordFinderProps) => {
     };
 
     return (
-        <Box sx={{ p: 2, height: '100%' }}>
+        <Box sx={{ p: 2, height: 'calc(100% - 69px)' }}>
             <Box>
                 <Tabs variant={'fullWidth'} value={activeFinderItem} onChange={handleItemChange}>
                     {finderItems.map((item, idx) => {
