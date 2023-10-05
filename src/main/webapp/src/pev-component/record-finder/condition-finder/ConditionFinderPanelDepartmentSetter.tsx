@@ -3,8 +3,8 @@ import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interfa
 import { Autocomplete, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { Square } from '@mui/icons-material';
 import { TDept } from '../../../pev-type/TDept';
-import { useGetDeptInfoListQuery } from '../../../pev-service/RecordService';
 import { IRecordDeptInfo } from '../../../pev-interface/IRecordInfo';
+import { useGetDepartmentListQuery } from '../../../pev-service/HospitalService';
 
 type ConditionFinderPanelDepartmentSetterProps = {
     searchCondition: ISearchCondition;
@@ -12,7 +12,7 @@ type ConditionFinderPanelDepartmentSetterProps = {
 };
 
 const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartmentSetterProps) => {
-    const { data: deptInfoList, isLoading: isDeptInfoListLoading } = useGetDeptInfoListQuery();
+    const { data: departmentList, isLoading: isDepartmentListLoading } = useGetDepartmentListQuery();
 
     const [deptType, setDeptType] = React.useState<string>(props.searchCondition.deptType);
     const [, setDeptCd] = React.useState<string | null>(props.searchCondition.deptCd);
@@ -48,7 +48,7 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
                     </RadioGroup>
                 </Grid>
                 <Grid item xs={5}>
-                    {deptInfoList && (
+                    {!isDepartmentListLoading && (
                         <Autocomplete
                             size={'small'}
                             fullWidth
@@ -61,7 +61,7 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
                                     </li>
                                 );
                             }}
-                            options={deptInfoList || []}
+                            options={departmentList || []}
                             getOptionLabel={(option) => option.deptNm}
                             onChange={handleDeptCdChange}
                         />

@@ -32,6 +32,10 @@ const ConditionFinder = () => {
         setSearchCondition(nextSearchCondition);
     };
 
+    React.useEffect(() => {
+        console.log('searchCondition', searchCondition);
+    }, [searchCondition]);
+
     return (
         <Box sx={{ p: 1, width: '100%', height: 'calc(100% - 60px)' }}>
             {/*조건 설정 패널*/}

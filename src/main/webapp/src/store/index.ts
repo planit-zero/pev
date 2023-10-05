@@ -11,6 +11,7 @@ import { recordExceptionApi } from '../pev-service/RecordExceptionService';
 import { formApi } from '../pev-service/FormService';
 import { patientApi } from '../pev-service/PatientService';
 import { ErrorLogger } from '../pev-service/ErrorLogger';
+import { hospitalApi } from '../pev-service/HospitalService';
 
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
@@ -22,7 +23,8 @@ const store = configureStore({
             .concat(recordApi.middleware)
             .concat(recordExceptionApi.middleware)
             .concat(formApi.middleware)
-            .concat(patientApi.middleware);
+            .concat(patientApi.middleware)
+            .concat(hospitalApi.middleware);
     }
 });
 
