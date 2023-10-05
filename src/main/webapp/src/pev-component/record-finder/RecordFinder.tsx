@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Box, Tab, Tabs } from '@mui/material';
-import ConditionFinder from './ConditionFinder';
+import ConditionFinder from './condition-finder/ConditionFinder';
 
 type RecordFinderProps = {};
 
