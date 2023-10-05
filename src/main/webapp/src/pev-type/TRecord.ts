@@ -4,6 +4,7 @@ type RecordType = {
     NR: string;
     EX: string;
     SC: string;
+    CR: string;
 };
 
 export const TRecord: RecordType = {
@@ -11,7 +12,8 @@ export const TRecord: RecordType = {
     OR: 'OR',
     NR: 'NR',
     EX: 'EX',
-    SC: 'SC'
+    SC: 'SC',
+    CR: 'CR'
 };
 
 type RecordElementClassType = {

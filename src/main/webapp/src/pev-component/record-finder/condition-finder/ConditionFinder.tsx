@@ -11,7 +11,7 @@ import { TWriter } from '../../../pev-type/TWriter';
 
 const ConditionFinder = () => {
     const initialSearchCondition: ISearchCondition = {
-        searchTargets: [TRecord.DR],
+        searchTargets: [TRecord.DR, 'D001', 'D002', 'D003', 'D004', 'D031', 'D005', 'D006', 'D010', 'D011', 'D007', 'D020', 'D030'],
         searchFromDate: dayjs().add(-1, 'month').format('YYYY-MM-DD'),
         searchToDate: dayjs().add(-1, 'day').format('YYYY-MM-DD'),
         pactTpCd: TPactTpCd.ALL,
@@ -41,7 +41,7 @@ const ConditionFinder = () => {
             {/*조건 설정 패널*/}
             <ConditionFinderPanel searchCondition={searchCondition} onSearchConditionChange={handleSearchConditionChange} />
             {/*목록 조회 그리드*/}
-            <ConditionFinderGrid />
+            <ConditionFinderGrid searchCondition={searchCondition} />
         </Box>
     );
 };
