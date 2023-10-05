@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ISearchCondition } from '../../../pev-interface/IRecord';
+import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
 import { Autocomplete, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { Square } from '@mui/icons-material';
 import { TDept } from '../../../pev-type/TDept';
@@ -8,7 +8,7 @@ import { IRecordDeptInfo } from '../../../pev-interface/IRecordInfo';
 
 type ConditionFinderPanelDepartmentSetterProps = {
     searchCondition: ISearchCondition;
-    onSearchConditionChange: (key: string, value: string | null) => void;
+    onSearchConditionChange: (conditions: ISearchConditionKeyValue[]) => void;
 };
 
 const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartmentSetterProps) => {
@@ -19,7 +19,7 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
 
     const handleDeptTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDeptType(event.target.value);
-        props.onSearchConditionChange('deptType', event.target.value);
+        props.onSearchConditionChange([{ key: 'deptType', value: event.target.value }]);
     };
 
     const handleDeptCdChange = (e: React.SyntheticEvent, value: IRecordDeptInfo | null, reason: string) => {
@@ -30,7 +30,7 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
         }
 
         setDeptCd(nextDeptCd);
-        props.onSearchConditionChange('deptCd', nextDeptCd);
+        props.onSearchConditionChange([{ key: 'deptCd', value: nextDeptCd }]);
     };
 
     return (

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { FormControlLabel, Grid, Radio, RadioGroup, Typography } from '@mui/material';
 import { Square } from '@mui/icons-material';
 import { TWriter } from '../../../pev-type/TWriter';
-import { ISearchCondition, IWriterCondition } from '../../../pev-interface/IRecord';
+import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
 
 type ConditionFinderPanelWriterSetterProps = {
     searchCondition: ISearchCondition;
-    onSearchConditionChange: (key: string, value: string | null) => void;
+    onSearchConditionChange: (conditions: ISearchConditionKeyValue[]) => void;
 };
 
 const ConditionFinderPanelWriterSetter = (props: ConditionFinderPanelWriterSetterProps) => {
@@ -14,8 +14,8 @@ const ConditionFinderPanelWriterSetter = (props: ConditionFinderPanelWriterSette
 
     const handleWriterTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setWriterType(event.target.value);
-        props.onSearchConditionChange('writerType', event.target.value);
-    }
+        props.onSearchConditionChange([{ key: 'writerType', value: event.target.value }]);
+    };
 
     return (
         <Grid container display={'flex'} alignItems={'center'}>

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { FormControlLabel, Grid, Radio, RadioGroup, Typography } from '@mui/material';
 import { Square } from '@mui/icons-material';
 import { TPactTpCd } from '../../../pev-type/TPactTpCd';
-import { ISearchCondition } from '../../../pev-interface/IRecord';
+import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
 
 type ConditionFinderPanelPatientTypeSetterProps = {
     searchCondition: ISearchCondition;
-    onSearchConditionChange: (key: string, value: string | null) => void;
+    onSearchConditionChange: (conditions: ISearchConditionKeyValue[]) => void;
 };
 
 const ConditionFinderPanelPatientTypeSetter = (props: ConditionFinderPanelPatientTypeSetterProps) => {
@@ -14,7 +14,7 @@ const ConditionFinderPanelPatientTypeSetter = (props: ConditionFinderPanelPatien
 
     const handlePactTpCdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPactTpCd(event.target.value);
-        props.onSearchConditionChange('pactTpCd', event.target.value);
+        props.onSearchConditionChange([{ key: 'pactTpCd', value: event.target.value }]);
     };
 
     return (

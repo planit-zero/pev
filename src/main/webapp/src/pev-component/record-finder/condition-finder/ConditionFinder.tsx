@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Box } from '@mui/material';
 import ConditionFinderPanel from './ConditionFinderPanel';
 import ConditionFinderGrid from './ConditionFinderGrid';
-import { ISearchCondition } from '../../../pev-interface/IRecord';
+import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
 import { TRecord } from '../../../pev-type/TRecord';
 import dayjs from 'dayjs';
 import { TPactTpCd } from '../../../pev-type/TPactTpCd';
+import { TDept } from '../../../pev-type/TDept';
+import { TWriter } from '../../../pev-type/TWriter';
 
 const ConditionFinder = () => {
     const initialSearchCondition: ISearchCondition = {
@@ -13,18 +15,21 @@ const ConditionFinder = () => {
         searchFromDate: dayjs().add(-1, 'month').format('YYYY-MM-DD'),
         searchToDate: dayjs().add(-1, 'day').format('YYYY-MM-DD'),
         pactTpCd: TPactTpCd.ALL,
-        deptType: 'ALL',
+        deptType: TDept.ALL,
         deptCd: null,
-        writerType: 'ALL'
+        writerType: TWriter.ALL
     };
 
     const [searchCondition, setSearchCondition] = React.useState<ISearchCondition>(initialSearchCondition);
 
-    const handleSearchConditionChange = (key: string, value: string | null) => {
-        setSearchCondition({
-            ...searchCondition,
-            [key]: value
+    const handleSearchConditionChange = (conditions: ISearchConditionKeyValue[]) => {
+        let nextSearchCondition = { ...searchCondition };
+
+        conditions.forEach((condition) => {
+            nextSearchCondition = { ...nextSearchCondition, [condition.key]: condition.value };
         });
+
+        setSearchCondition(nextSearchCondition);
     };
 
     return (

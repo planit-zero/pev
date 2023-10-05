@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { Box, Divider, Paper, Typography } from '@mui/material';
-import { Bookmark, Square } from '@mui/icons-material';
+import { Bookmark } from '@mui/icons-material';
 import ConditionFinderPanelDateSetter from './ConditionFinderPanelDateSetter';
 import ConditionFinderPanelDepartmentSetter from './ConditionFinderPanelDepartmentSetter';
 import ConditionFinderPanelPatientTypeSetter from './ConditionFinderPanelPatientTypeSetter';
 import ConditionFinderPanelWriterSetter from './ConditionFinderPanelWriterSetter';
 import ConditionFinderPanelRecordSetter from './ConditionFinderPanelRecordSetter';
-import { IDateCondition, IDeptCondition, ISearchCondition, IWriterCondition } from '../../../pev-interface/IRecord';
+import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
 
 type ConditionFinderPanelProps = {
     searchCondition: ISearchCondition;
-    onSearchConditionChange: (key: string, value: string | null) => void;
+    onSearchConditionChange: (conditions: ISearchConditionKeyValue[]) => void;
 };
 
 const ConditionFinderPanel = (props: ConditionFinderPanelProps) => {

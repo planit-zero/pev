@@ -5,11 +5,11 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs, { ManipulateType } from 'dayjs';
 import { TDatePeriod } from '../../../pev-type/TDatePeriod';
-import { ISearchCondition } from '../../../pev-interface/IRecord';
+import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
 
 type ConditionFinderPanelDateSetterProps = {
     searchCondition: ISearchCondition;
-    onSearchConditionChange: (key: string, value: string | null) => void;
+    onSearchConditionChange: (conditions: ISearchConditionKeyValue[]) => void;
 };
 
 const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterProps) => {
@@ -18,13 +18,34 @@ const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterPro
     const [period, setPeriod] = React.useState<string>(TDatePeriod.ONE_MONTH);
 
     const handleFromChange = (value: string | null) => {
-        setFrom(value);
-        props.onSearchConditionChange('searchFromDate', value);
+        let nextValue = value;
+        if (value) nextValue = dayjs(value).format('YYYY-MM-DD');
+
+        setFrom(nextValue);
+        props.onSearchConditionChange([{ key: 'searchFromDate', value: nextValue }]);
     };
 
     const handleToChange = (value: string | null) => {
-        setTo(value);
-        props.onSearchConditionChange('searchToDate', value);
+        let nextValue = value;
+        if (value) nextValue = dayjs(value).format('YYYY-MM-DD');
+
+        setTo(nextValue);
+        props.onSearchConditionChange([{ key: 'searchToDate', value: nextValue }]);
+    };
+
+    const handleFromToChange = (fromValue: string | null, toValue: string | null) => {
+        let nextFromValue = fromValue;
+        let nextToValue = toValue;
+
+        setFrom(nextFromValue);
+        setTo(nextToValue);
+        props.onSearchConditionChange([
+            { key: 'searchFromDate', value: nextFromValue },
+            {
+                key: 'searchToDate',
+                value: nextToValue
+            }
+        ]);
     };
 
     const handlePeriodChange = (event: SelectChangeEvent) => {
@@ -61,8 +82,7 @@ const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterPro
             nextFrom = '1998-01-01';
         }
 
-        handleFromChange(nextFrom);
-        handleToChange(nextTo);
+        handleFromToChange(nextFrom, nextTo);
         setPeriod(event.target.value);
     };
 

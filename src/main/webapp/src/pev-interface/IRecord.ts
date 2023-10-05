@@ -16,3 +16,8 @@ export interface IDeptCondition {
 export interface IWriterCondition {
     writerType: string;
 }
+
+export interface ISearchConditionKeyValue {
+    key: string;
+    value: string | string[] | null;
+}
