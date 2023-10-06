@@ -16,7 +16,7 @@ const RecordSheet = (props: RecordSheetProps) => {
     }, []);
 
     return (
-        <Paper sx={{ width: 600, p: 2, mb: 2, borderRadius: 0 }}>
+        <Paper sx={{ width: 600, p: 2, mb: 2, borderRadius: 0, display: 'flex', flexDirection: 'column', gap: 3 }}>
             {recordSheet &&
                 recordSheet.sections.map((section, idx) => {
                     return <RecordSection key={idx} section={section} />;

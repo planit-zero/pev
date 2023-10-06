@@ -10,7 +10,7 @@ const RecordEntity = (props: RecordEntityProps) => {
     const textAlign = props.entity.alignment || 'left';
 
     return (
-        <Box sx={{ mb: 2, textAlign: textAlign }}>
+        <Box sx={{ textAlign: textAlign }}>
             <Typography
                 sx={{
                     fontSize: `h4.fontSize`,

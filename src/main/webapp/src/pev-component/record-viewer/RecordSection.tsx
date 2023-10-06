@@ -9,7 +9,7 @@ type RecordSectionProps = {
 
 const RecordSection = (props: RecordSectionProps) => {
     return (
-        <Box sx={{ mb: 2 }}>
+        <Box display={'flex'} flexDirection={'column'} gap={2}>
             {props.section.entities.map((entity, idx) => {
                 return <RecordEntity key={idx} entity={entity} />;
             })}
