@@ -7,8 +7,10 @@ type RecordEntityProps = {
 };
 
 const RecordEntity = (props: RecordEntityProps) => {
+    const textAlign = props.entity.alignment || 'left';
+
     return (
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 2, textAlign: textAlign }}>
             <Typography
                 sx={{
                     fontSize: `h4.fontSize`,
@@ -25,6 +27,7 @@ const RecordEntity = (props: RecordEntityProps) => {
             {props.entity.values.map((value, idx) => {
                 return (
                     <Typography
+                        key={idx}
                         sx={{
                             fontSize: 'h5.fontSize',
                             whiteSpace: 'pre-line',

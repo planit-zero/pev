@@ -5,6 +5,7 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.order.dao.OrderDAO;
 import ai.planit.pev.domain.order.dto.OrderData;
 import ai.planit.pev.domain.order.dto.OrderSection;
+import ai.planit.pev.domain.record.constant.RecordEntityAlignment;
 import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
@@ -141,6 +142,7 @@ public class OrderServiceImpl implements OrderService {
 
         entity.setText("작성자 :");
         entity.setIsInline(true);
+        entity.setAlignment(RecordEntityAlignment.RIGHT.getAlignment());
 
         List<RecordValue> values = new ArrayList<>();
 
