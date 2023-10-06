@@ -1,7 +1,7 @@
 import { IRecordState } from '../../pev-interface/IRecordDataR';
 import { createSlice } from '@reduxjs/toolkit';
 import { dispatch } from '../index';
-import { IRecordDetailR } from '../../pev-interface/IRecordDetail';
+import { IRecord } from '../../pev-interface/IRecord';
 
 const initialState: IRecordState = {
     targetRecords: []
@@ -19,6 +19,6 @@ const recordSlice = createSlice({
 
 export default recordSlice.reducer;
 
-export const setTargetRecords = (targets: IRecordDetailR[]) => {
+export const setTargetRecords = (targets: IRecord[]) => {
     dispatch(recordSlice.actions.setTargetRecords(targets));
 };

@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IRecordDetailP, IRecordDetailR } from '../pev-interface/IRecordDetail';
 import { IRecordDeptInfo, IRecordFormInfoP, IRecordFormInfoR } from '../pev-interface/IRecordInfo';
 import { IRecordDataP, IRecordDataR } from '../pev-interface/IRecordDataR';
-import { IRecord, ISearchCondition } from '../pev-interface/IRecord';
+import { IRecord, IRecordSheet, ISearchCondition } from '../pev-interface/IRecord';
 
 export const recordApi = createApi({
     reducerPath: 'recordApi',
@@ -40,8 +40,16 @@ export const recordApi = createApi({
                 method: 'POST',
                 body: payload
             })
+        }),
+        getRecordSheet: builder.mutation<IRecordSheet, IRecord>({
+            query: (payload) => ({
+                url: 'sheet',
+                method: 'POST',
+                body: payload
+            })
         })
     })
 });
 
-export const { useGetDetailListByConditionMutation, useGetDeptInfoListQuery, useGetRecordListMutation } = recordApi;
+export const { useGetDetailListByConditionMutation, useGetDeptInfoListQuery, useGetRecordListMutation, useGetRecordSheetMutation } =
+    recordApi;

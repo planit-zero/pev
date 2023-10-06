@@ -1,18 +1,27 @@
 import * as React from 'react';
-import { IRecordDataR } from '../../pev-interface/IRecordDataR';
+import { IRecord } from '../../pev-interface/IRecord';
 import { Paper } from '@mui/material';
+import { useGetRecordSheetMutation } from '../../pev-service/RecordService';
+import RecordSection from './RecordSection';
 
 type RecordSheetProps = {
-    data: IRecordDataR;
+    targetRecord: IRecord;
 };
 
 const RecordSheet = (props: RecordSheetProps) => {
+    const [getRecordSheet, { data: recordSheet, isLoading: isRecordSheetLoading }] = useGetRecordSheetMutation();
+
+    React.useEffect(() => {
+        getRecordSheet(props.targetRecord);
+    }, []);
+
     return (
-        <React.Fragment>
-            <Paper sx={{ width: 'fit-content', p: 2, mb: 2, borderRadius: 0 }}>
-                ABC
-            </Paper>
-        </React.Fragment>
+        <Paper sx={{ width: 600, p: 2, mb: 2, borderRadius: 0 }}>
+            {recordSheet &&
+                recordSheet.sections.map((section, idx) => {
+                    return <RecordSection key={idx} section={section} />;
+                })}
+        </Paper>
     );
 };
 

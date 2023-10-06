@@ -47,3 +47,30 @@ export interface IRecord {
     recType: string;
     geneExmYn: string;
 }
+
+export interface IRecordSheet {
+    sections: IRecordSection[];
+}
+
+export interface IRecordSection {
+    entities: IRecordEntity[];
+}
+
+export interface IRecordEntity extends IRecordElement {
+    type: string;
+    isInline: boolean;
+    attributes: IRecordAttribute[];
+    values: IRecordValue[];
+}
+
+export interface IRecordAttribute extends IRecordElement {
+    values: IRecordValue[];
+}
+
+export interface IRecordValue extends IRecordElement {
+
+}
+
+export interface IRecordElement {
+    text: string
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { IRecordSection } from '../../pev-interface/IRecordDataR';
+import { IRecordSection } from '../../pev-interface/IRecord';
 import { Box } from '@mui/material';
-import RecordElement from './RecordElement';
+import RecordEntity from './RecordEntity';
 
 type RecordSectionProps = {
     section: IRecordSection;
@@ -9,9 +9,9 @@ type RecordSectionProps = {
 
 const RecordSection = (props: RecordSectionProps) => {
     return (
-        <Box sx={{ position: 'relative' }} width={`${props.section.width}px`} height={`${props.section.height}px`}>
-            {props.section.items.map((item, idx) => {
-                return <RecordElement key={idx} item={item} />;
+        <Box sx={{ mb: 2 }}>
+            {props.section.entities.map((entity, idx) => {
+                return <RecordEntity key={idx} entity={entity} />;
             })}
         </Box>
     );

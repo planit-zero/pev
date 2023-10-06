@@ -5,12 +5,23 @@ import { IRecord } from '../../../pev-interface/IRecord';
 import { DataGrid } from 'devextreme-react';
 import { Column, FilterRow, Scrolling, Selection } from 'devextreme-react/data-grid';
 import SearchIcon from '@mui/icons-material/Search';
+import { setTargetRecords } from '../../../store/pev-slices/record';
 
 type ConditionFinderGridProps = {
     recordList: IRecord[];
 };
 
 const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
+    const [selectedRecordList, setSelectedRecordList] = React.useState<IRecord[]>([]);
+
+    const handleSelectionChanged = (e: any) => {
+        if (e && e.selectedRowsData) setSelectedRecordList(e.selectedRowsData);
+    };
+
+    const handleRetrieve = () => {
+        setTargetRecords(selectedRecordList);
+    };
+
     return (
         <Box width={'100%'} height={'calc(100% - 310px)'} marginTop={'20px'}>
             <Box width={'100%'} height={'31px'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
@@ -19,7 +30,7 @@ const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
                     <Typography variant={'body1'}>기록목록</Typography>
                 </Box>
                 <Box display={'flex'} alignItems={'center'}>
-                    <Button variant={'contained'} size={'small'} startIcon={<SearchIcon fontSize="small" />}>
+                    <Button variant={'contained'} size={'small'} startIcon={<SearchIcon fontSize="small" />} onClick={handleRetrieve}>
                         조회
                     </Button>
                 </Box>
@@ -33,6 +44,7 @@ const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
                     showColumnLines={true}
                     showRowLines={true}
                     noDataText={''}
+                    onSelectionChanged={handleSelectionChanged}
                 >
                     <FilterRow visible={true} />
                     <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={100} />

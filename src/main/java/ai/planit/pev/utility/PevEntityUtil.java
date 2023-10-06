@@ -16,10 +16,10 @@ public class PevEntityUtil {
      * @param valueText Value 출력값
      * @return 문자열 형태의 단순 Entity
      */
-    public static RecordEntity getSimpleTextEntity(boolean isInline, String entityText, String valueText) {
+    public static RecordEntity getSimpleTextEntity(Boolean isInline, String entityText, String valueText) {
         RecordEntity entity = new RecordEntity();
         entity.setType(RecordEntityType.TEXT.getType());
-        entity.setInline(isInline);
+        entity.setIsInline(isInline);
         entity.setText(entityText);
 
         List<RecordValue> values = new ArrayList<>();

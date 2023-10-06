@@ -94,7 +94,8 @@ public class OrderServiceImpl implements OrderService {
     private RecordEntity getOrderContentEntity(String pid, Record.Response record, OrderSection.Response orderSection) {
         RecordEntity entity = new RecordEntity();
 
-        entity.setText(orderSection.getOdaplPopNm());
+        entity.setText(String.format("%s >", orderSection.getOdaplPopNm()));
+        entity.setIsInline(false);
 
         OrderData.Request request = new OrderData.Request();
         request.setPtNo(pid);
@@ -139,6 +140,7 @@ public class OrderServiceImpl implements OrderService {
         RecordEntity entity = new RecordEntity();
 
         entity.setText("작성자 :");
+        entity.setIsInline(true);
 
         List<RecordValue> values = new ArrayList<>();
 

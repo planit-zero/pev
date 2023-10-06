@@ -71,9 +71,11 @@ public class PictureServiceImpl implements PictureService {
 
         List<RecordEntity> entities = new ArrayList<>();
 
-        entities.add(PevEntityUtil.getSimpleTextEntity(true, "[Conclusion]", pictureData.getIptnCncsCnte()));
-        entities.add(PevEntityUtil.getSimpleTextEntity(true, "[Finding]", pictureData.getTh1IptnExpl()));
-        entities.add(PevEntityUtil.getSimpleTextEntity(true, "[Clinical Information]", pictureData.getCopnCnte()));
+        entities.add(PevEntityUtil.getSimpleTextEntity(false, "[Conclusion]", pictureData.getIptnCncsCnte()));
+        entities.add(PevEntityUtil.getSimpleTextEntity(false, "[Finding]", pictureData.getTh1IptnExpl()));
+        if (pictureData.getCopnCnte() != null) {
+            entities.add(PevEntityUtil.getSimpleTextEntity(false, "[Clinical Information]", pictureData.getCopnCnte()));
+        }
         entities.add(getDecoderEntity(pictureData));
 
         section.setEntities(entities);
@@ -100,6 +102,6 @@ public class PictureServiceImpl implements PictureService {
                 .filter(d -> d != null && !d.isEmpty())
                 .collect(Collectors.joining(", "));
 
-        return PevEntityUtil.getSimpleTextEntity(false, "판독의", decoderStr);
+        return PevEntityUtil.getSimpleTextEntity(true, "판독의 :", decoderStr);
     }
 }
