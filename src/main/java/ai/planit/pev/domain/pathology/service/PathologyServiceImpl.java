@@ -83,39 +83,42 @@ public class PathologyServiceImpl implements PathologyService {
      * @return 병리검사 기록 섹션
      */
     private RecordSection getRecordSection(Record.Response record) {
+        PathologyData.Request dataRequest = new PathologyData.Request();
+        dataRequest.setPthlNo(record.getExamKey());
+
+        PathologyData.Response pathologyData = pathologyDAO.getPathologyData(dataRequest);
+
         RecordSection section = new RecordSection();
 
         List<RecordEntity> entities = new ArrayList<>();
-        entities.add(getPathologyEntity(record));
+
+        entities.add(PevEntityUtil.getSimpleTextEntity(false, "", pathologyData.getPlrtLdat()));
+        entities.add(getPathologyProcessEntity(record, pathologyData));
+
         section.setEntities(entities);
 
         return section;
     }
 
     /**
-     * 병리검사 엔티티 생성
+     * 병리검사 프로세스 엔티티 생성
      *
      * @param record 조회할 기록 정보
-     * @return 병리검사 기록 엔티티
+     * @param pathologyData 병리검사 데이터
+     * @return 병리검사 프로세스 엔티티
      */
-    private RecordEntity getPathologyEntity(Record.Response record) {
-        PathologyData.Request dataRequest = new PathologyData.Request();
-        dataRequest.setPthlNo(record.getExamKey());
-
-        PathologyData.Response pathologyData = pathologyDAO.getPathologyData(dataRequest);
-
+    private RecordEntity getPathologyProcessEntity(Record.Response record, PathologyData.Response pathologyData) {
         String acptDt = String.format("접수일 : %s", pathologyData.getAcptDt());
         String lshDt = String.format("판독일 : %s", pathologyData.getLshDt());
 
         String text = String.format(
-                "%s\r\n%s\t%s%s",
-                pathologyData.getPlrtLdat(),
+                "%s\u2003%s\r\n%s",
                 acptDt,
                 lshDt,
                 getPathologyProcessContent(record)
                 );
 
-        return PevEntityUtil.getSimpleTextEntity(true, "", text);
+        return PevEntityUtil.getSimpleTextEntity(false, "", text);
     }
 
     /**
@@ -163,7 +166,7 @@ public class PathologyServiceImpl implements PathologyService {
                 .collect(Collectors.joining("/"));
 
         return String.format(
-                "\r\n제작: %s\t육안: %s\t판독준비: %s\t결과입력: %s",
+                "제작: %s\u2003육안: %s\u2003판독준비: %s\u2003결과입력: %s",
                 createProcess,
                 microscopicProcess,
                 decodeProcess,
