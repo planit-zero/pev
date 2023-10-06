@@ -5,6 +5,7 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.pathology.dao.PathologyDAO;
 import ai.planit.pev.domain.pathology.dto.PathologyData;
 import ai.planit.pev.domain.pathology.dto.PathologyProcess;
+import ai.planit.pev.domain.record.constant.RecordEntityAlignment;
 import ai.planit.pev.domain.record.dto.Record;
 import ai.planit.pev.domain.record.dto.RecordEntity;
 import ai.planit.pev.domain.record.dto.RecordSection;
@@ -94,6 +95,11 @@ public class PathologyServiceImpl implements PathologyService {
 
         entities.add(PevEntityUtil.getSimpleTextEntity(false, "", pathologyData.getPlrtLdat()));
         entities.add(getPathologyProcessEntity(record, pathologyData));
+
+        RecordEntity writerEntity = PevEntityUtil.getSimpleTextEntity(false, "", pathologyData.getLshStfNm());
+        writerEntity.setAlignment(RecordEntityAlignment.RIGHT.getAlignment());
+
+        entities.add(writerEntity);
 
         section.setEntities(entities);
 
