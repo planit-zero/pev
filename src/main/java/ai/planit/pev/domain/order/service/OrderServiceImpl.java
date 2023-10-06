@@ -7,6 +7,7 @@ import ai.planit.pev.domain.order.dto.OrderData;
 import ai.planit.pev.domain.order.dto.OrderSection;
 import ai.planit.pev.domain.record.constant.RecordEntityAlignment;
 import ai.planit.pev.domain.record.dto.*;
+import ai.planit.pev.utility.PevEntityUtil;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,26 @@ public class OrderServiceImpl implements OrderService {
         }
 
         RecordSheet recordSheet = new RecordSheet();
+        recordSheet.setHeaderSection(getRecordHeaderSection(record));
         recordSheet.setSections(getRecordSections(pid, record));
 
         return recordSheet;
+    }
+
+    /**
+     * 처방기록의 헤더 섹션 생성
+     *
+     * @param record 조회할 기록 정보
+     * @return 처방기록의 헤더 섹션
+     */
+    private RecordSection getRecordHeaderSection(Record.Response record) {
+        RecordSection section = new RecordSection();
+
+        List<RecordEntity> entities = new ArrayList<>();
+        entities.add(PevEntityUtil.getSimpleTextEntity(true, "작성일자 :", record.getWritingDate()));
+
+        section.setEntities(entities);
+        return section;
     }
 
     /**

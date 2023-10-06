@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { IRecordEntity } from '../../pev-interface/IRecord';
 import { Box, Typography } from '@mui/material';
+import { TRecordSection } from '../../pev-type/TRecordSection';
 
 type RecordEntityProps = {
+    sectionType: string;
     entity: IRecordEntity;
 };
 
@@ -15,7 +17,7 @@ const RecordEntity = (props: RecordEntityProps) => {
                 sx={{
                     fontSize: `h4.fontSize`,
                     fontWeight: 'bold',
-                    color: '#4cbded',
+                    color: props.sectionType === TRecordSection.HEADER ? '#aa58d2' : '#4cbded',
                     whiteSpace: 'pre-line',
                     wordBreak: 'break-all',
                     mr: props.entity.isInline ? 1 : 0
@@ -29,7 +31,8 @@ const RecordEntity = (props: RecordEntityProps) => {
                     <Typography
                         key={idx}
                         sx={{
-                            fontSize: 'h5.fontSize',
+                            fontSize: props.sectionType === TRecordSection.HEADER ? 'h4.fontSize' : 'h5.fontSize',
+                            color: props.sectionType === TRecordSection.HEADER ? '#aa58d2' : 'inherit',
                             whiteSpace: 'pre-line',
                             wordBreak: 'break-all'
                         }}

@@ -49,6 +49,7 @@ export interface IRecord {
 }
 
 export interface IRecordSheet {
+    headerSection: IRecordSection;
     sections: IRecordSection[];
 }
 

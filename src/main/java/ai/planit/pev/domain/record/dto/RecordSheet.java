@@ -8,5 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class RecordSheet {
+    private RecordSection headerSection;
     private List<RecordSection> sections;
 }
