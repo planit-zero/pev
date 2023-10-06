@@ -2,6 +2,7 @@ package ai.planit.pev.domain.specimen.service;
 
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
+import ai.planit.pev.domain.record.constant.RecordEntityAlignment;
 import ai.planit.pev.domain.record.constant.RecordEntityType;
 import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.domain.specimen.dao.SpecimenDAO;
@@ -77,8 +78,8 @@ public class SpecimenServiceImpl implements SpecimenService {
 
         List<RecordEntity> entities = new ArrayList<>();
 
-        entities.add(PevEntityUtil.getSimpleTextEntity(true, "검사명 :", specimenInfo.getExmCtgNm()));
-        entities.add(PevEntityUtil.getSimpleTextEntity(true, "검체명 :", specimenInfo.getSpcmNm()));
+        entities.add(PevEntityUtil.getSimpleTextEntity(false, "검사명 :", String.format("\u2003%s", specimenInfo.getExmCtgNm())));
+        entities.add(PevEntityUtil.getSimpleTextEntity(false, "검체명 :", String.format("\u2003%s", specimenInfo.getSpcmNm())));
 
         recordSection.setEntities(entities);
         return recordSection;
@@ -171,7 +172,10 @@ public class SpecimenServiceImpl implements SpecimenService {
 
         List<RecordEntity> entities = new ArrayList<>();
 
-        entities.add(PevEntityUtil.getSimpleTextEntity(false, "보고자", specimenInfo.getItemCbVrfcIptnCnte()));
+        RecordEntity entity = PevEntityUtil.getSimpleTextEntity(true, "보고자", specimenInfo.getItemCbVrfcIptnCnte());
+        entity.setAlignment(RecordEntityAlignment.RIGHT.getAlignment());
+
+        entities.add(entity);
 
         recordSection.setEntities(entities);
         return recordSection;

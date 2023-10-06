@@ -3,6 +3,7 @@ import { IRecordSection } from '../../pev-interface/IRecord';
 import { Box } from '@mui/material';
 import RecordEntity from './RecordEntity';
 import { TRecordSection } from '../../pev-type/TRecordSection';
+import RecordEntityTable from './RecordEntityTable';
 
 type RecordSectionProps = {
     type: string;
@@ -18,6 +19,7 @@ const RecordSection = (props: RecordSectionProps) => {
             sx={{ fontStyle: props.type === TRecordSection.HEADER ? 'italic' : 'normal' }}
         >
             {props.section.entities.map((entity, idx) => {
+                if (entity.type === 'TABLE') return <RecordEntityTable key={idx} entity={entity} />;
                 return <RecordEntity key={idx} sectionType={props.type} entity={entity} />;
             })}
         </Box>
