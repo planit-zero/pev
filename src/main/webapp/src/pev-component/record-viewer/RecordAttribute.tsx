@@ -27,12 +27,7 @@ const RecordAttribute = (props: RecordAttributeProps) => {
             </Typography>
             {props.attribute.values &&
                 props.attribute.values.map((value, idx) => {
-                    return (
-                        <React.Fragment>
-                            <RecordValue key={idx} sectionType={props.sectionType} isInline={props.attribute.isInline} value={value} />
-                            {!props.attribute.isInline && <br />}
-                        </React.Fragment>
-                    );
+                    return <RecordValue key={idx} sectionType={props.sectionType} isInline={props.attribute.isInline} value={value} />;
                 })}
         </React.Fragment>
     );

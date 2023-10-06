@@ -39,12 +39,7 @@ const RecordEntity = (props: RecordEntityProps) => {
                 })}
             {props.entity.values &&
                 props.entity.values.map((value, idx) => {
-                    return (
-                        <React.Fragment>
-                            <RecordValue key={idx} sectionType={props.sectionType} isInline={props.entity.isInline} value={value} />
-                            {!props.entity.isInline && <br />}
-                        </React.Fragment>
-                    );
+                    return <RecordValue key={idx} sectionType={props.sectionType} isInline={props.entity.isInline} value={value} />;
                 })}
         </Box>
     );
