@@ -4,10 +4,8 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.picture.dao.PictureDAO;
 import ai.planit.pev.domain.picture.dto.PictureData;
-import ai.planit.pev.domain.record.dto.Record;
-import ai.planit.pev.domain.record.dto.RecordEntity;
-import ai.planit.pev.domain.record.dto.RecordSection;
-import ai.planit.pev.domain.record.dto.RecordSheet;
+import ai.planit.pev.domain.record.constant.RecordEntityAlignment;
+import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.utility.PevEntityUtil;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,9 @@ import java.util.stream.Stream;
 public class PictureServiceImpl implements PictureService {
     private final PictureDAO pictureDAO;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
         String pid = (String) session.getAttribute("pev-pid");
@@ -34,8 +34,14 @@ public class PictureServiceImpl implements PictureService {
             throw new BaseException(ErrorType.PID_NOT_FOUND_IN_SESSION);
         }
 
+        PictureData.Request request = new PictureData.Request();
+        request.setIptnNo(record.getExamKey());
+
+        PictureData.Response pictureData = pictureDAO.getPictureData(request);
+
         RecordSheet recordSheet = new RecordSheet();
-        recordSheet.setSections(getRecordSections(record));
+        recordSheet.setHeaderSection(getRecordHeaderSection(pictureData));
+        recordSheet.setSections(getRecordSections(pictureData));
 
         return recordSheet;
     }
@@ -43,30 +49,54 @@ public class PictureServiceImpl implements PictureService {
     /**
      * 영상검사 기록의 섹션 목록 생성
      *
-     * @param record 조회할 기록 정보
+     * @param pictureData 영상검사 기록 정보
      * @return 영상검사 섹션 목록
      */
-    private List<RecordSection> getRecordSections(Record.Response record) {
+    private List<RecordSection> getRecordSections(PictureData.Response pictureData) {
         List<RecordSection> sections = new ArrayList<>();
 
         // 영상검사는 단일 섹션으로 구성
-        sections.add(getRecordSection(record));
+        sections.add(getRecordSection(pictureData));
 
         return sections;
     }
 
     /**
+     * 영상검사 기록의 헤더 섹션 생성
+     *
+     * @param pictureData 영상검사 기록 정보
+     * @return 영상검사 기록의 헤더 섹션
+     */
+    private RecordSection getRecordHeaderSection(PictureData.Response pictureData) {
+        RecordSection section = new RecordSection();
+
+        List<RecordEntity> entities = new ArrayList<>();
+
+        RecordEntity entity = new RecordEntity();
+        entity.setText("영상검사결과");
+        entity.setIsInline(false);
+
+        List<RecordAttribute> attributes = new ArrayList<>();
+
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "검사일 :", pictureData.getExmDt()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "판독일 :", pictureData.getIptnDtm()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "검사명 :", pictureData.getOrdNm()));
+
+        entity.setAttributes(attributes);
+        entities.add(entity);
+
+        section.setEntities(entities);
+
+        return section;
+    }
+
+    /**
      * 영상검사 섹션 생성
      *
-     * @param record 조회할 기록 정보
+     * @param pictureData 영상검사 기록 정보
      * @return 영상검사 기록 섹션
      */
-    private RecordSection getRecordSection(Record.Response record) {
-        PictureData.Request request = new PictureData.Request();
-        request.setIptnNo(record.getExamKey());
-
-        PictureData.Response pictureData = pictureDAO.getPictureData(request);
-
+    private RecordSection getRecordSection(PictureData.Response pictureData) {
         RecordSection section = new RecordSection();
 
         List<RecordEntity> entities = new ArrayList<>();
@@ -102,6 +132,9 @@ public class PictureServiceImpl implements PictureService {
                 .filter(d -> d != null && !d.isEmpty())
                 .collect(Collectors.joining(", "));
 
-        return PevEntityUtil.getSimpleTextEntity(true, "판독의 :", decoderStr);
+        RecordEntity entity = PevEntityUtil.getSimpleTextEntity(true, "판독의 :", decoderStr);
+        entity.setAlignment(RecordEntityAlignment.RIGHT.getAlignment());
+
+        return entity;
     }
 }

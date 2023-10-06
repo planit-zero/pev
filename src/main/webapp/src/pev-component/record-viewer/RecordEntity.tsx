@@ -2,6 +2,8 @@ import * as React from 'react';
 import { IRecordEntity } from '../../pev-interface/IRecord';
 import { Box, Typography } from '@mui/material';
 import { TRecordSection } from '../../pev-type/TRecordSection';
+import RecordValue from './RecordValue';
+import RecordAttribute from './RecordAttribute';
 
 type RecordEntityProps = {
     sectionType: string;
@@ -26,22 +28,24 @@ const RecordEntity = (props: RecordEntityProps) => {
             >
                 {props.entity.text}
             </Typography>
-            {props.entity.values.map((value, idx) => {
-                return (
-                    <Typography
-                        key={idx}
-                        sx={{
-                            fontSize: props.sectionType === TRecordSection.HEADER ? 'h4.fontSize' : 'h5.fontSize',
-                            color: props.sectionType === TRecordSection.HEADER ? '#aa58d2' : 'inherit',
-                            whiteSpace: 'pre-line',
-                            wordBreak: 'break-all'
-                        }}
-                        display={props.entity.isInline ? 'inline' : 'block'}
-                    >
-                        {value.text}
-                    </Typography>
-                );
-            })}
+            {props.entity.attributes &&
+                props.entity.attributes.map((attribute, idx) => {
+                    return (
+                        <React.Fragment>
+                            <RecordAttribute key={idx} sectionType={props.sectionType} attribute={attribute} />
+                            {!props.entity.isInline && <br />}
+                        </React.Fragment>
+                    );
+                })}
+            {props.entity.values &&
+                props.entity.values.map((value, idx) => {
+                    return (
+                        <React.Fragment>
+                            <RecordValue key={idx} sectionType={props.sectionType} isInline={props.entity.isInline} value={value} />
+                            {!props.entity.isInline && <br />}
+                        </React.Fragment>
+                    );
+                })}
         </Box>
     );
 };

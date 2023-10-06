@@ -6,5 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RecordElement {
+    private Boolean isInline;
     private String text;
 }

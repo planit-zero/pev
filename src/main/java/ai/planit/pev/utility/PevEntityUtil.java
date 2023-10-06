@@ -1,6 +1,7 @@
 package ai.planit.pev.utility;
 
 import ai.planit.pev.domain.record.constant.RecordEntityType;
+import ai.planit.pev.domain.record.dto.RecordAttribute;
 import ai.planit.pev.domain.record.dto.RecordEntity;
 import ai.planit.pev.domain.record.dto.RecordValue;
 
@@ -18,18 +19,33 @@ public class PevEntityUtil {
      */
     public static RecordEntity getSimpleTextEntity(Boolean isInline, String entityText, String valueText) {
         RecordEntity entity = new RecordEntity();
+
         entity.setType(RecordEntityType.TEXT.getType());
         entity.setIsInline(isInline);
         entity.setText(entityText);
+        entity.setValues(getSimpleTextValues(valueText));
 
+        return entity;
+    }
+
+    public static RecordAttribute getSimpleTextAttribute(Boolean isInline, String attributeText, String valueText) {
+        RecordAttribute attribute = new RecordAttribute();
+
+        attribute.setIsInline(isInline);
+        attribute.setText(attributeText);
+        attribute.setValues(getSimpleTextValues(valueText));
+
+        return attribute;
+    }
+
+    public static List<RecordValue> getSimpleTextValues(String valueText) {
         List<RecordValue> values = new ArrayList<>();
 
         RecordValue value = new RecordValue();
         value.setText(valueText);
 
         values.add(value);
-        entity.setValues(values);
 
-        return entity;
+        return values;
     }
 }

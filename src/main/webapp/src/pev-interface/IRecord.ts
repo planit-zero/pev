@@ -59,7 +59,6 @@ export interface IRecordSection {
 
 export interface IRecordEntity extends IRecordElement {
     type: string;
-    isInline: boolean;
     alignment: string;
     attributes: IRecordAttribute[];
     values: IRecordValue[];
@@ -74,5 +73,6 @@ export interface IRecordValue extends IRecordElement {
 }
 
 export interface IRecordElement {
+    isInline: boolean;
     text: string
 }

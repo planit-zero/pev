@@ -1,0 +1,41 @@
+import * as React from 'react';
+import { IRecordAttribute } from '../../pev-interface/IRecord';
+import { TRecordSection } from '../../pev-type/TRecordSection';
+import { Typography } from '@mui/material';
+import RecordValue from './RecordValue';
+
+type RecordAttributeProps = {
+    sectionType: string;
+    attribute: IRecordAttribute;
+};
+
+const RecordAttribute = (props: RecordAttributeProps) => {
+    return (
+        <React.Fragment>
+            <Typography
+                sx={{
+                    fontSize: 'h5.fontSize',
+                    fontWeight: 'bold',
+                    color: props.sectionType === TRecordSection.HEADER ? '#aa58d2' : 'inherit',
+                    whiteSpace: 'pre-line',
+                    wordBreak: 'break-all',
+                    mr: props.attribute.isInline ? 1 : 0
+                }}
+                display={props.attribute.isInline ? 'inline' : 'block'}
+            >
+                {props.attribute.text}
+            </Typography>
+            {props.attribute.values &&
+                props.attribute.values.map((value, idx) => {
+                    return (
+                        <React.Fragment>
+                            <RecordValue key={idx} sectionType={props.sectionType} isInline={props.attribute.isInline} value={value} />
+                            {!props.attribute.isInline && <br />}
+                        </React.Fragment>
+                    );
+                })}
+        </React.Fragment>
+    );
+};
+
+export default RecordAttribute;
