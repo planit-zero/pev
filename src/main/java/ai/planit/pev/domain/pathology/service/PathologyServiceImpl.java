@@ -35,9 +35,30 @@ public class PathologyServiceImpl implements PathologyService {
         }
 
         RecordSheet recordSheet = new RecordSheet();
+        recordSheet.setHeaderSection(getRecordHeaderSection(record));
         recordSheet.setSections(getRecordSections(record));
 
         return recordSheet;
+    }
+
+    /**
+     * 병리검사 기록 헤더 섹션 생성
+     *
+     * @param record 조회할 기록 정보
+     * @return 병리검사 기록 헤더 섹션
+     */
+    private RecordSection getRecordHeaderSection(Record.Response record) {
+        RecordSection section = new RecordSection();
+
+        List<RecordEntity> entities = new ArrayList<>();
+
+        RecordEntity entity = new RecordEntity();
+        entity.setText(String.format("%s (%s) [%s]", "병리진단", record.getExamKey(), "판독완료"));
+
+        entities.add(entity);
+        section.setEntities(entities);
+
+        return section;
     }
 
     /**
