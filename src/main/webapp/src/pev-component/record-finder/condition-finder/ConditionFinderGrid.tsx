@@ -48,9 +48,9 @@ const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
                     onSelectionChanged={handleSelectionChanged}
                 >
                     <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={50} />
-                    <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={50} />
+                    <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={80} />
                     <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} width={180} />
-                    <Column dataField={'writingDate'} caption={'작성일자'} width={100} alignment={'center'} />
+                    <Column dataField={'writingDate'} caption={'작성일자'} width={90} alignment={'center'} />
                     <Column dataField={'writingDeptNm'} caption={'작성과'} width={100} alignment={'left'} />
                     <Column dataField={'writerNm'} caption={'작성자'} width={80} alignment={'center'} />
                     <Column dataField={'mdrcWrtStsCdYn'} caption={'서명'} alignment={'center'} width={60} />
