@@ -460,8 +460,8 @@
                       , NULL                                                        AS mdrcWrtStsCdYn
                       , NULL                                                        AS opExptRegId
         FROM ODS.S_MSELMAID A
-                 LEFT OUTER JOIN ODS.S_MSELMCED M ON A.SPCM_NO = M.SPCM_NO
-                 LEFT OUTER JOIN ODS.S_CCOOCCSC Q ON A.MED_EXM_CTG_CD = Q.ORD_SLIP_CTG_CD
+                 INNER JOIN ODS.S_MSELMCED M ON A.SPCM_NO = M.SPCM_NO
+                 INNER JOIN ODS.S_CCOOCCSC Q ON A.MED_EXM_CTG_CD = Q.ORD_SLIP_CTG_CD
         WHERE A.PT_NO = #{ptNo}
           AND A.ACPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
           AND A.RSLT_BRFG_YN = 'Y'
