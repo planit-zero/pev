@@ -7,6 +7,7 @@ import ai.planit.pev.domain.record.constant.RecordEntityType;
 import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.domain.specimen.dao.SpecimenDAO;
 import ai.planit.pev.domain.specimen.dto.SpecimenData;
+import ai.planit.pev.domain.specimen.dto.SpecimenHeaderData;
 import ai.planit.pev.domain.specimen.dto.SpecimenInfo;
 import ai.planit.pev.utility.PevEntityUtil;
 import ai.planit.pev.utility.PevStringUtil;
@@ -22,7 +23,9 @@ import java.util.List;
 public class SpecimenServiceImpl implements SpecimenService {
     private final SpecimenDAO specimenDAO;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
         String pid = (String) session.getAttribute("pev-pid");
@@ -33,15 +36,50 @@ public class SpecimenServiceImpl implements SpecimenService {
         }
 
         RecordSheet recordSheet = new RecordSheet();
+
+        recordSheet.setHeaderSection(getRecordHeaderSection(record.getExamKey()));
         recordSheet.setSections(getRecordSections(pid, record));
 
         return recordSheet;
     }
 
     /**
+     * 검체검사 기록의 헤더 섹션 생성
+     *
+     * @param spcmNo 검체번호
+     * @return 검체검사 기록의 헤더 섹션
+     */
+    private RecordSection getRecordHeaderSection(String spcmNo) {
+        SpecimenHeaderData headerData = specimenDAO.getSpecimenHeaderData(spcmNo);
+
+        RecordSection section = new RecordSection();
+        List<RecordEntity> entities = new ArrayList<>();
+
+        RecordEntity entity = new RecordEntity();
+        entity.setType(RecordEntityType.TEXT.getType());
+        entity.setIsInline(false);
+        entity.setAlignment(RecordEntityAlignment.LEFT.getAlignment());
+        entity.setText(String.format("%s (%s)", "검체검사결과", headerData.getOrdCtgNm()));
+
+        List<RecordAttribute> attributes = new ArrayList<>();
+
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "의뢰처/진료과 :", String.format("%s / %s", headerData.getPbsoDeptCd(), headerData.getPtHmeDeptCd())));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "의뢰의사 :", headerData.getAndrStfNm()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "의뢰일시 :", headerData.getOrdDt()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "접수일시 :", headerData.getAcptDtm()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "보고일시 :", headerData.getBrfgDtm()));
+
+        entity.setAttributes(attributes);
+        entities.add(entity);
+
+        section.setEntities(entities);
+        return section;
+    }
+
+    /**
      * 검체검사 기록의 섹션 목록 생성
      *
-     * @param pid 환자병록번호
+     * @param pid    환자병록번호
      * @param record 조회할 기록 정보
      * @return 검체검사 섹션 목록
      */
@@ -88,7 +126,7 @@ public class SpecimenServiceImpl implements SpecimenService {
     /**
      * 검체검사 기록의 검사결과 섹션 생성
      *
-     * @param pid 환자병록번호
+     * @param pid    환자병록번호
      * @param record 조회할 기록 정보
      * @return 검체검사 기록 검사결과 섹션
      */

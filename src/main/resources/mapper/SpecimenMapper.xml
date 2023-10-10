@@ -43,4 +43,17 @@
         ORDER BY B.SCRN_SORT_SEQ
         ]]>
     </select>
+    <select id="getSpecimenHeaderData" parameterType="java.lang.String" resultType="SpecimenHeaderData">
+        SELECT (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = B.ORD_CTG_CD) AS ordCtgNm,
+               B.PBSO_DEPT_CD AS pbsoDeptCd,
+               B.PT_HME_DEPT_CD AS ptHmeDeptCd,
+               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = B.ANDR_STF_NO) AS andrStfNm,
+               B.ORD_DT AS ordDt,
+               TO_CHAR(B.ACPT_DTM, 'YYYY-MM-DD HH:MI') AS acptDtm,
+               TO_CHAR(B.BRFG_DTM, 'YYYY-MM-DD HH:MI') AS brfgDtm
+        FROM ODS.S_MSELMCED A
+                 INNER JOIN ODS.S_MOOOREXM B
+                            ON A.ORD_ID = B.ORD_ID
+        WHERE A.SPCM_NO = #{spcmNo}
+    </select>
 </mapper>

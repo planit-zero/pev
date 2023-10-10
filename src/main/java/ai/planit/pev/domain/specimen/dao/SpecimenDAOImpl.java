@@ -1,6 +1,7 @@
 package ai.planit.pev.domain.specimen.dao;
 
 import ai.planit.pev.domain.specimen.dto.SpecimenData;
+import ai.planit.pev.domain.specimen.dto.SpecimenHeaderData;
 import ai.planit.pev.domain.specimen.dto.SpecimenInfo;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -23,5 +24,10 @@ public class SpecimenDAOImpl implements SpecimenDAO {
     @Override
     public List<SpecimenData.Response> getSpecimenData(SpecimenData.Request request) {
         return sqlSessionTemplate.selectList("getSpecimenData", request);
+    }
+
+    @Override
+    public SpecimenHeaderData getSpecimenHeaderData(String spcmNo) {
+        return sqlSessionTemplate.selectOne("getSpecimenHeaderData", spcmNo);
     }
 }

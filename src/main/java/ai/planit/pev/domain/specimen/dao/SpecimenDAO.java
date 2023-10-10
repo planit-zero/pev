@@ -1,6 +1,7 @@
 package ai.planit.pev.domain.specimen.dao;
 
 import ai.planit.pev.domain.specimen.dto.SpecimenData;
+import ai.planit.pev.domain.specimen.dto.SpecimenHeaderData;
 import ai.planit.pev.domain.specimen.dto.SpecimenInfo;
 
 import java.util.List;
@@ -19,4 +20,12 @@ public interface SpecimenDAO {
      * @return 조회한 검체검사 기록의 데이터
      */
     List<SpecimenData.Response> getSpecimenData(SpecimenData.Request request);
+
+    /**
+     * 검체검사 기록의 헤더 섹션 생성에 필요한 데이터 (처방분류명, 의뢰처, 진료과, 의뢰의사, 의뢰일시, 접수일시, 보고일시) 를 조회한다.
+     *
+     * @param spcmNo 검체번호
+     * @return 조회한 검체검사 기록의 헤더 섹션 데이터
+     */
+    SpecimenHeaderData getSpecimenHeaderData(String spcmNo);
 }
