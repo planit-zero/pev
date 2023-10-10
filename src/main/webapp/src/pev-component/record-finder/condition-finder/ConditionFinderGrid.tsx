@@ -6,6 +6,8 @@ import { DataGrid } from 'devextreme-react';
 import { Column, Scrolling, Selection } from 'devextreme-react/data-grid';
 import SearchIcon from '@mui/icons-material/Search';
 import { setTargetRecords } from '../../../store/pev-slices/record';
+import { setAlert } from '../../../store/pev-slices/environment';
+import { TAlert } from '../../../pev-type/TAlert';
 
 type ConditionFinderGridProps = {
     recordList: IRecord[];
@@ -19,6 +21,10 @@ const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
     };
 
     const handleRetrieve = () => {
+        if (selectedRecordList.length === 0) {
+            setAlert({ type: TAlert.WARNING, message: '기록 목록에서 기록을 한 개 이상 선택 후 조회 버튼을 눌러주세요.' });
+            return;
+        }
         setTargetRecords(selectedRecordList);
     };
 
