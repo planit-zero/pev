@@ -2,8 +2,10 @@ package ai.planit.pev.utility;
 
 import ai.planit.pev.domain.record.constant.RecordEntityType;
 import ai.planit.pev.domain.record.dto.RecordAttribute;
+import ai.planit.pev.domain.record.dto.RecordElement;
 import ai.planit.pev.domain.record.dto.RecordEntity;
 import ai.planit.pev.domain.record.dto.RecordValue;
+import reactor.util.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,26 +14,38 @@ public class PevEntityUtil {
     /**
      * 별도의 Attribute 가 존재하지 않고 Entity-Value 가 1:1 관계인 Entity 생성
      *
-     * @param isInline 줄바꿈 여부 (false -> 개행)
+     * @param element 요소의 속성 정보
      * @param entityText Entity 출력값
      * @param valueText Value 출력값
      * @return 문자열 형태의 단순 Entity
      */
-    public static RecordEntity getSimpleTextEntity(Boolean isInline, String entityText, String valueText) {
+    public static RecordEntity getSimpleTextEntity(@Nullable RecordElement element, String entityText, String valueText) {
         RecordEntity entity = new RecordEntity();
 
         entity.setType(RecordEntityType.TEXT.getType());
-        entity.setIsInline(isInline);
+
+        // 좋은 방법이 있을 것 같은데...
+        if (element != null) {
+            entity.setDisplay(element.getDisplay());
+            entity.setAlignment(element.getAlignment());
+            entity.setTextDecoration(element.getTextDecoration());
+        }
+
         entity.setText(entityText);
         entity.setValues(getSimpleTextValues(valueText));
 
         return entity;
     }
 
-    public static RecordAttribute getSimpleTextAttribute(Boolean isInline, String attributeText, String valueText) {
+    public static RecordAttribute getSimpleTextAttribute(@Nullable RecordElement element, String attributeText, String valueText) {
         RecordAttribute attribute = new RecordAttribute();
 
-        attribute.setIsInline(isInline);
+        if (element != null) {
+            attribute.setDisplay(element.getDisplay());
+            attribute.setAlignment(element.getAlignment());
+            attribute.setTextDecoration(element.getTextDecoration());
+        }
+
         attribute.setText(attributeText);
         attribute.setValues(getSimpleTextValues(valueText));
 

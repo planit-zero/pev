@@ -9,7 +9,6 @@ import java.util.List;
 @Setter
 public class RecordEntity extends RecordElement {
     private String type;
-    private String alignment;
     private List<RecordAttribute> attributes;
     private List<RecordValue> values;
 }

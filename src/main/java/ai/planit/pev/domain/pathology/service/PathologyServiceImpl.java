@@ -5,11 +5,8 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.pathology.dao.PathologyDAO;
 import ai.planit.pev.domain.pathology.dto.PathologyData;
 import ai.planit.pev.domain.pathology.dto.PathologyProcess;
-import ai.planit.pev.domain.record.constant.RecordEntityAlignment;
-import ai.planit.pev.domain.record.dto.Record;
-import ai.planit.pev.domain.record.dto.RecordEntity;
-import ai.planit.pev.domain.record.dto.RecordSection;
-import ai.planit.pev.domain.record.dto.RecordSheet;
+import ai.planit.pev.domain.record.constant.RecordElementAlignment;
+import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.utility.PevEntityUtil;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
@@ -93,12 +90,13 @@ public class PathologyServiceImpl implements PathologyService {
 
         List<RecordEntity> entities = new ArrayList<>();
 
-        entities.add(PevEntityUtil.getSimpleTextEntity(false, "", pathologyData.getPlrtLdat()));
+        entities.add(PevEntityUtil.getSimpleTextEntity(null, "", pathologyData.getPlrtLdat()));
         entities.add(getPathologyProcessEntity(record, pathologyData));
 
-        RecordEntity writerEntity = PevEntityUtil.getSimpleTextEntity(false, "", pathologyData.getLshStfNm());
-        writerEntity.setAlignment(RecordEntityAlignment.RIGHT.getAlignment());
+        RecordElement element = new RecordElement();
+        element.setAlignment(RecordElementAlignment.RIGHT.getValue());
 
+        RecordEntity writerEntity = PevEntityUtil.getSimpleTextEntity(element, "", pathologyData.getLshStfNm());
         entities.add(writerEntity);
 
         section.setEntities(entities);
@@ -124,7 +122,7 @@ public class PathologyServiceImpl implements PathologyService {
                 getPathologyProcessContent(record)
                 );
 
-        return PevEntityUtil.getSimpleTextEntity(false, "", text);
+        return PevEntityUtil.getSimpleTextEntity(null, "", text);
     }
 
     /**

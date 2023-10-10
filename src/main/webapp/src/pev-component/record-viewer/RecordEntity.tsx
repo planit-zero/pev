@@ -4,6 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { TRecordSection } from '../../pev-type/TRecordSection';
 import RecordValue from './RecordValue';
 import RecordAttribute from './RecordAttribute';
+import { TRecordElementDisplay } from '../../pev-type/TRecordElement';
 
 type RecordEntityProps = {
     sectionType: string;
@@ -22,9 +23,10 @@ const RecordEntity = (props: RecordEntityProps) => {
                     color: props.sectionType === TRecordSection.HEADER ? '#aa58d2' : '#4cbded',
                     whiteSpace: 'pre-line',
                     wordBreak: 'break-all',
-                    mr: props.entity.isInline ? 1 : 0
+                    mr: props.entity.display === TRecordElementDisplay.INLINE ? 1 : 0,
+                    textDecoration: props.entity.textDecoration
                 }}
-                display={props.entity.isInline ? 'inline' : 'block'}
+                display={props.entity.display}
             >
                 {props.entity.text}
             </Typography>
@@ -33,13 +35,13 @@ const RecordEntity = (props: RecordEntityProps) => {
                     return (
                         <React.Fragment>
                             <RecordAttribute key={idx} sectionType={props.sectionType} attribute={attribute} />
-                            {!props.entity.isInline && <br />}
+                            {props.entity.display === TRecordElementDisplay.BLOCK && <br />}
                         </React.Fragment>
                     );
                 })}
             {props.entity.values &&
                 props.entity.values.map((value, idx) => {
-                    return <RecordValue key={idx} sectionType={props.sectionType} isInline={props.entity.isInline} value={value} />;
+                    return <RecordValue key={idx} sectionType={props.sectionType} display={props.entity.display} value={value} />;
                 })}
         </Box>
     );

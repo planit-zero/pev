@@ -4,7 +4,9 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.picture.dao.PictureDAO;
 import ai.planit.pev.domain.picture.dto.PictureData;
-import ai.planit.pev.domain.record.constant.RecordEntityAlignment;
+import ai.planit.pev.domain.record.constant.RecordElementAlignment;
+import ai.planit.pev.domain.record.constant.RecordElementDisplay;
+import ai.planit.pev.domain.record.constant.RecordElementTextDecoration;
 import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.utility.PevEntityUtil;
 import ai.planit.pev.utility.PevStringUtil;
@@ -74,13 +76,15 @@ public class PictureServiceImpl implements PictureService {
 
         RecordEntity entity = new RecordEntity();
         entity.setText("영상검사결과");
-        entity.setIsInline(false);
 
         List<RecordAttribute> attributes = new ArrayList<>();
 
-        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "검사일 :", pictureData.getExmDt()));
-        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "판독일 :", pictureData.getIptnDtm()));
-        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "검사명 :", pictureData.getOrdNm()));
+        RecordElement element = new RecordElement();
+        element.setDisplay(RecordElementDisplay.INLINE.getValue());
+
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(element, "검사일 :", pictureData.getExmDt()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(element, "판독일 :", pictureData.getIptnDtm()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(element, "검사명 :", pictureData.getOrdNm()));
 
         entity.setAttributes(attributes);
         entities.add(entity);
@@ -101,11 +105,16 @@ public class PictureServiceImpl implements PictureService {
 
         List<RecordEntity> entities = new ArrayList<>();
 
-        entities.add(PevEntityUtil.getSimpleTextEntity(false, "[Conclusion]", pictureData.getIptnCncsCnte()));
-        entities.add(PevEntityUtil.getSimpleTextEntity(false, "[Finding]", pictureData.getTh1IptnExpl()));
+        RecordElement element = new RecordElement();
+        element.setTextDecoration(RecordElementTextDecoration.UNDERLINE.getValue());
+
+        entities.add(PevEntityUtil.getSimpleTextEntity(element, "[Conclusion]", pictureData.getIptnCncsCnte()));
+        entities.add(PevEntityUtil.getSimpleTextEntity(element, "[Finding]", pictureData.getTh1IptnExpl()));
+
         if (pictureData.getCopnCnte() != null) {
-            entities.add(PevEntityUtil.getSimpleTextEntity(false, "[Clinical Information]", pictureData.getCopnCnte()));
+            entities.add(PevEntityUtil.getSimpleTextEntity(element, "[Clinical Information]", pictureData.getCopnCnte()));
         }
+
         entities.add(getDecoderEntity(pictureData));
 
         section.setEntities(entities);
@@ -132,9 +141,10 @@ public class PictureServiceImpl implements PictureService {
                 .filter(d -> d != null && !d.isEmpty())
                 .collect(Collectors.joining(", "));
 
-        RecordEntity entity = PevEntityUtil.getSimpleTextEntity(true, "판독의 :", decoderStr);
-        entity.setAlignment(RecordEntityAlignment.RIGHT.getAlignment());
+        RecordElement element = new RecordElement();
+        element.setDisplay(RecordElementDisplay.INLINE.getValue());
+        element.setAlignment(RecordElementAlignment.RIGHT.getValue());
 
-        return entity;
+        return PevEntityUtil.getSimpleTextEntity(element, "판독의 :", decoderStr);
     }
 }

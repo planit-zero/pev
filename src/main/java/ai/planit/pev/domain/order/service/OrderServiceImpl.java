@@ -5,7 +5,8 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.order.dao.OrderDAO;
 import ai.planit.pev.domain.order.dto.OrderData;
 import ai.planit.pev.domain.order.dto.OrderSection;
-import ai.planit.pev.domain.record.constant.RecordEntityAlignment;
+import ai.planit.pev.domain.record.constant.RecordElementAlignment;
+import ai.planit.pev.domain.record.constant.RecordElementDisplay;
 import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.utility.PevEntityUtil;
 import ai.planit.pev.utility.PevStringUtil;
@@ -49,7 +50,11 @@ public class OrderServiceImpl implements OrderService {
         RecordSection section = new RecordSection();
 
         List<RecordEntity> entities = new ArrayList<>();
-        entities.add(PevEntityUtil.getSimpleTextEntity(true, "작성일자 :", record.getWritingDate()));
+
+        RecordElement element = new RecordElement();
+        element.setDisplay(RecordElementDisplay.INLINE.getValue());
+
+        entities.add(PevEntityUtil.getSimpleTextEntity(element, "작성일자 :", record.getWritingDate()));
 
         section.setEntities(entities);
         return section;
@@ -114,7 +119,6 @@ public class OrderServiceImpl implements OrderService {
         RecordEntity entity = new RecordEntity();
 
         entity.setText(String.format("%s >", orderSection.getOdaplPopNm()));
-        entity.setIsInline(false);
 
         OrderData.Request request = new OrderData.Request();
         request.setPtNo(pid);
@@ -159,8 +163,8 @@ public class OrderServiceImpl implements OrderService {
         RecordEntity entity = new RecordEntity();
 
         entity.setText("작성자 :");
-        entity.setIsInline(true);
-        entity.setAlignment(RecordEntityAlignment.RIGHT.getAlignment());
+        entity.setDisplay(RecordElementDisplay.INLINE.getValue());
+        entity.setAlignment(RecordElementAlignment.RIGHT.getValue());
 
         List<RecordValue> values = new ArrayList<>();
 

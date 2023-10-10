@@ -5,7 +5,7 @@ import { Typography } from '@mui/material';
 
 type RecordValueProps = {
     sectionType: string;
-    isInline: boolean;
+    display: string;
     value: IRecordValue;
 };
 
@@ -18,7 +18,7 @@ const RecordValue = (props: RecordValueProps) => {
                 whiteSpace: 'pre-line',
                 wordBreak: 'break-all'
             }}
-            display={props.isInline ? 'inline' : 'block'}
+            display={props.display}
         >
             {props.value.text}
         </Typography>

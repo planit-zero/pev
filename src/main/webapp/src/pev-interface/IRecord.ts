@@ -73,6 +73,7 @@ export interface IRecordValue extends IRecordElement {
 }
 
 export interface IRecordElement {
-    isInline: boolean;
+    display: string;
+    textDecoration: string;
     text: string
 }

@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum RecordEntityAlignment {
-    LEFT("left"),
-    RIGHT("right"),
-    CENTER("center"),
+public enum RecordElementDisplay {
+    BLOCK("block"),
+    INLINE("inline"),
     ;
 
-    private final String alignment;
+    private final String value;
 }

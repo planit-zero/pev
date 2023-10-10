@@ -2,7 +2,9 @@ package ai.planit.pev.domain.specimen.service;
 
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
-import ai.planit.pev.domain.record.constant.RecordEntityAlignment;
+import ai.planit.pev.domain.record.constant.RecordElementAlignment;
+import ai.planit.pev.domain.record.constant.RecordElementDisplay;
+import ai.planit.pev.domain.record.constant.RecordElementTextDecoration;
 import ai.planit.pev.domain.record.constant.RecordEntityType;
 import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.domain.specimen.dao.SpecimenDAO;
@@ -56,18 +58,18 @@ public class SpecimenServiceImpl implements SpecimenService {
         List<RecordEntity> entities = new ArrayList<>();
 
         RecordEntity entity = new RecordEntity();
-        entity.setType(RecordEntityType.TEXT.getType());
-        entity.setIsInline(false);
-        entity.setAlignment(RecordEntityAlignment.LEFT.getAlignment());
         entity.setText(String.format("%s (%s)", "검체검사결과", headerData.getOrdCtgNm()));
 
         List<RecordAttribute> attributes = new ArrayList<>();
 
-        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "의뢰처/진료과 :", String.format("%s / %s", headerData.getPbsoDeptCd(), headerData.getPtHmeDeptCd())));
-        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "의뢰의사 :", headerData.getAndrStfNm()));
-        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "의뢰일시 :", headerData.getOrdDt()));
-        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "접수일시 :", headerData.getAcptDtm()));
-        attributes.add(PevEntityUtil.getSimpleTextAttribute(true, "보고일시 :", headerData.getBrfgDtm()));
+        RecordElement element = new RecordElement();
+        element.setDisplay(RecordElementDisplay.INLINE.getValue());
+
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(element, "의뢰처/진료과 :", String.format("%s / %s", headerData.getPbsoDeptCd(), headerData.getPtHmeDeptCd())));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(element, "의뢰의사 :", headerData.getAndrStfNm()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(element, "의뢰일시 :", headerData.getOrdDt()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(element, "접수일시 :", headerData.getAcptDtm()));
+        attributes.add(PevEntityUtil.getSimpleTextAttribute(element, "보고일시 :", headerData.getBrfgDtm()));
 
         entity.setAttributes(attributes);
         entities.add(entity);
@@ -116,8 +118,11 @@ public class SpecimenServiceImpl implements SpecimenService {
 
         List<RecordEntity> entities = new ArrayList<>();
 
-        entities.add(PevEntityUtil.getSimpleTextEntity(false, "검사명 :", String.format("\u2003%s", specimenInfo.getExmCtgNm())));
-        entities.add(PevEntityUtil.getSimpleTextEntity(false, "검체명 :", String.format("\u2003%s", specimenInfo.getSpcmNm())));
+        RecordElement element = new RecordElement();
+        element.setTextDecoration(RecordElementTextDecoration.UNDERLINE.getValue());
+
+        entities.add(PevEntityUtil.getSimpleTextEntity(element, "검사명 :", String.format("\u2003%s", specimenInfo.getExmCtgNm())));
+        entities.add(PevEntityUtil.getSimpleTextEntity(element, "검체명 :", String.format("\u2003%s", specimenInfo.getSpcmNm())));
 
         recordSection.setEntities(entities);
         return recordSection;
@@ -210,12 +215,13 @@ public class SpecimenServiceImpl implements SpecimenService {
 
         List<RecordEntity> entities = new ArrayList<>();
 
-        RecordEntity entity = PevEntityUtil.getSimpleTextEntity(true, "보고자", specimenInfo.getItemCbVrfcIptnCnte());
-        entity.setAlignment(RecordEntityAlignment.RIGHT.getAlignment());
+        RecordElement element = new RecordElement();
+        element.setDisplay(RecordElementDisplay.INLINE.getValue());
+        element.setAlignment(RecordElementAlignment.RIGHT.getValue());
 
-        entities.add(entity);
-
+        entities.add(PevEntityUtil.getSimpleTextEntity(element, "보고자", specimenInfo.getItemCbVrfcIptnCnte()));
         recordSection.setEntities(entities);
+
         return recordSection;
     }
 }
