@@ -19,28 +19,30 @@ const RecordEntityTable = (props: RecordEntityTableProps) => {
                             borderCollapse: 'collapse'
                         }}
                     >
-                        <tr>
-                            <th style={{ backgroundColor: '#3f51b5' }}>
-                                <Typography
-                                    sx={{
-                                        color: '#ffffff',
-                                        fontSize: 'h4.fontSize',
-                                        fontWeight: 'bold'
-                                    }}
-                                >
-                                    {attribute.text}
-                                </Typography>
-                            </th>
-                        </tr>
-                        {attribute.values.map((value, vIdx) => {
-                            return (
-                                <tr>
-                                    <td key={vIdx} style={{ height: '25px', padding: '4px' }}>
-                                        <Typography sx={{ fontSize: 'h6.fontSize' }}>{value.text}</Typography>
-                                    </td>
-                                </tr>
-                            );
-                        })}
+                        <tbody>
+                            <tr>
+                                <th style={{ backgroundColor: '#3f51b5' }}>
+                                    <Typography
+                                        sx={{
+                                            color: '#ffffff',
+                                            fontSize: 'h4.fontSize',
+                                            fontWeight: 'bold'
+                                        }}
+                                    >
+                                        {attribute.text}
+                                    </Typography>
+                                </th>
+                            </tr>
+                            {attribute.values.map((value, vIdx) => {
+                                return (
+                                    <tr>
+                                        <td key={vIdx} style={{ height: '25px', padding: '4px' }}>
+                                            <Typography sx={{ fontSize: 'h6.fontSize' }}>{value.text}</Typography>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
                     </table>
                 );
             })}
