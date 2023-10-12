@@ -33,8 +33,8 @@ const RecordEntity = (props: RecordEntityProps) => {
             {props.entity.attributes &&
                 props.entity.attributes.map((attribute, idx) => {
                     return (
-                        <React.Fragment>
-                            <RecordAttribute key={idx} sectionType={props.sectionType} attribute={attribute} />
+                        <React.Fragment key={idx}>
+                            <RecordAttribute sectionType={props.sectionType} attribute={attribute} />
                         </React.Fragment>
                     );
                 })}
