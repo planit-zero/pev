@@ -5,7 +5,7 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.record.constant.RecordElementAlignment;
 import ai.planit.pev.domain.record.constant.RecordElementDisplay;
 import ai.planit.pev.domain.record.constant.RecordElementTextDecoration;
-import ai.planit.pev.domain.record.constant.RecordEntityType;
+import ai.planit.pev.domain.record.constant.RecordEntityPattern;
 import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.domain.specimen.dao.SpecimenDAO;
 import ai.planit.pev.domain.specimen.dto.SpecimenData;
@@ -159,7 +159,7 @@ public class SpecimenServiceImpl implements SpecimenService {
         List<RecordEntity> entities = new ArrayList<>();
 
         RecordEntity entity = new RecordEntity();
-        entity.setType(RecordEntityType.TABLE.getType());
+        entity.setType(RecordEntityPattern.TABLE.getType());
 
         List<RecordAttribute> attributes = new ArrayList<>();
 

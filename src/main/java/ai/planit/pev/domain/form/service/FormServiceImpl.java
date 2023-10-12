@@ -6,7 +6,7 @@ import ai.planit.pev.domain.form.dao.FormDAO;
 import ai.planit.pev.domain.form.dto.*;
 import ai.planit.pev.domain.record.constant.RecordElementClass;
 import ai.planit.pev.domain.record.constant.RecordElementDisplay;
-import ai.planit.pev.domain.record.constant.RecordTargetType;
+import ai.planit.pev.domain.record.constant.RecordTarget;
 import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.utility.PevEntityUtil;
 import ai.planit.pev.utility.PevStringUtil;
@@ -40,25 +40,25 @@ public class FormServiceImpl implements FormService {
     }
 
     private RecordSection getRecordHeaderSection(Record.Response record) {
-        if (record.getRecordType().equals(RecordTargetType.MEDICAL_RECORD.getCode())) {
+        if (record.getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
             if (
-                    record.getRecordDetailType().equals(RecordTargetType.MEDICAL_OUTPATIENT_FIRST.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_OUTPATIENT_PROGRESS.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_INPATIENT_FIRST.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_INPATIENT_PROGRESS.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_EMERGENCY.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_SURGERY.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_DISCHARGE.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_REQUEST.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_COVER.getCode())
+                    record.getRecordDetailType().equals(RecordTarget.MEDICAL_OUTPATIENT_FIRST.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_OUTPATIENT_PROGRESS.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_INPATIENT_FIRST.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_INPATIENT_PROGRESS.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_EMERGENCY.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_SURGERY.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_DISCHARGE.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_REQUEST.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_COVER.getType())
             ) {
                 return getRecordHeaderSectionWithItemNameAndDepartment(record);
             }
 
             if (
-                    record.getRecordDetailType().equals(RecordTargetType.MEDICAL_ANESTHESIA.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode())
-                            || record.getRecordDetailType().equals(RecordTargetType.MEDICAL_DEPARTMENT.getCode())
+                    record.getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType())
+                            || record.getRecordDetailType().equals(RecordTarget.MEDICAL_DEPARTMENT.getType())
             ) {
                 return getRecordHeaderSectionWithItemName(record);
             }

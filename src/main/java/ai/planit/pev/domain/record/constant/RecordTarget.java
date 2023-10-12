@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum RecordTargetType {
+public enum RecordTarget {
     // 진료기록
     MEDICAL_RECORD("DR", "진료기록"),
     MEDICAL_OUTPATIENT_FIRST("D001", "진료기록 - 외래초진"),
@@ -42,6 +42,6 @@ public enum RecordTargetType {
     ;
 
 
-    private final String code;
+    private final String type;
     private final String desc;
 }

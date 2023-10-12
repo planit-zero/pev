@@ -1,6 +1,6 @@
 package ai.planit.pev.utility;
 
-import ai.planit.pev.domain.record.constant.RecordEntityType;
+import ai.planit.pev.domain.record.constant.RecordEntityPattern;
 import ai.planit.pev.domain.record.dto.RecordAttribute;
 import ai.planit.pev.domain.record.dto.RecordElement;
 import ai.planit.pev.domain.record.dto.RecordEntity;
@@ -22,7 +22,7 @@ public class PevEntityUtil {
     public static RecordEntity getSimpleTextEntity(@Nullable RecordElement element, String entityText, String valueText) {
         RecordEntity entity = new RecordEntity();
 
-        entity.setType(RecordEntityType.TEXT.getType());
+        entity.setType(RecordEntityPattern.TEXT.getType());
 
         // 좋은 방법이 있을 것 같은데...
         if (element != null) {

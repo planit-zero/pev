@@ -6,7 +6,7 @@ import ai.planit.pev.domain.form.service.FormService;
 import ai.planit.pev.domain.order.service.OrderService;
 import ai.planit.pev.domain.pathology.service.PathologyService;
 import ai.planit.pev.domain.picture.service.PictureService;
-import ai.planit.pev.domain.record.constant.RecordTargetType;
+import ai.planit.pev.domain.record.constant.RecordTarget;
 import ai.planit.pev.domain.record.dao.RecordListDAO;
 import ai.planit.pev.domain.record.dto.Record;
 import ai.planit.pev.domain.record.dto.RecordSheet;
@@ -72,14 +72,14 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 처방
-        if (searchTargetList.contains(RecordTargetType.ORDER_RECORD.getCode())) {
+        if (searchTargetList.contains(RecordTarget.ORDER_RECORD.getType())) {
             recordList.addAll(recordListDAO.getOrderRecordList(request));
         }
 
         // 검사
         List<String> examRecordTargets = searchTargetList
                 .stream()
-                .filter(target -> target.startsWith(RecordTargetType.EXAM_RECORD.getCode()))
+                .filter(target -> target.startsWith(RecordTarget.EXAM_RECORD.getType()))
                 .collect(Collectors.toList());
 
         if (examRecordTargets.size() > 0) {
@@ -112,24 +112,24 @@ public class RecordServiceImpl implements RecordService {
         List<Record.Response> medicalRecordList = new ArrayList<>();
 
         // 진료기록 - 수술기록
-        if (medicalRecordTargets.contains(RecordTargetType.MEDICAL_SURGERY.getCode())) {
-            String[] queryTargets = {RecordTargetType.MEDICAL_SURGERY.getCode()};
+        if (medicalRecordTargets.contains(RecordTarget.MEDICAL_SURGERY.getType())) {
+            String[] queryTargets = {RecordTarget.MEDICAL_SURGERY.getType()};
             request.setQueryTargets(queryTargets);
 
             medicalRecordList.addAll(recordListDAO.getSurgeryRecordList(request));
         }
 
         // 진료기록 - 퇴원기록
-        if (medicalRecordTargets.contains(RecordTargetType.MEDICAL_DISCHARGE.getCode())) {
-            String[] queryTargets = {RecordTargetType.MEDICAL_DISCHARGE.getCode()};
+        if (medicalRecordTargets.contains(RecordTarget.MEDICAL_DISCHARGE.getType())) {
+            String[] queryTargets = {RecordTarget.MEDICAL_DISCHARGE.getType()};
             request.setQueryTargets(queryTargets);
 
             medicalRecordList.addAll(recordListDAO.getDischargeRecordList(request));
         }
 
         // 진료기록 - 타과의뢰
-        if (medicalRecordTargets.contains(RecordTargetType.MEDICAL_REQUEST.getCode())) {
-            String[] queryTargets = {RecordTargetType.MEDICAL_REQUEST.getCode()};
+        if (medicalRecordTargets.contains(RecordTarget.MEDICAL_REQUEST.getType())) {
+            String[] queryTargets = {RecordTarget.MEDICAL_REQUEST.getType()};
             request.setQueryTargets(queryTargets);
 
             medicalRecordList.addAll(recordListDAO.getRequestRecordList(request));
@@ -137,22 +137,22 @@ public class RecordServiceImpl implements RecordService {
 
         // 진료기록 - 마취기록, 마취 전 평가
         if (medicalRecordTargets
-                .contains(RecordTargetType.MEDICAL_ANESTHESIA.getCode())
-                || medicalRecordTargets.contains(RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode())) {
+                .contains(RecordTarget.MEDICAL_ANESTHESIA.getType())
+                || medicalRecordTargets.contains(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType())) {
             String[] queryTargets = {
-                    RecordTargetType.MEDICAL_ANESTHESIA.getCode(),
-                    RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode()
+                    RecordTarget.MEDICAL_ANESTHESIA.getType(),
+                    RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()
             };
 
-            if (!medicalRecordTargets.contains(RecordTargetType.MEDICAL_ANESTHESIA.getCode())) {
+            if (!medicalRecordTargets.contains(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
                 queryTargets = Arrays.stream(queryTargets)
-                        .filter(target -> !target.equals(RecordTargetType.MEDICAL_ANESTHESIA.getCode()))
+                        .filter(target -> !target.equals(RecordTarget.MEDICAL_ANESTHESIA.getType()))
                         .toArray(String[]::new);
             }
 
-            if (!medicalRecordTargets.contains(RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode())) {
+            if (!medicalRecordTargets.contains(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType())) {
                 queryTargets = Arrays.stream(queryTargets)
-                        .filter(target -> !target.equals(RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode()))
+                        .filter(target -> !target.equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()))
                         .toArray(String[]::new);
             }
 
@@ -163,11 +163,11 @@ public class RecordServiceImpl implements RecordService {
 
         // 진료기록 - 일반
         List<String> generalTypeList = medicalRecordTargets.stream()
-                .filter(type -> !type.equals(RecordTargetType.MEDICAL_SURGERY.getCode()))
-                .filter(type -> !type.equals(RecordTargetType.MEDICAL_DISCHARGE.getCode()))
-                .filter(type -> !type.equals(RecordTargetType.MEDICAL_REQUEST.getCode()))
-                .filter(type -> !type.equals(RecordTargetType.MEDICAL_ANESTHESIA.getCode()))
-                .filter(type -> !type.equals(RecordTargetType.MEDICAL_BEFORE_ANESTHESIA.getCode()))
+                .filter(type -> !type.equals(RecordTarget.MEDICAL_SURGERY.getType()))
+                .filter(type -> !type.equals(RecordTarget.MEDICAL_DISCHARGE.getType()))
+                .filter(type -> !type.equals(RecordTarget.MEDICAL_REQUEST.getType()))
+                .filter(type -> !type.equals(RecordTarget.MEDICAL_ANESTHESIA.getType()))
+                .filter(type -> !type.equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()))
                 .collect(Collectors.toList());
 
         if (generalTypeList.size() > 0) {
@@ -191,22 +191,22 @@ public class RecordServiceImpl implements RecordService {
         List<Record.Response> examRecordList = new ArrayList<>();
 
         // 영상검사
-        if (examRecordTargets.contains(RecordTargetType.EXAM_PICTURE.getCode())) {
+        if (examRecordTargets.contains(RecordTarget.EXAM_PICTURE.getType())) {
             examRecordList.addAll(recordListDAO.getExamPictureRecordList(request));
         }
 
         // 병리검사
-        if (examRecordTargets.contains(RecordTargetType.EXAM_PATHOLOGY.getCode())) {
+        if (examRecordTargets.contains(RecordTarget.EXAM_PATHOLOGY.getType())) {
             examRecordList.addAll(recordListDAO.getExamPathologyRecordList(request));
         }
 
         // 검체검사
-        if (examRecordTargets.contains(RecordTargetType.EXAM_SPECIMEN.getCode())) {
+        if (examRecordTargets.contains(RecordTarget.EXAM_SPECIMEN.getType())) {
             examRecordList.addAll(recordListDAO.getExamSpecimenRecordList(request));
         }
 
         // 기능검사
-        if (examRecordTargets.contains(RecordTargetType.EXAM_FUNCTION.getCode())) {
+        if (examRecordTargets.contains(RecordTarget.EXAM_FUNCTION.getType())) {
             examRecordList.addAll(recordListDAO.getExamFunctionRecordList(request));
         }
 
@@ -215,26 +215,26 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
-        if (record.getRecordType().equals(RecordTargetType.MEDICAL_RECORD.getCode())) {
+        if (record.getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
             return formService.getRecordSheet(session, record);
         }
         // 처방기록
-        if (record.getRecordDetailType().equals(RecordTargetType.ORDER_RECORD.getCode())) {
+        if (record.getRecordDetailType().equals(RecordTarget.ORDER_RECORD.getType())) {
             return orderService.getRecordSheet(session, record);
         }
 
         // 검체검사
-        if (record.getRecordDetailType().equals(RecordTargetType.EXAM_SPECIMEN.getCode())) {
+        if (record.getRecordDetailType().equals(RecordTarget.EXAM_SPECIMEN.getType())) {
             return specimenService.getRecordSheet(session, record);
         }
 
         // 영상검사
-        if (record.getRecordDetailType().equals(RecordTargetType.EXAM_PICTURE.getCode())) {
+        if (record.getRecordDetailType().equals(RecordTarget.EXAM_PICTURE.getType())) {
             return pictureService.getRecordSheet(session, record);
         }
 
         // 병리검사
-        if (record.getRecordDetailType().equals(RecordTargetType.EXAM_PATHOLOGY.getCode())) {
+        if (record.getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
             return pathologyService.getRecordSheet(session, record);
         }
 

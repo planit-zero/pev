@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum RecordEntityType {
+public enum RecordEntityPattern {
     TEXT("TEXT"),
     TABLE("TABLE"),
     ;
