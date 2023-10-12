@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Box, Tab, Tabs } from '@mui/material';
 import ConditionFinder from './condition-finder/ConditionFinder';
+import CertificateFinder from './certificate-finder/CertificateFinder';
 
-type RecordFinderProps = {};
-
-const RecordFinder = (props: RecordFinderProps) => {
+const RecordFinder = () => {
     const finderItems: string[] = ['수진일별\r\n기록조회', '조건별\r\n상세조회', '진단서', '동의서', '특성화\r\n리포트'];
 
     const [activeFinderItem, setActiveFinderItem] = React.useState<number>(1);
@@ -23,7 +22,7 @@ const RecordFinder = (props: RecordFinderProps) => {
                 </Tabs>
             </Box>
             {activeFinderItem === 1 && <ConditionFinder />}
-            {activeFinderItem !== 1 && <span>서비스 준비 중입니다.</span>}
+            {activeFinderItem === 2 && <CertificateFinder />}
         </Box>
     );
 };

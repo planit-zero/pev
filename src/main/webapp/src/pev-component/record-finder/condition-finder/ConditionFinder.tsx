@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Backdrop, Box, CircularProgress } from '@mui/material';
 import ConditionFinderPanel from './ConditionFinderPanel';
-import ConditionFinderGrid from './ConditionFinderGrid';
+import RecordGrid from '../RecordGrid';
 import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
 import { TRecord } from '../../../pev-type/TRecord';
 import dayjs from 'dayjs';
@@ -56,7 +56,9 @@ const ConditionFinder = () => {
                 onListSearch={handleListSearch}
             />
             {/*목록 조회 그리드*/}
-            <ConditionFinderGrid recordList={recordList || []} />
+            <Box width={'100%'} height={'calc(100% - 310px)'} marginTop={'20px'}>
+                <RecordGrid recordList={recordList || []} />
+            </Box>
         </Box>
     );
 };

@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { Box, Button, Divider, Typography } from '@mui/material';
 import { Bookmark } from '@mui/icons-material';
-import { IRecord } from '../../../pev-interface/IRecord';
+import { IRecord } from '../../pev-interface/IRecord';
 import { DataGrid } from 'devextreme-react';
 import { Column, Scrolling, Selection } from 'devextreme-react/data-grid';
 import SearchIcon from '@mui/icons-material/Search';
-import { setTargetRecords } from '../../../store/pev-slices/record';
-import { setAlert } from '../../../store/pev-slices/environment';
-import { TAlert } from '../../../pev-type/TAlert';
+import { setTargetRecords } from '../../store/pev-slices/record';
+import { setAlert } from '../../store/pev-slices/environment';
+import { TAlert } from '../../pev-type/TAlert';
 
 type ConditionFinderGridProps = {
     recordList: IRecord[];
 };
 
-const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
+const RecordGrid = (props: ConditionFinderGridProps) => {
     const [selectedRecordList, setSelectedRecordList] = React.useState<IRecord[]>([]);
 
     const handleSelectionChanged = (e: any) => {
@@ -29,7 +29,7 @@ const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
     };
 
     return (
-        <Box width={'100%'} height={'calc(100% - 310px)'} marginTop={'20px'}>
+        <Box width={'100%'} height={'100%'}>
             <Box width={'100%'} height={'31px'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                 <Box display={'flex'} alignItems={'center'}>
                     <Bookmark color={'primary'} fontSize={'small'} />
@@ -68,4 +68,4 @@ const ConditionFinderGrid = (props: ConditionFinderGridProps) => {
     );
 };
 
-export default ConditionFinderGrid;
+export default RecordGrid;
