@@ -22,6 +22,7 @@ public enum RecordTarget {
     MEDICAL_COVER("D030", "진료기록 - 의무기록표지"),
     CERTIFICATE_REQUEST("D009", "진단서 - 진단서/의뢰서"),
     CERTIFICATE_ACCIDENT("D035", "진단서 - 산재진단서"),
+    CONSENT_NOTE("D033", "동의서"),
 
     // 처방
     ORDER_RECORD("OR", "처방기록"),
