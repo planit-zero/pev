@@ -33,11 +33,6 @@ const ConditionFinder = () => {
         setSearchCondition(nextSearchCondition);
     };
 
-    // for debugging
-    React.useEffect(() => {
-        console.log('searchCondition', searchCondition);
-    }, [searchCondition]);
-
     const [getRecordList, { data: recordList, isLoading: isRecordListLoading }] = useGetRecordListMutation();
 
     const handleListSearch = () => {
