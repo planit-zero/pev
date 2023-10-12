@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MedicalFormMapper">
+    <select id="getMedicalFormData" parameterType="ai.planit.pev.domain.record.dto.Record$Response" resultType="MedicalFormData">
+        SELECT T.sectionSeq,
+               T.id,
+               T.parentId,
+               T.controlType,
+               T.classType,
+               T.text
+        FROM (
+                 SELECT M.sectionSeq,
+                        M.id,
+                        M.parentId,
+                        M.controlType,
+                        M.classType,
+                        CASE WHEN M.controlType = '7' THEN D.INTG_IMG_FILE_PATH_NM ELSE M.text END AS text
+                 FROM (
+                          SELECT A.MDFM_SCTN_SEQ                        AS sectionSeq,
+                                 A.MDFM_CPEM_ID                         AS id,
+                                 A.UPR_MDFM_CPEM_ID                     AS parentId,
+                                 A.ELMT_CCLS_CD                         AS controlType,
+                                 A.MDFM_ELMT_CLS_CD                     AS classType,
+                                 CASE
+                                     WHEN A.MDFM_ELMT_CLS_CD != 'V' THEN ISNULL(A.MDFM_CPEM_CNTE, A.ELMT_BSC_CNTE)
+                                     WHEN A.MDFM_ELMT_CLS_CD = 'V' AND A.ELMT_CCLS_CD IN ('4', '5', '6') THEN DECODE(B.MDFM_ELMT_INPT_CNTE, NULL, NULL, A.MDFM_CPEM_CNTE)
+                                     WHEN A.MDFM_ELMT_CLS_CD = 'V' AND A.ELMT_CCLS_CD = '7' THEN C.INTG_IMG_FILE_PATH_NM
+                                     ELSE COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT, C.INTG_IMG_FILE_PATH_NM) END AS text,
+                                 CASE
+                                     WHEN A.ELMT_CCLS_CD = 7
+                                         THEN (ROW_NUMBER() OVER (PARTITION BY A.ELMT_CCLS_CD ORDER BY A.MDFM_CPEM_ID) - 1)
+                                     ELSE - 1 END                       AS imageSeq
+                          FROM ODS.S_MRFMFCID A
+                                   LEFT OUTER JOIN ODS.S_MRDDRECE B
+                                                   ON B.MDRC_ID = #{mdrcId}
+                                                       AND B.MDRC_FOM_SEQ = #{mdrcFomSeq}
+                                                       AND A.MDFM_CPEM_ID = B.MDFM_CPEM_ID
+                                   LEFT OUTER JOIN ODS.S_MRDDRLFE C
+                                                   ON C.MDRC_ID = #{mdrcId}
+                                                       AND C.MDRC_FOM_SEQ = #{mdrcFomSeq}
+                                                       AND A.MDFM_CPEM_ID = C.MDFM_CPEM_ID
+                          WHERE A.MDFM_ID = #{mdfmId}
+                            AND A.MDFM_FOM_SEQ = #{mdfmFomSeq}
+                      ) M
+                          LEFT OUTER JOIN ODS.S_MRDDRIMD D
+                                          ON D.MDRC_ID = #{mdrcId}
+                                              AND D.MDRC_FOM_SEQ = #{mdrcFomSeq}
+                                              AND M.imageSeq = D.IMG_SEQ
+             ) T
+        WHERE T.text IS NOT NULL
+        ORDER BY T.sectionSeq, T.id, T.parentId
+    </select>
+</mapper>

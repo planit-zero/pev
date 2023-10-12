@@ -50,6 +50,6 @@ public class Record {
         private String recType;
         private String geneExmYn;
         private String mdrcWrtStsCdYn;
-        private int opExptRegId;
+        private String opExptRegId;
     }
 }

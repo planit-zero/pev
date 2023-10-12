@@ -8,5 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class RecordAttribute extends RecordElement {
+    private List<RecordAttribute> attributes;
     private List<RecordValue> values;
 }

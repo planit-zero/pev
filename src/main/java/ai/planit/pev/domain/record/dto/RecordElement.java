@@ -10,6 +10,8 @@ import lombok.Setter;
 @Setter
 public class RecordElement {
     private String text;
+    private String controlType;
+    private String classType;
     private String display = RecordElementDisplay.BLOCK.getValue();
     private String alignment = RecordElementAlignment.LEFT.getValue();
     private String textDecoration = RecordElementTextDecoration.NORMAL.getValue();

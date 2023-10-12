@@ -65,6 +65,7 @@ export interface IRecordEntity extends IRecordElement {
 }
 
 export interface IRecordAttribute extends IRecordElement {
+    attributes: IRecordAttribute[];
     values: IRecordValue[];
 }
 
@@ -73,6 +74,8 @@ export interface IRecordValue extends IRecordElement {
 }
 
 export interface IRecordElement {
+    controlType: string;
+    classType: string;
     display: string;
     textDecoration: string;
     text: string

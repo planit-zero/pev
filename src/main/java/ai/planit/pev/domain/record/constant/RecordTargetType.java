@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum RecordTargetType {
     // 진료기록
-    MEDICAL_RECORD("D0", "진료기록"),
+    MEDICAL_RECORD("DR", "진료기록"),
     MEDICAL_SURGERY("D005", "진료기록 - 수술기록"),
     MEDICAL_DISCHARGE("D006", "진료기록 - 퇴원기록"),
     MEDICAL_REQUEST("D007", "진료기록 - 타과의뢰"),
