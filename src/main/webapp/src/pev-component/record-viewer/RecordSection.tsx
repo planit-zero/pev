@@ -15,7 +15,7 @@ const RecordSection = (props: RecordSectionProps) => {
         <Box
             display={'flex'}
             flexDirection={'column'}
-            gap={2}
+            gap={props.type === TRecordSection.HEADER ? 0 : 2}
             sx={{ fontStyle: props.type === TRecordSection.HEADER ? 'italic' : 'normal' }}
         >
             {props.section.entities.map((entity, idx) => {

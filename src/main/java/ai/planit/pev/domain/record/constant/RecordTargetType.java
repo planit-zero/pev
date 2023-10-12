@@ -8,11 +8,18 @@ import lombok.RequiredArgsConstructor;
 public enum RecordTargetType {
     // 진료기록
     MEDICAL_RECORD("DR", "진료기록"),
+    MEDICAL_OUTPATIENT_FIRST("D001", "진료기록 - 외래초진"),
+    MEDICAL_OUTPATIENT_PROGRESS("D002", "진료기록 - 외래경과"),
+    MEDICAL_INPATIENT_FIRST("D003", "진료기록 - 입원초진"),
+    MEDICAL_INPATIENT_PROGRESS("D004", "진료기록 - 입원경과"),
+    MEDICAL_EMERGENCY("D031", "진료기록 - 응급기록"),
     MEDICAL_SURGERY("D005", "진료기록 - 수술기록"),
     MEDICAL_DISCHARGE("D006", "진료기록 - 퇴원기록"),
-    MEDICAL_REQUEST("D007", "진료기록 - 타과의뢰"),
     MEDICAL_ANESTHESIA("D010", "진료기록 - 마취기록"),
     MEDICAL_BEFORE_ANESTHESIA("D011", "진료기록 - 마취전평가"),
+    MEDICAL_REQUEST("D007", "진료기록 - 타과의뢰"),
+    MEDICAL_DEPARTMENT("D020", "진료기록 - 과별서식"),
+    MEDICAL_COVER("D030", "진료기록 - 의무기록표지"),
 
     // 처방
     ORDER_RECORD("OR", "처방기록"),

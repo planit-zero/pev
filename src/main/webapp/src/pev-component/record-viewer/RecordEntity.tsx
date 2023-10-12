@@ -15,7 +15,7 @@ const RecordEntity = (props: RecordEntityProps) => {
     const textAlign = props.entity.alignment || 'left';
 
     return (
-        <Box sx={{ textAlign: textAlign }}>
+        <Box sx={{ textAlign: textAlign, display: props.entity.display }}>
             <Typography
                 sx={{
                     fontSize: `h4.fontSize`,
@@ -35,7 +35,6 @@ const RecordEntity = (props: RecordEntityProps) => {
                     return (
                         <React.Fragment>
                             <RecordAttribute key={idx} sectionType={props.sectionType} attribute={attribute} />
-                            {props.entity.display === TRecordElementDisplay.BLOCK && <br />}
                         </React.Fragment>
                     );
                 })}

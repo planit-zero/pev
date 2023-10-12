@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MedicalFormServiceImpl implements MedicalFormService {
     private final MedicalFormDAO medicalFormDAO;
+    private final MedicalFormHeaderSectionService medicalFormHeaderSectionService;
 
     @Override
     public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
@@ -30,6 +31,7 @@ public class MedicalFormServiceImpl implements MedicalFormService {
         }
 
         RecordSheet recordSheet = new RecordSheet();
+        recordSheet.setHeaderSection(medicalFormHeaderSectionService.getRecordHeaderSection(record));
         recordSheet.setSections(getRecordSections(record));
 
         return recordSheet;

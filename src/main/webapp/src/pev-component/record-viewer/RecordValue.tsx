@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IRecordValue } from '../../pev-interface/IRecord';
 import { TRecordSection } from '../../pev-type/TRecordSection';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 type RecordValueProps = {
     sectionType: string;
@@ -11,10 +11,11 @@ type RecordValueProps = {
 
 const RecordValue = (props: RecordValueProps) => {
     return (
-        <Box sx={{ ml: 1 }}>
+        <React.Fragment>
             {props.value.controlType !== '7' && (
                 <Typography
                     sx={{
+                        ml: 1,
                         fontSize: 'h5.fontSize',
                         color: props.sectionType === TRecordSection.HEADER ? '#aa58d2' : 'inherit',
                         whiteSpace: 'pre-line',
@@ -28,7 +29,7 @@ const RecordValue = (props: RecordValueProps) => {
             {props.value.controlType === '7' && (
                 <img src={`http://hisimg.snuh.org/${props.value.text}`} alt={'이미지'} style={{ maxWidth: '100%' }} />
             )}
-        </Box>
+        </React.Fragment>
     );
 };
 
