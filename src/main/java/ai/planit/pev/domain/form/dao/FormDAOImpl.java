@@ -1,6 +1,6 @@
-package ai.planit.pev.domain.medical.dao;
+package ai.planit.pev.domain.form.dao;
 
-import ai.planit.pev.domain.medical.dto.MedicalFormData;
+import ai.planit.pev.domain.form.dto.FormData;
 import ai.planit.pev.domain.record.dto.Record;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -10,11 +10,11 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class MedicalFormDAOImpl implements MedicalFormDAO {
+public class FormDAOImpl implements FormDAO {
     private final SqlSessionTemplate sqlSessionTemplate;
 
     @Override
-    public List<MedicalFormData> getMedicalFormData(Record.Response record) {
-        return sqlSessionTemplate.selectList("getMedicalFormData", record);
+    public List<FormData> getFormData(Record.Response record) {
+        return sqlSessionTemplate.selectList("getFormData", record);
     }
 }

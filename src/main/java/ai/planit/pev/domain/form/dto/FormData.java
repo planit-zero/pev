@@ -1,11 +1,11 @@
-package ai.planit.pev.domain.medical.dto;
+package ai.planit.pev.domain.form.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MedicalFormData {
+public class FormData {
     private int sectionSeq;
     private String id;
     private String parentId;

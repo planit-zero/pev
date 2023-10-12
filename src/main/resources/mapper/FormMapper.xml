@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="MedicalFormMapper">
-    <select id="getMedicalFormData" parameterType="ai.planit.pev.domain.record.dto.Record$Response" resultType="MedicalFormData">
+<mapper namespace="FormMapper">
+    <select id="getFormData" parameterType="ai.planit.pev.domain.record.dto.Record$Response" resultType="FormData">
         SELECT T.sectionSeq,
                T.id,
                T.parentId,

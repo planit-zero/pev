@@ -2,7 +2,7 @@ package ai.planit.pev.domain.record.service;
 
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
-import ai.planit.pev.domain.medical.service.MedicalFormService;
+import ai.planit.pev.domain.form.service.FormService;
 import ai.planit.pev.domain.order.service.OrderService;
 import ai.planit.pev.domain.pathology.service.PathologyService;
 import ai.planit.pev.domain.picture.service.PictureService;
@@ -31,7 +31,7 @@ public class RecordServiceImpl implements RecordService {
     private final SpecimenService specimenService;
     private final PictureService pictureService;
     private final PathologyService pathologyService;
-    private final MedicalFormService medicalFormService;
+    private final FormService formService;
 
     /**
      * {@inheritDoc}
@@ -216,7 +216,7 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
         if (record.getRecordType().equals(RecordTargetType.MEDICAL_RECORD.getCode())) {
-            return medicalFormService.getRecordSheet(session, record);
+            return formService.getRecordSheet(session, record);
         }
         // 처방기록
         if (record.getRecordDetailType().equals(RecordTargetType.ORDER_RECORD.getCode())) {
