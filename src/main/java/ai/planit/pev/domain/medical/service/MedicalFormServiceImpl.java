@@ -2,9 +2,9 @@ package ai.planit.pev.domain.medical.service;
 
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
-import ai.planit.pev.domain.medical.constant.MedicalElementClass;
 import ai.planit.pev.domain.medical.dao.MedicalFormDAO;
 import ai.planit.pev.domain.medical.dto.*;
+import ai.planit.pev.domain.record.constant.RecordElementClass;
 import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +59,7 @@ public class MedicalFormServiceImpl implements MedicalFormService {
 
         List<MedicalFormData> entityDataList = formDataListInSection
                 .stream()
-                .filter(d -> d.getClassType().equals(MedicalElementClass.ENTITY.getType()))
+                .filter(d -> d.getClassType().equals(RecordElementClass.ENTITY.getType()))
                 .collect(Collectors.toList());
 
         section.setEntities(getRecordEntities(formDataListInSection, entityDataList));
@@ -97,7 +97,7 @@ public class MedicalFormServiceImpl implements MedicalFormService {
 
         List<MedicalFormData> attributeDataList = formDataListInSection
                 .stream()
-                .filter(d -> d.getClassType().equals(MedicalElementClass.ATTRIBUTE.getType())
+                .filter(d -> d.getClassType().equals(RecordElementClass.ATTRIBUTE.getType())
                         && d.getParentId().equals(parentId))
                 .collect(Collectors.toList());
 
@@ -127,7 +127,7 @@ public class MedicalFormServiceImpl implements MedicalFormService {
 
         List<MedicalFormData> valueDataList = formDataListInSection
                 .stream()
-                .filter(d -> d.getClassType().equals(MedicalElementClass.VALUE.getType())
+                .filter(d -> d.getClassType().equals(RecordElementClass.VALUE.getType())
                         && d.getParentId().equals(parentId))
                 .collect(Collectors.toList());
 

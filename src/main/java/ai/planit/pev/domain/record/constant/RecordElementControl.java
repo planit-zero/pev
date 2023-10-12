@@ -1,11 +1,11 @@
-package ai.planit.pev.domain.medical.constant;
+package ai.planit.pev.domain.record.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MedicalFormElementControl {
+public enum RecordElementControl {
     LABEL("1", "Label"),
     TEXT_BOX("2", "TextBox"),
     RICH_TEXT_BOX("3", "RichTextBox"),

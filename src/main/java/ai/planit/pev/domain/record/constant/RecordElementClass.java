@@ -1,11 +1,11 @@
-package ai.planit.pev.domain.medical.constant;
+package ai.planit.pev.domain.record.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MedicalElementClass {
+public enum RecordElementClass {
     ENTITY("E"),
     ATTRIBUTE("A"),
     VALUE("V"),
