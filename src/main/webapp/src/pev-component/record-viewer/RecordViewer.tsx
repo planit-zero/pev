@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSelector } from '../../store';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import { Article, MenuBook } from '@mui/icons-material';
 import RecordSheetContainer from './RecordSheetContainer';
 import { setViewMode } from '../../store/pev-slices/environment';
@@ -20,13 +20,20 @@ const RecordViewer = () => {
         }
     };
 
+    const getTooltipTitle = () => {
+        if (viewMode === 'single') return '두 페이지 모드로 변경합니다.';
+        if (viewMode === 'double') return '한 페이지 모드로 변경합니다.';
+    };
+
     return (
         <Box>
             <Box position={'fixed'} top={'95px'} right={'30px'}>
-                <IconButton onClick={handleViewModeChange}>
-                    {viewMode === 'double' && <Article />}
-                    {viewMode === 'single' && <MenuBook />}
-                </IconButton>
+                <Tooltip title={getTooltipTitle()} placement={'left'}>
+                    <IconButton onClick={handleViewModeChange}>
+                        {viewMode === 'double' && <Article />}
+                        {viewMode === 'single' && <MenuBook />}
+                    </IconButton>
+                </Tooltip>
             </Box>
             <Box
                 sx={{
