@@ -14,7 +14,7 @@ const RecordSheet = (props: RecordSheetProps) => {
 
     React.useEffect(() => {
         getRecordSheet(props.targetRecord);
-    }, []);
+    }, [props.targetRecord]);
 
     return (
         <Paper sx={{ width: 600, p: 2, mb: 2, borderRadius: 0 }}>

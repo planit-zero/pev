@@ -35,8 +35,8 @@ const RecordEntityTable = (props: RecordEntityTableProps) => {
                             </tr>
                             {attribute.values.map((value, vIdx) => {
                                 return (
-                                    <tr>
-                                        <td key={vIdx} style={{ height: '25px', padding: '4px' }}>
+                                    <tr key={vIdx}>
+                                        <td style={{ height: '25px', padding: '4px' }}>
                                             <Typography sx={{ fontSize: 'h6.fontSize' }}>{value.text}</Typography>
                                         </td>
                                     </tr>

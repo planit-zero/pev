@@ -1,22 +1,46 @@
 import * as React from 'react';
 import { useSelector } from '../../store';
-import { Backdrop, Box, CircularProgress } from '@mui/material';
-import { useGetFormContentMutation } from '../../pev-service/FormService';
-import { IFormContentP } from '../../pev-interface/IForm';
-import FormSheet from './form/FormSheet';
-import RecordSheet from './RecordSheet';
-import dayjs from 'dayjs';
+import { Box, IconButton } from '@mui/material';
+import { Article, MenuBook } from '@mui/icons-material';
+import RecordSheetContainer from './RecordSheetContainer';
+import { setViewMode } from '../../store/pev-slices/environment';
 
-type RecordViewerProps = {};
+const RecordViewer = () => {
+    const { viewMode } = useSelector((state) => state.environment);
 
-const RecordViewer = (props: RecordViewerProps) => {
-    const { targetRecords } = useSelector((state) => state.record);
+    const handleViewModeChange = () => {
+        if (viewMode === 'single') {
+            setViewMode('double');
+            return;
+        }
+
+        if (viewMode === 'double') {
+            setViewMode('single');
+            return;
+        }
+    };
 
     return (
-        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-            {targetRecords.map((target, idx) => {
-                return <RecordSheet key={`${dayjs()}-${idx}`} targetRecord={target} />;
-            })}
+        <Box>
+            <Box position={'fixed'} top={'95px'} right={'30px'}>
+                <IconButton onClick={handleViewModeChange}>
+                    {viewMode === 'double' && <Article />}
+                    {viewMode === 'single' && <MenuBook />}
+                </IconButton>
+            </Box>
+            <Box
+                sx={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    flexWrap: 'wrap',
+                    gap: 1,
+                    flexDirection: viewMode === 'single' ? 'column' : 'row',
+                    alignItems: viewMode === 'single' ? 'center' : 'stretch'
+                }}
+            >
+                <RecordSheetContainer />
+            </Box>
         </Box>
     );
 };
