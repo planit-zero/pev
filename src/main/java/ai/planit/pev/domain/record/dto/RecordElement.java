@@ -1,5 +1,6 @@
 package ai.planit.pev.domain.record.dto;
 
+import ai.planit.pev.domain.form.dto.FormStyleItem;
 import ai.planit.pev.domain.record.constant.RecordElementAlignment;
 import ai.planit.pev.domain.record.constant.RecordElementDisplay;
 import ai.planit.pev.domain.record.constant.RecordElementTextDecoration;
@@ -15,4 +16,5 @@ public class RecordElement {
     private String display = RecordElementDisplay.BLOCK.getValue();
     private String alignment = RecordElementAlignment.LEFT.getValue();
     private String textDecoration = RecordElementTextDecoration.NORMAL.getValue();
+    private FormStyleItem formStyleItem;
 }

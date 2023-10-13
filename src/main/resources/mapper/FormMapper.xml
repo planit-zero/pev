@@ -17,8 +17,8 @@
                         CASE WHEN M.controlType = '7' THEN D.INTG_IMG_FILE_PATH_NM ELSE M.text END AS text
                  FROM (
                           SELECT A.MDFM_SCTN_SEQ                        AS sectionSeq,
-                                 A.MDFM_CPEM_ID                         AS id,
-                                 A.UPR_MDFM_CPEM_ID                     AS parentId,
+                                 A.MDFM_CPEM_NO                         AS id,
+                                 A.UPR_MDFM_CPEM_NO                     AS parentId,
                                  A.ELMT_CCLS_CD                         AS controlType,
                                  A.MDFM_ELMT_CLS_CD                     AS classType,
                                  CASE
@@ -49,5 +49,18 @@
              ) T
         WHERE T.text IS NOT NULL
         ORDER BY T.sectionSeq, T.id, T.parentId
+    </select>
+    <select id="getFormXMLData"
+            parameterType="ai.planit.pev.domain.form.dto.FormStyleXML$Request"
+            resultType="ai.planit.pev.domain.form.dto.FormStyleXML$Response">
+        SELECT MDFM_ID            AS mdfmId,
+               MDFM_FOM_SEQ       AS mdfmFormSeq,
+               MDFM_SCTN_SEQ      AS mdfmSctnSeq,
+               SCTN_DGN_META_LDAT AS sctnDgnMetaLdat
+        FROM ODS.S_MRFMFSCD
+        WHERE MDFM_ID = #{mdfmId}
+          AND MDFM_FOM_SEQ = #{mdfmFomSeq}
+          AND MDFM_SCTN_SEQ = #{mdfmSctnSeq}
+        ORDER BY MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ
     </select>
 </mapper>
