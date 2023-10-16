@@ -31,9 +31,9 @@ const StyledElement = (props: StyledElementProps) => {
 
     const CheckBoxElement = () => {
         return (
-            <label style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <label style={{ display: 'flex', alignItems: 'center' }}>
                 <input type={`checkbox`} checked={element?.text === '1'} readOnly={true} />
-                <span>{element?.text}</span>
+                <span>{element?.textDesc}</span>
             </label>
         );
     };
@@ -42,13 +42,13 @@ const StyledElement = (props: StyledElementProps) => {
         return (
             <label style={{ display: 'flex', alignItems: 'flex-end' }}>
                 <input type={`radio`} checked={element?.text === '1'} readOnly={true} />
-                <span>{element?.text}</span>
+                <span>{element?.textDesc}</span>
             </label>
         );
     };
 
     const ImageElement = (): JSX.Element => {
-        return <img src={element?.text ? `http://hisimg.snuh.org${element?.text}` : ''} alt={element?.text} />;
+        return <img src={element?.text ? `https://hisimg.snuh.org/${element?.text}` : ''} alt={element?.text} />;
     };
 
     const handleClick = () => {
@@ -86,7 +86,7 @@ const StyledElement = (props: StyledElementProps) => {
 
     if (element === null || element.formStyleItem === null) return null;
     if (element.formStyleItem.id === '-1000') return null;
-    if (element.formStyleItem.visibility === 'Collapse') return null;
+    if (element.formStyleItem.visibility === 'Collapsed') return null;
 
     return (
         <Box

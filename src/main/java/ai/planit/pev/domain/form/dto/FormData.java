@@ -12,4 +12,5 @@ public class FormData {
     private String controlType;
     private String classType;
     private String text;
+    private String textDesc;
 }

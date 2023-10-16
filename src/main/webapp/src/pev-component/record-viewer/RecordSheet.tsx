@@ -56,9 +56,9 @@ const RecordSheet = (props: RecordSheetProps) => {
     const StyledSection = (sheet: IRecordSheet) => {
         return (
             <Box>
-                {sheet.sections.map((section) => {
+                {sheet.sections.map((section, idx) => {
                     return (
-                        <Box position={'relative'} width={1000} height={1000}>
+                        <Box key={idx} position={'relative'} width={`${section.width}px`} height={`${section.height}px`}>
                             {section.entities.map((entity) => {
                                 return StyledEntity(entity);
                             })}

@@ -7,14 +7,16 @@
                T.parentId,
                T.controlType,
                T.classType,
-               T.text
+               T.text,
+               T.textDesc
         FROM (
                  SELECT M.sectionSeq,
                         M.id,
                         M.parentId,
                         M.controlType,
                         M.classType,
-                        CASE WHEN M.controlType = '7' THEN D.INTG_IMG_FILE_PATH_NM ELSE M.text END AS text
+                        CASE WHEN M.controlType = '7' THEN D.INTG_IMG_FILE_PATH_NM ELSE M.text END AS text,
+                        M.textDesc
                  FROM (
                           SELECT A.MDFM_SCTN_SEQ                        AS sectionSeq,
                                  A.MDFM_CPEM_NO                         AS id,
@@ -23,9 +25,17 @@
                                  A.MDFM_ELMT_CLS_CD                     AS classType,
                                  CASE
                                      WHEN A.MDFM_ELMT_CLS_CD != 'V' THEN ISNULL(A.MDFM_CPEM_CNTE, A.ELMT_BSC_CNTE)
-                                     WHEN A.MDFM_ELMT_CLS_CD = 'V' AND A.ELMT_CCLS_CD IN ('4', '5', '6') THEN DECODE(B.MDFM_ELMT_INPT_CNTE, NULL, NULL, A.MDFM_CPEM_CNTE)
+                                     <choose>
+                                         <when test="!recordDetailType.equals('D009') and !recordDetailType.equals('D035')">
+                                             WHEN A.MDFM_ELMT_CLS_CD = 'V' AND A.ELMT_CCLS_CD IN ('4', '5', '6') THEN DECODE(B.MDFM_ELMT_INPT_CNTE, NULL, NULL, A.MDFM_CPEM_CNTE)
+                                         </when>
+                                         <otherwise>
+                                             WHEN A.MDFM_ELMT_CLS_CD = 'V' AND A.ELMT_CCLS_CD IN ('4', '5', '6') THEN B.MDFM_ELMT_INPT_CNTE
+                                         </otherwise>
+                                     </choose>
                                      WHEN A.MDFM_ELMT_CLS_CD = 'V' AND A.ELMT_CCLS_CD = '7' THEN C.INTG_IMG_FILE_PATH_NM
                                      ELSE COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT, C.INTG_IMG_FILE_PATH_NM) END AS text,
+                                 A.MDFM_CPEM_CNTE AS textDesc,
                                  CASE
                                      WHEN A.ELMT_CCLS_CD = 7
                                          THEN (ROW_NUMBER() OVER (PARTITION BY A.ELMT_CCLS_CD ORDER BY A.MDFM_CPEM_ID) - 1)
@@ -47,7 +57,9 @@
                                               AND D.MDRC_FOM_SEQ = #{mdrcFomSeq}
                                               AND M.imageSeq = D.IMG_SEQ
              ) T
-        WHERE T.text IS NOT NULL
+        <if test="!recordDetailType.equals('D009') and !recordDetailType.equals('D035')">
+            WHERE T.text IS NOT NULL
+        </if>
         ORDER BY T.sectionSeq, T.id, T.parentId
     </select>
     <select id="getFormXMLData"

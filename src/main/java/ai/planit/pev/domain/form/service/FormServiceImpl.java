@@ -126,14 +126,19 @@ public class FormServiceImpl implements FormService {
             xmlRequest.setMdfmFomSeq(record.getMdfmFomSeq());
             xmlRequest.setMdfmSctnSeq(sectionSeq);
 
-            RecordSection section = getRecordSection(xmlRequest, formDataListInSection);
+            RecordSection section = getRecordSection(xmlRequest, formDataListInSection, hasStyle(record));
             if (section != null) sections.add(section);
         }
 
         return sections;
     }
 
-    private RecordSection getRecordSection(FormStyleXML.Request xmlRequest, List<FormData> formDataListInSection) {
+    private boolean hasStyle(Record.Response record) {
+        return record.getRecordDetailType().equals(RecordTarget.CERTIFICATE_REQUEST.getType())
+                || record.getRecordDetailType().equals(RecordTarget.CERTIFICATE_ACCIDENT.getType());
+    }
+
+    private RecordSection getRecordSection(FormStyleXML.Request xmlRequest, List<FormData> formDataListInSection, boolean hasStyle) {
         RecordSection section = new RecordSection();
 
         List<FormData> entityDataList = formDataListInSection
@@ -142,9 +147,11 @@ public class FormServiceImpl implements FormService {
                 .collect(Collectors.toList());
 
         FormStyleSection formStyleSection = getFormStyleSection(xmlRequest);
-        section.setEntities(getRecordEntities(formDataListInSection, entityDataList, formStyleSection));
+        section.setWidth(formStyleSection.getWidth());
+        section.setHeight(formStyleSection.getHeight());
+        section.setEntities(getRecordEntities(formDataListInSection, entityDataList, formStyleSection, hasStyle));
 
-        if (section.getEntities().size() == 0) return null;
+        if (section.getEntities().size() == 0 && !hasStyle) return null;
         return section;
     }
 
@@ -172,33 +179,34 @@ public class FormServiceImpl implements FormService {
         return formStyleItem.orElse(null);
     }
 
-    private List<RecordEntity> getRecordEntities(List<FormData> formDataListInSection, List<FormData> entityDataList, FormStyleSection formStyleSection) {
+    private List<RecordEntity> getRecordEntities(List<FormData> formDataListInSection, List<FormData> entityDataList, FormStyleSection formStyleSection, boolean hasStyle) {
         List<RecordEntity> entities = new ArrayList<>();
 
         for (FormData entityData : entityDataList) {
-            RecordEntity entity = getRecordEntity(formDataListInSection, entityData, formStyleSection);
+            RecordEntity entity = getRecordEntity(formDataListInSection, entityData, formStyleSection, hasStyle);
             if (entity != null) entities.add(entity);
         }
 
         return entities;
     }
 
-    private RecordEntity getRecordEntity(List<FormData> formDataListInSection, FormData entityData, FormStyleSection formStyleSection) {
+    private RecordEntity getRecordEntity(List<FormData> formDataListInSection, FormData entityData, FormStyleSection formStyleSection, boolean hasStyle) {
         RecordEntity entity = new RecordEntity();
 
         entity.setControlType(entityData.getControlType());
         entity.setClassType(entityData.getClassType());
         entity.setText(entityData.getText());
-        entity.setAttributes(getRecordAttributes(formDataListInSection, entityData.getId(), formStyleSection));
+        entity.setTextDesc(entity.getTextDesc());
+        entity.setAttributes(getRecordAttributes(formDataListInSection, entityData.getId(), formStyleSection, hasStyle));
         entity.setValues(getRecordValues(formDataListInSection, entityData.getId(), formStyleSection));
 
-        if (entity.getAttributes().size() == 0 && entity.getValues().size() == 0) return null;
+        if (entity.getAttributes().size() == 0 && entity.getValues().size() == 0 && !hasStyle) return null;
 
         entity.setFormStyleItem(getFormStyleItem(formStyleSection, entityData.getId()));
         return entity;
     }
 
-    private List<RecordAttribute> getRecordAttributes(List<FormData> formDataListInSection, String parentId, FormStyleSection formStyleSection) {
+    private List<RecordAttribute> getRecordAttributes(List<FormData> formDataListInSection, String parentId, FormStyleSection formStyleSection, boolean hasStyle) {
         List<RecordAttribute> attributes = new ArrayList<>();
 
         List<FormData> attributeDataList = formDataListInSection
@@ -208,23 +216,24 @@ public class FormServiceImpl implements FormService {
                 .collect(Collectors.toList());
 
         for (FormData attributeData : attributeDataList) {
-            RecordAttribute attribute = getRecordAttribute(formDataListInSection, attributeData, formStyleSection);
+            RecordAttribute attribute = getRecordAttribute(formDataListInSection, attributeData, formStyleSection, hasStyle);
             if (attribute != null) attributes.add(attribute);
         }
 
         return attributes;
     }
 
-    private RecordAttribute getRecordAttribute(List<FormData> formDataListInSection, FormData attributeData, FormStyleSection formStyleSection) {
+    private RecordAttribute getRecordAttribute(List<FormData> formDataListInSection, FormData attributeData, FormStyleSection formStyleSection, boolean hasStyle) {
         RecordAttribute attribute = new RecordAttribute();
 
         attribute.setControlType(attributeData.getControlType());
         attribute.setClassType(attributeData.getClassType());
         attribute.setText(attributeData.getText());
-        attribute.setAttributes(getRecordAttributes(formDataListInSection, attributeData.getId(), formStyleSection));
+        attribute.setTextDesc(attribute.getTextDesc());
+        attribute.setAttributes(getRecordAttributes(formDataListInSection, attributeData.getId(), formStyleSection, hasStyle));
         attribute.setValues(getRecordValues(formDataListInSection, attributeData.getId(), formStyleSection));
 
-        if (attribute.getAttributes().size() == 0 && attribute.getValues().size() == 0) return null;
+        if (attribute.getAttributes().size() == 0 && attribute.getValues().size() == 0 && !hasStyle) return null;
 
         attribute.setFormStyleItem(getFormStyleItem(formStyleSection, attributeData.getId()));
         return attribute;
@@ -252,6 +261,7 @@ public class FormServiceImpl implements FormService {
         value.setControlType(valueData.getControlType());
         value.setClassType(valueData.getClassType());
         value.setText(valueData.getText());
+        value.setTextDesc(valueData.getTextDesc());
         value.setFormStyleItem(getFormStyleItem(formStyleSection, valueData.getId()));
 
         return value;

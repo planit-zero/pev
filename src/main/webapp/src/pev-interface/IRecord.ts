@@ -54,6 +54,8 @@ export interface IRecordSheet {
 }
 
 export interface IRecordSection {
+    width: string;
+    height: string;
     entities: IRecordEntity[];
 }
 
@@ -79,6 +81,7 @@ export interface IRecordElement {
     display: string;
     textDecoration: string;
     text: string;
+    textDesc: string;
     formStyleItem: IFormStyleItem | null;
 }
 

@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class RecordElement {
     private String text;
+    private String textDesc;
     private String controlType;
     private String classType;
     private String display = RecordElementDisplay.BLOCK.getValue();
