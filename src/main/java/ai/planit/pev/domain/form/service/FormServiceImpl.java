@@ -135,7 +135,8 @@ public class FormServiceImpl implements FormService {
 
     private boolean hasStyle(Record.Response record) {
         return record.getRecordDetailType().equals(RecordTarget.CERTIFICATE_REQUEST.getType())
-                || record.getRecordDetailType().equals(RecordTarget.CERTIFICATE_ACCIDENT.getType());
+                || record.getRecordDetailType().equals(RecordTarget.CERTIFICATE_ACCIDENT.getType())
+                || record.getRecordDetailType().equals(RecordTarget.MEDICAL_DEPARTMENT.getType());
     }
 
     private RecordSection getRecordSection(FormStyleXML.Request xmlRequest, List<FormData> formDataListInSection, boolean hasStyle) {
