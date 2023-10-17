@@ -5,6 +5,8 @@ import { Square } from '@mui/icons-material';
 import { TDept } from '../../../pev-type/TDept';
 import { IRecordDeptInfo } from '../../../pev-interface/IRecordInfo';
 import { useGetDepartmentListQuery } from '../../../pev-service/HospitalService';
+import { useSelector } from '../../../store';
+import { finderWidthWide } from '../../../store/constant';
 
 type ConditionFinderPanelDepartmentSetterProps = {
     searchCondition: ISearchCondition;
@@ -12,6 +14,8 @@ type ConditionFinderPanelDepartmentSetterProps = {
 };
 
 const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartmentSetterProps) => {
+    const { finderWidth } = useSelector((state) => state.environment);
+
     const { data: departmentList, isLoading: isDepartmentListLoading } = useGetDepartmentListQuery();
 
     const [deptType, setDeptType] = React.useState<string>(props.searchCondition.deptType);
@@ -33,6 +37,11 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
         props.onSearchConditionChange([{ key: 'deptCd', value: nextDeptCd }]);
     };
 
+    const getInputWidth = () => {
+        if (finderWidth === finderWidthWide) return '344px';
+        return '210px';
+    };
+
     return (
         <Grid container display={'flex'} alignItems={'center'}>
             <Grid item xs={2} display={'flex'} alignItems={'center'}>
@@ -47,7 +56,7 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
                         <FormControlLabel value={TDept.WRITER} control={<Radio size={'small'} />} label={'작성과'} />
                     </RadioGroup>
                 </Box>
-                <Box width={210}>
+                <Box width={getInputWidth()}>
                     {!isDepartmentListLoading && (
                         <Autocomplete
                             size={'small'}

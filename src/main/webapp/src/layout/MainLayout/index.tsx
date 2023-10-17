@@ -1,15 +1,11 @@
-import { useMemo } from 'react';
-
 // material-ui
 import { styled, useTheme, Theme } from '@mui/material/styles';
-import { AppBar, Box, Container, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
+import { AppBar, Box, CssBaseline, Toolbar } from '@mui/material';
 
 // project imports
 import Header from './Header';
 import Sidebar from './Sidebar';
 
-import LAYOUT_CONST from 'constant';
-import useConfig from 'hooks/useConfig';
 import { finderWidthNarrow, finderWidthWide } from 'store/constant';
 import { useSelector } from 'store';
 
@@ -20,17 +16,16 @@ import CommonSnackbar from '../../pev-component/common/CommonSnackbar';
 interface MainStyleProps {
     theme: Theme;
     open: boolean;
-    layout: string;
     width: number;
 }
 
 // styles
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open, layout, width }: MainStyleProps) => ({
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open, width }: MainStyleProps) => ({
     ...theme.typography.mainContent,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    padding: `20px 10px 20px 20px`,
-    marginTop: layout === LAYOUT_CONST.HORIZONTAL_LAYOUT ? 135 : 88,
+    padding: '20px 40px',
+    marginTop: '68px',
     ...(!open && {
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
@@ -44,11 +39,9 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
             duration: theme.transitions.duration.shorter + 200
         }),
         width: `calc(100% - ${width}px)`,
-        marginTop: 88,
         marginLeft: '20px',
         [theme.breakpoints.down('md')]: {
-            marginLeft: `${-(width - 40)}px`,
-            marginTop: 88
+            marginLeft: `${-(width - 40)}px`
         }
     }),
     ...((width === finderWidthNarrow || width === finderWidthWide) && {
@@ -63,24 +56,17 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
 
 const MainLayout = () => {
     const theme = useTheme();
+
     const { finderWidth } = useSelector((state) => state.environment);
-
-    const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-
     const { drawerOpen } = useSelector((state) => state.menu);
-    const { container, layout } = useConfig();
 
-    const condition = layout === LAYOUT_CONST.HORIZONTAL_LAYOUT && !matchDownMd;
-
-    const header = useMemo(
-        () => (
-            <Toolbar sx={{ p: condition ? '10px' : '16px' }}>
+    const header = () => {
+        return (
+            <Toolbar sx={{ p: 1 }}>
                 <Header />
             </Toolbar>
-        ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [layout, matchDownMd]
-    );
+        );
+    };
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -88,7 +74,7 @@ const MainLayout = () => {
 
             {/* header */}
             <AppBar enableColorOnDark position="fixed" color="inherit" elevation={0} sx={{ bgcolor: theme.palette.background.default }}>
-                {header}
+                {header()}
             </AppBar>
 
             {/* snackbar */}
@@ -98,10 +84,10 @@ const MainLayout = () => {
             <Sidebar />
 
             {/* main content */}
-            <Main theme={theme} open={drawerOpen} layout={layout} width={finderWidth}>
-                <Container maxWidth={container ? 'lg' : false} {...(!container && { sx: { px: { xs: 0 } } })}>
+            <Main theme={theme} open={drawerOpen} width={finderWidth}>
+                <Box sx={{ width: '100%' }}>
                     <RecordViewer />
-                </Container>
+                </Box>
             </Main>
         </Box>
     );

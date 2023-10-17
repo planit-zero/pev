@@ -29,7 +29,7 @@ const Sidebar = () => {
                 onClose={() => dispatch(openDrawer(!drawerOpen))}
                 sx={{
                     '& .MuiDrawer-paper': {
-                        mt: 11,
+                        mt: '68px',
                         zIndex: 1099,
                         width: finderWidth,
                         background: theme.palette.background.default,

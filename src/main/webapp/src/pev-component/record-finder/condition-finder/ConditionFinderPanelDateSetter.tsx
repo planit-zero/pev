@@ -6,6 +6,8 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs, { ManipulateType } from 'dayjs';
 import { TDatePeriod } from '../../../pev-type/TDatePeriod';
 import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
+import { useSelector } from '../../../store';
+import { finderWidthWide } from '../../../store/constant';
 
 type ConditionFinderPanelDateSetterProps = {
     searchCondition: ISearchCondition;
@@ -13,6 +15,8 @@ type ConditionFinderPanelDateSetterProps = {
 };
 
 const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterProps) => {
+    const { finderWidth } = useSelector((state) => state.environment);
+
     const [from, setFrom] = React.useState<string | null>(props.searchCondition.searchFromDate);
     const [to, setTo] = React.useState<string | null>(props.searchCondition.searchToDate);
     const [period, setPeriod] = React.useState<string>(TDatePeriod.ONE_MONTH);
@@ -86,6 +90,11 @@ const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterPro
         setPeriod(event.target.value);
     };
 
+    const getInputWidth = () => {
+        if (finderWidth === finderWidthWide) return '228px';
+        return '160px';
+    };
+
     return (
         <Grid container display={'flex'} alignItems={'center'}>
             <Grid item xs={2} display={'flex'} alignItems={'center'}>
@@ -97,7 +106,7 @@ const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterPro
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
                             inputFormat={'yyyy-MM-dd'}
-                            renderInput={(fieldProps) => <TextField sx={{ width: '160px' }} size={'small'} {...fieldProps} />}
+                            renderInput={(fieldProps) => <TextField sx={{ width: getInputWidth() }} size={'small'} {...fieldProps} />}
                             value={from}
                             onChange={handleFromChange}
                         />
@@ -110,7 +119,7 @@ const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterPro
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
                             inputFormat={'yyyy-MM-dd'}
-                            renderInput={(fieldProps) => <TextField sx={{ width: '160px' }} size={'small'} {...fieldProps} />}
+                            renderInput={(fieldProps) => <TextField sx={{ width: getInputWidth() }} size={'small'} {...fieldProps} />}
                             value={to}
                             onChange={handleToChange}
                         />
