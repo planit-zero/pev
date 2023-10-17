@@ -116,7 +116,7 @@ const RecordSheet = (props: RecordSheetProps) => {
     };
 
     return (
-        <Paper sx={{ minWidth: 600, p: 2, mb: 2, borderRadius: 0 }}>
+        <Paper sx={{ minWidth: 600, width: hasStyle() ? 'fit-content' : 600, p: 2, mb: 2, borderRadius: 0 }}>
             {!isRecordSheetLoading && recordSheet && hasStyle() && StyledSection(recordSheet)}
             {!isRecordSheetLoading && recordSheet && !hasStyle() && CommonSection(recordSheet)}
             {isRecordSheetLoading && SkeletonSheet()}

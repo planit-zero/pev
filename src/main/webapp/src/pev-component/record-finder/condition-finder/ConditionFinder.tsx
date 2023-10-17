@@ -40,7 +40,7 @@ const ConditionFinder = () => {
     };
 
     return (
-        <Box sx={{ p: 1, width: '100%', height: 'calc(100% - 60px)' }}>
+        <Box sx={{ width: '100%', height: 'calc(100% - 68px)' }}>
             <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isRecordListLoading}>
                 <CircularProgress color="inherit" />
             </Backdrop>

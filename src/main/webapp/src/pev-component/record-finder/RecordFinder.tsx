@@ -13,8 +13,8 @@ const RecordFinder = () => {
     };
 
     return (
-        <Box sx={{ p: 2, height: 'calc(100% - 69px)' }}>
-            <Box>
+        <Box sx={{ px: 2, pb: 2, height: 'calc(100% - 88px)' }}>
+            <Box sx={{ mb: 1 }}>
                 <Tabs variant={'fullWidth'} value={activeFinderItem} onChange={handleItemChange}>
                     {finderItems.map((item, idx) => {
                         return <Tab key={idx} value={idx} label={item} sx={{ whiteSpace: 'pre-line' }} />;

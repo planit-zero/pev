@@ -2,12 +2,12 @@ import * as React from 'react';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Button, InputAdornment, OutlinedInput, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, Button, InputAdornment, OutlinedInput, ToggleButton, ToggleButtonGroup, useMediaQuery } from '@mui/material';
 
 // assets
 import { IconSearch } from '@tabler/icons';
 import { shouldForwardProp } from '@mui/system';
-import { IPatientGidP, IPatientR } from '../../../../pev-interface/IPatient';
+import { IPatientR } from '../../../../pev-interface/IPatient';
 import { useGetPatientWithGidMutation } from '../../../../pev-service/PatientService';
 
 const OutlineInputStyle = styled(OutlinedInput, { shouldForwardProp })(({ theme }) => ({
@@ -23,6 +23,10 @@ const OutlineInputStyle = styled(OutlinedInput, { shouldForwardProp })(({ theme 
 const SearchSection = () => {
     const theme = useTheme();
 
+    const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
+    const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+    const matchDownSm = useMediaQuery(theme.breakpoints.down('sm'));
+
     const [mode, setMode] = React.useState<string>('gid');
 
     const ModeSelector = () => {
@@ -33,8 +37,16 @@ const SearchSection = () => {
         return (
             <Box>
                 <ToggleButtonGroup color={'primary'} value={mode} exclusive={true} onChange={handleModeChange}>
-                    <ToggleButton value={'gid'}>가명화 환자 ID</ToggleButton>
-                    <ToggleButton value={'rid'}>연구별 익명 ID</ToggleButton>
+                    <ToggleButton value={'gid'}>
+                        {matchUpMd && '가명화 환자 ID'}
+                        {matchDownMd && !matchDownSm && 'GID'}
+                        {matchDownSm && 'G'}
+                    </ToggleButton>
+                    <ToggleButton value={'rid'}>
+                        {matchUpMd && '연구별 환자 ID'}
+                        {matchDownMd && !matchDownSm && 'RID'}
+                        {matchDownSm && 'R'}
+                    </ToggleButton>
                 </ToggleButtonGroup>
             </Box>
         );
@@ -79,17 +91,12 @@ const SearchSection = () => {
     };
 
     return (
-        <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-            <Box display={'flex'} alignItems={'center'} gap={1}>
-                <ModeSelector />
-                <Box display={'flex'} alignItems={'center'} gap={1}>
-                    <GidSearchPanel />
-                </Box>
-            </Box>
+        <Box display={'flex'} alignItems={'center'}>
             {patient && (
                 <Box
                     sx={{
-                        p: 2,
+                        mr: 1,
+                        p: '14px',
                         height: '100%',
                         color: 'white',
                         fontSize: 'h4.fontSize',
@@ -109,6 +116,12 @@ const SearchSection = () => {
                     </span>
                 </Box>
             )}
+            <Box display={'flex'} alignItems={'center'} gap={1}>
+                <ModeSelector />
+                <Box display={'flex'} alignItems={'center'} gap={1}>
+                    <GidSearchPanel />
+                </Box>
+            </Box>
         </Box>
     );
 };

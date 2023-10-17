@@ -1,10 +1,12 @@
 import { IEnvironment, IEnvironmentAlert } from '../../pev-interface/IEnvironment';
 import { createSlice } from '@reduxjs/toolkit';
 import { dispatch } from '../index';
+import { finderWidthNarrow } from '../constant';
 
 const initialState: IEnvironment = {
     alert: null,
-    viewMode: 'single'
+    viewMode: 'single',
+    finderWidth: finderWidthNarrow
 };
 
 const environmentSlice = createSlice({
@@ -16,6 +18,9 @@ const environmentSlice = createSlice({
         },
         setViewMode(state, action) {
             state.viewMode = action.payload;
+        },
+        setFinderWidth(state, action) {
+            state.finderWidth = action.payload;
         }
     }
 });
@@ -28,4 +33,8 @@ export const setAlert = (alert: IEnvironmentAlert | null) => {
 
 export const setViewMode = (viewMode: string) => {
     dispatch(environmentSlice.actions.setViewMode(viewMode));
+};
+
+export const setFinderWidth = (finderWidth: number) => {
+    dispatch(environmentSlice.actions.setFinderWidth(finderWidth));
 };

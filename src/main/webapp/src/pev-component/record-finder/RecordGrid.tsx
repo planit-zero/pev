@@ -8,12 +8,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import { setTargetRecords } from '../../store/pev-slices/record';
 import { setAlert } from '../../store/pev-slices/environment';
 import { TAlert } from '../../pev-type/TAlert';
+import { useSelector } from '../../store';
 
 type ConditionFinderGridProps = {
     recordList: IRecord[];
 };
 
 const RecordGrid = (props: ConditionFinderGridProps) => {
+    const { finderWidth } = useSelector((state) => state.environment);
     const [selectedRecordList, setSelectedRecordList] = React.useState<IRecord[]>([]);
 
     const handleSelectionChanged = (e: any) => {
@@ -27,6 +29,14 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
         }
         setTargetRecords(selectedRecordList);
     };
+
+    const gridRef = React.useRef<DataGrid>(null);
+
+    React.useEffect(() => {
+        if (gridRef && gridRef.current) {
+            void gridRef.current.instance.refresh();
+        }
+    }, [finderWidth]);
 
     return (
         <Box width={'100%'} height={'100%'}>
@@ -44,6 +54,7 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
             <Divider sx={{ mt: 1, mb: 1 }} />
             <Box width={'100%'} height={'calc(100% - 48px)'}>
                 <DataGrid
+                    ref={gridRef}
                     dataSource={props.recordList}
                     height={'100%'}
                     showBorders={true}
@@ -53,14 +64,14 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                     noDataText={''}
                     onSelectionChanged={handleSelectionChanged}
                 >
-                    <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={50} />
-                    <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={80} />
-                    <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} width={180} />
+                    <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={75} />
+                    <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={75} />
+                    <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} minWidth={160} />
                     <Column dataField={'writingDate'} caption={'작성일자'} width={90} alignment={'center'} />
                     <Column dataField={'writingDeptNm'} caption={'작성과'} width={100} alignment={'left'} />
                     <Column dataField={'writerNm'} caption={'작성자'} width={80} alignment={'center'} />
                     <Column dataField={'mdrcWrtStsCdYn'} caption={'서명'} alignment={'center'} width={60} />
-                    <Scrolling mode={'virtual'} />
+                    <Scrolling mode={'virtual'} showScrollbar={'always'} />
                     <Selection mode={'multiple'} showCheckBoxesMode={'onClick'} />
                 </DataGrid>
             </Box>

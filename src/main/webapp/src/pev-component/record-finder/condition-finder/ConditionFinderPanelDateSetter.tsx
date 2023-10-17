@@ -92,7 +92,7 @@ const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterPro
                 <Square color={'primary'} sx={{ width: 10, mr: 1 }} />
                 <Typography variant={'body1'}>기록일자</Typography>
             </Grid>
-            <Grid item xs={10} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+            <Grid item xs={10} display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={1}>
                 <Box>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker

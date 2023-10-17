@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
-import { Autocomplete, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { Square } from '@mui/icons-material';
 import { TDept } from '../../../pev-type/TDept';
 import { IRecordDeptInfo } from '../../../pev-interface/IRecordInfo';
@@ -39,15 +39,15 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
                 <Square color={'primary'} sx={{ width: 10, mr: 1 }} />
                 <Typography variant={'body1'}>진료과</Typography>
             </Grid>
-            <Grid item xs={10} display={'flex'} alignItems={'center'}>
-                <Grid item xs={7}>
+            <Grid item xs={10} display={'flex'} justifyContent={'flex-start'} alignItems={'center'}>
+                <Box>
                     <RadioGroup value={deptType} row={true} onChange={handleDeptTypeChange}>
                         <FormControlLabel value={TDept.ALL} control={<Radio size={'small'} />} label={'전체'} />
                         <FormControlLabel value={TDept.MEDICAL} control={<Radio size={'small'} />} label={'수진과'} />
                         <FormControlLabel value={TDept.WRITER} control={<Radio size={'small'} />} label={'작성과'} />
                     </RadioGroup>
-                </Grid>
-                <Grid item xs={5}>
+                </Box>
+                <Box width={210}>
                     {!isDepartmentListLoading && (
                         <Autocomplete
                             size={'small'}
@@ -66,7 +66,7 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
                             onChange={handleDeptCdChange}
                         />
                     )}
-                </Grid>
+                </Box>
             </Grid>
         </Grid>
     );

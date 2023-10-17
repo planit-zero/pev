@@ -1,5 +1,4 @@
-import { useEffect, useMemo } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useMemo } from 'react';
 
 // material-ui
 import { styled, useTheme, Theme } from '@mui/material/styles';
@@ -8,19 +7,13 @@ import { AppBar, Box, Container, CssBaseline, Toolbar, useMediaQuery } from '@mu
 // project imports
 import Header from './Header';
 import Sidebar from './Sidebar';
-import HorizontalBar from './HorizontalBar';
-import Customization from '../Customization';
-import Breadcrumbs from 'ui-component/extended/Breadcrumbs';
 
-import navigation from 'menu-items';
 import LAYOUT_CONST from 'constant';
 import useConfig from 'hooks/useConfig';
-import { drawerWidth } from 'store/constant';
-import { openDrawer } from 'store/slices/menu';
-import { useDispatch, useSelector } from 'store';
+import { finderWidthNarrow, finderWidthWide } from 'store/constant';
+import { useSelector } from 'store';
 
 // assets
-import { IconChevronRight } from '@tabler/icons';
 import RecordViewer from '../../pev-component/record-viewer/RecordViewer';
 import CommonSnackbar from '../../pev-component/common/CommonSnackbar';
 
@@ -28,57 +21,41 @@ interface MainStyleProps {
     theme: Theme;
     open: boolean;
     layout: string;
+    width: number;
 }
 
 // styles
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open, layout }: MainStyleProps) => ({
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open, layout, width }: MainStyleProps) => ({
     ...theme.typography.mainContent,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+    padding: `20px 10px 20px 20px`,
+    marginTop: layout === LAYOUT_CONST.HORIZONTAL_LAYOUT ? 135 : 88,
     ...(!open && {
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.shorter + 200
         }),
-        [theme.breakpoints.up('md')]: {
-            marginLeft: layout === LAYOUT_CONST.VERTICAL_LAYOUT ? -(drawerWidth - 72) : '20px',
-            width: `calc(100% - ${drawerWidth}px)`,
-            marginTop: layout === LAYOUT_CONST.HORIZONTAL_LAYOUT ? 135 : 88
-        },
-        [theme.breakpoints.down('md')]: {
-            marginLeft: '20px',
-            width: `calc(100% - ${drawerWidth}px)`,
-            padding: '16px',
-            marginTop: 88
-        },
-        [theme.breakpoints.down('sm')]: {
-            marginLeft: '10px',
-            width: `calc(100% - ${drawerWidth}px)`,
-            padding: '16px',
-            marginRight: '10px',
-            marginTop: 88
-        }
+        marginLeft: `${-(width - 40)}px`
     }),
     ...(open && {
-        // 'margin 538ms cubic-bezier(0.4, 0, 1, 1) 0ms',
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.shorter + 200
         }),
-        marginLeft: layout === LAYOUT_CONST.HORIZONTAL_LAYOUT ? '20px' : 0,
-        marginTop: layout === LAYOUT_CONST.HORIZONTAL_LAYOUT ? 135 : 88,
-        width: `calc(100% - ${drawerWidth}px)`,
-        [theme.breakpoints.up('md')]: {
-            marginTop: layout === LAYOUT_CONST.HORIZONTAL_LAYOUT ? 135 : 88
-        },
+        width: `calc(100% - ${width}px)`,
+        marginTop: 88,
+        marginLeft: '20px',
         [theme.breakpoints.down('md')]: {
-            marginLeft: '20px',
-            marginTop: 88
-        },
-        [theme.breakpoints.down('sm')]: {
-            marginLeft: '10px',
+            marginLeft: `${-(width - 40)}px`,
             marginTop: 88
         }
+    }),
+    ...((width === finderWidthNarrow || width === finderWidthWide) && {
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.standard + 200
+        })
     })
 }));
 
@@ -86,35 +63,12 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
 
 const MainLayout = () => {
     const theme = useTheme();
+    const { finderWidth } = useSelector((state) => state.environment);
 
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
-    const dispatch = useDispatch();
     const { drawerOpen } = useSelector((state) => state.menu);
-    const { drawerType, container, layout } = useConfig();
-
-    useEffect(() => {
-        if (drawerType === LAYOUT_CONST.DEFAULT_DRAWER) {
-            dispatch(openDrawer(true));
-        } else {
-            dispatch(openDrawer(false));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [drawerType]);
-
-    useEffect(() => {
-        if (drawerType === LAYOUT_CONST.DEFAULT_DRAWER) {
-            dispatch(openDrawer(true));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        if (matchDownMd) {
-            dispatch(openDrawer(true));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [matchDownMd]);
+    const { container, layout } = useConfig();
 
     const condition = layout === LAYOUT_CONST.HORIZONTAL_LAYOUT && !matchDownMd;
 
@@ -131,6 +85,7 @@ const MainLayout = () => {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
+
             {/* header */}
             <AppBar enableColorOnDark position="fixed" color="inherit" elevation={0} sx={{ bgcolor: theme.palette.background.default }}>
                 {header}
@@ -139,14 +94,11 @@ const MainLayout = () => {
             {/* snackbar */}
             <CommonSnackbar />
 
-            {/* horizontal menu-list bar */}
-            {layout === LAYOUT_CONST.HORIZONTAL_LAYOUT && !matchDownMd && <HorizontalBar />}
-
-            {/* drawer */}
-            {(layout === LAYOUT_CONST.VERTICAL_LAYOUT || matchDownMd) && <Sidebar />}
+            {/* sidebar */}
+            <Sidebar />
 
             {/* main content */}
-            <Main theme={theme} open={drawerOpen} layout={layout}>
+            <Main theme={theme} open={drawerOpen} layout={layout} width={finderWidth}>
                 <Container maxWidth={container ? 'lg' : false} {...(!container && { sx: { px: { xs: 0 } } })}>
                     <RecordViewer />
                 </Container>

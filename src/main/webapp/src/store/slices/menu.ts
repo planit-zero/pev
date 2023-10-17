@@ -10,7 +10,7 @@ import axios from 'utils/axios';
 const initialState: MenuProps = {
     selectedItem: ['dashboard'],
     selectedID: null,
-    drawerOpen: false,
+    drawerOpen: true,
     error: null,
     menu: {}
 };
