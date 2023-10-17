@@ -60,7 +60,7 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                     showBorders={true}
                     showColumnLines={true}
                     showRowLines={true}
-                    wordWrapEnabled={true}
+                    wordWrapEnabled={false}
                     noDataText={''}
                     onSelectionChanged={handleSelectionChanged}
                 >
