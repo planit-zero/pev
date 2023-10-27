@@ -2,6 +2,7 @@ package ai.planit.pev.domain.record.service;
 
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
+import ai.planit.pev.core.webclient.PevWebClient;
 import ai.planit.pev.domain.form.service.FormService;
 import ai.planit.pev.domain.order.service.OrderService;
 import ai.planit.pev.domain.pathology.service.PathologyService;
@@ -10,16 +11,21 @@ import ai.planit.pev.domain.record.constant.RecordTarget;
 import ai.planit.pev.domain.record.dao.RecordListDAO;
 import ai.planit.pev.domain.record.dto.Record;
 import ai.planit.pev.domain.record.dto.RecordSheet;
+import ai.planit.pev.domain.scan.service.ScanService;
 import ai.planit.pev.domain.specimen.service.SpecimenService;
 import ai.planit.pev.utility.PevStringUtil;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +38,7 @@ public class RecordServiceImpl implements RecordService {
     private final PictureService pictureService;
     private final PathologyService pathologyService;
     private final FormService formService;
+    private final ScanService scanService;
 
     /**
      * {@inheritDoc}
@@ -88,7 +95,9 @@ public class RecordServiceImpl implements RecordService {
 
         // TODO: 간호기록 목록 연동
 
-        // TODO: 스캔자료 목록 연동
+        if (searchTargetList.contains(RecordTarget.SCAN_RECORD.getType())) {
+            recordList.addAll(recordListDAO.getScanRecordList(request));
+        }
 
         // TODO: 특성화기록 목록 연동
 
@@ -215,29 +224,62 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
+        RecordSheet sheet = new RecordSheet();
+
         if (record.getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
-            return formService.getRecordSheet(session, record);
+            sheet = formService.getRecordSheet(session, record);
         }
         // 처방기록
         if (record.getRecordDetailType().equals(RecordTarget.ORDER_RECORD.getType())) {
-            return orderService.getRecordSheet(session, record);
+            sheet = orderService.getRecordSheet(session, record);
         }
 
         // 검체검사
         if (record.getRecordDetailType().equals(RecordTarget.EXAM_SPECIMEN.getType())) {
-            return specimenService.getRecordSheet(session, record);
+            sheet = specimenService.getRecordSheet(session, record);
         }
 
         // 영상검사
         if (record.getRecordDetailType().equals(RecordTarget.EXAM_PICTURE.getType())) {
-            return pictureService.getRecordSheet(session, record);
+            sheet = pictureService.getRecordSheet(session, record);
         }
 
         // 병리검사
         if (record.getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
-            return pathologyService.getRecordSheet(session, record);
+            sheet = pathologyService.getRecordSheet(session, record);
         }
 
-        return null;
+        // 스캔자료
+        if (record.getRecordDetailType().equals(RecordTarget.SCAN_RECORD.getType())) {
+            sheet = scanService.getRecordSheet(session, record);
+        }
+//        return sheet;
+        return getMaskedSheet(sheet);
+    }
+
+    private RecordSheet getMaskedSheet(RecordSheet sheet) {
+        String url = "http://172.26.33.23:28092";
+        String uri = "/api/emr/ann-record-sheet";
+        WebClient webClient = PevWebClient.getWebClient(url, ErrorType.RID_CONNECTION_TIMEOUT);
+
+        return webClient.post()
+                .uri(uri)
+                .acceptCharset(StandardCharsets.UTF_8)
+                .body(BodyInserters.fromValue(sheet))
+                .retrieve()
+                .onStatus(HttpStatus::is5xxServerError, this::throwRidServerError)
+                .onStatus(HttpStatus::is4xxClientError, this::throwRidServerError)
+                .bodyToMono(RecordSheet.class)
+                .block();
+    }
+
+    private Mono<? extends Throwable> throwRidServerError(ClientResponse response) {
+        return response.createException()
+                .flatMap(error -> {
+                    String body = error.getResponseBodyAsString(StandardCharsets.UTF_8);
+                    Map<String, String> errorData = new Gson().fromJson(body, HashMap.class);
+                    System.out.println(errorData.get("message"));
+                    return Mono.error(new BaseException(ErrorType.CONVERT_GID_TO_PID_FAILED, ErrorType.CONVERT_GID_TO_PID_FAILED.getMessage(), errorData.get("message")));
+                });
     }
 }

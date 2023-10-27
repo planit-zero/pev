@@ -1,0 +1,5 @@
+spring:
+  pid:
+    file: /Users/changho/Development/pev/boot.pid
+server:
+  port: 8080

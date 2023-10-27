@@ -15,7 +15,7 @@
                         M.parentId,
                         M.controlType,
                         M.classType,
-                        CASE WHEN M.controlType = '7' THEN D.INTG_IMG_FILE_PATH_NM ELSE M.text END AS text,
+                        CASE WHEN M.controlType = '7' THEN REGEXP_REPLACE(D.INTG_IMG_FILE_PATH_NM, '\\', '/') ELSE M.text END AS text,
                         M.textDesc
                  FROM (
                           SELECT A.MDFM_SCTN_SEQ                        AS sectionSeq,
@@ -33,8 +33,8 @@
                                              WHEN A.MDFM_ELMT_CLS_CD = 'V' AND A.ELMT_CCLS_CD IN ('4', '5', '6') THEN B.MDFM_ELMT_INPT_CNTE
                                          </otherwise>
                                      </choose>
-                                     WHEN A.MDFM_ELMT_CLS_CD = 'V' AND A.ELMT_CCLS_CD = '7' THEN C.INTG_IMG_FILE_PATH_NM
-                                     ELSE COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT, C.INTG_IMG_FILE_PATH_NM) END AS text,
+                                     WHEN A.MDFM_ELMT_CLS_CD = 'V' AND A.ELMT_CCLS_CD = '7' THEN REGEXP_REPLACE(C.INTG_IMG_FILE_PATH_NM, '\\', '/')
+                                     ELSE COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT, REGEXP_REPLACE(C.INTG_IMG_FILE_PATH_NM, '\\', '/')) END AS text,
                                  A.MDFM_CPEM_CNTE AS textDesc,
                                  CASE
                                      WHEN A.ELMT_CCLS_CD = 7

@@ -22,13 +22,13 @@ const RecordValue = (props: RecordValueProps) => {
                         wordBreak: 'break-all'
                     }}
                     display={props.display}
+                    className={'record-value'}
                 >
-                    {props.value.text}
+                    {/*{props.value.text}*/}
+                    <div style={{ display: props.display }} dangerouslySetInnerHTML={{ __html: props.value.text }} />
                 </Typography>
             )}
-            {props.value.controlType === '7' && (
-                <img src={`http://hisimg.snuh.org/${props.value.text}`} alt={'이미지'} style={{ maxWidth: '100%' }} />
-            )}
+            {props.value.controlType === '7' && <img src={`${props.value.text}`} alt={'이미지'} style={{ maxWidth: '100%' }} />}
         </React.Fragment>
     );
 };

@@ -37,7 +37,7 @@ const RadioButtonElement = (item: IRecordItem): JSX.Element => {
 };
 
 const ImageElement = (item: IRecordItem): JSX.Element => {
-    return <img src={item.value ? `http://hisimg.snuh.org${item.value}` : ''} alt={item.text} />;
+    return <img src={item.value ? `${item.value}` : ''} alt={item.text} />;
 };
 
 const getBoxShadow = (item: IRecordItem): string => {
