@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { IRecord, IRecordAttribute, IRecordEntity, IRecordSheet, IRecordValue } from '../../pev-interface/IRecord';
-import { Box, Paper, Skeleton } from '@mui/material';
+import { Alert, AlertTitle, Box, Button, Paper, Skeleton } from '@mui/material';
 import { useGetRecordSheetMutation } from '../../pev-service/RecordService';
 import RecordSection from './RecordSection';
 import { TRecordSection } from '../../pev-type/TRecordSection';
 import StyledElement from './StyledElement';
+import { setAlert } from '../../store/pev-slices/environment';
 
 type RecordSheetProps = {
     targetRecord: IRecord;
 };
 
 const RecordSheet = (props: RecordSheetProps) => {
-    const [getRecordSheet, { data: recordSheet, isLoading: isRecordSheetLoading }] = useGetRecordSheetMutation();
+    const [getRecordSheet, { data: recordSheet, isLoading: isRecordSheetLoading, error: recordSheetError }] = useGetRecordSheetMutation();
 
     React.useEffect(() => {
         getRecordSheet(props.targetRecord);
@@ -115,11 +116,36 @@ const RecordSheet = (props: RecordSheetProps) => {
         return styledRecordDetailType.includes(props.targetRecord.recordDetailType);
     };
 
+    const SheetError = () => {
+        if (!recordSheetError) return null;
+        return (
+            <Alert
+                severity={'error'}
+                action={
+                    <Button variant={'contained'} color={'error'} size={'small'} onClick={handleSheetError}>
+                        신고
+                    </Button>
+                }
+            >
+                <AlertTitle>기록지 오류</AlertTitle>
+                <strong>{`${props.targetRecord.itemNm} (${props.targetRecord.writingDate})`}</strong> 기록지를 불러오는 데 실패했습니다.
+                <br />
+                우측의 <strong>신고 버튼</strong>을 눌러 관리자에게 문의해주세요.
+            </Alert>
+        );
+    };
+
+    const handleSheetError = () => {
+        // TODO: 기록지 오류 신고 처리 필요
+        setAlert({ type: 'info', message: '기록지 오류 신고 완료되었습니다.\r\n조치 후 안내드리도록 하겠습니다.' });
+    };
+
     return (
         <Paper sx={{ minWidth: 600, width: hasStyle() ? 'fit-content' : 600, p: 2, mb: 2, borderRadius: 0 }}>
-            {!isRecordSheetLoading && recordSheet && hasStyle() && StyledSection(recordSheet)}
-            {!isRecordSheetLoading && recordSheet && !hasStyle() && CommonSection(recordSheet)}
+            {!isRecordSheetLoading && !recordSheetError && recordSheet && hasStyle() && StyledSection(recordSheet)}
+            {!isRecordSheetLoading && !recordSheetError && recordSheet && !hasStyle() && CommonSection(recordSheet)}
             {isRecordSheetLoading && SkeletonSheet()}
+            {SheetError()}
         </Paper>
     );
 };
