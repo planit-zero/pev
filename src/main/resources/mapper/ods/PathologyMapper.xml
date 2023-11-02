@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.pathology.dao.PathologyDAO">
+    <select id="getPathologyData"
+            parameterType="ai.planit.pev.domain.ods.pathology.dto.PathologyData$Request"
+            resultType="ai.planit.pev.domain.ods.pathology.dto.PathologyData$Response">
+        SELECT B.PLRT_LDAT                                                           AS plrtLdat,
+               A.ACPT_DTM::DATE                                                      AS acptDt,
+               A.LSH_DTM::DATE                                                       AS lshDt,
+               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.LSH_STF_NO) AS lshStfNm
+        FROM ODS.S_MSEPMPMD A
+                 INNER JOIN ODS.S_MSEPMRID B
+                            ON A.PTHL_NO = B.PTHL_NO
+                                AND B.TMPR_SV_YN = 'N'
+        WHERE A.PTHL_NO = #{pthlNo}
+    </select>
+    <select id="getPathologyProcessList"
+            parameterType="ai.planit.pev.domain.ods.pathology.dto.PathologyProcess$Request"
+            resultType="ai.planit.pev.domain.ods.pathology.dto.PathologyProcess$Response">
+        SELECT A.PTHL_PRO_TP_CD                                                         AS pthlProTpCd,
+               (SELECT Z.COMN_CD_NM
+                FROM ODS.S_CCCCCUTE Z
+                WHERE Z.COMN_GRP_CD = 'SPM00023' AND Z.COMN_CD = A.PTHL_PRO_TP_CD)      AS pthlProTpNm,
+               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WK_FMT_STF_NO) AS wkFmtStfNm
+        FROM ODS.S_MSEPMPRD A
+        WHERE A.PTHL_NO = #{pthlNo}
+          AND A.PTHL_PRO_STS_CD = 'C'
+    </select>
+</mapper>

@@ -1,13 +1,19 @@
 spring:
-  datasource:
-    driver-class-name: com.vertica.jdbc.Driver
-    url: jdbc:vertica://172.26.33.19:5433/CDW
-    username: emr
-    password: emr1127!
+  ods:
+    datasource:
+      hikari:
+        driver-class-name: com.vertica.jdbc.Driver
+        jdbc-url: jdbc:vertica://172.26.33.19:5433/CDW
+        username: emr
+        password: emr1127!
+  irb:
+    datasource:
+      hikari:
+        driver-class-name: com.vertica.jdbc.Driver
+        url: jdbc:vertica://172.26.33.19:5433/CDW
+        username: emr
+        password: emr1127!
   pid:
     file: /psdEx/pev/boot.pid
-mybatis:
-  mapper-locations: mapper/*.xml
-  type-aliases-package: ai.planit.pev.domain.**.dto
 server:
   port: 18083

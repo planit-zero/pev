@@ -1,10 +1,10 @@
 package ai.planit.pev.utility;
 
-import ai.planit.pev.domain.record.constant.RecordEntityPattern;
-import ai.planit.pev.domain.record.dto.RecordAttribute;
-import ai.planit.pev.domain.record.dto.RecordElement;
-import ai.planit.pev.domain.record.dto.RecordEntity;
-import ai.planit.pev.domain.record.dto.RecordValue;
+import ai.planit.pev.domain.ods.record.constant.RecordEntityPattern;
+import ai.planit.pev.domain.ods.record.dto.RecordAttribute;
+import ai.planit.pev.domain.ods.record.dto.RecordElement;
+import ai.planit.pev.domain.ods.record.dto.RecordEntity;
+import ai.planit.pev.domain.ods.record.dto.RecordValue;
 import reactor.util.annotation.Nullable;
 
 import java.util.ArrayList;
