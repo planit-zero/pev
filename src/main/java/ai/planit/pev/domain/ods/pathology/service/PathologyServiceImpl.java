@@ -7,7 +7,6 @@ import ai.planit.pev.domain.ods.record.dto.*;
 import ai.planit.pev.domain.ods.pathology.dao.PathologyDAO;
 import ai.planit.pev.domain.ods.pathology.dto.PathologyData;
 import ai.planit.pev.domain.ods.pathology.dto.PathologyProcess;
-import ai.planit.pev.domain.record.dto.*;
 import ai.planit.pev.utility.PevEntityUtil;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;

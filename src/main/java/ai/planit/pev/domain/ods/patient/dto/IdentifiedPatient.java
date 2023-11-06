@@ -5,23 +5,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 public class IdentifiedPatient {
 
     @Getter
     @Setter
     @NoArgsConstructor
     public static class Request {
-        private String gid;
-        private String irbNo;
-        private String stfNo;
-        private String stfNm;
-        private String deptCd;
-        private String deptNm;
+        private List<String> ridList;
+        private String irb;
     }
 
     @Getter
     @Setter
     public static class Response {
-        private String ptNo;
+        private List<String> ptNo;
     }
 }

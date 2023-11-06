@@ -37,11 +37,6 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
         props.onSearchConditionChange([{ key: 'deptCd', value: nextDeptCd }]);
     };
 
-    const getInputWidth = () => {
-        if (finderWidth === finderWidthWide) return '344px';
-        return '210px';
-    };
-
     return (
         <Grid container display={'flex'} alignItems={'center'}>
             <Grid item xs={2} display={'flex'} alignItems={'center'}>
@@ -49,14 +44,14 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
                 <Typography variant={'body1'}>진료과</Typography>
             </Grid>
             <Grid item xs={10} display={'flex'} justifyContent={'flex-start'} alignItems={'center'}>
-                <Box>
+                <Grid item xs={7}>
                     <RadioGroup value={deptType} row={true} onChange={handleDeptTypeChange}>
                         <FormControlLabel value={TDept.ALL} control={<Radio size={'small'} />} label={'전체'} />
                         <FormControlLabel value={TDept.MEDICAL} control={<Radio size={'small'} />} label={'수진과'} />
                         <FormControlLabel value={TDept.WRITER} control={<Radio size={'small'} />} label={'작성과'} />
                     </RadioGroup>
-                </Box>
-                <Box width={getInputWidth()}>
+                </Grid>
+                <Grid item xs={5}>
                     {!isDepartmentListLoading && (
                         <Autocomplete
                             size={'small'}
@@ -75,7 +70,7 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
                             onChange={handleDeptCdChange}
                         />
                     )}
-                </Box>
+                </Grid>
             </Grid>
         </Grid>
     );

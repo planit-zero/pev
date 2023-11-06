@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 public class PatientController {
     private final PatientService patientService;
 
-    @PostMapping("gid")
+    @PostMapping("rid")
     public ResponseEntity<?> getPatient(HttpSession session, @RequestBody IdentifiedPatient.Request request) {
         return ResponseEntity.ok().body(patientService.getPatient(session, request));
     }

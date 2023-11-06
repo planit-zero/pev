@@ -279,7 +279,7 @@ public class RecordServiceImpl implements RecordService {
                     String body = error.getResponseBodyAsString(StandardCharsets.UTF_8);
                     Map<String, String> errorData = new Gson().fromJson(body, HashMap.class);
                     System.out.println(errorData.get("message"));
-                    return Mono.error(new BaseException(ErrorType.CONVERT_GID_TO_PID_FAILED, ErrorType.CONVERT_GID_TO_PID_FAILED.getMessage(), errorData.get("message")));
+                    return Mono.error(new BaseException(ErrorType.CONVERT_RID_TO_PID_FAILED, ErrorType.CONVERT_RID_TO_PID_FAILED.getMessage(), errorData.get("message")));
                 });
     }
 }

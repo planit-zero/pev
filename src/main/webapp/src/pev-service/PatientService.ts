@@ -7,9 +7,9 @@ export const patientApi = createApi({
         baseUrl: '/api/patient'
     }),
     endpoints: (builder) => ({
-        getPatientWithGid: builder.mutation<IPatientR, IPatientGidP>({
+        getPatient: builder.mutation<IPatientR, IPatientGidP>({
             query: (payload) => ({
-                url: 'gid',
+                url: 'rid',
                 method: 'POST',
                 body: payload
             })
@@ -17,4 +17,4 @@ export const patientApi = createApi({
     })
 });
 
-export const { useGetPatientWithGidMutation } = patientApi;
+export const { useGetPatientMutation } = patientApi;

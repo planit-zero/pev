@@ -6,7 +6,6 @@ import ai.planit.pev.core.webclient.PevWebClient;
 import ai.planit.pev.domain.ods.patient.dao.PatientDAO;
 import ai.planit.pev.domain.ods.patient.dto.IdentifiedPatient;
 import ai.planit.pev.domain.ods.patient.dto.Patient;
-import ai.planit.pev.utility.PevStringUtil;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,15 +26,15 @@ public class PatientServiceImpl implements PatientService {
     private final PatientDAO patientDAO;
 
     private final static String RID_URL = "http://172.26.33.23:28092";
-    private final static String RID_DECRYPT_API_URI = "/api/psd/decrypt";
+    private final static String RID_DECRYPT_API_URI = "/api/ann/identification";
 
 
     public Patient getPatient(HttpSession session, IdentifiedPatient.Request request) {
-        if (PevStringUtil.isStringEmpty(request.getGid())) {
-            throw new BaseException(ErrorType.GID_NOT_FOUND);
-        }
+//        if (PevStringUtil.isStringEmpty(request.getGid())) {
+//            throw new BaseException(ErrorType.GID_NOT_FOUND);
+//        }
 
-        String pid = convertGidToPid(request.getGid());
+        String pid = convertRidToPid(request);
         session.setAttribute("pev-pid", pid);
 
         Patient patient = patientDAO.getPatient(pid);
@@ -44,32 +43,24 @@ public class PatientServiceImpl implements PatientService {
         return patient;
     }
 
-    private String convertGidToPid(String gid) {
+    private String convertRidToPid(IdentifiedPatient.Request request) {
         WebClient webClient = PevWebClient.getWebClient(RID_URL, ErrorType.RID_CONNECTION_TIMEOUT);
 
-        IdentifiedPatient.Request identifiedPatientRequest = new IdentifiedPatient.Request();
-        identifiedPatientRequest.setGid(gid);
-        identifiedPatientRequest.setIrbNo("PEV-CONVERT-GID-TO-PID");
-        identifiedPatientRequest.setStfNo("CHUCK");
-        identifiedPatientRequest.setStfNm("김창호");
-        identifiedPatientRequest.setDeptCd("PHC");
-        identifiedPatientRequest.setDeptNm("플랜잇");
-
-        IdentifiedPatient.Response identifiedPatient = webClient.post()
+        String[] identifiedPatient = webClient.post()
                 .uri(RID_DECRYPT_API_URI)
                 .acceptCharset(StandardCharsets.UTF_8)
-                .body(BodyInserters.fromValue(identifiedPatientRequest))
+                .body(BodyInserters.fromValue(request))
                 .retrieve()
                 .onStatus(HttpStatus::is5xxServerError, this::throwRidServerError)
                 .onStatus(HttpStatus::is4xxClientError, this::throwRidServerError)
-                .bodyToMono(IdentifiedPatient.Response.class)
+                .bodyToMono(String[].class)
                 .block();
 
-        if (identifiedPatient == null || identifiedPatient.getPtNo() == null) {
-            throw new BaseException(ErrorType.CONVERT_GID_TO_PID_FAILED);
+        if (identifiedPatient == null || identifiedPatient.length < 1) {
+            throw new BaseException(ErrorType.CONVERT_RID_TO_PID_FAILED);
         }
 
-        return identifiedPatient.getPtNo();
+        return identifiedPatient[0];
     }
 
     private Mono<? extends Throwable> throwRidServerError(ClientResponse response) {
@@ -78,7 +69,7 @@ public class PatientServiceImpl implements PatientService {
                     String body = error.getResponseBodyAsString(StandardCharsets.UTF_8);
                     Map<String, String> errorData = new Gson().fromJson(body, HashMap.class);
                     System.out.println(errorData.get("message"));
-                    return Mono.error(new BaseException(ErrorType.CONVERT_GID_TO_PID_FAILED, ErrorType.CONVERT_GID_TO_PID_FAILED.getMessage(), errorData.get("message")));
+                    return Mono.error(new BaseException(ErrorType.CONVERT_RID_TO_PID_FAILED, ErrorType.CONVERT_RID_TO_PID_FAILED.getMessage(), errorData.get("message")));
                 });
     }
 }

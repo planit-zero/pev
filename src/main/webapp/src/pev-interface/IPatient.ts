@@ -1,10 +1,11 @@
 export interface IPatientGidP {
-    gid: string
+    ridList: string[];
+    irb: string;
 }
 
 export interface IPatientRidP {
-    irbNo: string
-    rid: string
+    irbNo: string;
+    rid: string;
 }
 
 export interface IPatientR {

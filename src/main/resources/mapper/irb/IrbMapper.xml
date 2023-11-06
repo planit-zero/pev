@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.irb.irb.dao.IrbDAO">
+    <select id="getIrbList" parameterType="java.lang.String" resultType="Irb">
+        <![CDATA[
+        SELECT *
+        FROM (
+                 SELECT DISTINCT
+                     IRBNO AS irbNo,
+                     RESKORNM AS irbKrNm,
+                     TO_CHAR(TO_DATE(REPLACE(AVAISTARTDT, '-', ''), 'YYYYMMDD'), 'YYYY-MM-DD') AS fromDt,
+                     TO_CHAR(TO_DATE(REPLACE(AVAIENDDT, '-', ''), 'YYYYMMDD'), 'YYYY-MM-DD') AS toDt,
+                     TO_CHAR(TO_DATE(REPLACE(APPROVEDT, '-', ''), 'YYYYMMDD'), 'YYYY-MM-DD') AS approvedDt,
+                     IRBMETHOD as irbType,
+                     (CASE
+                          WHEN IRBMETHOD = '1' THEN '정규'
+                          WHEN IRBMETHOD = '2' THEN '신속'
+                          WHEN IRBMETHOD = '3' THEN '긴급'
+                          WHEN IRBMETHOD = '4' THEN '면제'
+                          WHEN IRBMETHOD = '5' THEN '공동'
+                          ELSE '미승인' END) as irbTypeDesc,
+                     (CASE
+                          WHEN HUMINRMANCT = 0 THEN NULL
+                          ELSE HUMINRMANCT END) AS ptCnt
+                 FROM NCRIS.V_IRBAPPROVAL_CDW_VIEW
+                 WHERE 1 = 1
+                   AND PROFESSORID = #{stfNo}
+                   AND ( AVAIENDDT >= TO_CHAR(sysdate, 'YYYY-MM-DD')
+                     OR (IRBMETHOD = '4' AND (AVAIENDDT >= TO_CHAR(sysdate, 'YYYY-MM-DD') OR AVAIENDDT IS NULL))))
+        ORDER BY approvedDt
+        ]]>
+    </select>
+</mapper>
