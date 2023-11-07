@@ -193,11 +193,11 @@ const SearchSection = () => {
                 }}
             >
                 <span>
-                    <strong>IRB:</strong> {irb ? irb.irbNo : '선택하지 않음'}
+                    IRB: <strong>{irb ? irb.irbNo : '선택하지 않음'}</strong>
                 </span>
                 <br />
                 <span>
-                    <strong>환자:</strong> {patient ? `${patient.name} (${patient.dob}, ${patient.gender})` : '조회하지 않음'}
+                    환자: <strong>{patient ? `${patient.name} (${patient.dob}, ${patient.gender})` : '조회하지 않음'}</strong>
                 </span>
             </Box>
         );
