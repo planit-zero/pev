@@ -16,6 +16,7 @@ type ConditionFinderGridProps = {
 
 const RecordGrid = (props: ConditionFinderGridProps) => {
     const { finderWidth } = useSelector((state) => state.environment);
+    const { targetRecords } = useSelector((state) => state.record);
     const [selectedRecordList, setSelectedRecordList] = React.useState<IRecord[]>([]);
 
     const handleSelectionChanged = (e: any) => {
@@ -43,7 +44,12 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
             <Box width={'100%'} height={'31px'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                 <Box display={'flex'} alignItems={'center'}>
                     <Bookmark color={'primary'} fontSize={'small'} />
-                    <Typography variant={'body1'}>기록목록</Typography>
+                    <Typography variant={'body1'}>
+                        기록목록&emsp;
+                        {`전체: ${props.recordList.length} 건`}&emsp;
+                        {`선택: ${selectedRecordList.length} 건`}&emsp;
+                        {`조회: ${targetRecords.length} 건`}
+                    </Typography>
                 </Box>
                 <Box display={'flex'} alignItems={'center'}>
                     <Button
