@@ -183,26 +183,22 @@ const SearchSection = () => {
             <Box
                 sx={{
                     width: finderWidth === finderWidthWide ? '364px' : '200px',
-                    p: '16px',
+                    p: '6.8px',
                     height: '100%',
                     color: '#3f51b5',
                     fontSize: 'h5.fontSize',
                     border: '1px solid #3f51b5',
                     borderRadius: 2,
-                    textAlign: 'center'
+                    textAlign: 'left'
                 }}
             >
-                {!(irb && patient) && <span>환자를 조회해주세요.</span>}
-                {irb && patient && finderWidth === finderWidthNarrow && (
-                    <span>
-                        {patient.name} / {patient.gender} / {patient.dob}
-                    </span>
-                )}
-                {irb && patient && finderWidth === finderWidthWide && (
-                    <span>
-                        환자명: {patient.name} / 성별: {patient.gender} / 생년월일: {patient.dob}
-                    </span>
-                )}
+                <span>
+                    <strong>IRB:</strong> {irb ? irb.irbNo : '선택하지 않음'}
+                </span>
+                <br />
+                <span>
+                    <strong>환자:</strong> {patient ? `${patient.name} (${patient.dob}, ${patient.gender})` : '조회하지 않음'}
+                </span>
             </Box>
         );
     };
