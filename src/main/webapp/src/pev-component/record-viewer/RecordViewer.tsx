@@ -46,7 +46,7 @@ const RecordViewer = () => {
     return (
         <Box display={'flex'} justifyContent={'center'}>
             <Box display={'flex'} width={'100%'} justifyContent={'space-between'}>
-                <Box position={'fixed'} top={68} left={drawerOpen ? finderWidth + 6 : 24} display={'flex'} flexDirection={'column'}>
+                <Box position={'fixed'} top={68} left={drawerOpen ? finderWidth + 68 : 68} display={'flex'} flexDirection={'column'}>
                     <Tooltip title={getNarrowTooltip()} placement={'right'}>
                         <span>
                             <IconButton onClick={resizeToNarrow} disabled={!drawerOpen}>
@@ -77,7 +77,7 @@ const RecordViewer = () => {
                 >
                     <RecordSheetContainer />
                 </Box>
-                <Box position={'fixed'} top={68} right={20} display={'flex'} flexDirection={'column'}>
+                <Box position={'fixed'} top={68} right={35} display={'flex'} flexDirection={'column'}>
                     <Tooltip title={'한 페이지 모드로 변경합니다.'} placement={'left'}>
                         <IconButton color={viewMode === 'single' ? 'primary' : 'default'} onClick={() => setViewMode('single')}>
                             <Article />

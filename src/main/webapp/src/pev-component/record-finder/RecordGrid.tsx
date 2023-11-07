@@ -46,7 +46,13 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                     <Typography variant={'body1'}>기록목록</Typography>
                 </Box>
                 <Box display={'flex'} alignItems={'center'}>
-                    <Button variant={'contained'} size={'small'} startIcon={<SearchIcon fontSize="small" />} onClick={handleRetrieve}>
+                    <Button
+                        variant={'contained'}
+                        size={'small'}
+                        startIcon={<SearchIcon fontSize="small" />}
+                        onClick={handleRetrieve}
+                        disabled={selectedRecordList.length === 0}
+                    >
                         조회
                     </Button>
                 </Box>
@@ -66,7 +72,7 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                 >
                     <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={75} />
                     <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={75} />
-                    <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} minWidth={160} />
+                    <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} minWidth={170} />
                     <Column dataField={'writingDate'} caption={'작성일자'} width={90} alignment={'center'} />
                     <Column dataField={'writingDeptNm'} caption={'작성과'} width={100} alignment={'left'} />
                     <Column dataField={'writerNm'} caption={'작성자'} width={80} alignment={'center'} />

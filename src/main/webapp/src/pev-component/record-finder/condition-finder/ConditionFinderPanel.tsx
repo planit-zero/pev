@@ -26,14 +26,14 @@ const ConditionFinderPanel = (props: ConditionFinderPanelProps) => {
             <Paper
                 sx={{
                     mt: 1,
-                    p: 1,
+                    p: 0,
                     height: '253px',
                     borderRadius: 0,
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between'
                 }}
-                elevation={1}
+                elevation={0}
             >
                 <ConditionFinderPanelDateSetter
                     searchCondition={props.searchCondition}

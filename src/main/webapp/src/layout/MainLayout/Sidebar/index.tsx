@@ -21,7 +21,7 @@ const Sidebar = () => {
     const drawer = React.useMemo(() => <RecordFinder />, [drawerOpen]);
 
     return (
-        <Box component="nav" sx={{ width: finderWidth }} aria-label="record finder">
+        <Box component="nav" sx={{ width: finderWidth, height: 'calc(100vh - 48px)', mt: '48px', ml: '48px' }} aria-label="record finder">
             <Drawer
                 variant={matchUpMd ? 'persistent' : 'temporary'}
                 anchor="left"
@@ -29,13 +29,15 @@ const Sidebar = () => {
                 onClose={() => dispatch(openDrawer(!drawerOpen))}
                 sx={{
                     '& .MuiDrawer-paper': {
-                        mt: '68px',
-                        zIndex: 1099,
+                        zIndex: 1,
+                        position: 'fixed',
+                        top: '48px',
+                        left: '48px',
                         width: finderWidth,
-                        background: theme.palette.background.default,
+                        height: 'calc(100vh - 48px)',
+                        backgroundColor: 'transparent',
                         color: theme.palette.text.primary,
-                        borderRight: 'none',
-                        height: '100vh'
+                        borderRight: 'none'
                     }
                 }}
                 ModalProps={{ keepMounted: true }}

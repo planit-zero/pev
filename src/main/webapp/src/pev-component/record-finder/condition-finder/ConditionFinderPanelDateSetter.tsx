@@ -126,7 +126,7 @@ const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterPro
                     </LocalizationProvider>
                 </Box>
                 <Box>
-                    <Select sx={{ width: '80px' }} size={'small'} value={period} onChange={handlePeriodChange}>
+                    <Select sx={{ width: '100px' }} size={'small'} value={period} onChange={handlePeriodChange}>
                         <MenuItem value={TDatePeriod.ALL}>전체</MenuItem>
                         <MenuItem value={TDatePeriod.FIVE_YEARS}>5년</MenuItem>
                         <MenuItem value={TDatePeriod.ONE_YEAR}>1년</MenuItem>

@@ -1,28 +1,15 @@
 import * as React from 'react';
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box } from '@mui/material';
 import ConditionFinder from './condition-finder/ConditionFinder';
-import CertificateFinder from './certificate-finder/CertificateFinder';
+import SearchSection from '../../layout/MainLayout/Header/SearchSection';
 
 const RecordFinder = () => {
-    const finderItems: string[] = ['수진일별\r\n기록조회', '조건별\r\n상세조회', '진단서', '동의서', '특성화\r\n리포트'];
-
-    const [activeFinderItem, setActiveFinderItem] = React.useState<number>(1);
-
-    const handleItemChange = (event: React.SyntheticEvent, value: number) => {
-        setActiveFinderItem(value);
-    };
-
     return (
-        <Box sx={{ px: 2, pb: 2, height: 'calc(100% - 68px)' }}>
-            <Box sx={{ mb: 1 }}>
-                <Tabs variant={'fullWidth'} value={activeFinderItem} onChange={handleItemChange}>
-                    {finderItems.map((item, idx) => {
-                        return <Tab key={idx} value={idx} label={item} sx={{ whiteSpace: 'pre-line' }} />;
-                    })}
-                </Tabs>
+        <Box sx={{ pl: 2, pr: 0, pb: 2, width: '100%', height: '100%' }}>
+            <Box sx={{ width: '100%', height: '52px', mb: 1.5 }}>
+                <SearchSection />
             </Box>
-            {activeFinderItem === 1 && <ConditionFinder />}
-            {activeFinderItem === 2 && <CertificateFinder />}
+            <ConditionFinder />
         </Box>
     );
 };

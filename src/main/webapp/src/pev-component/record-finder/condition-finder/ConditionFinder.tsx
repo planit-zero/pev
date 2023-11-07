@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Backdrop, Box, CircularProgress } from '@mui/material';
+import { Backdrop, Box, CircularProgress, Divider } from '@mui/material';
 import ConditionFinderPanel from './ConditionFinderPanel';
 import RecordGrid from '../RecordGrid';
 import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
@@ -40,7 +40,7 @@ const ConditionFinder = () => {
     };
 
     return (
-        <Box sx={{ width: '100%', height: 'calc(100% - 68px)' }}>
+        <Box sx={{ width: '100%', height: 'calc(100% - 64px)' }}>
             <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isRecordListLoading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -50,8 +50,9 @@ const ConditionFinder = () => {
                 onSearchConditionChange={handleSearchConditionChange}
                 onListSearch={handleListSearch}
             />
+            <Divider sx={{ my: 1 }} />
             {/*목록 조회 그리드*/}
-            <Box width={'100%'} height={'calc(100% - 310px)'} marginTop={'20px'}>
+            <Box width={'100%'} height={'calc(100% - 307px)'}>
                 <RecordGrid recordList={recordList || []} />
             </Box>
         </Box>

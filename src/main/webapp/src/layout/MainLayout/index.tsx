@@ -12,39 +12,43 @@ import { useSelector } from 'store';
 // assets
 import RecordViewer from '../../pev-component/record-viewer/RecordViewer';
 import CommonSnackbar from '../../pev-component/common/CommonSnackbar';
+import * as React from 'react';
 
 interface MainStyleProps {
     theme: Theme;
     open: boolean;
-    width: number;
+    finderwidth: number;
 }
 
 // styles
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open, width }: MainStyleProps) => ({
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open, finderwidth }: MainStyleProps) => ({
     ...theme.typography.mainContent,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     padding: '20px 40px',
-    marginTop: '68px',
+    marginTop: '48px',
+    height: 'calc(100vh - 48px)',
+    overflowY: 'scroll',
     ...(!open && {
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.shorter + 200
         }),
-        marginLeft: `${-(width - 40)}px`
+        width: `calc(100vh - 48px - 40px)`,
+        marginLeft: `-${finderwidth - 20}px`
     }),
     ...(open && {
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.shorter + 200
         }),
-        width: `calc(100% - ${width}px)`,
+        width: `calc(100% - ${finderwidth}px - 48px - 40px)`,
         marginLeft: '20px',
         [theme.breakpoints.down('md')]: {
-            marginLeft: `${-(width - 40)}px`
+            marginLeft: `${-(finderwidth - 40 - 48)}px`
         }
     }),
-    ...((width === finderWidthNarrow || width === finderWidthWide) && {
+    ...((finderwidth === finderWidthNarrow || finderwidth === finderWidthWide) && {
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.standard + 200
@@ -62,7 +66,7 @@ const MainLayout = () => {
 
     const header = () => {
         return (
-            <Toolbar sx={{ p: 1 }}>
+            <Toolbar sx={{ height: '48px' }}>
                 <Header />
             </Toolbar>
         );
@@ -73,19 +77,40 @@ const MainLayout = () => {
             <CssBaseline />
 
             {/* header */}
-            <AppBar enableColorOnDark position="fixed" color="inherit" elevation={0} sx={{ bgcolor: theme.palette.background.default }}>
+            <AppBar
+                enableColorOnDark
+                position="fixed"
+                color="inherit"
+                elevation={0}
+                sx={{ background: theme.palette.background.default, ml: '48px', zIndex: 1 }}
+            >
                 {header()}
             </AppBar>
 
             {/* snackbar */}
             <CommonSnackbar />
 
-            {/* sidebar */}
+            {/* Platform Sidebar */}
+            <Box
+                sx={{
+                    zIndex: 2,
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: 48,
+                    height: '100vh',
+                    backgroundColor: '#3f51b5'
+                }}
+            >
+                &nbsp;
+            </Box>
+
+            {/* App Sidebar */}
             <Sidebar />
 
             {/* main content */}
-            <Main theme={theme} open={drawerOpen} width={finderWidth}>
-                <Box sx={{ width: '100%' }}>
+            <Main theme={theme} open={drawerOpen} finderwidth={finderWidth}>
+                <Box sx={{ width: '100%', height: '100%' }}>
                     <RecordViewer />
                 </Box>
             </Main>

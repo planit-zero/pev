@@ -10,6 +10,7 @@ import {
     OutlinedInput,
     ToggleButton,
     ToggleButtonGroup,
+    Tooltip,
     Typography,
     useMediaQuery
 } from '@mui/material';
@@ -23,10 +24,11 @@ import { DataGrid } from 'devextreme-react';
 import { Column, Scrolling, Selection } from 'devextreme-react/data-grid';
 import { useGetIrbListQuery } from '../../../../pev-service/IrbService';
 import { IIrb } from '../../../../pev-interface/IIrb';
-import { setAlert } from '../../../../store/pev-slices/environment';
+import { useSelector } from '../../../../store';
+import { finderWidthNarrow, finderWidthWide } from '../../../../store/constant';
 
 const OutlineInputStyle = styled(OutlinedInput, { shouldForwardProp })(({ theme }) => ({
-    width: 320,
+    width: 280,
     paddingLeft: 16,
     paddingRight: 16,
     '& input': {
@@ -59,7 +61,7 @@ const SearchSection = () => {
                 id="input-search-header"
                 value={rid}
                 onChange={(e) => setRid(e.target.value)}
-                placeholder="연구별 환자 ID 를 입력하세요."
+                placeholder="연구별 환자 ID"
                 startAdornment={
                     <InputAdornment position="start">
                         <IconSearch stroke={1.5} size="16px" color={theme.palette.grey[500]} />
@@ -67,7 +69,7 @@ const SearchSection = () => {
                 }
                 endAdornment={
                     <InputAdornment position="end">
-                        <Button variant={'contained'} size={'small'} onClick={handleRidSearch}>
+                        <Button variant={'contained'} size={'small'} onClick={handleRidSearch} disabled={!irb}>
                             조회
                         </Button>
                     </InputAdornment>
@@ -80,27 +82,43 @@ const SearchSection = () => {
 
     const IrbSelector = () => {
         const [open, setOpen] = React.useState<boolean>(false);
+        const [selectedIrb, setSelectedIrb] = React.useState<IIrb | null>(null);
 
         const { data: irbList, isLoading: isIrbListLoading } = useGetIrbListQuery('66206');
 
         const gridRef = React.useRef<DataGrid>(null);
 
-        const handleIrbSelect = () => {
-            if (gridRef && gridRef.current) {
-                const selected = gridRef.current.instance.getSelectedRowsData();
+        const handleIrbSelectionChanged = (e: any) => {
+            if (e && e.selectedRowsData && e.selectedRowsData.length > 0) {
+                setSelectedIrb(e.selectedRowsData[0]);
+            } else {
+                setSelectedIrb(null);
+            }
+        };
 
-                if (selected && selected.length > 0) {
-                    setIrb(selected[0]);
-                    setOpen(false);
-                }
+        const handleIrbSelect = () => {
+            if (selectedIrb) {
+                setIrb(selectedIrb);
+                setOpen(false);
             }
         };
 
         return (
             <React.Fragment>
-                <Button variant={'outlined'} size={'small'} sx={{ p: '13px', borderRadius: 2 }} onClick={() => setOpen(true)}>
-                    IRB 선택 {irb && `(${irb.irbNo})`}
-                </Button>
+                <Tooltip
+                    title={irb ? `현재 선택된 IRB는 ${irb.irbKrNm}(${irb.irbNo})입니다.` : '버튼을 눌러 IRB를 선택해주세요.'}
+                    placement={'right'}
+                >
+                    <Button
+                        variant={'contained'}
+                        color={'primary'}
+                        size={'small'}
+                        sx={{ p: '13px', borderRadius: 2 }}
+                        onClick={() => setOpen(true)}
+                    >
+                        IRB
+                    </Button>
+                </Tooltip>
                 <Modal open={open} onClose={() => setOpen(false)}>
                     <Box
                         sx={{
@@ -126,6 +144,7 @@ const SearchSection = () => {
                                     showRowLines={true}
                                     wordWrapEnabled={false}
                                     noDataText={''}
+                                    onSelectionChanged={handleIrbSelectionChanged}
                                 >
                                     <Column dataField={'irbNo'} caption={'IRB 번호'} width={130} alignment={'center'} />
                                     <Column dataField={'irbKrNm'} caption={'연구과제명'} />
@@ -147,7 +166,7 @@ const SearchSection = () => {
                                 marginTop: '10px'
                             }}
                         >
-                            <Button variant={'contained'} size={'small'} onClick={handleIrbSelect}>
+                            <Button variant={'contained'} size={'small'} onClick={handleIrbSelect} disabled={!selectedIrb}>
                                 선택
                             </Button>
                         </Box>
@@ -157,38 +176,42 @@ const SearchSection = () => {
         );
     };
 
-    return (
-        <Box display={'flex'} alignItems={'center'}>
-            {patient && (
-                <Box
-                    sx={{
-                        mr: 1,
-                        p: '14px',
-                        height: '100%',
-                        color: 'white',
-                        fontSize: 'h4.fontSize',
-                        backgroundColor: '#3f51b5',
-                        borderRadius: 1,
-                        boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)'
-                    }}
-                >
+    const PatientInfo = () => {
+        const { finderWidth } = useSelector((state) => state.environment);
+
+        return (
+            <Box
+                sx={{
+                    width: finderWidth === finderWidthWide ? '364px' : '200px',
+                    p: '16px',
+                    height: '100%',
+                    color: '#3f51b5',
+                    fontSize: 'h5.fontSize',
+                    border: '1px solid #3f51b5',
+                    borderRadius: 2,
+                    textAlign: 'center'
+                }}
+            >
+                {!(irb && patient) && <span>환자를 조회해주세요.</span>}
+                {irb && patient && finderWidth === finderWidthNarrow && (
                     <span>
-                        <strong>환자명:</strong> {patient.name}&emsp;
+                        {patient.name} / {patient.gender} / {patient.dob}
                     </span>
+                )}
+                {irb && patient && finderWidth === finderWidthWide && (
                     <span>
-                        <strong>성별:</strong> {patient.gender}&emsp;
+                        환자명: {patient.name} / 성별: {patient.gender} / 생년월일: {patient.dob}
                     </span>
-                    <span>
-                        <strong>생년월일:</strong> {patient.dob}
-                    </span>
-                </Box>
-            )}
-            <Box display={'flex'} alignItems={'center'} gap={1}>
-                <Box display={'flex'} alignItems={'center'} gap={1}>
-                    <IrbSelector />
-                    <RidSearchPanel />
-                </Box>
+                )}
             </Box>
+        );
+    };
+
+    return (
+        <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={1} sx={{ width: '100%' }}>
+            <IrbSelector />
+            <RidSearchPanel />
+            <PatientInfo />
         </Box>
     );
 };
