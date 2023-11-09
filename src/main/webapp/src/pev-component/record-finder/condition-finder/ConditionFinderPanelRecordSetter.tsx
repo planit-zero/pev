@@ -85,7 +85,7 @@ const ConditionFinderPanelRecordSetter = (props: ConditionFinderPanelRecordSette
                         기록유형 선택
                     </Button>
                     <Popover
-                        sx={{ height: '300px' }}
+                        sx={{ height: '619px' }}
                         open={Boolean(anchorEl)}
                         anchorEl={anchorEl}
                         onClose={handleAnchorClose}
