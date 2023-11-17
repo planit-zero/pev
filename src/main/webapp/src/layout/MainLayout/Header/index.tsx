@@ -2,9 +2,6 @@
 import { useTheme } from '@mui/material/styles';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 
-// project imports
-import SearchSection from './SearchSection';
-
 // assets
 import { IconReportMedical } from '@tabler/icons';
 

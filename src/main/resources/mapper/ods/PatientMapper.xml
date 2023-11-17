@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.patient.dao.PatientDAO">
-    <select id="getPatient" parameterType="java.lang.String" resultType="Patient">
-        <![CDATA[
+    <sql id="selectPatientTable">
         SELECT REGEXP_REPLACE(A.PT_NO, '.', '*')                 AS id,
                REGEXP_REPLACE(A.PT_NM, '.', '*', 2, 1)           AS name,
                A.SEX_TP_CD                                       AS gender,
                REGEXP_REPLACE(A.PT_BRDY_DT::VARCHAR, '.', '', 8) AS dob
         FROM ODS.S_PCTPCPAM A
+    </sql>
+    <select id="getPatient" parameterType="java.lang.String" resultType="Patient">
+        <include refid="selectPatientTable" />
         WHERE A.PT_NO = #{ptNo}
-        ]]>
     </select>
 </mapper>

@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IPatientGidP, IPatientR } from '../pev-interface/IPatient';
 import { IIrb } from '../pev-interface/IIrb';
 
 export const irbApi = createApi({

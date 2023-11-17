@@ -3,6 +3,7 @@ package ai.planit.pev.domain.ods.record.service;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.core.webclient.PevWebClient;
+import ai.planit.pev.core.webclient.PevWebClientUtil;
 import ai.planit.pev.domain.ods.form.service.FormService;
 import ai.planit.pev.domain.ods.scan.service.ScanService;
 import ai.planit.pev.domain.ods.order.service.OrderService;
@@ -14,14 +15,11 @@ import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.domain.ods.record.dto.RecordSheet;
 import ai.planit.pev.domain.ods.specimen.service.SpecimenService;
 import ai.planit.pev.utility.PevStringUtil;
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
@@ -249,12 +247,23 @@ public class RecordServiceImpl implements RecordService {
             sheet = pathologyService.getRecordSheet(session, record);
         }
 
+        // 기능검사
+        if (record.getRecordDetailType().equals(RecordTarget.EXAM_FUNCTION.getType())) {
+            record.setMdfmId(5167);
+            record.setMdfmFomSeq(4);
+            sheet = formService.getRecordSheet(session, record);
+        }
+
         // 스캔자료
         if (record.getRecordDetailType().equals(RecordTarget.SCAN_RECORD.getType())) {
             sheet = scanService.getRecordSheet(session, record);
         }
-//        return sheet;
-        return getMaskedSheet(sheet);
+
+        try {
+            return getMaskedSheet(sheet);
+        } catch (Exception e) {
+            return sheet;
+        }
     }
 
     private RecordSheet getMaskedSheet(RecordSheet sheet) {
@@ -267,19 +276,9 @@ public class RecordServiceImpl implements RecordService {
                 .acceptCharset(StandardCharsets.UTF_8)
                 .body(BodyInserters.fromValue(sheet))
                 .retrieve()
-                .onStatus(HttpStatus::is5xxServerError, this::throwRidServerError)
-                .onStatus(HttpStatus::is4xxClientError, this::throwRidServerError)
+                .onStatus(HttpStatus::is5xxServerError, response -> PevWebClientUtil.throwServerError(response, ErrorType.ANN_PROCESS_FAILED))
+                .onStatus(HttpStatus::is4xxClientError, response -> PevWebClientUtil.throwServerError(response, ErrorType.ANN_PROCESS_FAILED))
                 .bodyToMono(RecordSheet.class)
                 .block();
-    }
-
-    private Mono<? extends Throwable> throwRidServerError(ClientResponse response) {
-        return response.createException()
-                .flatMap(error -> {
-                    String body = error.getResponseBodyAsString(StandardCharsets.UTF_8);
-                    Map<String, String> errorData = new Gson().fromJson(body, HashMap.class);
-                    System.out.println(errorData.get("message"));
-                    return Mono.error(new BaseException(ErrorType.ANN_PROCESS_FAILED, ErrorType.ANN_PROCESS_FAILED.getMessage(), errorData.get("message")));
-                });
     }
 }

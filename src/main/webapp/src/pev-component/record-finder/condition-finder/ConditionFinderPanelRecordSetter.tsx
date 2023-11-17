@@ -24,6 +24,8 @@ const ConditionFinderPanelRecordSetter = (props: ConditionFinderPanelRecordSette
                 { id: 'D031', name: '응급기록', selected: true, items: [] },
                 { id: 'D005', name: '수술기록', selected: true, items: [] },
                 { id: 'D006', name: '퇴원기록', selected: true, items: [] },
+                { id: 'D009', name: '진단서', selected: true, items: [] },
+                { id: 'D035', name: '산재진단서', selected: true, items: [] },
                 { id: 'D010', name: '마취기록', selected: true, items: [] },
                 { id: 'D011', name: '마취전평가', selected: true, items: [] },
                 { id: 'D007', name: '타과의뢰', selected: true, items: [] },

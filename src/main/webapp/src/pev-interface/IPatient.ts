@@ -1,11 +1,6 @@
-export interface IPatientGidP {
+export interface IPatientRidP {
     ridList: string[];
     irb: string;
-}
-
-export interface IPatientRidP {
-    irbNo: string;
-    rid: string;
 }
 
 export interface IPatientR {
@@ -13,4 +8,30 @@ export interface IPatientR {
     name: string;
     gender: string;
     dob: string;
+}
+
+export interface IPatientByIrbP {
+    irb: string;
+}
+
+export interface IPatientByIrbR {
+    id: string;
+    name: string;
+    dob: string;
+}
+
+export interface IRidByGidP {
+    stfNo: string;
+    irbNo: string;
+    data: IRidByGidPatient[];
+}
+
+export interface IRidByGidR {
+    irbNo: string;
+    data: IRidByGidPatient[];
+}
+
+interface IRidByGidPatient {
+    gid: string;
+    rid?: string;
 }

@@ -22,11 +22,12 @@ const StyledElement = (props: StyledElementProps) => {
     };
 
     const TextBoxElement = () => {
-        return <input type={`text`} value={element?.text || ''} readOnly={true} />;
+        // return <input type={`text`} value={element?.text || ''} readOnly={true} />;
+        return <div dangerouslySetInnerHTML={{ __html: element ? element.text : '' }} />;
     };
 
     const RichTextBoxElement = () => {
-        return <textarea value={element?.text || ''} readOnly={true} />;
+        return <div dangerouslySetInnerHTML={{ __html: element ? element.text : '' }} style={{ overflowY: 'scroll', padding: '5px' }} />;
     };
 
     const CheckBoxElement = () => {

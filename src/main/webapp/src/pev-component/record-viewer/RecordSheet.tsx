@@ -111,7 +111,7 @@ const RecordSheet = (props: RecordSheetProps) => {
     };
 
     const hasStyle = (): boolean => {
-        const styledRecordDetailType: string[] = ['D009', 'D020', 'D035'];
+        const styledRecordDetailType: string[] = ['D009', 'D020', 'D035', 'EX_FUNCTION'];
 
         return styledRecordDetailType.includes(props.targetRecord.recordDetailType);
     };
