@@ -8,10 +8,12 @@ import { IPatientR, IPatientRidP, IRidByGidP } from '../../../pev-interface/IPat
 import PatientInfo from './PatientInfo';
 import { useSearchParams } from 'react-router-dom';
 import { CryptoUtils } from '../../../pev-utils/CryptoUtils';
+import { setAlert } from '../../../store/pev-slices/environment';
 
 const RecordSearchPanel = () => {
     const [searchParams] = useSearchParams();
 
+    const [stfNo, setStfNo] = React.useState<string | null>(null);
     const [irb, setIrb] = React.useState<string | null>(null);
     const [rid, setRid] = React.useState<string>('');
     const [patient, setPatient] = React.useState<IPatientR | null>(null);
@@ -31,6 +33,8 @@ const RecordSearchPanel = () => {
             const decryptedGid = decryptArr[2] || null;
 
             if (decryptedStfNo && decryptedIrbNo && decryptedGid) {
+                setStfNo(decryptedStfNo.toUpperCase());
+
                 const payload: IRidByGidP = {
                     stfNo: decryptedStfNo,
                     irbNo: decryptedIrbNo,
@@ -44,8 +48,14 @@ const RecordSearchPanel = () => {
 
                         if (res.data.length > 0 && res.data[0].rid) {
                             setRid(res.data[0].rid);
+                            handleRidSubmit(res.irbNo, res.data[0].rid);
                         }
                     });
+            } else {
+                setAlert({
+                    type: 'error',
+                    message: '연동 정보가 부정확합니다.'
+                });
             }
         }
     }, []);
@@ -58,12 +68,13 @@ const RecordSearchPanel = () => {
         setRid(value);
     };
 
-    const handleRidSubmit = () => {
-        if (!irb) return;
+    const handleRidSubmit = (irbStr: string | null, ridStr: string | null) => {
+        if (!irbStr) return;
+        if (!ridStr) return;
 
         const payload: IPatientRidP = {
-            irb: irb,
-            ridList: [rid]
+            irb: irbStr,
+            ridList: [ridStr]
         };
 
         getPatient(payload)
@@ -75,7 +86,7 @@ const RecordSearchPanel = () => {
     return (
         <Grid container spacing={1}>
             <Grid item xs={4}>
-                <IrbSelector irb={irb} onChange={handleIrbChangeByObj} />
+                <IrbSelector stfNo={stfNo} irb={irb} onChange={handleIrbChangeByObj} />
             </Grid>
             <Grid item xs={4}>
                 <RidForm irb={irb} rid={rid} onChange={handleRidChange} onSubmit={handleRidSubmit} />

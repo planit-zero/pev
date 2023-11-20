@@ -18,7 +18,7 @@ const CommonSnackbar = () => {
 
     return (
         <Snackbar
-            sx={{ marginTop: '80px', marginRight: '10px' }}
+            sx={{ marginTop: '25px', marginRight: '10px' }}
             open={Boolean(alert)}
             autoHideDuration={3000}
             onClose={handleClose}

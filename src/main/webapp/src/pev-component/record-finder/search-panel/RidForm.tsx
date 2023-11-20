@@ -8,7 +8,7 @@ type RidFormProps = {
     irb: string | null;
     rid: string;
     onChange: (value: string) => void;
-    onSubmit: () => void;
+    onSubmit: (irb: string | null, rid: string | null) => void;
 };
 
 const OutlineInputStyle = styled(OutlinedInput, { shouldForwardProp })(() => ({
@@ -26,7 +26,7 @@ const OutlineInputStyle = styled(OutlinedInput, { shouldForwardProp })(() => ({
 const RidForm = (props: RidFormProps) => {
     const handleRidSearch = (e: any) => {
         if (e.type === 'click' || (e.type === 'keydown' && e.code === 'Enter')) {
-            props.onSubmit();
+            props.onSubmit(props.irb, props.rid);
         }
     };
 

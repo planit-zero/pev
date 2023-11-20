@@ -6,6 +6,7 @@ import { Box, Button, Modal, Typography } from '@mui/material';
 import { Column, Scrolling, Selection } from 'devextreme-react/data-grid';
 
 type IrbSelectorProps = {
+    stfNo: string | null;
     irb: string | null;
     onChange: (irb: IIrb) => void;
 };
@@ -14,7 +15,13 @@ const IrbSelector = (props: IrbSelectorProps) => {
     const [open, setOpen] = React.useState<boolean>(false);
     const [selectedIrb, setSelectedIrb] = React.useState<IIrb | null>(null);
 
-    const { data: irbList, isLoading: isIrbListLoading } = useGetIrbListQuery('66206');
+    const stfNoForIrb = () => {
+        if (!props.stfNo) return '66206';
+        if (props.stfNo && props.stfNo === 'CHUCK') return '66206';
+        return props.stfNo;
+    };
+
+    const { data: irbList, isLoading: isIrbListLoading } = useGetIrbListQuery(stfNoForIrb());
 
     const gridRef = React.useRef<DataGrid>(null);
 
