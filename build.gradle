@@ -53,3 +53,49 @@ sourceSets {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+node {
+    download = false
+    version = '16.20.1'
+    yarnVersion = '1.22.19'
+    workDir = file("${project.projectDir}/.gradle/nodejs")
+    yarnWorkDir = file("${project.projectDir}/.gradle/yarn")
+    nodeProjectDir = file("${project.projectDir}/src/main/webapp")
+}
+
+def buildDir = file("${project.projectDir}/src/main/webapp/build")
+def staticDir = file("${project.projectDir}/src/main/resources/static")
+
+task cleanBuildAndStatic(type: Delete) {
+    doFirst {
+        delete buildDir
+        delete staticDir
+    }
+
+    doLast {
+        staticDir.mkdir()
+    }
+}
+
+task yarnInstall(type: YarnTask) {
+    args = ['install']
+}
+
+task yarnBuild(type: YarnTask) {
+    args = ['build']
+}
+
+task copyBuildToStatic(type: Copy) {
+    from buildDir
+    into staticDir
+}
+
+task removeBuild(type: Delete) {
+    delete buildDir
+}
+
+yarnInstall.dependsOn(cleanBuildAndStatic)
+yarnBuild.dependsOn(yarnInstall)
+copyBuildToStatic.dependsOn(yarnBuild)
+removeBuild.dependsOn(copyBuildToStatic)
+processResources.dependsOn(removeBuild)
