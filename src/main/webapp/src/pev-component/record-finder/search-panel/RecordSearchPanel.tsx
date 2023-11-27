@@ -28,9 +28,10 @@ const RecordSearchPanel = () => {
             const decrypt = CryptoUtils.decrypt(token, 'planitsquare2023');
             const decryptArr = decrypt.split('|||');
 
-            const decryptedStfNo = decryptArr[0] || null;
-            const decryptedIrbNo = decryptArr[1] || null;
-            const decryptedGid = decryptArr[2] || null;
+            const decryptedAuthCd = decryptArr[0] || null;
+            const decryptedStfNo = decryptArr[1] || null;
+            const decryptedIrbNo = decryptArr[2] || null;
+            const decryptedGid = decryptArr[3] || null;
 
             if (decryptedStfNo && decryptedIrbNo && decryptedGid) {
                 setStfNo(decryptedStfNo.toUpperCase());
