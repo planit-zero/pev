@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.anesthesia.dao.AnesthesiaDAO">
+    <select id="getAnesthesiaRecordDataList"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.domain.ods.anesthesia.dto.AnesthesiaRecordData">
+        SELECT SUBSTR(INPT_HMI, 1, 2) || ':' || SUBSTR(INPT_HMI, 3, 2) AS inptHmi,
+               INPT_VAL_CNTE AS inptValCnte
+        FROM ODS.S_MRDDRARE
+        WHERE OP_EXPT_REG_ID = #{opExptRegId}
+        AND AFCHG_ANRM_REC_VAL_ID IS NULL
+        ORDER BY INPT_HMI
+    </select>
+</mapper>

@@ -4,6 +4,7 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.core.webclient.PevWebClient;
 import ai.planit.pev.core.webclient.PevWebClientUtil;
+import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.form.service.FormService;
 import ai.planit.pev.domain.ods.function.service.FunctionService;
 import ai.planit.pev.domain.ods.scan.service.ScanService;
@@ -39,6 +40,7 @@ public class RecordServiceImpl implements RecordService {
     private final FunctionService functionService;
     private final FormService formService;
     private final ScanService scanService;
+    private final AnesthesiaService anesthesiaService;
 
     /**
      * {@inheritDoc}
@@ -227,7 +229,11 @@ public class RecordServiceImpl implements RecordService {
         RecordSheet sheet = new RecordSheet();
 
         if (record.getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
-            sheet = formService.getRecordSheet(session, record);
+            if (record.getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
+                sheet = anesthesiaService.getRecordSheet(session, record);
+            } else {
+                sheet = formService.getRecordSheet(session, record);
+            }
         }
         // 처방기록
         if (record.getRecordDetailType().equals(RecordTarget.ORDER_RECORD.getType())) {
