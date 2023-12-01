@@ -13,7 +13,7 @@ type RidListProps = {
 
 const RidList = (props: RidListProps) => {
     const limit: number = 15;
-    const [offset, setOffset] = React.useState<number>(1);
+    const [offset, setOffset] = React.useState<number>(0);
     const [selectedPatient, setSelectedPatient] = React.useState<IPatientByIrbR | null>(null);
 
     const [getPatientList, { data: patientList }] = useGetPatientListMutation();
@@ -23,7 +23,7 @@ const RidList = (props: RidListProps) => {
             const payload: IPatientByIrbP = {
                 irb: props.irb,
                 limit: limit,
-                offset: offset
+                offset: limit * offset
             };
 
             getPatientList(payload);
@@ -31,7 +31,7 @@ const RidList = (props: RidListProps) => {
     }, [offset]);
 
     const getPreviousPatientList = () => {
-        if (offset > 1) setOffset(offset - 1);
+        if (offset > 0) setOffset(offset - 1);
     };
 
     const getNextPatientList = () => {
@@ -66,7 +66,7 @@ const RidList = (props: RidListProps) => {
             }}
         >
             <Box sx={{ width: '100%', height: '30px', display: 'flex', justifyContent: 'space-between', mb: '10px' }}>
-                <Button variant={'outlined'} size={'small'} onClick={getPreviousPatientList} disabled={offset === 1}>
+                <Button variant={'outlined'} size={'small'} onClick={getPreviousPatientList} disabled={offset === 0}>
                     이전
                 </Button>
                 <Button variant={'outlined'} size={'small'} onClick={getNextPatientList}>
