@@ -9,6 +9,8 @@ public class PatientByIrb {
     @Setter
     public static class Request {
         private String irb;
+        private int limit;
+        private int offset;
     }
 
     @Getter

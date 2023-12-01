@@ -12,6 +12,8 @@ export interface IPatientR {
 
 export interface IPatientByIrbP {
     irb: string;
+    limit: number;
+    offset: number;
 }
 
 export interface IPatientByIrbR {

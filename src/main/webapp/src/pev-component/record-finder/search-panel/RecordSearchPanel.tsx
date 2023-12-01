@@ -87,13 +87,13 @@ const RecordSearchPanel = () => {
 
     return (
         <Grid container spacing={1}>
-            <Grid item xs={4}>
+            <Grid item xs={3.5}>
                 <IrbSelector authCd={authCd} stfNo={stfNo} irb={irb} onChange={handleIrbChangeByObj} />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={5}>
                 <RidForm irb={irb} rid={rid} onChange={handleRidChange} onSubmit={handleRidSubmit} />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3.5}>
                 <PatientInfo patient={patient} />
             </Grid>
         </Grid>
