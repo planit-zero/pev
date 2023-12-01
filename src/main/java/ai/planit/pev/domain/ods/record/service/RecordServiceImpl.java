@@ -5,6 +5,7 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.core.webclient.PevWebClient;
 import ai.planit.pev.core.webclient.PevWebClientUtil;
 import ai.planit.pev.domain.ods.form.service.FormService;
+import ai.planit.pev.domain.ods.function.service.FunctionService;
 import ai.planit.pev.domain.ods.scan.service.ScanService;
 import ai.planit.pev.domain.ods.order.service.OrderService;
 import ai.planit.pev.domain.ods.pathology.service.PathologyService;
@@ -35,6 +36,7 @@ public class RecordServiceImpl implements RecordService {
     private final SpecimenService specimenService;
     private final PictureService pictureService;
     private final PathologyService pathologyService;
+    private final FunctionService functionService;
     private final FormService formService;
     private final ScanService scanService;
 
@@ -249,9 +251,7 @@ public class RecordServiceImpl implements RecordService {
 
         // 기능검사
         if (record.getRecordDetailType().equals(RecordTarget.EXAM_FUNCTION.getType())) {
-            record.setMdfmId(5167);
-            record.setMdfmFomSeq(4);
-            sheet = formService.getRecordSheet(session, record);
+            sheet = functionService.getRecordSheet(session, record);
         }
 
         // 스캔자료

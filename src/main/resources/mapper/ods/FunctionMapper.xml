@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.function.dao.FunctionDAO">
+    <select id="getFunctionDecodeMasterList"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.domain.ods.function.dto.FunctionDecodeMaster">
+        SELECT IPTN_NO AS iptnNo,
+               IPPR_SEQ AS ipprSeq,
+               IPPR_ID AS ipprId,
+               MDFM_ID AS mdfmId,
+               MDFM_FOM_SEQ AS mdfmFomSeq
+        FROM ODS.S_MSERMMLD
+        WHERE IPTN_NO = #{examKey}
+        ORDER BY IPPR_SEQ
+    </select>
+    <select id="getFunctionData"
+            parameterType="ai.planit.pev.domain.ods.function.dto.FunctionDecodeMaster"
+            resultType="ai.planit.pev.domain.ods.function.dto.FunctionData">
+        SELECT A.MDFM_CPEM_ID      AS id,
+               A.UPR_MDFM_CPEM_ID  AS parentId,
+               A.ELMT_CCLS_CD      AS controlType,
+               A.MDFM_ELMT_CLS_CD  AS classType,
+               CASE
+                   WHEN A.MDFM_ELMT_CLS_CD != 'V' THEN A.MDFM_CPEM_CNTE
+                   ELSE ISNULL(B.DCST_LDAT, B.IPTN_CNTE) END AS text
+        FROM ODS.S_MRFMFCID A
+                 LEFT OUTER JOIN ODS.S_MSERMDTD B
+                                 ON B.IPPR_ID = #{ipprId}
+                                     AND A.MDFM_CPEM_ID = B.MDFM_CPEM_ID
+        WHERE A.MDFM_ID = #{mdfmId}
+          AND A.MDFM_FOM_SEQ = #{mdfmFomSeq}
+        ORDER BY A.MDFM_CPEM_ID, A.UPR_MDFM_CPEM_ID
+    </select>
+</mapper>
