@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Grid } from '@mui/material';
 import IrbSelector from './IrbSelector';
-import { IIrb } from '../../../pev-interface/IIrb';
 import RidForm from './RidForm';
 import { useGetPatientMutation, useGetRidByGidMutation } from '../../../pev-service/PatientService';
 import { IPatientR, IPatientRidP, IRidByGidP } from '../../../pev-interface/IPatient';
@@ -13,6 +12,7 @@ import { setAlert } from '../../../store/pev-slices/environment';
 const RecordSearchPanel = () => {
     const [searchParams] = useSearchParams();
 
+    const [authCd, setAuthCd] = React.useState<string | null>(null);
     const [stfNo, setStfNo] = React.useState<string | null>(null);
     const [irb, setIrb] = React.useState<string | null>(null);
     const [rid, setRid] = React.useState<string>('');
@@ -33,7 +33,8 @@ const RecordSearchPanel = () => {
             const decryptedIrbNo = decryptArr[2] || null;
             const decryptedGid = decryptArr[3] || null;
 
-            if (decryptedStfNo && decryptedIrbNo && decryptedGid) {
+            if (decryptedAuthCd && decryptedStfNo && decryptedIrbNo && decryptedGid) {
+                setAuthCd(decryptedAuthCd.toUpperCase());
                 setStfNo(decryptedStfNo.toUpperCase());
 
                 const payload: IRidByGidP = {
@@ -61,8 +62,8 @@ const RecordSearchPanel = () => {
         }
     }, []);
 
-    const handleIrbChangeByObj = (irbObj: IIrb) => {
-        setIrb(irbObj.irbNo);
+    const handleIrbChangeByObj = (irbNo: string) => {
+        setIrb(irbNo);
     };
 
     const handleRidChange = (value: string) => {
@@ -87,7 +88,7 @@ const RecordSearchPanel = () => {
     return (
         <Grid container spacing={1}>
             <Grid item xs={4}>
-                <IrbSelector stfNo={stfNo} irb={irb} onChange={handleIrbChangeByObj} />
+                <IrbSelector authCd={authCd} stfNo={stfNo} irb={irb} onChange={handleIrbChangeByObj} />
             </Grid>
             <Grid item xs={4}>
                 <RidForm irb={irb} rid={rid} onChange={handleRidChange} onSubmit={handleRidSubmit} />

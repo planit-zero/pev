@@ -2,18 +2,20 @@ import { IIrb } from 'pev-interface/IIrb';
 import * as React from 'react';
 import { useGetIrbListQuery } from '../../../pev-service/IrbService';
 import { DataGrid } from 'devextreme-react';
-import { Box, Button, Modal, Typography } from '@mui/material';
+import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { Column, Scrolling, Selection } from 'devextreme-react/data-grid';
 
 type IrbSelectorProps = {
+    authCd: string | null;
     stfNo: string | null;
     irb: string | null;
-    onChange: (irb: IIrb) => void;
+    onChange: (irbNo: string) => void;
 };
 
 const IrbSelector = (props: IrbSelectorProps) => {
     const [open, setOpen] = React.useState<boolean>(false);
     const [selectedIrb, setSelectedIrb] = React.useState<IIrb | null>(null);
+    const [inputIrb, setInputIrb] = React.useState<string | null>(null);
 
     const stfNoForIrb = () => {
         if (!props.stfNo) return '66206';
@@ -35,7 +37,18 @@ const IrbSelector = (props: IrbSelectorProps) => {
 
     const handleIrbSelect = () => {
         if (selectedIrb) {
-            props.onChange(selectedIrb);
+            props.onChange(selectedIrb.irbNo);
+            setOpen(false);
+        }
+    };
+
+    const handleIrbInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputIrb(e.target.value);
+    };
+
+    const handleIrbInputClick = () => {
+        if (inputIrb) {
+            props.onChange(inputIrb);
             setOpen(false);
         }
     };
@@ -95,13 +108,28 @@ const IrbSelector = (props: IrbSelectorProps) => {
                             width: '100%',
                             height: '30px',
                             display: 'flex',
-                            justifyContent: 'flex-end',
+                            justifyContent: 'space-between',
                             marginTop: '10px'
                         }}
                     >
-                        <Button variant={'contained'} size={'small'} onClick={handleIrbSelect} disabled={!selectedIrb}>
-                            선택
-                        </Button>
+                        <Box>
+                            {Boolean(props.authCd && props.authCd === 'S') && (
+                                <React.Fragment>
+                                    <Typography display={'inline'} fontWeight={'bold'}>
+                                        직접 입력
+                                    </Typography>
+                                    <TextField sx={{ mx: 1 }} variant={'standard'} onChange={handleIrbInputChange} />
+                                    <Button variant={'contained'} size={'small'} onClick={handleIrbInputClick} disabled={!inputIrb}>
+                                        적용
+                                    </Button>
+                                </React.Fragment>
+                            )}
+                        </Box>
+                        <Box>
+                            <Button variant={'contained'} size={'small'} onClick={handleIrbSelect} disabled={!selectedIrb}>
+                                선택
+                            </Button>
+                        </Box>
                     </Box>
                 </Box>
             </Modal>
