@@ -3,7 +3,7 @@ import { Box, Button, Divider, Typography } from '@mui/material';
 import { Bookmark } from '@mui/icons-material';
 import { IRecord } from '../../pev-interface/IRecord';
 import { DataGrid } from 'devextreme-react';
-import { Column, Scrolling, Selection } from 'devextreme-react/data-grid';
+import { Column, FilterRow, HeaderFilter, Scrolling, Selection } from 'devextreme-react/data-grid';
 import SearchIcon from '@mui/icons-material/Search';
 import { setTargetRecords } from '../../store/pev-slices/record';
 import { setAlert } from '../../store/pev-slices/environment';
@@ -76,15 +76,17 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                     noDataText={''}
                     onSelectionChanged={handleSelectionChanged}
                 >
-                    <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={75} />
-                    <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={75} />
+                    <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={110} />
+                    <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={110} />
                     <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} minWidth={170} />
-                    <Column dataField={'writingDate'} caption={'작성일자'} width={90} alignment={'center'} />
+                    <Column dataField={'writingDate'} caption={'작성일자'} width={110} alignment={'center'} />
                     <Column dataField={'writingDeptNm'} caption={'작성과'} width={100} alignment={'left'} />
-                    <Column dataField={'writerNm'} caption={'작성자'} width={80} alignment={'center'} />
-                    <Column dataField={'mdrcWrtStsCdYn'} caption={'서명'} alignment={'center'} width={60} />
+                    <Column dataField={'writerNm'} caption={'작성자'} width={100} alignment={'center'} />
+                    <Column dataField={'mdrcWrtStsCdYn'} caption={'서명'} alignment={'center'} width={85} />
                     <Scrolling mode={'virtual'} showScrollbar={'always'} />
                     <Selection mode={'multiple'} showCheckBoxesMode={'onClick'} />
+                    <FilterRow visible={true} />
+                    <HeaderFilter visible={true} />
                 </DataGrid>
             </Box>
         </Box>
