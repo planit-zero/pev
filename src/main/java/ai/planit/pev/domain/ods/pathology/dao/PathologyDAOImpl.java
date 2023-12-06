@@ -1,7 +1,8 @@
 package ai.planit.pev.domain.ods.pathology.dao;
 
-import ai.planit.pev.domain.ods.pathology.dto.PathologyData;
-import ai.planit.pev.domain.ods.pathology.dto.PathologyProcess;
+import ai.planit.pev.strategy.chart.object.pathology.PathologyContent;
+import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
+import ai.planit.pev.strategy.chart.object.pathology.PathologyProcess;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,13 +16,13 @@ public class PathologyDAOImpl implements PathologyDAO {
 
     /** {@inheritDoc} */
     @Override
-    public PathologyData.Response getPathologyData(PathologyData.Request request) {
+    public PathologyContent getPathologyData(PathologyData.Request request) {
         return sqlSessionTemplate.selectOne("getPathologyData", request);
     }
 
     /** {@inheritDoc} */
     @Override
-    public List<PathologyProcess.Response> getPathologyProcessList(PathologyProcess.Request request) {
+    public List<PathologyProcess> getPathologyProcessList(PathologyData.Request request) {
         return sqlSessionTemplate.selectList("getPathologyProcessList", request);
     }
 }

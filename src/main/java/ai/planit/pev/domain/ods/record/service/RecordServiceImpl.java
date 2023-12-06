@@ -16,6 +16,11 @@ import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.domain.ods.record.dto.RecordSheet;
 import ai.planit.pev.domain.ods.specimen.service.SpecimenService;
+import ai.planit.pev.strategy.chart.ChartContext;
+import ai.planit.pev.strategy.chart.PathologyChartStrategy;
+import ai.planit.pev.strategy.chart.object.common.Chart;
+import ai.planit.pev.strategy.chart.object.common.ChartElement;
+import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -265,11 +270,7 @@ public class RecordServiceImpl implements RecordService {
             sheet = scanService.getRecordSheet(session, record);
         }
 
-        try {
-            return getMaskedSheet(sheet);
-        } catch (Exception e) {
-            return sheet;
-        }
+        return sheet;
     }
 
     private RecordSheet getMaskedSheet(RecordSheet sheet) {
@@ -286,5 +287,26 @@ public class RecordServiceImpl implements RecordService {
                 .onStatus(HttpStatus::is4xxClientError, response -> PevWebClientUtil.throwServerError(response, ErrorType.ANN_PROCESS_FAILED))
                 .bodyToMono(RecordSheet.class)
                 .block();
+    }
+
+    public Chart getChart(Record.Response record) {
+        ChartContext chartContext = new ChartContext();
+
+        Object formatSource = null;
+        Object dataSource = null;
+
+        if (record.getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
+            chartContext.setChartStrategy(new PathologyChartStrategy());
+
+            PathologyData.Request request = new PathologyData.Request();
+            request.setPthlNo(record.getExamKey());
+
+            dataSource = pathologyService.getPathologyData(request);
+        }
+
+        List<ChartElement> format = chartContext.getChartStrategy().getFormat(formatSource);
+        List<ChartElement> data = chartContext.getChartStrategy().getData(dataSource);
+
+        return chartContext.getChart(format, data);
     }
 }

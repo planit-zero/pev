@@ -2,6 +2,7 @@ package ai.planit.pev.domain.ods.pathology.service;
 
 import ai.planit.pev.domain.ods.record.dto.RecordSheet;
 import ai.planit.pev.domain.ods.record.dto.Record;
+import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,4 +15,6 @@ public interface PathologyService {
      * @return 검체검사 기록 시트 정보
      */
     RecordSheet getRecordSheet(HttpSession session, Record.Response record);
+
+    PathologyData.Response getPathologyData(PathologyData.Request request);
 }

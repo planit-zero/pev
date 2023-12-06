@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.pathology.dao.PathologyDAO">
     <select id="getPathologyData"
-            parameterType="ai.planit.pev.domain.ods.pathology.dto.PathologyData$Request"
-            resultType="ai.planit.pev.domain.ods.pathology.dto.PathologyData$Response">
+            parameterType="ai.planit.pev.strategy.chart.object.pathology.PathologyData$Request"
+            resultType="ai.planit.pev.strategy.chart.object.pathology.PathologyContent">
         SELECT B.PLRT_LDAT                                                           AS plrtLdat,
                A.ACPT_DTM::DATE                                                      AS acptDt,
                A.LSH_DTM::DATE                                                       AS lshDt,
@@ -15,8 +15,8 @@
         WHERE A.PTHL_NO = #{pthlNo}
     </select>
     <select id="getPathologyProcessList"
-            parameterType="ai.planit.pev.domain.ods.pathology.dto.PathologyProcess$Request"
-            resultType="ai.planit.pev.domain.ods.pathology.dto.PathologyProcess$Response">
+            parameterType="ai.planit.pev.strategy.chart.object.pathology.PathologyData$Request"
+            resultType="ai.planit.pev.strategy.chart.object.pathology.PathologyProcess">
         SELECT A.PTHL_PRO_TP_CD                                                         AS pthlProTpCd,
                (SELECT Z.COMN_CD_NM
                 FROM ODS.S_CCCCCUTE Z

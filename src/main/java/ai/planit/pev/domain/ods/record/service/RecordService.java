@@ -2,6 +2,8 @@ package ai.planit.pev.domain.ods.record.service;
 
 import ai.planit.pev.domain.ods.record.dto.RecordSheet;
 import ai.planit.pev.domain.ods.record.dto.Record;
+import ai.planit.pev.strategy.chart.object.common.Chart;
+import ai.planit.pev.strategy.chart.object.common.ChartElement;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -18,4 +20,6 @@ public interface RecordService {
     List<Record.Response> getRecordList(HttpSession session, Record.Request request);
 
     RecordSheet getRecordSheet(HttpSession session, Record.Response record);
+
+    Chart getChart(Record.Response record);
 }
