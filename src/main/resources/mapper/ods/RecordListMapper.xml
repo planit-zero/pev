@@ -404,8 +404,8 @@
              , NULL                                                        AS ptMedDeptNm
              , NULL                                                        AS sortSeq
              , NULL                                                        AS note
-             , NULL                                                        AS mdfmId
-             , NULL                                                        AS mdfmFomSeq
+             , 1                                                           AS mdfmId
+             , 1                                                           AS mdfmFomSeq
              , NULL                                                        AS mdrcId
              , NULL                                                        AS mdrcFomSeq
              , A.PTHL_NO                                                   AS examKey
@@ -536,8 +536,8 @@
         , NULL AS ptMedDeptNm
         , NULL AS sortSeq
         , NULL AS note
-        , NULL AS mdfmId
-        , NULL AS mdfmFomSeq
+        , 1 AS mdfmId
+        , 1 AS mdfmFomSeq
         , NULL AS mdrcId
         , NULL AS mdrcFomSeq
         , REGEXP_REPLACE(A.IMG_SV_ADDR_NM, '\\', '/') AS examKey

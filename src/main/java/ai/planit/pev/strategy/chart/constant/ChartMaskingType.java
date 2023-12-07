@@ -10,5 +10,6 @@ public enum ChartMaskingType {
     POST_NUMBER,
     ADDRESS,
     LANDLINE_PHONE,
-    CELLULAR_PHONE
+    CELLULAR_PHONE,
+    IMAGE
 }

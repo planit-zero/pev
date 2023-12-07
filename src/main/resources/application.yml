@@ -13,6 +13,13 @@ spring:
         jdbc-url: jdbc:oracle:thin:@//192.168.1.14:13625/orcl
         username: SNUHOCS
         password: GRtocTjqQx7@$
+  meta:
+    datasource:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://172.26.33.23:5432/pev
+        username: pev
+        password: planit1127!@
   pid:
     file: /psdEx/pev/boot.pid
 server:

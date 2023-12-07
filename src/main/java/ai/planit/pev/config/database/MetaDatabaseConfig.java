@@ -19,15 +19,15 @@ import javax.sql.DataSource;
 
 @Configuration
 @MapperScan(
-        value = "ai.planit.pev.domain.irb.**.dao",
-        sqlSessionFactoryRef = "IrbSqlSessionFactory",
-        sqlSessionTemplateRef = "IrbSqlSessionTemplate"
+        value = "ai.planit.pev.domain.meta.**.dao",
+        sqlSessionFactoryRef = "MetaSqlSessionFactory",
+        sqlSessionTemplateRef = "MetaSqlSessionTemplate"
 )
-public class IrbDatabaseConfig {
+public class MetaDatabaseConfig {
 
-    @Bean("IrbDataSource")
-    @ConfigurationProperties(prefix = "spring.irb.datasource.hikari")
-    public DataSource IrbDataSource() {
+    @Bean("MetaDataSource")
+    @ConfigurationProperties(prefix = "spring.meta.datasource.hikari")
+    public DataSource MetaDataSource() {
         return DataSourceBuilder
                 .create()
                 .type(HikariDataSource.class)
@@ -35,26 +35,26 @@ public class IrbDatabaseConfig {
     }
 
     @Bean
-    public SqlSessionFactory IrbSqlSessionFactory(@Qualifier("IrbDataSource") DataSource dataSource) throws Exception {
+    public SqlSessionFactory MetaSqlSessionFactory(@Qualifier("MetaDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
 
-        Resource[] res = new PathMatchingResourcePatternResolver().getResources("classpath:mapper/irb/*.xml");
+        Resource[] res = new PathMatchingResourcePatternResolver().getResources("classpath:mapper/meta/*.xml");
         bean.setMapperLocations(res);
 
-        bean.setTypeAliasesPackage("ai.planit.pev.domain.irb.**.dto");
+        bean.setTypeAliasesPackage("ai.planit.pev.domain.meta.**.dto");
 
         return bean.getObject();
     }
 
     @Bean
-    public SqlSessionTemplate IrbSqlSessionTemplate(@Qualifier("IrbSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+    public SqlSessionTemplate MetaSqlSessionTemplate(@Qualifier("MetaSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
     @Primary
     @Bean
-    public DataSourceTransactionManager IrbTransactionManager(@Qualifier("IrbDataSource") DataSource dataSource) {
+    public DataSourceTransactionManager MetaTransactionManager(@Qualifier("MetaDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 }

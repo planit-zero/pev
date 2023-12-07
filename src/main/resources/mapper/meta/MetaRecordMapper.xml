@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.meta.record.dao.MetaRecordDAO">
+    <select id="getRecordFormatList"
+            parameterType="ai.planit.pev.domain.ods.record.dto.Record$Response"
+            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+        select section_id as sectionId,
+               id,
+               parent_id as parentId,
+               class_type as classType,
+               control_type as controlType,
+               masking_type as maskingType,
+               content,
+               "desc"
+        from pev_record_format
+        where record_id = #{recordDetailType}
+        and mdfm_id = #{mdfmId}
+        and mdfm_fom_seq = #{mdfmFomSeq}
+        order by section_id, id, parent_id
+    </select>
+</mapper>
