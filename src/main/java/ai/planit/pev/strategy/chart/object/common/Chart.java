@@ -1,15 +1,25 @@
 package ai.planit.pev.strategy.chart.object.common;
 
+import ai.planit.pev.domain.ods.record.dto.Record;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
 public class Chart {
-    private ChartSection headerSection;
-    private List<ChartSection> sections;
+    @Getter
+    @Setter
+    public static class Request {
+        private String maskingYn;
+        private Record.Response record;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class Response {
+        private ChartSection headerSection;
+        private List<ChartSection> sections;
+    }
 }

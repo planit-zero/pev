@@ -3,6 +3,7 @@ import { IRecordDetailP, IRecordDetailR } from '../pev-interface/IRecordDetail';
 import { IRecordDeptInfo, IRecordFormInfoP, IRecordFormInfoR } from '../pev-interface/IRecordInfo';
 import { IRecordDataP, IRecordDataR } from '../pev-interface/IRecordDataR';
 import { IRecord, IRecordSheet, ISearchCondition } from '../pev-interface/IRecord';
+import { IChart, IChartP } from '../pev-interface/IChart';
 
 export const recordApi = createApi({
     reducerPath: 'recordApi',
@@ -41,7 +42,7 @@ export const recordApi = createApi({
                 body: payload
             })
         }),
-        getRecordSheet: builder.mutation<IRecordSheet, IRecord>({
+        getChart: builder.mutation<IChart, IChartP>({
             query: (payload) => ({
                 url: 'chart',
                 method: 'POST',
@@ -51,5 +52,4 @@ export const recordApi = createApi({
     })
 });
 
-export const { useGetDetailListByConditionMutation, useGetDeptInfoListQuery, useGetRecordListMutation, useGetRecordSheetMutation } =
-    recordApi;
+export const { useGetDetailListByConditionMutation, useGetDeptInfoListQuery, useGetRecordListMutation, useGetChartMutation } = recordApi;

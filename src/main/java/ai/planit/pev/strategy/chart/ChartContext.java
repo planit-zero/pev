@@ -25,7 +25,7 @@ import java.util.Optional;
 public class ChartContext {
     private ChartStrategy chartStrategy;
 
-    public Chart getChart(List<ChartElement> format, List<ChartElement> data) {
+    public Chart.Response getChart(List<ChartElement> format, List<ChartElement> data) {
         List<ChartElement> elements = new ArrayList<>();
 
         for (ChartElement f : format) {
@@ -37,7 +37,7 @@ public class ChartContext {
             value.ifPresentOrElse(elements::add, () -> elements.add(f));
         }
 
-        Chart chart = new Chart();
+        Chart.Response chart = new Chart.Response();
         chart.setSections(PevChartUtil.getChartSections(elements));
 
         return chart;

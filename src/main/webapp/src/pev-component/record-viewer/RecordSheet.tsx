@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IRecord, IRecordAttribute, IRecordEntity, IRecordSheet, IRecordValue } from '../../pev-interface/IRecord';
 import { Alert, AlertTitle, Box, Button, Paper, Skeleton } from '@mui/material';
-import { useGetRecordSheetMutation } from '../../pev-service/RecordService';
+import { useGetChartMutation } from '../../pev-service/RecordService';
 import RecordSection from './RecordSection';
 import { TRecordSection } from '../../pev-type/TRecordSection';
 import StyledElement from './StyledElement';
@@ -12,11 +12,11 @@ type RecordSheetProps = {
 };
 
 const RecordSheet = (props: RecordSheetProps) => {
-    const [getRecordSheet, { data: recordSheet, isLoading: isRecordSheetLoading, error: recordSheetError }] = useGetRecordSheetMutation();
+    const [getRecordSheet, { data: recordSheet, isLoading: isRecordSheetLoading, error: recordSheetError }] = useGetChartMutation();
 
-    React.useEffect(() => {
-        getRecordSheet(props.targetRecord);
-    }, [props.targetRecord]);
+    // React.useEffect(() => {
+    //     getRecordSheet(props.targetRecord);
+    // }, [props.targetRecord]);
 
     const StyledEntity = (entity: IRecordEntity) => {
         return (
@@ -142,10 +142,10 @@ const RecordSheet = (props: RecordSheetProps) => {
 
     return (
         <Paper sx={{ minWidth: 600, width: hasStyle() ? 'fit-content' : 600, p: 2, mb: 2, borderRadius: 0 }}>
-            {!isRecordSheetLoading && !recordSheetError && recordSheet && hasStyle() && StyledSection(recordSheet)}
-            {!isRecordSheetLoading && !recordSheetError && recordSheet && !hasStyle() && CommonSection(recordSheet)}
-            {isRecordSheetLoading && SkeletonSheet()}
-            {SheetError()}
+            {/*{!isRecordSheetLoading && !recordSheetError && recordSheet && hasStyle() && StyledSection(recordSheet)}*/}
+            {/*{!isRecordSheetLoading && !recordSheetError && recordSheet && !hasStyle() && CommonSection(recordSheet)}*/}
+            {/*{isRecordSheetLoading && SkeletonSheet()}*/}
+            {/*{SheetError()}*/}
         </Paper>
     );
 };

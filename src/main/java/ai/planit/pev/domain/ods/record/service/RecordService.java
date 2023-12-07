@@ -17,5 +17,5 @@ public interface RecordService {
      */
     List<Record.Response> getRecordList(HttpSession session, Record.Request request);
 
-    Chart getChart(HttpSession session, Record.Response record);
+    Chart.Response getChart(HttpSession session, Chart.Request request);
 }

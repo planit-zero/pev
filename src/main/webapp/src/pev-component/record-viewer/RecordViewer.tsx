@@ -7,6 +7,7 @@ import { setFinderWidth, setViewMode } from '../../store/pev-slices/environment'
 import { openDrawer } from '../../store/slices/menu';
 import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand } from '@tabler/icons';
 import { finderWidthNarrow, finderWidthWide } from '../../store/constant';
+import ChartContainer from '../chart/ChartContainer';
 
 const RecordViewer = () => {
     const dispatch = useDispatch();
@@ -75,7 +76,7 @@ const RecordViewer = () => {
                         alignItems: viewMode === 'single' ? 'center' : 'stretch'
                     }}
                 >
-                    <RecordSheetContainer />
+                    <ChartContainer />
                 </Box>
                 <Box position={'fixed'} top={68} right={35} display={'flex'} flexDirection={'column'}>
                     <Tooltip title={'한 페이지 모드로 변경합니다.'} placement={'left'}>

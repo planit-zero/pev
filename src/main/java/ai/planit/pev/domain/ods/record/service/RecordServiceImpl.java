@@ -212,34 +212,34 @@ public class RecordServiceImpl implements RecordService {
         return examRecordList;
     }
 
-    public Chart getChart(HttpSession session, Record.Response record) {
+    public Chart.Response getChart(HttpSession session, Chart.Request request) {
         ChartContext chartContext = new ChartContext();
 
         Object dataSource = null;
 
         // 병리검사
-        if (record.getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
+        if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
             chartContext.setChartStrategy(new PathologyChartStrategy());
 
-            PathologyData.Request request = new PathologyData.Request();
-            request.setPthlNo(record.getExamKey());
+            PathologyData.Request pathologyDataRequest = new PathologyData.Request();
+            pathologyDataRequest.setPthlNo(request.getRecord().getExamKey());
 
-            dataSource = pathologyService.getPathologyData(request);
+            dataSource = pathologyService.getPathologyData(pathologyDataRequest);
         }
 
         // 스캔자료
-        if (record.getRecordType().equals(RecordTarget.SCAN_RECORD.getType())) {
+        if (request.getRecord().getRecordType().equals(RecordTarget.SCAN_RECORD.getType())) {
             chartContext.setChartStrategy(new ScanChartStrategy());
 
-            dataSource = record;
+            dataSource = request.getRecord();
         }
 
-        List<ChartElement> format = metaRecordService.getRecordFormatList(record);
+        List<ChartElement> format = metaRecordService.getRecordFormatList(request.getRecord());
         List<ChartElement> data = chartContext.getChartStrategy().getData(format, dataSource);
 
-        ChartData originData = new ChartData(data);
-        ChartData maskedData = chartContext.getMaskedData(originData);
+        ChartData chartData = new ChartData(data);
+        if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
-        return chartContext.getChart(format, maskedData.getValues());
+        return chartContext.getChart(format, chartData.getValues());
     }
 }

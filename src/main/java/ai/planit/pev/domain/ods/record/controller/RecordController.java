@@ -2,6 +2,7 @@ package ai.planit.pev.domain.ods.record.controller;
 
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.domain.ods.record.service.RecordService;
+import ai.planit.pev.strategy.chart.object.common.Chart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class RecordController {
     }
 
     @PostMapping("chart")
-    public ResponseEntity<?> getChart(HttpSession session, @RequestBody Record.Response record) {
-        return ResponseEntity.ok().body(recordService.getChart(session, record));
+    public ResponseEntity<?> getChart(HttpSession session, @RequestBody Chart.Request request) {
+        return ResponseEntity.ok().body(recordService.getChart(session, request));
     }
 }
