@@ -43,7 +43,7 @@ export const recordApi = createApi({
         }),
         getRecordSheet: builder.mutation<IRecordSheet, IRecord>({
             query: (payload) => ({
-                url: 'sheet',
+                url: 'chart',
                 method: 'POST',
                 body: payload
             })

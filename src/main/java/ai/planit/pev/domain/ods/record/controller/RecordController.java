@@ -23,9 +23,8 @@ public class RecordController {
         return ResponseEntity.ok().body(recordService.getRecordList(session, request));
     }
 
-    @PostMapping("sheet")
-    public ResponseEntity<?> getRecordSheet(HttpSession session, @RequestBody Record.Response record) {
-//        return ResponseEntity.ok().body(recordService.getRecordSheet(session, record));
-        return ResponseEntity.ok().body(recordService.getChart(record));
+    @PostMapping("chart")
+    public ResponseEntity<?> getChart(HttpSession session, @RequestBody Record.Response record) {
+        return ResponseEntity.ok().body(recordService.getChart(session, record));
     }
 }

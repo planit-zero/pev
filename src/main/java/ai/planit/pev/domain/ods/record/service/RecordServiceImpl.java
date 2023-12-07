@@ -3,18 +3,10 @@ package ai.planit.pev.domain.ods.record.service;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
-import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
-import ai.planit.pev.domain.ods.form.service.FormService;
-import ai.planit.pev.domain.ods.function.service.FunctionService;
-import ai.planit.pev.domain.ods.scan.service.ScanService;
-import ai.planit.pev.domain.ods.order.service.OrderService;
 import ai.planit.pev.domain.ods.pathology.service.PathologyService;
-import ai.planit.pev.domain.ods.picture.service.PictureService;
 import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
-import ai.planit.pev.domain.ods.record.dto.RecordSheet;
-import ai.planit.pev.domain.ods.specimen.service.SpecimenService;
 import ai.planit.pev.strategy.chart.ChartContext;
 import ai.planit.pev.strategy.chart.PathologyChartStrategy;
 import ai.planit.pev.strategy.chart.ScanChartStrategy;
@@ -36,14 +28,7 @@ public class RecordServiceImpl implements RecordService {
 
     private final RecordListDAO recordListDAO;
     private final MetaRecordService metaRecordService;
-    private final OrderService orderService;
-    private final SpecimenService specimenService;
-    private final PictureService pictureService;
     private final PathologyService pathologyService;
-    private final FunctionService functionService;
-    private final FormService formService;
-    private final ScanService scanService;
-    private final AnesthesiaService anesthesiaService;
 
     /**
      * {@inheritDoc}
@@ -227,50 +212,12 @@ public class RecordServiceImpl implements RecordService {
         return examRecordList;
     }
 
-    @Override
-    public RecordSheet getRecordSheet(HttpSession session, Record.Response record) {
-        RecordSheet sheet = new RecordSheet();
-
-        if (record.getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
-            if (record.getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
-                sheet = anesthesiaService.getRecordSheet(session, record);
-            } else {
-                sheet = formService.getRecordSheet(session, record);
-            }
-        }
-        // 처방기록
-        if (record.getRecordDetailType().equals(RecordTarget.ORDER_RECORD.getType())) {
-            sheet = orderService.getRecordSheet(session, record);
-        }
-
-        // 검체검사
-        if (record.getRecordDetailType().equals(RecordTarget.EXAM_SPECIMEN.getType())) {
-            sheet = specimenService.getRecordSheet(session, record);
-        }
-
-        // 영상검사
-        if (record.getRecordDetailType().equals(RecordTarget.EXAM_PICTURE.getType())) {
-            sheet = pictureService.getRecordSheet(session, record);
-        }
-
-        // 기능검사
-        if (record.getRecordDetailType().equals(RecordTarget.EXAM_FUNCTION.getType())) {
-            sheet = functionService.getRecordSheet(session, record);
-        }
-
-        // 스캔자료
-        if (record.getRecordDetailType().equals(RecordTarget.SCAN_RECORD.getType())) {
-            sheet = scanService.getRecordSheet(session, record);
-        }
-
-        return sheet;
-    }
-
-    public Chart getChart(Record.Response record) {
+    public Chart getChart(HttpSession session, Record.Response record) {
         ChartContext chartContext = new ChartContext();
 
         Object dataSource = null;
 
+        // 병리검사
         if (record.getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
             chartContext.setChartStrategy(new PathologyChartStrategy());
 
@@ -280,6 +227,7 @@ public class RecordServiceImpl implements RecordService {
             dataSource = pathologyService.getPathologyData(request);
         }
 
+        // 스캔자료
         if (record.getRecordType().equals(RecordTarget.SCAN_RECORD.getType())) {
             chartContext.setChartStrategy(new ScanChartStrategy());
 
