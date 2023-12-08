@@ -40,7 +40,7 @@ export interface IChartAttribute extends IChartElement {
 export interface IChartValue extends IChartElement {}
 
 export interface IChartReport {
-    record: IRecord;
+    recordInfo: string;
     values: IChartReportValue[];
 }
 

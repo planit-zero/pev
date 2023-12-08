@@ -36,7 +36,7 @@ const ChartToolbar = (props: ChartToolbarProps) => {
             <Modal open={activeModal !== null} onClose={() => setActiveModal(null)}>
                 <React.Fragment>
                     {activeModal === 'COMPARATOR' && <ChartComparator targetRecord={props.targetRecord} />}
-                    {activeModal === 'REPORT' && <ChartReport targetRecord={props.targetRecord} />}
+                    {activeModal === 'REPORT' && <ChartReport targetRecord={props.targetRecord} onClose={() => setActiveModal(null)} />}
                 </React.Fragment>
             </Modal>
         </Box>

@@ -4,14 +4,16 @@ import { Box, Button, Chip, TextField, Typography } from '@mui/material';
 import ChartWrapper from './ChartWrapper';
 import { IChartReport, IChartReportValue } from '../../pev-interface/IChart';
 import { setAlert } from '../../store/pev-slices/environment';
+import { useInsertReportMutation } from '../../pev-service/ReportService';
 
 type ChartReportProps = {
     targetRecord: IRecord;
+    onClose: () => void;
 };
 
 const ChartReport = (props: ChartReportProps) => {
     const initialChartReportForm: IChartReport = {
-        record: props.targetRecord,
+        recordInfo: JSON.stringify(props.targetRecord),
         values: []
     };
 
@@ -56,6 +58,28 @@ const ChartReport = (props: ChartReportProps) => {
         handleValueChange({ ...value, confirmYn: 'Y' });
     };
 
+    const [insertReport] = useInsertReportMutation();
+
+    const handleSubmit = () => {
+        if (chartReportForm.values.length === 0) {
+            setAlert({
+                type: 'warning',
+                message: '신고 내용을 작성 완료한 후 제출 버튼을 눌러주세요.'
+            });
+            return;
+        }
+
+        insertReport(chartReportForm)
+            .unwrap()
+            .then(() => {
+                setAlert({
+                    type: 'success',
+                    message: '신고가 완료되었습니다.'
+                });
+                props.onClose();
+            });
+    };
+
     return (
         <Box
             sx={{
@@ -94,7 +118,7 @@ const ChartReport = (props: ChartReportProps) => {
                     }}
                 >
                     <Typography fontWeight={'bold'}>좌측 기록지에서 신고할 영역을 선택해주세요.</Typography>
-                    <Button variant={'contained'} color={'primary'} size={'small'}>
+                    <Button variant={'contained'} color={'primary'} size={'small'} onClick={handleSubmit}>
                         신고 제출
                     </Button>
                 </Box>

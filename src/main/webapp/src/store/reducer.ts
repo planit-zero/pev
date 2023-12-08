@@ -23,6 +23,7 @@ import { formApi } from '../pev-service/FormService';
 import { patientApi } from '../pev-service/PatientService';
 import { hospitalApi } from '../pev-service/HospitalService';
 import { irbApi } from '../pev-service/IrbService';
+import { reportApi } from '../pev-service/ReportService';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
@@ -52,7 +53,8 @@ const reducer = combineReducers({
     [formApi.reducerPath]: formApi.reducer,
     [patientApi.reducerPath]: patientApi.reducer,
     [hospitalApi.reducerPath]: hospitalApi.reducer,
-    [irbApi.reducerPath]: irbApi.reducer
+    [irbApi.reducerPath]: irbApi.reducer,
+    [reportApi.reducerPath]: reportApi.reducer
 });
 
 export default reducer;
