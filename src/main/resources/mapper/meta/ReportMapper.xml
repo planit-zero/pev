@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.meta.report.dao.ReportDAO">
+    <insert id="insertReport"
+            parameterType="ai.planit.pev.domain.meta.report.dto.ChartReport"
+            useGeneratedKeys="true"
+            keyProperty="reportId">
+        insert into pev_report
+        (record_info, report_user, report_dtm)
+        values (#{recordInfo}, '테스트', now())
+    </insert>
+    <insert id="insertReportDetail"
+            parameterType="ai.planit.pev.domain.meta.report.dto.ChartReport">
+        insert into pev_report_detail
+        values
+        <foreach collection="values" item="item" index="index" separator=", ">
+            (#{reportId}, ${index} + 1, #{item.id}, #{item.parentId}, #{item.report}, 'N', null, null)
+        </foreach>
+    </insert>
+</mapper>
