@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Box, Button, Modal } from '@mui/material';
 import { IRecord } from '../../pev-interface/IRecord';
-import RecordComparator from '../record-comparator/RecordComparator';
+import ChartComparator from '../record-comparator/ChartComparator';
+import { ChartWrapperType } from '../../pev-type/TChart';
+import ChartReport from './ChartReport';
 
 type ChartToolbarProps = {
     targetRecord: IRecord;
@@ -9,18 +11,33 @@ type ChartToolbarProps = {
 };
 
 const ChartToolbar = (props: ChartToolbarProps) => {
-    const [open, setOpen] = React.useState<boolean>(false);
+    const [activeModal, setActiveModal] = React.useState<ChartWrapperType | null>(null);
 
     return (
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <Button variant={'contained'} color={'primary'} size={'small'} onClick={() => setOpen(true)} disabled={props.isChartLoading}>
+            <Button
+                variant={'contained'}
+                color={'primary'}
+                size={'small'}
+                onClick={() => setActiveModal('COMPARATOR')}
+                disabled={props.isChartLoading}
+            >
                 원본 대조
             </Button>
-            <Button variant={'contained'} color={'error'} size={'small'} disabled={props.isChartLoading}>
+            <Button
+                variant={'contained'}
+                color={'error'}
+                size={'small'}
+                onClick={() => setActiveModal('REPORT')}
+                disabled={props.isChartLoading}
+            >
                 비식별화 처리 미비 신고
             </Button>
-            <Modal open={open} onClose={() => setOpen(false)}>
-                <RecordComparator targetRecord={props.targetRecord} />
+            <Modal open={activeModal !== null} onClose={() => setActiveModal(null)}>
+                <React.Fragment>
+                    {activeModal === 'COMPARATOR' && <ChartComparator targetRecord={props.targetRecord} />}
+                    {activeModal === 'REPORT' && <ChartReport targetRecord={props.targetRecord} />}
+                </React.Fragment>
             </Modal>
         </Box>
     );

@@ -22,3 +22,4 @@ export type ChartMaskingType =
     | 'LANDLINE_PHONE'
     | 'CELLULAR_PHONE'
     | 'IMAGE';
+export type ChartWrapperType = 'NORMAL' | 'COMPARATOR' | 'REPORT';

@@ -3,12 +3,16 @@ import { IRecord } from '../../pev-interface/IRecord';
 import SkeletonChart from './SkeletonChart';
 import { useGetChartMutation } from '../../pev-service/RecordService';
 import Chart from './Chart';
-import { IChartP } from '../../pev-interface/IChart';
+import { IChartP, IChartReportValue } from '../../pev-interface/IChart';
+import { ChartWrapperType } from '../../pev-type/TChart';
 
 type ChartWrapperProps = {
+    mode: ChartWrapperType;
     maskingYn: 'Y' | 'N';
     targetRecord: IRecord;
     onChartLoadingChange?: (isLoading: boolean) => void;
+    reportValues?: IChartReportValue[];
+    onValueChange?: (value: IChartReportValue) => void;
 };
 
 const ChartWrapper = (props: ChartWrapperProps) => {
@@ -32,7 +36,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
             {isChartLoading && <SkeletonChart />}
             {!isChartLoading && chart && (
                 <React.Fragment>
-                    <Chart chart={chart} />
+                    <Chart mode={props.mode} chart={chart} reportValues={props.reportValues} onValueChange={props.onValueChange} />
                 </React.Fragment>
             )}
         </React.Fragment>

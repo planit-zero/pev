@@ -3,11 +3,11 @@ import { Box } from '@mui/material';
 import ChartWrapper from '../chart/ChartWrapper';
 import { IRecord } from '../../pev-interface/IRecord';
 
-type RecordComparatorProps = {
+type ChartComparatorProps = {
     targetRecord: IRecord;
 };
 
-const RecordComparator = (props: RecordComparatorProps) => {
+const ChartComparator = (props: ChartComparatorProps) => {
     return (
         <Box
             sx={{
@@ -28,13 +28,13 @@ const RecordComparator = (props: RecordComparatorProps) => {
             }}
         >
             <Box sx={{ minWidth: 600, height: 'fit-content', bgcolor: 'background.paper', p: 2 }}>
-                <ChartWrapper maskingYn={'N'} targetRecord={props.targetRecord} />
+                <ChartWrapper mode={'NORMAL'} maskingYn={'N'} targetRecord={props.targetRecord} />
             </Box>
             <Box sx={{ minWidth: 600, height: 'fit-content', bgcolor: 'background.paper', p: 2 }}>
-                <ChartWrapper maskingYn={'Y'} targetRecord={props.targetRecord} />
+                <ChartWrapper mode={'NORMAL'} maskingYn={'Y'} targetRecord={props.targetRecord} />
             </Box>
         </Box>
     );
 };
 
-export default RecordComparator;
+export default ChartComparator;

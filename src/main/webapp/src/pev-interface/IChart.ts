@@ -38,3 +38,13 @@ export interface IChartAttribute extends IChartElement {
 }
 
 export interface IChartValue extends IChartElement {}
+
+export interface IChartReport {
+    record: IRecord;
+    values: IChartReportValue[];
+}
+
+export interface IChartReportValue extends IChartValue {
+    confirmYn: 'Y' | 'N';
+    report: string;
+}
