@@ -27,10 +27,10 @@ const RecordComparator = (props: RecordComparatorProps) => {
                 overflowY: 'scroll'
             }}
         >
-            <Box sx={{ minWidth: 600, bgcolor: 'background.paper', p: 2 }}>
+            <Box sx={{ minWidth: 600, height: 'fit-content', bgcolor: 'background.paper', p: 2 }}>
                 <ChartWrapper maskingYn={'N'} targetRecord={props.targetRecord} />
             </Box>
-            <Box sx={{ minWidth: 600, bgcolor: 'background.paper', p: 2 }}>
+            <Box sx={{ minWidth: 600, height: 'fit-content', bgcolor: 'background.paper', p: 2 }}>
                 <ChartWrapper maskingYn={'Y'} targetRecord={props.targetRecord} />
             </Box>
         </Box>

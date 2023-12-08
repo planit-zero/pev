@@ -9,7 +9,7 @@ type ChartBoxProps = {
 };
 
 const ChartBox = (props: ChartBoxProps) => {
-    const [isChartLoading, setChartLoading] = React.useState<boolean>(false);
+    const [isChartLoading, setChartLoading] = React.useState<boolean>(true);
 
     const handleChartLoadingChange = (isLoading: boolean) => {
         setChartLoading(isLoading);

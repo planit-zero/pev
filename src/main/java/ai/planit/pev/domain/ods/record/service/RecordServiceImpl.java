@@ -4,16 +4,19 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.pathology.service.PathologyService;
+import ai.planit.pev.domain.ods.picture.service.PictureService;
 import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.ChartContext;
 import ai.planit.pev.strategy.chart.PathologyChartStrategy;
+import ai.planit.pev.strategy.chart.PictureChartStrategy;
 import ai.planit.pev.strategy.chart.ScanChartStrategy;
 import ai.planit.pev.strategy.chart.object.common.Chart;
 import ai.planit.pev.strategy.chart.object.common.ChartData;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
+import ai.planit.pev.strategy.chart.object.picture.PictureData;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,7 @@ public class RecordServiceImpl implements RecordService {
     private final RecordListDAO recordListDAO;
     private final MetaRecordService metaRecordService;
     private final PathologyService pathologyService;
+    private final PictureService pictureService;
 
     /**
      * {@inheritDoc}
@@ -225,6 +229,16 @@ public class RecordServiceImpl implements RecordService {
             pathologyDataRequest.setPthlNo(request.getRecord().getExamKey());
 
             dataSource = pathologyService.getPathologyData(pathologyDataRequest);
+        }
+
+        // 영상검사
+        if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PICTURE.getType())) {
+            chartContext.setChartStrategy(new PictureChartStrategy());
+
+            PictureData.Request pictureDataRequest = new PictureData.Request();
+            pictureDataRequest.setIptnNo(request.getRecord().getExamKey());
+
+            dataSource = pictureService.getPictureData(pictureDataRequest);
         }
 
         // 스캔자료

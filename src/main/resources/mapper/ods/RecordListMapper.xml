@@ -358,8 +358,8 @@
              , NULL                                                        AS ptMedDeptNm
              , NULL                                                        AS sortSeq
              , NULL                                                        AS note
-             , NULL                                                        AS mdfmId
-             , NULL                                                        AS mdfmFomSeq
+             , 1                                                        AS mdfmId
+             , 1                                                        AS mdfmFomSeq
              , NULL                                                        AS mdrcId
              , NULL                                                        AS mdrcFomSeq
              , M.IPTN_NO                                                   AS examKey

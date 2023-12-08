@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.picture.dao.PictureDAO">
     <select id="getPictureData"
-            parameterType="ai.planit.pev.domain.ods.picture.dto.PictureData$Request"
-            resultType="ai.planit.pev.domain.ods.picture.dto.PictureData$Response">
+            parameterType="ai.planit.pev.strategy.chart.object.picture.PictureData$Request"
+            resultType="ai.planit.pev.strategy.chart.object.picture.PictureData$Response">
         SELECT B.IPTN_DTM::DATE AS iptnDtm,
                B.EXM_DT::DATE AS exmDt,
                (SELECT Z.ORD_NM FROM ODS.S_CCOOCBAC Z WHERE Z.ORD_CD = A.ORD_CD) AS ordNm,
-               B.IPTN_CNCS_CNTE AS iptnCncsCnte,
-               B.TH1_IPTN_EXPL AS th1IptnExpl,
-               C.COPN_CNTE AS copnCnte,
+               ISNULL(B.IPTN_CNCS_CNTE, '') AS iptnCncsCnte,
+               ISNULL(B.TH1_IPTN_EXPL, '') AS th1IptnExpl,
+               ISNULL(C.COPN_CNTE, '') AS copnCnte,
                (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = B.TH1_IPDR_STF_NO) AS th1IpdrStfNm,
                (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = B.TH2_IPDR_STF_NO) AS th2IpdrStfNm,
                (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = B.TH3_IPDR_STF_NO) AS th3IpdrStfNm,

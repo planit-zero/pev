@@ -1,6 +1,6 @@
 package ai.planit.pev.domain.ods.picture.dao;
 
-import ai.planit.pev.domain.ods.picture.dto.PictureData;
+import ai.planit.pev.strategy.chart.object.picture.PictureData;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
