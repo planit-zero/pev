@@ -8,10 +8,11 @@ import { IChartP } from '../../pev-interface/IChart';
 type ChartWrapperProps = {
     maskingYn: 'Y' | 'N';
     targetRecord: IRecord;
+    onChartLoadingChange?: (isLoading: boolean) => void;
 };
 
 const ChartWrapper = (props: ChartWrapperProps) => {
-    const [getChart, { data: chart, isLoading: isChartLoading, error: chartError }] = useGetChartMutation();
+    const [getChart, { data: chart, isLoading: isChartLoading }] = useGetChartMutation();
 
     React.useEffect(() => {
         const payload: IChartP = {
@@ -21,6 +22,10 @@ const ChartWrapper = (props: ChartWrapperProps) => {
 
         getChart(payload);
     }, [props.targetRecord]);
+
+    React.useEffect(() => {
+        if (props.onChartLoadingChange) props.onChartLoadingChange(isChartLoading);
+    }, [isChartLoading]);
 
     return (
         <React.Fragment>

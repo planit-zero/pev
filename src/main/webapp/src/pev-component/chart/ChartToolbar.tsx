@@ -5,6 +5,7 @@ import RecordComparator from '../record-comparator/RecordComparator';
 
 type ChartToolbarProps = {
     targetRecord: IRecord;
+    isChartLoading: boolean;
 };
 
 const ChartToolbar = (props: ChartToolbarProps) => {
@@ -12,10 +13,10 @@ const ChartToolbar = (props: ChartToolbarProps) => {
 
     return (
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <Button variant={'contained'} color={'primary'} size={'small'} onClick={() => setOpen(true)}>
+            <Button variant={'contained'} color={'primary'} size={'small'} onClick={() => setOpen(true)} disabled={props.isChartLoading}>
                 원본 대조
             </Button>
-            <Button variant={'contained'} color={'error'} size={'small'}>
+            <Button variant={'contained'} color={'error'} size={'small'} disabled={props.isChartLoading}>
                 비식별화 처리 미비 신고
             </Button>
             <Modal open={open} onClose={() => setOpen(false)}>
