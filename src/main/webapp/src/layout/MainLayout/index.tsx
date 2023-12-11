@@ -13,6 +13,7 @@ import { useSelector } from 'store';
 import RecordViewer from '../../pev-component/record-viewer/RecordViewer';
 import CommonSnackbar from '../../pev-component/common/CommonSnackbar';
 import * as React from 'react';
+import { IconGridDots, IconMessageReport, IconReportMedical, IconSettings } from '@tabler/icons';
 
 interface MainStyleProps {
     theme: Theme;
@@ -102,7 +103,18 @@ const MainLayout = () => {
                     backgroundColor: '#3f51b5'
                 }}
             >
-                &nbsp;
+                <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
+                    <IconGridDots color={'white'} />
+                </Box>
+                <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
+                    <IconReportMedical color={'white'} />
+                </Box>
+                <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
+                    <IconMessageReport color={'white'} />
+                </Box>
+                <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
+                    <IconSettings color={'white'} />
+                </Box>
             </Box>
 
             {/* App Sidebar */}
