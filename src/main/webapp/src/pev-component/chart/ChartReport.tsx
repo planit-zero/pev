@@ -148,7 +148,7 @@ const ChartReport = (props: ChartReportProps) => {
                                     />
                                 </Box>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                                    <Button variant={'outlined'} color={'primary'} onClick={() => handleValueRemove(v)}>
+                                    <Button variant={'outlined'} color={'primary'} size={'small'} onClick={() => handleValueRemove(v)}>
                                         취소
                                     </Button>
                                     {v.confirmYn === 'N' && (
