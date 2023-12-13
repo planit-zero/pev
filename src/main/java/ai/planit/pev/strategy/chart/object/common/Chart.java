@@ -19,6 +19,7 @@ public class Chart {
     @Setter
     @NoArgsConstructor
     public static class Response {
+        private List<ChartElement> data;
         private ChartSection headerSection;
         private List<ChartSection> sections;
     }

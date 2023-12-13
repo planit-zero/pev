@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.medical.dao.MedicalDAO">
+    <select id="getMedicalData"
+            parameterType="ai.planit.pev.domain.ods.record.dto.Record$Response"
+            resultType="ai.planit.pev.strategy.chart.object.medical.MedicalData">
+        SELECT M.sectionId,
+               M.id,
+               M.parentId,
+               CASE
+                   WHEN M.elmtCclsCd = '7' THEN ISNULL(REGEXP_REPLACE(D.INTG_IMG_FILE_PATH_NM, '\\', '/'), M.content)
+                   ELSE M.content END AS content,
+               M."desc"
+        FROM (
+                 SELECT A.MDFM_SCTN_SEQ                                                      AS sectionId,
+                        A.MDFM_CPEM_ID                                                       AS id,
+                        A.UPR_MDFM_CPEM_ID                                                   AS parentId,
+                        CASE
+                            WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN A.ELMT_BSC_CNTE
+                            WHEN A.ELMT_CCLS_CD = '7' THEN REGEXP_REPLACE(C.INTG_IMG_FILE_PATH_NM, '\\', '/')
+                            ELSE COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT) END            AS content,
+                        CASE
+                            WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN A.MDFM_CPEM_CNTE END AS "desc",
+                        A.ELMT_CCLS_CD                                                       AS elmtCclsCd,
+                        CASE
+                            WHEN A.ELMT_CCLS_CD = '7' THEN (
+                                            ROW_NUMBER() OVER (PARTITION BY A.ELMT_CCLS_CD ORDER BY A.MDFM_CPEM_ID) - 1)
+                            ELSE -1 END                                                      AS imageSeq
+                 FROM ODS.S_MRFMFCID A
+                          LEFT OUTER JOIN ODS.S_MRDDRECE B
+                                          ON B.MDRC_ID = #{mdrcId}
+                                              AND B.MDRC_FOM_SEQ = #{mdrcFomSeq}
+                                              AND A.MDFM_CPEM_ID = B.MDFM_CPEM_ID
+                          LEFT OUTER JOIN ODS.S_MRDDRLFE C
+                                          ON C.MDRC_ID = #{mdrcId}
+                                              AND C.MDRC_FOM_SEQ = #{mdrcFomSeq}
+                                              AND A.MDFM_CPEM_ID = C.MDFM_CPEM_ID
+                 WHERE A.MDFM_ID = #{mdfmId}
+                   AND A.MDFM_FOM_SEQ = #{mdfmFomSeq}
+                   AND A.MDFM_ELMT_CLS_CD = 'V'
+                 ORDER BY A.MDFM_SCTN_SEQ, A.MDFM_CPEM_ID, A.UPR_MDFM_CPEM_ID
+             ) M
+                 LEFT OUTER JOIN ODS.S_MRDDRIMD D
+                                 ON D.MDRC_ID = #{mdrcId}
+                                     AND D.MDRC_FOM_SEQ = #{mdrcFomSeq}
+                                     AND M.imageSeq = D.IMG_SEQ
+    </select>
+</mapper>

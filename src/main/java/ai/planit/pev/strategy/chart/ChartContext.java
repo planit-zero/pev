@@ -38,6 +38,7 @@ public class ChartContext {
         }
 
         Chart.Response chart = new Chart.Response();
+        chart.setData(data);
         chart.setSections(PevChartUtil.getChartSections(elements));
 
         return chart;

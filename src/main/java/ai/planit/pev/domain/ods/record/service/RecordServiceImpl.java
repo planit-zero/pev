@@ -3,15 +3,13 @@ package ai.planit.pev.domain.ods.record.service;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
+import ai.planit.pev.domain.ods.medical.service.MedicalService;
 import ai.planit.pev.domain.ods.pathology.service.PathologyService;
 import ai.planit.pev.domain.ods.picture.service.PictureService;
 import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
-import ai.planit.pev.strategy.chart.ChartContext;
-import ai.planit.pev.strategy.chart.PathologyChartStrategy;
-import ai.planit.pev.strategy.chart.PictureChartStrategy;
-import ai.planit.pev.strategy.chart.ScanChartStrategy;
+import ai.planit.pev.strategy.chart.*;
 import ai.planit.pev.strategy.chart.object.common.Chart;
 import ai.planit.pev.strategy.chart.object.common.ChartData;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
@@ -31,6 +29,7 @@ public class RecordServiceImpl implements RecordService {
 
     private final RecordListDAO recordListDAO;
     private final MetaRecordService metaRecordService;
+    private final MedicalService medicalService;
     private final PathologyService pathologyService;
     private final PictureService pictureService;
 
@@ -220,6 +219,13 @@ public class RecordServiceImpl implements RecordService {
         ChartContext chartContext = new ChartContext();
 
         Object dataSource = null;
+
+        // 진료기록
+        if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_OUTPATIENT_FIRST.getType())) {
+            chartContext.setChartStrategy(new MedicalChartStrategy());
+
+            dataSource = medicalService.getMedicalData(request.getRecord());
+        }
 
         // 병리검사
         if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
