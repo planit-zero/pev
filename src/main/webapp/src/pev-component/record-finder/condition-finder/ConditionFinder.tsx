@@ -3,7 +3,6 @@ import { Backdrop, Box, CircularProgress, Divider } from '@mui/material';
 import ConditionFinderPanel from './ConditionFinderPanel';
 import RecordGrid from '../RecordGrid';
 import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
-import { TRecord } from '../../../pev-type/TRecord';
 import dayjs from 'dayjs';
 import { TPactTpCd } from '../../../pev-type/TPactTpCd';
 import { TDept } from '../../../pev-type/TDept';
@@ -12,7 +11,7 @@ import { useGetRecordListMutation } from '../../../pev-service/RecordService';
 
 const ConditionFinder = () => {
     const initialSearchCondition: ISearchCondition = {
-        searchTargets: [TRecord.DR, 'D001', 'D002', 'D003', 'D004', 'D031', 'D005', 'D006', 'D010', 'D011', 'D007', 'D020', 'D030'],
+        searchTargets: ['D001', 'D002', 'D003', 'D004'],
         searchFromDate: dayjs().add(-1, 'month').format('YYYY-MM-DD'),
         searchToDate: dayjs().add(-1, 'day').format('YYYY-MM-DD'),
         pactTpCd: TPactTpCd.ALL,
