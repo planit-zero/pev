@@ -47,7 +47,8 @@ public class PevChartUtil {
                 .collect(Collectors.toList());
 
         for (ChartElement entityElement : entityElements) {
-            entities.add(getChartEntity(sectionElements, entityElement));
+            ChartEntity entity = getChartEntity(sectionElements, entityElement);
+            if (entity != null) entities.add(entity);
         }
 
         return entities;
@@ -56,8 +57,13 @@ public class PevChartUtil {
     private static ChartEntity getChartEntity(List<ChartElement> sectionElements, ChartElement entityElement) {
         ChartEntity entity = new ChartEntity(entityElement);
 
-        entity.setAttributes(getChartAttributes(sectionElements, entityElement.getId()));
-        entity.setValues(getChartValues(sectionElements, entityElement.getId()));
+        List<ChartAttribute> chartAttributes = getChartAttributes(sectionElements, entityElement.getId());
+        List<ChartValue> chartValues = getChartValues(sectionElements, entityElement.getId());
+
+        if (chartAttributes.size() == 0 && chartValues.size() == 0) return null;
+
+        entity.setAttributes(chartAttributes);
+        entity.setValues(chartValues);
 
         return entity;
     }
@@ -71,7 +77,8 @@ public class PevChartUtil {
                 .collect(Collectors.toList());
 
         for (ChartElement attributeElement : attributeElements) {
-            attributes.add(getChartAttribute(sectionElements, attributeElement));
+            ChartAttribute chartAttribute = getChartAttribute(sectionElements, attributeElement);
+            if (chartAttribute != null) attributes.add(chartAttribute);
         }
 
         return attributes;
@@ -80,14 +87,19 @@ public class PevChartUtil {
     private static ChartAttribute getChartAttribute(List<ChartElement> sectionElements, ChartElement attributeElement) {
         ChartAttribute attribute = new ChartAttribute(attributeElement);
 
-        attribute.setAttributes(getChartAttributes(sectionElements, attributeElement.getId()));
-        attribute.setValues(getChartValues(sectionElements, attributeElement.getId()));
+        List<ChartAttribute> chartAttributes = getChartAttributes(sectionElements, attributeElement.getId());
+        List<ChartValue> chartValues = getChartValues(sectionElements, attributeElement.getId());
+
+        if (chartAttributes.size() == 0 && chartValues.size() == 0) return null;
+
+        attribute.setAttributes(chartAttributes);
+        attribute.setValues(chartValues);
 
         return attribute;
     }
 
     private static List<ChartValue> getChartValues(List<ChartElement> sectionElements, String parentId) {
-        List<ChartValue>  values = new ArrayList<>();
+        List<ChartValue> values = new ArrayList<>();
 
         List<ChartElement> valueElements = sectionElements
                 .stream()
@@ -95,7 +107,9 @@ public class PevChartUtil {
                 .collect(Collectors.toList());
 
         for (ChartElement valueElement : valueElements) {
-            values.add(getChartValue(valueElement));
+            if (valueElement.getContent() != null && !valueElement.getContent().equals("")) {
+                values.add(getChartValue(valueElement));
+            }
         }
 
         return values;
