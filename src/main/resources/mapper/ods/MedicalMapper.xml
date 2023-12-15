@@ -8,7 +8,7 @@
                M.id,
                M.parentId,
                CASE
-                   WHEN M.elmtCclsCd = '7' THEN 'https://hisimg.snuh.org/' || ISNULL(REGEXP_REPLACE(D.INTG_IMG_FILE_PATH_NM, '\\', '/'), M.content)
+                   WHEN M.elmtCclsCd = '7' AND D.INTG_IMG_FILE_PATH_NM IS NOT NULL THEN 'https://hisimg.snuh.org/' || REGEXP_REPLACE(D.INTG_IMG_FILE_PATH_NM, '\\', '/')
                    ELSE M.content END AS content,
                M."desc"
         FROM (
