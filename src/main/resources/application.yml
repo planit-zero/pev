@@ -9,7 +9,7 @@ spring:
   irb:
     datasource:
       hikari:
-        driver-class-name: oracle.jdbc.driver.OracleDriver
+        driver-class-name: oracle.jdbc.OracleDriver
         jdbc-url: jdbc:oracle:thin:@//192.168.1.14:13625/orcl
         username: SNUHOCS
         password: GRtocTjqQx7@$
