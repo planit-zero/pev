@@ -9,6 +9,7 @@ import { setTargetRecords } from '../../store/pev-slices/record';
 import { setAlert } from '../../store/pev-slices/environment';
 import { TAlert } from '../../pev-type/TAlert';
 import { useSelector } from '../../store';
+import { IconArrowBigRight } from '@tabler/icons';
 
 type ConditionFinderGridProps = {
     recordList: IRecord[];
@@ -38,6 +39,28 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
             void gridRef.current.instance.refresh();
         }
     }, [finderWidth]);
+
+    const CellTemplate = (e: any) => {
+        return (
+            <Box
+                width={'100%'}
+                height={'100%'}
+                display={'flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                sx={{ cursor: 'pointer' }}
+                onClick={() => handleCellClick(e)}
+            >
+                <IconArrowBigRight width={16} height={16} color={'#3f51b5'} />
+            </Box>
+        );
+    };
+
+    const handleCellClick = (e: any) => {
+        if (e && e.data) {
+            setTargetRecords([e.data]);
+        }
+    };
 
     return (
         <Box width={'100%'} height={'100%'}>
@@ -76,6 +99,7 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                     noDataText={''}
                     onSelectionChanged={handleSelectionChanged}
                 >
+                    <Column caption={''} cellRender={CellTemplate} alignment={'center'} width={50} />
                     <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={110} />
                     <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={110} />
                     <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} minWidth={170} />
