@@ -92,7 +92,7 @@ const Chart = (props: ChartProps) => {
                             />
                         </Box>
                     )}
-                {value.controlType === 'IMAGE' && (
+                {value.controlType === 'IMAGE' && value.content && (
                     <img style={{ width: '100%', height: '100%', objectFit: 'contain' }} src={value.content} alt={'가명화 이미지'} />
                 )}
                 {value.controlType !== 'IMAGE' && (
