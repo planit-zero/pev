@@ -62,8 +62,7 @@ const RecordSelector = (props: RecordSelectorProps) => {
                         sx={{ ml: 0 }}
                         control={
                             <Checkbox
-                                sx={{ mr: 1 }}
-                                color={'success'}
+                                sx={{ mr: 1, color: 'white !important' }}
                                 checked={isAllChildrenChecked(metaRecord)}
                                 onChange={(e) => handleCheckboxChange(e, metaRecord)}
                             />
