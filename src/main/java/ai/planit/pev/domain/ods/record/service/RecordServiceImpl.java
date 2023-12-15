@@ -221,7 +221,7 @@ public class RecordServiceImpl implements RecordService {
         Object dataSource = null;
 
         // 진료기록
-        if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_OUTPATIENT_FIRST.getType())) {
+        if (request.getRecord().getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
             chartContext.setChartStrategy(new MedicalChartStrategy());
 
             dataSource = medicalService.getMedicalData(request.getRecord());

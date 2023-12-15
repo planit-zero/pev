@@ -1,5 +1,6 @@
 package ai.planit.pev.domain.ods.medical.dao;
 
+import ai.planit.pev.domain.meta.record.dto.MetaRecordFormat;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.object.medical.MedicalData;
 import lombok.RequiredArgsConstructor;
@@ -16,5 +17,10 @@ public class MedicalDAOImpl implements MedicalDAO {
     @Override
     public List<MedicalData> getMedicalData(Record.Response record) {
         return sqlSessionTemplate.selectList("getMedicalData", record);
+    }
+
+    @Override
+    public List<MetaRecordFormat.Response> getMedicalRecordFormatList(MetaRecordFormat.Request request) {
+        return sqlSessionTemplate.selectList("getMedicalRecordFormatList", request);
     }
 }

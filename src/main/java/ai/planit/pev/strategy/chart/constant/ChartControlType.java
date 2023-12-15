@@ -10,5 +10,6 @@ public enum ChartControlType {
     IMAGE,
     NUMERIC_TEXT_BOX,
     DATE_TEXT_BOX,
-    DATA_GRID
+    DATA_GRID,
+    UNKNOWN
 }

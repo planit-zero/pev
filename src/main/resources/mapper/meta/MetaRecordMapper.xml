@@ -4,7 +4,7 @@
     <select id="getMetaRecordList"
             parameterType="ai.planit.pev.domain.meta.record.dto.MetaRecord">
         SELECT id,
-               parent_id AS parentId,
+               parent_id   AS parentId,
                name,
                display_seq AS displaySeq
         FROM pev_record
@@ -13,18 +13,37 @@
     <select id="getRecordFormatList"
             parameterType="ai.planit.pev.domain.ods.record.dto.Record$Response"
             resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
-        select section_id as sectionId,
+        select section_id   as sectionId,
                id,
-               parent_id as parentId,
-               class_type as classType,
+               parent_id    as parentId,
+               class_type   as classType,
                control_type as controlType,
                masking_type as maskingType,
                content,
                "desc"
         from pev_record_format
         where record_id = #{recordDetailType}
-        and mdfm_id = #{mdfmId}
-        and mdfm_fom_seq = #{mdfmFomSeq}
+          and mdfm_id = #{mdfmId}
+          and mdfm_fom_seq = #{mdfmFomSeq}
         order by section_id, id, parent_id
     </select>
+    <insert id="reloadMedicalRecordFormat"
+            parameterType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Response">
+        insert into pev_record_format
+        (record_id, mdfm_id, mdfm_fom_seq, section_id, id, parent_id, class_type, control_type, masking_type, content,
+        "desc", load_dtm)
+        values
+        <foreach collection="list" item="item" separator=", ">
+            (#{item.recordId}, #{item.mdfmId}, #{item.mdfmFomSeq}, #{item.sectionId}, #{item.id}, #{item.parentId},
+            #{item.classType}, #{item.controlType}, #{item.maskingType}, #{item.content}, #{item.desc}, #{item.loadDtm})
+        </foreach>
+        on conflict (record_id, mdfm_id, mdfm_fom_seq, section_id, id, parent_id)
+        do update
+        set class_type = excluded.class_type,
+        control_type = excluded.control_type,
+        masking_type = excluded.masking_type,
+        content = excluded.content,
+        "desc" = excluded."desc",
+        load_dtm = excluded.load_dtm
+    </insert>
 </mapper>

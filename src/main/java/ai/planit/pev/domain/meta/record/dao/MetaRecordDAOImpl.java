@@ -1,6 +1,7 @@
 package ai.planit.pev.domain.meta.record.dao;
 
 import ai.planit.pev.domain.meta.record.dto.MetaRecord;
+import ai.planit.pev.domain.meta.record.dto.MetaRecordFormat;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
 import lombok.RequiredArgsConstructor;
@@ -22,5 +23,10 @@ public class MetaRecordDAOImpl implements MetaRecordDAO {
     @Override
     public List<ChartElement> getRecordFormatList(Record.Response record) {
         return sqlSessionTemplate.selectList("getRecordFormatList", record);
+    }
+
+    @Override
+    public void reloadMedicalRecordFormat(List<MetaRecordFormat.Response> metaRecordFormatList) {
+        sqlSessionTemplate.insert("reloadMedicalRecordFormat", metaRecordFormatList);
     }
 }

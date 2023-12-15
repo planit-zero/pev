@@ -8,7 +8,7 @@
                M.id,
                M.parentId,
                CASE
-                   WHEN M.elmtCclsCd = '7' THEN ISNULL(REGEXP_REPLACE(D.INTG_IMG_FILE_PATH_NM, '\\', '/'), M.content)
+                   WHEN M.elmtCclsCd = '7' THEN 'https://hisimg.snuh.org/' || ISNULL(REGEXP_REPLACE(D.INTG_IMG_FILE_PATH_NM, '\\', '/'), M.content)
                    ELSE M.content END AS content,
                M."desc"
         FROM (
@@ -17,7 +17,7 @@
                         A.UPR_MDFM_CPEM_ID                                                   AS parentId,
                         CASE
                             WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN A.ELMT_BSC_CNTE
-                            WHEN A.ELMT_CCLS_CD = '7' THEN REGEXP_REPLACE(C.INTG_IMG_FILE_PATH_NM, '\\', '/')
+                            WHEN A.ELMT_CCLS_CD = '7' THEN 'https://hisimg.snuh.org/' || REGEXP_REPLACE(C.INTG_IMG_FILE_PATH_NM, '\\', '/')
                             ELSE COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT) END            AS content,
                         CASE
                             WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN A.MDFM_CPEM_CNTE END AS "desc",
@@ -44,5 +44,43 @@
                                  ON D.MDRC_ID = #{mdrcId}
                                      AND D.MDRC_FOM_SEQ = #{mdrcFomSeq}
                                      AND M.imageSeq = D.IMG_SEQ
+    </select>
+    <select id="getMedicalRecordFormatList"
+            parameterType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Request"
+            resultType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Response">
+        SELECT MDFM_CLS_CD                           AS recordId,
+        MDFM_ID                               AS mdfmId,
+        MDFM_FOM_SEQ                          AS mdfmFomSeq,
+        MDFM_SCTN_SEQ                         AS sectionId,
+        MDFM_CPEM_ID                          AS id,
+        UPR_MDFM_CPEM_ID                      AS parentId,
+        CASE
+        WHEN MDFM_ELMT_CLS_CD = 'E' THEN 'ENTITY'
+        WHEN MDFM_ELMT_CLS_CD = 'A' THEN 'ATTRIBUTE'
+        WHEN MDFM_ELMT_CLS_CD = 'V' THEN 'VALUE'
+        ELSE 'UNKNOWN' END                AS classType,
+        CASE
+        WHEN ELMT_CCLS_CD = '1' THEN 'LABEL'
+        WHEN ELMT_CCLS_CD = '2' THEN 'TEXT_BOX'
+        WHEN ELMT_CCLS_CD = '3' THEN 'RICH_TEXT_BOX'
+        WHEN ELMT_CCLS_CD = '4' THEN 'COMBO_BOX'
+        WHEN ELMT_CCLS_CD = '5' THEN 'CHECK_BOX'
+        WHEN ELMT_CCLS_CD = '6' THEN 'RADIO_BUTTON'
+        WHEN ELMT_CCLS_CD = '7' THEN 'IMAGE'
+        WHEN ELMT_CCLS_CD = '8' THEN 'NUMERIC_TEXT_BOX'
+        WHEN ELMT_CCLS_CD = '9' THEN 'DATE_TEXT_BOX'
+        WHEN ELMT_CCLS_CD = '12' THEN 'DATA_GRID'
+        ELSE 'UNKNOWN' END             AS controlType,
+        NULL                                  as maskingType,
+        ISNULL(MDFM_CPEM_CNTE, ELMT_BSC_CNTE) AS content,
+        ELMT_BSC_CNTE                         AS "desc",
+        LSH_DTM                               AS loadDtm
+        FROM ods.S_MRFMFCID
+        <![CDATA[
+        WHERE LSH_DTM::DATE >= #{startDate}::DATE
+          AND LSH_DTM::DATE <= #{endDate}::DATE
+          AND MDFM_CLS_CD = #{recordId}
+        ]]>
+        ORDER BY MDFM_CLS_CD, MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ, MDFM_CPEM_ID, UPR_MDFM_CPEM_ID
     </select>
 </mapper>
