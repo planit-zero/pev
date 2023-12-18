@@ -8,7 +8,7 @@
                M.id,
                M.parentId,
                CASE
-                   WHEN M.elmtCclsCd = '7' AND D.INTG_IMG_FILE_PATH_NM IS NOT NULL THEN 'https://hisimg.snuh.org/' || REGEXP_REPLACE(D.INTG_IMG_FILE_PATH_NM, '\\', '/')
+                   WHEN M.elmtCclsCd = '7' AND D.INTG_IMG_FILE_PATH_NM IS NOT NULL THEN 'http://hisimg.snuh.org/' || REGEXP_REPLACE(D.INTG_IMG_FILE_PATH_NM, '\\', '/')
                    ELSE M.content END AS content,
                M."desc"
         FROM (
@@ -17,7 +17,7 @@
                         A.UPR_MDFM_CPEM_ID                                                   AS parentId,
                         CASE
                             WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN A.ELMT_BSC_CNTE
-                            WHEN A.ELMT_CCLS_CD = '7' THEN 'https://hisimg.snuh.org/' || REGEXP_REPLACE(C.INTG_IMG_FILE_PATH_NM, '\\', '/')
+                            WHEN A.ELMT_CCLS_CD = '7' THEN 'http://hisimg.snuh.org/' || REGEXP_REPLACE(C.INTG_IMG_FILE_PATH_NM, '\\', '/')
                             ELSE COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT) END            AS content,
                         CASE
                             WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN A.MDFM_CPEM_CNTE END AS "desc",

@@ -49,7 +49,7 @@ const StyledElement = (props: StyledElementProps) => {
     };
 
     const ImageElement = (): JSX.Element => {
-        return <img src={element?.text ? `https://hisimg.snuh.org/${element?.text}` : ''} alt={element?.text} />;
+        return <img src={element?.text ? `http://hisimg.snuh.org/${element?.text}` : ''} alt={element?.text} />;
     };
 
     const handleClick = () => {
