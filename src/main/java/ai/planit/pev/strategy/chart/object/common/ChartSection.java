@@ -12,4 +12,5 @@ import java.util.List;
 public class ChartSection {
     private int sectionId;
     private List<ChartEntity> entities;
+    private ChartStyleSection style;
 }

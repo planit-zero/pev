@@ -11,16 +11,18 @@ public class ChartEntity extends ChartElement {
     private List<ChartAttribute> attributes;
     private List<ChartValue> values;
 
-    public ChartEntity(ChartElement element) {
+    public ChartEntity(ChartElement element, ChartStyleItem style) {
         super(
                 element.getSectionId(),
                 element.getId(),
                 element.getParentId(),
+                element.getMdfmCpemNo(),
                 element.getClassType(),
                 element.getControlType(),
                 element.getMaskingType(),
                 element.getContent(),
-                element.getDesc()
+                element.getDesc(),
+                style
         );
     }
 }

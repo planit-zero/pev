@@ -16,6 +16,7 @@
         select section_id   as sectionId,
                id,
                parent_id    as parentId,
+               mdfm_cpem_no as mdfmCpemNo,
                class_type   as classType,
                control_type as controlType,
                masking_type as maskingType,
@@ -30,12 +31,14 @@
     <insert id="reloadMedicalRecordFormat"
             parameterType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Response">
         insert into pev_record_format
-        (record_id, mdfm_id, mdfm_fom_seq, section_id, id, parent_id, class_type, control_type, masking_type, content,
+        (record_id, mdfm_id, mdfm_fom_seq, section_id, id, parent_id, mdfm_cpem_no, class_type, control_type,
+        masking_type, content,
         "desc", load_dtm)
         values
         <foreach collection="list" item="item" separator=", ">
             (#{item.recordId}, #{item.mdfmId}, #{item.mdfmFomSeq}, #{item.sectionId}, #{item.id}, #{item.parentId},
-            #{item.classType}, #{item.controlType}, #{item.maskingType}, #{item.content}, #{item.desc}, #{item.loadDtm})
+            #{item.mdfmCpemNo}, #{item.classType}, #{item.controlType}, #{item.maskingType}, #{item.content},
+            #{item.desc}, #{item.loadDtm})
         </foreach>
         on conflict (record_id, mdfm_id, mdfm_fom_seq, section_id, id, parent_id)
         do update

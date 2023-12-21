@@ -10,9 +10,7 @@ import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.*;
-import ai.planit.pev.strategy.chart.object.common.Chart;
-import ai.planit.pev.strategy.chart.object.common.ChartData;
-import ai.planit.pev.strategy.chart.object.common.ChartElement;
+import ai.planit.pev.strategy.chart.object.common.*;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.strategy.chart.object.picture.PictureData;
 import ai.planit.pev.utility.PevStringUtil;
@@ -257,9 +255,16 @@ public class RecordServiceImpl implements RecordService {
         List<ChartElement> format = metaRecordService.getRecordFormatList(request.getRecord());
         List<ChartElement> data = chartContext.getChartStrategy().getData(format, dataSource);
 
+        ChartStyleXml.Request xmlRequest = new ChartStyleXml.Request();
+        xmlRequest.setMdfmClsCd(request.getRecord().getRecordDetailType());
+        xmlRequest.setMdfmId(request.getRecord().getMdfmId());
+        xmlRequest.setMdfmFomSeq(request.getRecord().getMdfmFomSeq());
+
+        List<ChartStyleSection> style = medicalService.getChartStyleSections(xmlRequest);
+
         ChartData chartData = new ChartData(data);
         if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
-        return chartContext.getChart(format, chartData.getValues());
+        return chartContext.getChart(format, chartData.getValues(), style);
     }
 }

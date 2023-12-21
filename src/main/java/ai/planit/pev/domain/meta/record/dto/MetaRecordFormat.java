@@ -26,6 +26,7 @@ public class MetaRecordFormat {
         private int sectionId;
         private String id;
         private String parentId;
+        private String mdfmCpemNo;
         private ChartClassType classType;
         private ChartControlType controlType;
         private ChartMaskingType maskingType;

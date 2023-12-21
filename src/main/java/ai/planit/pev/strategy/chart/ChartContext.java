@@ -6,6 +6,7 @@ import ai.planit.pev.core.webclient.PevWebClientUtil;
 import ai.planit.pev.strategy.chart.object.common.Chart;
 import ai.planit.pev.strategy.chart.object.common.ChartData;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
+import ai.planit.pev.strategy.chart.object.common.ChartStyleSection;
 import ai.planit.pev.utility.PevChartUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ import java.util.Optional;
 public class ChartContext {
     private ChartStrategy chartStrategy;
 
-    public Chart.Response getChart(List<ChartElement> format, List<ChartElement> data) {
+    public Chart.Response getChart(List<ChartElement> format, List<ChartElement> data, List<ChartStyleSection> style) {
         List<ChartElement> elements = new ArrayList<>();
 
         for (ChartElement f : format) {
@@ -39,7 +40,7 @@ public class ChartContext {
 
         Chart.Response chart = new Chart.Response();
         chart.setData(data);
-        chart.setSections(PevChartUtil.getChartSections(elements));
+        chart.setSections(PevChartUtil.getChartSections(elements, style));
 
         return chart;
     }

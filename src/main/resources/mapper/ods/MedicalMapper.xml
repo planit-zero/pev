@@ -54,6 +54,7 @@
         MDFM_SCTN_SEQ                         AS sectionId,
         MDFM_CPEM_ID                          AS id,
         UPR_MDFM_CPEM_ID                      AS parentId,
+        MDFM_CPEM_NO                          AS mdfmCpemNo,
         CASE
         WHEN MDFM_ELMT_CLS_CD = 'E' THEN 'ENTITY'
         WHEN MDFM_ELMT_CLS_CD = 'A' THEN 'ATTRIBUTE'
@@ -82,5 +83,18 @@
           AND MDFM_CLS_CD = #{recordId}
         ]]>
         ORDER BY MDFM_CLS_CD, MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ, MDFM_CPEM_ID, UPR_MDFM_CPEM_ID
+    </select>
+    <select id="getChartStyleList"
+            parameterType="ai.planit.pev.strategy.chart.object.common.ChartStyleXml$Request"
+            resultType="ai.planit.pev.strategy.chart.object.common.ChartStyleXml$Response">
+        SELECT MDFM_ID            AS mdfmId,
+               MDFM_FOM_SEQ       AS mdfmFormSeq,
+               MDFM_SCTN_SEQ      AS mdfmSctnSeq,
+               SCTN_DGN_META_LDAT AS sctnDgnMetaLdat
+        FROM ODS.S_MRFMFSCD
+        WHERE MDFM_CLS_CD = #{mdfmClsCd}
+          AND MDFM_ID = #{mdfmId}
+          AND MDFM_FOM_SEQ = #{mdfmFomSeq}
+        ORDER BY MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ
     </select>
 </mapper>
