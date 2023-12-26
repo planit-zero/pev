@@ -5,7 +5,6 @@ import { IconChecks } from '@tabler/icons';
 
 // project imports
 import useConfig from 'hooks/useConfig';
-import SubCard from 'ui-component/cards/SubCard';
 
 // color import
 import colors from 'assets/scss/_themes-vars.module.scss';
@@ -85,13 +84,11 @@ const PresetColor = () => {
     ];
 
     return (
-        <SubCard title="Preset Color">
-            <Grid item container spacing={2} alignItems="center">
-                {colorOptions.map((color, index) => (
-                    <PresetColorBox key={index} color={color} presetColor={presetColor} setPresetColor={onChangePresetColor} />
-                ))}
-            </Grid>
-        </SubCard>
+        <Grid item container spacing={2} alignItems="center">
+            {colorOptions.map((color, index) => (
+                <PresetColorBox key={index} color={color} presetColor={presetColor} setPresetColor={onChangePresetColor} />
+            ))}
+        </Grid>
     );
 };
 

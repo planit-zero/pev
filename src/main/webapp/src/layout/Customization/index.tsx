@@ -15,7 +15,6 @@ import PresetColor from './PresetColor';
 import FontFamily from './FontFamily';
 import InputFilled from './InputFilled';
 import BoxContainer from './BoxContainer';
-import AnimateButton from 'ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
 
 // ==============================|| LIVE CUSTOMIZATION ||============================== //
@@ -52,11 +51,9 @@ const Customization = () => {
                         boxShadow: theme.customShadows.secondary
                     }}
                 >
-                    <AnimateButton type="rotate">
-                        <IconButton color="inherit" size="large" disableRipple aria-label="live customize">
-                            <IconSettings />
-                        </IconButton>
-                    </AnimateButton>
+                    <IconButton color="inherit" size="large" disableRipple aria-label="live customize">
+                        <IconSettings />
+                    </IconButton>
                 </Fab>
             </Tooltip>
 

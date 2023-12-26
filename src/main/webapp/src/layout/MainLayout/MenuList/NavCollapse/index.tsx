@@ -19,7 +19,6 @@ import {
 
 // project imports
 import NavItem from '../NavItem';
-import Transitions from 'ui-component/extended/Transitions';
 
 import { useSelector } from 'store';
 import LAYOUT_CONST from 'constant';
@@ -329,24 +328,7 @@ const NavCollapse = ({ menu, level, parentId }: NavCollapseProps) => {
                                         }
                                     }
                                 ]}
-                            >
-                                {({ TransitionProps }) => (
-                                    <Transitions in={openMini} {...TransitionProps}>
-                                        <Paper
-                                            sx={{
-                                                overflow: 'hidden',
-                                                mt: 1.5,
-                                                boxShadow: theme.shadows[8],
-                                                backgroundImage: 'none'
-                                            }}
-                                        >
-                                            <ClickAwayListener onClickAway={handleClosePopper}>
-                                                <Box>{menus}</Box>
-                                            </ClickAwayListener>
-                                        </Paper>
-                                    </Transitions>
-                                )}
-                            </PopperStyledMini>
+                            ></PopperStyledMini>
                         )}
                     </ListItemButton>
                     {drawerOpen && (
@@ -416,25 +398,7 @@ const NavCollapse = ({ menu, level, parentId }: NavCollapseProps) => {
                                         }
                                     }
                                 ]}
-                            >
-                                {({ TransitionProps }) => (
-                                    <Transitions in={openMini} {...TransitionProps}>
-                                        <Paper
-                                            sx={{
-                                                overflow: 'hidden',
-                                                mt: 1.5,
-                                                py: 0.5,
-                                                boxShadow: theme.shadows[8],
-                                                backgroundImage: 'none'
-                                            }}
-                                        >
-                                            <ClickAwayListener onClickAway={handleClosePopper}>
-                                                <Box>{menus}</Box>
-                                            </ClickAwayListener>
-                                        </Paper>
-                                    </Transitions>
-                                )}
-                            </PopperStyled>
+                            ></PopperStyled>
                         )}
                     </ListItemButton>
                 </>

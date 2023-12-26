@@ -25,7 +25,6 @@ import LAYOUT_CONST from 'constant';
 import NavCollapse from '../NavCollapse';
 import NavItem from '../NavItem';
 import useConfig from 'hooks/useConfig';
-import Transitions from 'ui-component/extended/Transitions';
 import { dispatch, useSelector } from 'store';
 
 // assets
@@ -253,43 +252,6 @@ const NavGroup = ({ item, lastItem, remItems, lastItemId }: NavGroupProps) => {
                                     zIndex: 2001
                                 }}
                             >
-                                {({ TransitionProps }) => (
-                                    <Transitions in={openMini} {...TransitionProps}>
-                                        <Paper
-                                            sx={{
-                                                mt: 0.5,
-                                                py: 1.25,
-                                                boxShadow: theme.shadows[8],
-                                                backgroundImage: 'none'
-                                            }}
-                                        >
-                                            <ClickAwayListener onClickAway={handleClose}>
-                                                <Box
-                                                    sx={{
-                                                        maxHeight: 'calc(100vh - 170px)',
-                                                        overflowY: 'auto',
-                                                        '&::-webkit-scrollbar': {
-                                                            opacity: 0,
-                                                            width: 4,
-                                                            '&:hover': {
-                                                                opacity: 0.7
-                                                            }
-                                                        },
-                                                        '&::-webkit-scrollbar-track': {
-                                                            background: 'transparent'
-                                                        },
-                                                        '&::-webkit-scrollbar-thumb': {
-                                                            background: theme.palette.divider,
-                                                            borderRadius: 4
-                                                        }
-                                                    }}
-                                                >
-                                                    {currentItem.id !== lastItemId ? items : moreItems}
-                                                </Box>
-                                            </ClickAwayListener>
-                                        </Paper>
-                                    </Transitions>
-                                )}
                             </PopperStyled>
                         )}
                     </ListItemButton>
