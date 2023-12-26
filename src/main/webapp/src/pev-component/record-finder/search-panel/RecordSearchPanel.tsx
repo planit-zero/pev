@@ -8,58 +8,63 @@ import PatientInfo from './PatientInfo';
 import { useSearchParams } from 'react-router-dom';
 import { CryptoUtils } from '../../../pev-utils/CryptoUtils';
 import { setAlert } from '../../../store/pev-slices/environment';
+import { useGetIdpLoginUserMutation } from '../../../pev-service/UserService';
+import { setUserInfo } from '../../../store/slices/user';
 
 const RecordSearchPanel = () => {
     const [searchParams] = useSearchParams();
 
-    const [authCd, setAuthCd] = React.useState<string | null>(null);
-    const [stfNo, setStfNo] = React.useState<string | null>(null);
     const [irb, setIrb] = React.useState<string | null>(null);
     const [rid, setRid] = React.useState<string>('');
     const [patient, setPatient] = React.useState<IPatientR | null>(null);
 
     const [getPatient] = useGetPatientMutation();
-    const [getRidByGid] = useGetRidByGidMutation();
+    const [getIdpLoginUser] = useGetIdpLoginUserMutation();
 
     React.useEffect(() => {
         const token = searchParams.get('token');
 
-        if (token) {
-            const decrypt = CryptoUtils.decrypt(token, 'planitsquare2023');
-            const decryptArr = decrypt.split('|||');
+        getIdpLoginUser(token)
+            .unwrap()
+            .then((data) => setUserInfo(data))
+            .catch(() => (window.location.href = 'https://supreme.snuh.org/'));
 
-            const decryptedAuthCd = decryptArr[0] || null;
-            const decryptedStfNo = decryptArr[1] || null;
-            const decryptedIrbNo = decryptArr[2] || null;
-            const decryptedGid = decryptArr[3] || null;
-
-            if (decryptedAuthCd && decryptedStfNo && decryptedIrbNo && decryptedGid) {
-                setAuthCd(decryptedAuthCd.toUpperCase());
-                setStfNo(decryptedStfNo.toUpperCase());
-
-                const payload: IRidByGidP = {
-                    stfNo: decryptedStfNo,
-                    irbNo: decryptedIrbNo,
-                    data: [{ gid: decryptedGid }]
-                };
-
-                getRidByGid(payload)
-                    .unwrap()
-                    .then((res) => {
-                        setIrb(res.irbNo);
-
-                        if (res.data.length > 0 && res.data[0].rid) {
-                            setRid(res.data[0].rid);
-                            handleRidSubmit(res.irbNo, res.data[0].rid);
-                        }
-                    });
-            } else {
-                setAlert({
-                    type: 'error',
-                    message: '연동 정보가 부정확합니다.'
-                });
-            }
-        }
+        // if (token) {
+        //     const decrypt = CryptoUtils.decrypt(token, 'planitsquare2023');
+        //     const decryptArr = decrypt.split('|||');
+        //
+        //     const decryptedAuthCd = decryptArr[0] || null;
+        //     const decryptedStfNo = decryptArr[1] || null;
+        //     const decryptedIrbNo = decryptArr[2] || null;
+        //     const decryptedGid = decryptArr[3] || null;
+        //
+        //     if (decryptedAuthCd && decryptedStfNo && decryptedIrbNo && decryptedGid) {
+        //         setAuthCd(decryptedAuthCd.toUpperCase());
+        //         setStfNo(decryptedStfNo.toUpperCase());
+        //
+        //         const payload: IRidByGidP = {
+        //             stfNo: decryptedStfNo,
+        //             irbNo: decryptedIrbNo,
+        //             data: [{ gid: decryptedGid }]
+        //         };
+        //
+        //         getRidByGid(payload)
+        //             .unwrap()
+        //             .then((res) => {
+        //                 setIrb(res.irbNo);
+        //
+        //                 if (res.data.length > 0 && res.data[0].rid) {
+        //                     setRid(res.data[0].rid);
+        //                     handleRidSubmit(res.irbNo, res.data[0].rid);
+        //                 }
+        //             });
+        //     } else {
+        //         setAlert({
+        //             type: 'error',
+        //             message: '연동 정보가 부정확합니다.'
+        //         });
+        //     }
+        // }
     }, []);
 
     const handleIrbChangeByObj = (irbNo: string) => {
@@ -88,7 +93,7 @@ const RecordSearchPanel = () => {
     return (
         <Grid container spacing={1}>
             <Grid item xs={3.5}>
-                <IrbSelector authCd={authCd} stfNo={stfNo} irb={irb} onChange={handleIrbChangeByObj} />
+                <IrbSelector irb={irb} onChange={handleIrbChangeByObj} />
             </Grid>
             <Grid item xs={5}>
                 <RidForm irb={irb} rid={rid} onChange={handleRidChange} onSubmit={handleRidSubmit} />

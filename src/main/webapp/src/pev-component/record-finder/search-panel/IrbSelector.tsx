@@ -4,23 +4,24 @@ import { useGetIrbListQuery } from '../../../pev-service/IrbService';
 import { DataGrid } from 'devextreme-react';
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { Column, Scrolling, Selection } from 'devextreme-react/data-grid';
+import { useSelector } from '../../../store';
 
 type IrbSelectorProps = {
-    authCd: string | null;
-    stfNo: string | null;
     irb: string | null;
     onChange: (irbNo: string) => void;
 };
 
 const IrbSelector = (props: IrbSelectorProps) => {
+    const { info } = useSelector((state) => state.user);
     const [open, setOpen] = React.useState<boolean>(false);
     const [selectedIrb, setSelectedIrb] = React.useState<IIrb | null>(null);
     const [inputIrb, setInputIrb] = React.useState<string | null>(null);
 
     const stfNoForIrb = () => {
-        if (!props.stfNo) return '66206';
-        if (props.stfNo && props.stfNo === 'CHUCK') return '66206';
-        return props.stfNo;
+        if (!info) return '66206';
+        if (!info.stfNo) return '66206';
+        if (info.stfNo && info.stfNo === 'CHUCK') return '66206';
+        return info.stfNo;
     };
 
     const { data: irbList, isLoading: isIrbListLoading } = useGetIrbListQuery(stfNoForIrb());
@@ -113,7 +114,7 @@ const IrbSelector = (props: IrbSelectorProps) => {
                         }}
                     >
                         <Box>
-                            {Boolean(props.authCd && props.authCd === 'S') && (
+                            {Boolean(info && info.authCd && info.authCd === 'S') && (
                                 <React.Fragment>
                                     <Typography display={'inline'} fontWeight={'bold'}>
                                         직접 입력
