@@ -1,6 +1,7 @@
 package ai.planit.pev.utility;
 
 
+import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.object.common.*;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PevChartUtil {
-    public static List<ChartSection> getChartSections(List<ChartElement> elements, List<ChartStyleSection> style) {
+    public static List<ChartSection> getChartSections(List<ChartElement> elements, List<ChartStyleSection> style, boolean applyStyle) {
         List<ChartSection> sections = new ArrayList<>();
 
         List<Integer> sectionIds = elements
@@ -27,22 +28,22 @@ public class PevChartUtil {
 
             Optional<ChartStyleSection> chartStyleSection = style.stream().filter(s -> s.getMdfmSctnSeq() == sectionId).findAny();
 
-            sections.add(getChartSection(sectionId, sectionElements, chartStyleSection.orElse(null)));
+            sections.add(getChartSection(sectionId, sectionElements, chartStyleSection.orElse(null), applyStyle));
         }
 
         return sections;
     }
 
-    private static ChartSection getChartSection(Integer sectionId, List<ChartElement> sectionElements, ChartStyleSection chartStyleSection) {
+    private static ChartSection getChartSection(Integer sectionId, List<ChartElement> sectionElements, ChartStyleSection chartStyleSection, boolean applyStyle) {
         return ChartSection
                 .builder()
                 .sectionId(sectionId)
-                .entities(getChartEntities(sectionElements, chartStyleSection))
+                .entities(getChartEntities(sectionElements, chartStyleSection, applyStyle))
                 .style(chartStyleSection)
                 .build();
     }
 
-    private static List<ChartEntity> getChartEntities(List<ChartElement> sectionElements, ChartStyleSection chartStyleSection) {
+    private static List<ChartEntity> getChartEntities(List<ChartElement> sectionElements, ChartStyleSection chartStyleSection, boolean applyStyle) {
         List<ChartEntity> entities = new ArrayList<>();
 
         List<ChartElement> entityElements = sectionElements
@@ -51,20 +52,20 @@ public class PevChartUtil {
                 .collect(Collectors.toList());
 
         for (ChartElement entityElement : entityElements) {
-            ChartEntity entity = getChartEntity(sectionElements, entityElement, chartStyleSection);
+            ChartEntity entity = getChartEntity(sectionElements, entityElement, chartStyleSection, applyStyle);
             if (entity != null) entities.add(entity);
         }
 
         return entities;
     }
 
-    private static ChartEntity getChartEntity(List<ChartElement> sectionElements, ChartElement entityElement, ChartStyleSection chartStyleSection) {
+    private static ChartEntity getChartEntity(List<ChartElement> sectionElements, ChartElement entityElement, ChartStyleSection chartStyleSection, boolean applyStyle) {
         ChartEntity entity = new ChartEntity(entityElement, getChartStyleItem(chartStyleSection, entityElement.getMdfmCpemNo()));
 
-        List<ChartAttribute> chartAttributes = getChartAttributes(sectionElements, chartStyleSection, entityElement.getId());
-        List<ChartValue> chartValues = getChartValues(sectionElements, chartStyleSection, entityElement.getId());
+        List<ChartAttribute> chartAttributes = getChartAttributes(sectionElements, chartStyleSection, entityElement.getId(), applyStyle);
+        List<ChartValue> chartValues = getChartValues(sectionElements, chartStyleSection, entityElement.getId(), applyStyle);
 
-//        if (chartAttributes.size() == 0 && chartValues.size() == 0) return null;
+        if (!applyStyle && chartAttributes.size() == 0 && chartValues.size() == 0) return null;
 
         entity.setAttributes(chartAttributes);
         entity.setValues(chartValues);
@@ -72,7 +73,7 @@ public class PevChartUtil {
         return entity;
     }
 
-    private static List<ChartAttribute> getChartAttributes(List<ChartElement> sectionElements, ChartStyleSection chartStyleSection, String parentId) {
+    private static List<ChartAttribute> getChartAttributes(List<ChartElement> sectionElements, ChartStyleSection chartStyleSection, String parentId, boolean applyStyle) {
         List<ChartAttribute> attributes = new ArrayList<>();
 
         List<ChartElement> attributeElements = sectionElements
@@ -81,20 +82,20 @@ public class PevChartUtil {
                 .collect(Collectors.toList());
 
         for (ChartElement attributeElement : attributeElements) {
-            ChartAttribute chartAttribute = getChartAttribute(sectionElements, attributeElement, chartStyleSection);
+            ChartAttribute chartAttribute = getChartAttribute(sectionElements, attributeElement, chartStyleSection, applyStyle);
             if (chartAttribute != null) attributes.add(chartAttribute);
         }
 
         return attributes;
     }
 
-    private static ChartAttribute getChartAttribute(List<ChartElement> sectionElements, ChartElement attributeElement, ChartStyleSection chartStyleSection) {
+    private static ChartAttribute getChartAttribute(List<ChartElement> sectionElements, ChartElement attributeElement, ChartStyleSection chartStyleSection, boolean applyStyle) {
         ChartAttribute attribute = new ChartAttribute(attributeElement, getChartStyleItem(chartStyleSection, attributeElement.getMdfmCpemNo()));
 
-        List<ChartAttribute> chartAttributes = getChartAttributes(sectionElements, chartStyleSection, attributeElement.getId());
-        List<ChartValue> chartValues = getChartValues(sectionElements, chartStyleSection, attributeElement.getId());
+        List<ChartAttribute> chartAttributes = getChartAttributes(sectionElements, chartStyleSection, attributeElement.getId(), applyStyle);
+        List<ChartValue> chartValues = getChartValues(sectionElements, chartStyleSection, attributeElement.getId(), applyStyle);
 
-//        if (chartAttributes.size() == 0 && chartValues.size() == 0) return null;
+        if (!applyStyle && chartAttributes.size() == 0 && chartValues.size() == 0) return null;
 
         attribute.setAttributes(chartAttributes);
         attribute.setValues(chartValues);
@@ -102,7 +103,7 @@ public class PevChartUtil {
         return attribute;
     }
 
-    private static List<ChartValue> getChartValues(List<ChartElement> sectionElements, ChartStyleSection chartStyleSection, String parentId) {
+    private static List<ChartValue> getChartValues(List<ChartElement> sectionElements, ChartStyleSection chartStyleSection, String parentId, boolean applyStyle) {
         List<ChartValue> values = new ArrayList<>();
 
         List<ChartElement> valueElements = sectionElements
@@ -111,9 +112,9 @@ public class PevChartUtil {
                 .collect(Collectors.toList());
 
         for (ChartElement valueElement : valueElements) {
-//            if (valueElement.getContent() != null && !valueElement.getContent().equals("")) {
+            if (applyStyle || (valueElement.getContent() != null && !valueElement.getContent().equals(""))) {
                 values.add(getChartValue(valueElement, chartStyleSection));
-//            }
+            }
         }
 
         return values;
@@ -124,7 +125,18 @@ public class PevChartUtil {
     }
 
     private static ChartStyleItem getChartStyleItem(ChartStyleSection chartStyleSection, String id) {
+        if (chartStyleSection == null) return null;
         Optional<ChartStyleItem> chartStyleItem = chartStyleSection.getItems().stream().filter(i -> i.getId().equals(id)).findAny();
         return chartStyleItem.orElse(null);
+    }
+
+    public static boolean applyStyle(String recordDetailType) {
+        List<String> targetList = new ArrayList<>();
+
+        targetList.add(RecordTarget.CERTIFICATE_REQUEST.getType());
+        targetList.add(RecordTarget.CERTIFICATE_ACCIDENT.getType());
+        targetList.add(RecordTarget.MEDICAL_DEPARTMENT.getType());
+
+        return targetList.contains(recordDetailType);
     }
 }

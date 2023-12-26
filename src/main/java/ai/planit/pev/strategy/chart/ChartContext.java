@@ -26,7 +26,7 @@ import java.util.Optional;
 public class ChartContext {
     private ChartStrategy chartStrategy;
 
-    public Chart.Response getChart(List<ChartElement> format, List<ChartElement> data, List<ChartStyleSection> style) {
+    public Chart.Response getChart(List<ChartElement> format, List<ChartElement> data, List<ChartStyleSection> style, boolean applyStyle) {
         List<ChartElement> elements = new ArrayList<>();
 
         for (ChartElement f : format) {
@@ -40,7 +40,7 @@ public class ChartContext {
 
         Chart.Response chart = new Chart.Response();
         chart.setData(data);
-        chart.setSections(PevChartUtil.getChartSections(elements, style));
+        chart.setSections(PevChartUtil.getChartSections(elements, style, applyStyle));
 
         return chart;
     }

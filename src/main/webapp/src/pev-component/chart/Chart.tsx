@@ -20,7 +20,7 @@ type ChartProps = {
 };
 
 const Chart = (props: ChartProps) => {
-    const styleSx = (item: IChartStyledItem | null) => {
+    const styleSx = (element: IChartEntity | IChartAttribute | IChartValue) => {
         const getColor = (color: string) => {
             if (!color) return 'inherit';
             return `#${color.substring(3)}`;
@@ -51,35 +51,36 @@ const Chart = (props: ChartProps) => {
             return 'none';
         };
 
-        if (!item) return {};
+        if (!element.style) return {};
 
         return {
             position: 'absolute',
             display: 'flex',
-            zIndex: isNaN(Number(item.zIndex)) ? 0 : Number(item.zIndex),
-            top: `${item.top}px`,
-            left: `${item.left}px`,
-            width: `${item.width}px`,
-            height: `${isNaN(Number(item.height)) ? Number(item.minHeight) : Number(item.height)}px`,
-            textAlign: item.textAlignment?.toLowerCase() || 'left',
-            fontStyle: item.fontStyle?.toLowerCase() || 'normal',
-            fontWeight: item.fontWeight?.toLowerCase() || 'normal',
-            fontSize: `${Number(item.fontSize) - 2}px`,
-            backgroundColor: props.mode === 'REPORT' && item.type === 'VALUE' ? 'pink' : getColor(item.background),
-            color: getColor(item.foreGround),
-            boxShadow: getBoxShadow(item),
-            justifyContent: getJustifyContent(item),
-            alignItems: item.vContentAlignment?.toLowerCase() || 'center',
-            paddingLeft: isNaN(Number(item.indentUnit)) ? 0 : `${item.indentUnit}px`
+            zIndex: isNaN(Number(element.style.zIndex)) ? 0 : Number(element.style.zIndex),
+            top: `${element.style.top}px`,
+            left: `${element.style.left}px`,
+            width: `${element.style.width}px`,
+            height: `${isNaN(Number(element.style.height)) ? Number(element.style.minHeight) : Number(element.style.height)}px`,
+            textAlign: element.style.textAlignment?.toLowerCase() || 'left',
+            fontStyle: element.style.fontStyle?.toLowerCase() || 'normal',
+            fontWeight: element.style.fontWeight?.toLowerCase() || 'normal',
+            fontSize: `${Number(element.style.fontSize) - 3}px`,
+            backgroundColor: props.mode === 'REPORT' && element.classType === 'VALUE' ? 'pink' : getColor(element.style.background),
+            color: getColor(element.style.foreGround),
+            boxShadow: getBoxShadow(element.style),
+            justifyContent: getJustifyContent(element.style),
+            alignItems: element.style.vContentAlignment?.toLowerCase() || 'center',
+            paddingLeft: isNaN(Number(element.style.indentUnit)) ? 0 : `${element.style.indentUnit}px`
         };
     };
+
     const ChartSection = (section: IChartSection, sIdx: number) => {
         return (
             <Box
                 key={sIdx}
                 position={'relative'}
-                width={section.style ? `${section.style.width}px` : ''}
-                height={section.style ? `${section.style.height}px` : ''}
+                width={section.style ? `${section.style.width}px` : '600px'}
+                height={section.style ? `${section.style.height}px` : 'fit-content'}
             >
                 {section.entities.map((e, idx) => {
                     return ChartEntity(e, idx);
@@ -91,7 +92,7 @@ const Chart = (props: ChartProps) => {
     const ChartEntity = (entity: IChartEntity, eIdx: number) => {
         if (entity.style) return StyledElementWithChildren(entity, eIdx);
         return (
-            <Box key={eIdx} sx={styleSx(entity.style)} onClick={() => console.log('### entity', entity)}>
+            <Box key={eIdx} onClick={() => console.log('### entity', entity)}>
                 <Typography
                     sx={{
                         fontSize: `h4.fontSize`,
@@ -194,7 +195,7 @@ const Chart = (props: ChartProps) => {
             <Box
                 key={index}
                 sx={{
-                    ...styleSx(element.style),
+                    ...styleSx(element),
                     '& em': {
                         color: 'white',
                         backgroundColor: 'grey',
@@ -204,32 +205,45 @@ const Chart = (props: ChartProps) => {
                 }}
                 onClick={() => console.log('### element', element)}
             >
-                {(element.controlType === 'LABEL' || element.controlType === 'TEXT_BOX') && (
-                    <Box width={'100%'} height={'100%'} sx={{ p: 0.5 }} dangerouslySetInnerHTML={{ __html: element.content }} />
-                )}
-                {element.controlType === 'RICH_TEXT_BOX' && (
-                    <Box
-                        width={'100%'}
-                        height={'100%'}
-                        sx={{ p: 0.5, overflowY: 'scroll' }}
-                        dangerouslySetInnerHTML={{ __html: element.content }}
-                    />
-                )}
-                {element.controlType === 'RADIO_BUTTON' && (
-                    <label style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
-                        <Radio size={'small'} checked={element.content === '1'} readOnly={true} sx={{ p: 0, pr: 1 }} />
-                        <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>{element.desc}</Typography>
-                    </label>
-                )}
-                {element.controlType === 'CHECK_BOX' && (
-                    <label style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
-                        <Checkbox size={'small'} checked={element.content === '1'} readOnly={true} sx={{ p: 0, pr: 1 }} />
-                        <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>{element.desc}</Typography>
-                    </label>
-                )}
-                {element.controlType === 'IMAGE' && (
-                    <img style={{ width: '100%', height: '100%', objectFit: 'contain' }} src={element.content} alt={element.content} />
-                )}
+                <Box width={'100%'} height={'100%'} position={'relative'} onClick={() => handleValueClick(element)}>
+                    {props.mode === 'REPORT' &&
+                        props.reportValues &&
+                        props.reportValues.findIndex((v) => v.id === element.id && v.parentId === element.parentId) > -1 && (
+                            <Box sx={{ position: 'absolute', top: 0, right: 0, zIndex: 9999 }}>
+                                <Chip
+                                    label={props.reportValues.findIndex((v) => v.id === element.id && v.parentId === element.parentId) + 1}
+                                    color={'error'}
+                                    size={'small'}
+                                />
+                            </Box>
+                        )}
+                    {(element.controlType === 'LABEL' || element.controlType === 'TEXT_BOX') && (
+                        <Box width={'100%'} height={'100%'} sx={{ p: 0.5 }} dangerouslySetInnerHTML={{ __html: element.content }} />
+                    )}
+                    {element.controlType === 'RICH_TEXT_BOX' && (
+                        <Box
+                            width={'100%'}
+                            height={'100%'}
+                            sx={{ p: 0.5, overflowY: 'scroll' }}
+                            dangerouslySetInnerHTML={{ __html: element.content }}
+                        />
+                    )}
+                    {element.controlType === 'RADIO_BUTTON' && (
+                        <label style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
+                            <Radio size={'small'} checked={element.content === '1'} readOnly={true} sx={{ p: 0, pr: 1 }} />
+                            <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>{element.desc}</Typography>
+                        </label>
+                    )}
+                    {element.controlType === 'CHECK_BOX' && (
+                        <label style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
+                            <Checkbox size={'small'} checked={element.content === '1'} readOnly={true} sx={{ p: 0, pr: 1 }} />
+                            <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>{element.desc}</Typography>
+                        </label>
+                    )}
+                    {element.controlType === 'IMAGE' && (
+                        <img style={{ width: '100%', height: '100%', objectFit: 'contain' }} src={element.content} alt={element.content} />
+                    )}
+                </Box>
             </Box>
         );
     };
@@ -249,6 +263,7 @@ const Chart = (props: ChartProps) => {
     };
 
     const handleValueClick = (value: IChartValue) => {
+        if (value.classType !== 'VALUE') return;
         console.log('### value', value);
 
         if (props.mode !== 'REPORT') return;

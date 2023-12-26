@@ -13,6 +13,7 @@ import ai.planit.pev.strategy.chart.*;
 import ai.planit.pev.strategy.chart.object.common.*;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.strategy.chart.object.picture.PictureData;
+import ai.planit.pev.utility.PevChartUtil;
 import ai.planit.pev.utility.PevStringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -255,16 +256,22 @@ public class RecordServiceImpl implements RecordService {
         List<ChartElement> format = metaRecordService.getRecordFormatList(request.getRecord());
         List<ChartElement> data = chartContext.getChartStrategy().getData(format, dataSource);
 
-        ChartStyleXml.Request xmlRequest = new ChartStyleXml.Request();
-        xmlRequest.setMdfmClsCd(request.getRecord().getRecordDetailType());
-        xmlRequest.setMdfmId(request.getRecord().getMdfmId());
-        xmlRequest.setMdfmFomSeq(request.getRecord().getMdfmFomSeq());
+        boolean applyStyle = PevChartUtil.applyStyle(request.getRecord().getRecordDetailType());
 
-        List<ChartStyleSection> style = medicalService.getChartStyleSections(xmlRequest);
+        List<ChartStyleSection> style = new ArrayList<>();
+
+        if (applyStyle) {
+            ChartStyleXml.Request xmlRequest = new ChartStyleXml.Request();
+            xmlRequest.setMdfmClsCd(request.getRecord().getRecordDetailType());
+            xmlRequest.setMdfmId(request.getRecord().getMdfmId());
+            xmlRequest.setMdfmFomSeq(request.getRecord().getMdfmFomSeq());
+
+            style = medicalService.getChartStyleSections(xmlRequest);
+        }
 
         ChartData chartData = new ChartData(data);
         if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
-        return chartContext.getChart(format, chartData.getValues(), style);
+        return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
     }
 }
