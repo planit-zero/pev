@@ -22,6 +22,9 @@ public enum ErrorType {
 
     // Form
     FAILED_GET_FORM_STYLE(500, "기록지 서식 정보를 불러오는 데 실패했습니다."),
+
+    // IDP
+    IDP_TOKEN_NOT_FOUND(500, "인증 토큰이 존재하지 않습니다.")
     ;
 
     private final int status;

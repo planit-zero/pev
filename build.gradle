@@ -42,6 +42,8 @@ dependencies {
     implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
     implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 
+    implementation 'org.apache.commons:commons-lang3:3.0'
+    implementation 'commons-codec:commons-codec:1.13'
     implementation files("src/main/libs/sdk-1.0.0-all.jar")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -24,3 +24,6 @@ spring:
     file: /psdEx/pev/boot.pid
 server:
   port: 18083
+idp:
+  url: http://172.26.33.22:18020
+  service-provider: PEV
