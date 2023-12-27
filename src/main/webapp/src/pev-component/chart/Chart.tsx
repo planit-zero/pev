@@ -230,17 +230,17 @@ const Chart = (props: ChartProps) => {
                     )}
                     {element.controlType === 'RADIO_BUTTON' && (
                         <label style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
-                            <Radio size={'small'} checked={element.content === '1'} readOnly={true} sx={{ p: 0, pr: 1 }} />
+                            <Radio size={'small'} checked={element.content === '1'} readOnly={true} sx={{ p: 0, pr: 0.5 }} />
                             <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>{element.desc}</Typography>
                         </label>
                     )}
                     {element.controlType === 'CHECK_BOX' && (
                         <label style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
-                            <Checkbox size={'small'} checked={element.content === '1'} readOnly={true} sx={{ p: 0, pr: 1 }} />
+                            <Checkbox size={'small'} checked={element.content === '1'} readOnly={true} sx={{ p: 0, pr: 0.5 }} />
                             <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>{element.desc}</Typography>
                         </label>
                     )}
-                    {element.controlType === 'IMAGE' && (
+                    {element.controlType === 'IMAGE' && element.content && (
                         <img style={{ width: '100%', height: '100%', objectFit: 'contain' }} src={element.content} alt={element.content} />
                     )}
                 </Box>
