@@ -61,10 +61,11 @@ public class UserServiceImpl implements UserService {
             throw new BaseException(ErrorType.IDP_TOKEN_NOT_FOUND);
         }
 
-        IdpResponse<IdpLoginUser> response = idpRequestHandler.getIdpLoginUser(
-                token != null
-                        ? token
-                        : session.getAttribute("pev-token").toString());
+        if (token != null && Objects.isNull(session.getAttribute("pev-token"))) {
+            session.setAttribute("pev-token", token);
+        }
+
+        IdpResponse<IdpLoginUser> response = idpRequestHandler.getIdpLoginUser(session.getAttribute("pev-token").toString());
 
         if (HttpStatus.OK != response.getStatus()) {
             throw new RuntimeException(response.getError().getMessage());

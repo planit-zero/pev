@@ -6,8 +6,6 @@ import { useGetPatientMutation, useGetRidByGidMutation } from '../../../pev-serv
 import { IPatientR, IPatientRidP, IRidByGidP } from '../../../pev-interface/IPatient';
 import PatientInfo from './PatientInfo';
 import { useSearchParams } from 'react-router-dom';
-import { CryptoUtils } from '../../../pev-utils/CryptoUtils';
-import { setAlert } from '../../../store/pev-slices/environment';
 import { useGetIdpLoginUserMutation } from '../../../pev-service/UserService';
 import { setUserInfo } from '../../../store/slices/user';
 
@@ -20,51 +18,44 @@ const RecordSearchPanel = () => {
 
     const [getPatient] = useGetPatientMutation();
     const [getIdpLoginUser] = useGetIdpLoginUserMutation();
+    const [getRidByGid] = useGetRidByGidMutation();
 
     React.useEffect(() => {
         const token = searchParams.get('token');
+        const irbParam = searchParams.get('irb');
+        const gidParam = searchParams.get('gid');
 
         getIdpLoginUser(token)
             .unwrap()
-            .then((data) => setUserInfo(data))
-            .catch(() => (window.location.href = 'https://supreme.snuh.org/'));
+            .then((res) => {
+                setUserInfo(res);
 
-        // if (token) {
-        //     const decrypt = CryptoUtils.decrypt(token, 'planitsquare2023');
-        //     const decryptArr = decrypt.split('|||');
-        //
-        //     const decryptedAuthCd = decryptArr[0] || null;
-        //     const decryptedStfNo = decryptArr[1] || null;
-        //     const decryptedIrbNo = decryptArr[2] || null;
-        //     const decryptedGid = decryptArr[3] || null;
-        //
-        //     if (decryptedAuthCd && decryptedStfNo && decryptedIrbNo && decryptedGid) {
-        //         setAuthCd(decryptedAuthCd.toUpperCase());
-        //         setStfNo(decryptedStfNo.toUpperCase());
-        //
-        //         const payload: IRidByGidP = {
-        //             stfNo: decryptedStfNo,
-        //             irbNo: decryptedIrbNo,
-        //             data: [{ gid: decryptedGid }]
-        //         };
-        //
-        //         getRidByGid(payload)
-        //             .unwrap()
-        //             .then((res) => {
-        //                 setIrb(res.irbNo);
-        //
-        //                 if (res.data.length > 0 && res.data[0].rid) {
-        //                     setRid(res.data[0].rid);
-        //                     handleRidSubmit(res.irbNo, res.data[0].rid);
-        //                 }
-        //             });
-        //     } else {
-        //         setAlert({
-        //             type: 'error',
-        //             message: '연동 정보가 부정확합니다.'
-        //         });
-        //     }
-        // }
+                if (irbParam && gidParam) {
+                    // const gid = CryptoUtils.decrypt(gidParam, 'planitsquare2023');
+                    const gid = gidParam;
+
+                    const payload: IRidByGidP = {
+                        stfNo: res.stfNo,
+                        irbNo: irbParam,
+                        data: [{ gid: gid }]
+                    };
+
+                    getRidByGid(payload)
+                        .unwrap()
+                        .then((r) => {
+                            if (r.data.length > 0 && r.data[0].rid) {
+                                setIrb(r.irbNo);
+                                setRid(r.data[0].rid);
+
+                                handleRidSubmit(r.irbNo, r.data[0].rid);
+                            }
+                        });
+                }
+            })
+            .catch((error) => {
+                alert(error.data?.message || '인증 토큰이 존재하지 않습니다.');
+                window.location.href = 'https://supreme.snuh.org/';
+            });
     }, []);
 
     const handleIrbChangeByObj = (irbNo: string) => {
