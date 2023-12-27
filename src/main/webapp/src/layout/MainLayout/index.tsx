@@ -65,6 +65,8 @@ const MainLayout = () => {
     const { finderWidth } = useSelector((state) => state.environment);
     const { drawerOpen } = useSelector((state) => state.menu);
 
+    const { info } = useSelector((state) => state.user);
+
     const header = () => {
         return (
             <Toolbar sx={{ height: '48px' }}>
@@ -112,9 +114,11 @@ const MainLayout = () => {
                 <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
                     <IconMessageReport color={'white'} />
                 </Box>
-                <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
-                    <IconSettings color={'white'} />
-                </Box>
+                {info && info.authCd === 'S' && (
+                    <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
+                        <IconSettings color={'white'} />
+                    </Box>
+                )}
             </Box>
 
             {/* App Sidebar */}
