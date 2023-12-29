@@ -219,7 +219,10 @@ const Chart = (props: ChartProps) => {
                                 />
                             </Box>
                         )}
-                    {(element.controlType === 'LABEL' || element.controlType === 'TEXT_BOX') && (
+                    {(element.controlType === 'LABEL' ||
+                        element.controlType === 'TEXT_BOX' ||
+                        element.controlType === 'DATE_TEXT_BOX' ||
+                        element.controlType === 'NUMERIC_TEXT_BOX') && (
                         <Box width={'100%'} height={'100%'} sx={{ p: 0.5 }} dangerouslySetInnerHTML={{ __html: element.content }} />
                     )}
                     {element.controlType === 'RICH_TEXT_BOX' && (
