@@ -8,6 +8,7 @@ import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.object.common.ChartStyleSection;
 import ai.planit.pev.strategy.chart.object.common.ChartStyleXml;
 import ai.planit.pev.strategy.chart.object.medical.MedicalData;
+import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -59,5 +60,10 @@ public class MedicalServiceImpl implements MedicalService {
             e.printStackTrace();
             throw new BaseException(ErrorType.FAILED_GET_FORM_STYLE);
         }
+    }
+
+    @Override
+    public Record.Response getMedicalReplyRecord(MedicalReply.Request request) {
+        return medicalDAO.getMedicalReplyRecord(request);
     }
 }

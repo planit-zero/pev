@@ -2,8 +2,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IRecordDetailP, IRecordDetailR } from '../pev-interface/IRecordDetail';
 import { IRecordDeptInfo, IRecordFormInfoP, IRecordFormInfoR } from '../pev-interface/IRecordInfo';
 import { IRecordDataP, IRecordDataR } from '../pev-interface/IRecordDataR';
-import { IRecord, IRecordSheet, ISearchCondition } from '../pev-interface/IRecord';
-import { IChart, IChartP } from '../pev-interface/IChart';
+import { IRecord, ISearchCondition } from '../pev-interface/IRecord';
+import { IChart, IChartP, IChartReplyP, IChartReplyR } from '../pev-interface/IChart';
 
 export const recordApi = createApi({
     reducerPath: 'recordApi',
@@ -48,8 +48,21 @@ export const recordApi = createApi({
                 method: 'POST',
                 body: payload
             })
+        }),
+        getChartReply: builder.mutation<IChartReplyR, IChartReplyP>({
+            query: (payload) => ({
+                url: 'chart/reply',
+                method: 'POST',
+                body: payload
+            })
         })
     })
 });
 
-export const { useGetDetailListByConditionMutation, useGetDeptInfoListQuery, useGetRecordListMutation, useGetChartMutation } = recordApi;
+export const {
+    useGetDetailListByConditionMutation,
+    useGetDeptInfoListQuery,
+    useGetRecordListMutation,
+    useGetChartMutation,
+    useGetChartReplyMutation
+} = recordApi;

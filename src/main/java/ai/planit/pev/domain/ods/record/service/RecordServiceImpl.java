@@ -11,6 +11,7 @@ import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.*;
 import ai.planit.pev.strategy.chart.object.common.*;
+import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.strategy.chart.object.picture.PictureData;
 import ai.planit.pev.utility.PevChartUtil;
@@ -273,5 +274,22 @@ public class RecordServiceImpl implements RecordService {
         if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
         return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
+    }
+
+    @Override
+    public MedicalReply.Response getChartReply(HttpSession session, MedicalReply.Request request) {
+        Record.Response record = medicalService.getMedicalReplyRecord(request);
+
+        Chart.Request chartRequest = new Chart.Request();
+
+        chartRequest.setMaskingYn(request.getMaskingYn());
+        chartRequest.setRecord(record);
+
+        MedicalReply.Response medicalReply = new MedicalReply.Response();
+
+        medicalReply.setChart(getChart(session, chartRequest));
+        medicalReply.setRecord(record);
+
+        return medicalReply;
     }
 }

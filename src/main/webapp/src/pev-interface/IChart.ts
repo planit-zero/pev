@@ -6,6 +6,17 @@ export interface IChartP {
     record: IRecord;
 }
 
+export interface IChartReplyP {
+    maskingYn: 'Y' | 'N';
+    mdrcId: number;
+    mdrcFomSeq: number;
+}
+
+export interface IChartReplyR {
+    chart: IChart;
+    record: IRecord;
+}
+
 export interface IChart {
     headerSection: IChartSection | null;
     sections: IChartSection[];
