@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import * as React from 'react';
 import { useSelector } from '../../store';
 import ChartBox from './ChartBox';
@@ -8,7 +9,7 @@ const ChartContainer = () => {
     return (
         <React.Fragment>
             {targetRecords.map((targetRecord, idx) => {
-                return <ChartBox key={idx} targetRecord={targetRecord} />;
+                return <ChartBox key={`${dayjs()}-${idx}`} targetRecord={targetRecord} />;
             })}
         </React.Fragment>
     );
