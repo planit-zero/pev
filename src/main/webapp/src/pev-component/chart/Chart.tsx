@@ -289,7 +289,7 @@ const Chart = (props: ChartProps) => {
     };
 
     const getHeaderSection = (record: IRecord) => {
-        if (['D009', 'D020', 'D035'].includes(record.recordDetailType)) return null;
+        if (['D009', 'D020', 'D035', 'SC'].includes(record.recordDetailType)) return null;
         return (
             <Box sx={{ mb: 2, fontStyle: 'italic', color: '#aa58d2' }}>
                 <Typography
