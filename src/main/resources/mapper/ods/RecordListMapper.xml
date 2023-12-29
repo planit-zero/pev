@@ -313,8 +313,8 @@
         , DECODE(A.MED_PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm
         , NULL AS sortSeq
         , NULL AS note
-        , NULL AS mdfmId
-        , NULL AS mdfmFomSeq
+        , 1 AS mdfmId
+        , 1 AS mdfmFomSeq
         , NULL AS mdrcId
         , NULL AS mdrcFomSeq
         , NULL AS examKey
