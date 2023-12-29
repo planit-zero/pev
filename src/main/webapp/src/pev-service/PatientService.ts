@@ -27,8 +27,14 @@ export const patientApi = createApi({
                 method: 'POST',
                 body: payload
             })
+        }),
+        getPid: builder.mutation<{ pid: string }, void>({
+            query: () => ({
+                url: 'pid',
+                method: 'POST'
+            })
         })
     })
 });
 
-export const { useGetPatientMutation, useGetRidByGidMutation, useGetPatientListMutation } = patientApi;
+export const { useGetPatientMutation, useGetRidByGidMutation, useGetPatientListMutation, useGetPidMutation } = patientApi;

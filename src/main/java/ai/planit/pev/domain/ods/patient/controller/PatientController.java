@@ -9,12 +9,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/patient")
 @RequiredArgsConstructor
 public class PatientController {
     private final PatientService patientService;
+
+    @PostMapping("pid")
+    public ResponseEntity<?> getPatientNumber(HttpSession session) {
+        Map<String, String> map = new HashMap<>();
+
+        String pid = "";
+
+        if (session.getAttribute("pev-pid") != null) {
+            pid = session.getAttribute("pev-pid").toString();
+        }
+
+        map.put("pid", pid);
+
+        return ResponseEntity.ok().body(map);
+    }
 
     @PostMapping("rid")
     public ResponseEntity<?> getPatient(HttpSession session, @RequestBody IdentifiedPatient.Request request) {
