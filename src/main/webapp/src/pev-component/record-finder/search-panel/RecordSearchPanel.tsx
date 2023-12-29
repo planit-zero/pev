@@ -8,6 +8,7 @@ import PatientInfo from './PatientInfo';
 import { useSearchParams } from 'react-router-dom';
 import { useGetIdpLoginUserMutation } from '../../../pev-service/UserService';
 import { setUserInfo } from '../../../store/slices/user';
+import { CryptoUtils } from '../../../pev-utils/CryptoUtils';
 
 const RecordSearchPanel = () => {
     const [searchParams] = useSearchParams();
@@ -22,34 +23,38 @@ const RecordSearchPanel = () => {
 
     React.useEffect(() => {
         const token = searchParams.get('token');
-        const irbParam = searchParams.get('irb');
-        const gidParam = searchParams.get('gid');
+        const key = searchParams.get('key');
 
         getIdpLoginUser(token)
             .unwrap()
             .then((res) => {
                 setUserInfo(res);
 
-                if (irbParam && gidParam) {
-                    // const gid = CryptoUtils.decrypt(gidParam, 'planitsquare2023');
-                    const gid = gidParam;
+                if (key) {
+                    const decryptStr = CryptoUtils.decrypt(key, 'planitsquare2023');
+                    const decryptArr = decryptStr.split('|||');
 
-                    const payload: IRidByGidP = {
-                        stfNo: res.stfNo,
-                        irbNo: irbParam,
-                        data: [{ gid: gid }]
-                    };
+                    if (decryptArr.length == 2) {
+                        const irbParam = decryptArr[0];
+                        const gidParam = decryptArr[1];
 
-                    getRidByGid(payload)
-                        .unwrap()
-                        .then((r) => {
-                            if (r.data.length > 0 && r.data[0].rid) {
-                                setIrb(r.irbNo);
-                                setRid(r.data[0].rid);
+                        const payload: IRidByGidP = {
+                            stfNo: res.stfNo,
+                            irbNo: irbParam,
+                            data: [{ gid: gidParam }]
+                        };
 
-                                handleRidSubmit(r.irbNo, r.data[0].rid);
-                            }
-                        });
+                        getRidByGid(payload)
+                            .unwrap()
+                            .then((r) => {
+                                if (r.data.length > 0 && r.data[0].rid) {
+                                    setIrb(r.irbNo);
+                                    setRid(r.data[0].rid);
+
+                                    handleRidSubmit(r.irbNo, r.data[0].rid);
+                                }
+                            });
+                    }
                 }
             })
             .catch((error) => {

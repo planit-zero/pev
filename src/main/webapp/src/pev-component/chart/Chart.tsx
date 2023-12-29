@@ -11,9 +11,11 @@ import {
 import { Box, Checkbox, Chip, Radio, Typography } from '@mui/material';
 import { ChartWrapperType } from '../../pev-type/TChart';
 import { setAlert } from '../../store/pev-slices/environment';
+import { IRecord } from '../../pev-interface/IRecord';
 
 type ChartProps = {
     mode: ChartWrapperType;
+    record: IRecord;
     chart: IChart;
     reportValues?: IChartReportValue[];
     onValueChange?: (value: IChartReportValue) => void;
@@ -283,8 +285,42 @@ const Chart = (props: ChartProps) => {
         });
     };
 
+    const getHeaderSection = (record: IRecord) => {
+        if (['D009', 'D020', 'D035'].includes(record.recordDetailType)) return null;
+        return (
+            <Box sx={{ mb: 2, fontStyle: 'italic', color: '#aa58d2' }}>
+                <Typography
+                    display={'inline'}
+                    sx={{
+                        fontSize: 'h4.fontSize',
+                        fontWeight: 'bold',
+                        fontStyle: 'italic',
+                        color: '#aa58d2',
+                        mr: 1
+                    }}
+                >
+                    {record.itemNm}
+                </Typography>
+                <Typography
+                    display={'inline'}
+                    sx={{
+                        fontSize: 'h4.fontSize',
+                        fontWeight: 'normal',
+                        fontStyle: 'italic',
+                        color: '#aa58d2'
+                    }}
+                >
+                    ({record.writingDate})
+                </Typography>
+                <Typography sx={{ fontSize: 'h4.fontSize', fontWeight: 'bold' }}>작성과: {record.writingDeptNm}</Typography>
+                <Typography sx={{ fontSize: 'h4.fontSize', fontWeight: 'bold' }}>수진과: {record.ptMedDeptNm}</Typography>
+            </Box>
+        );
+    };
+
     return (
         <React.Fragment>
+            {getHeaderSection(props.record)}
             {props.chart.sections.map((s, idx) => {
                 return ChartSection(s, idx);
             })}

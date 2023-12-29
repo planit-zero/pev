@@ -19,6 +19,8 @@ export interface IRecordDetailR {
     writingDeptNm: string;
     writerStfNo: string
     writerNm: string;
+    ptMedDeptCd: string;
+    ptMedDeptNm: string;
     keyId: string;
     pactId: string;
     pactTpCd: string;

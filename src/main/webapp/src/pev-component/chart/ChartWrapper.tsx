@@ -36,7 +36,13 @@ const ChartWrapper = (props: ChartWrapperProps) => {
             {isChartLoading && <SkeletonChart />}
             {!isChartLoading && chart && (
                 <React.Fragment>
-                    <Chart mode={props.mode} chart={chart} reportValues={props.reportValues} onValueChange={props.onValueChange} />
+                    <Chart
+                        mode={props.mode}
+                        record={props.targetRecord}
+                        chart={chart}
+                        reportValues={props.reportValues}
+                        onValueChange={props.onValueChange}
+                    />
                 </React.Fragment>
             )}
         </React.Fragment>

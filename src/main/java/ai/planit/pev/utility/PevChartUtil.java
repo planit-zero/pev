@@ -35,12 +35,13 @@ public class PevChartUtil {
     }
 
     private static ChartSection getChartSection(Integer sectionId, List<ChartElement> sectionElements, ChartStyleSection chartStyleSection, boolean applyStyle) {
-        return ChartSection
-                .builder()
-                .sectionId(sectionId)
-                .entities(getChartEntities(sectionElements, chartStyleSection, applyStyle))
-                .style(chartStyleSection)
-                .build();
+        ChartSection section = new ChartSection();
+
+        section.setSectionId(sectionId);
+        section.setEntities(getChartEntities(sectionElements, chartStyleSection, applyStyle));
+        section.setStyle(chartStyleSection);
+
+        return section;
     }
 
     private static List<ChartEntity> getChartEntities(List<ChartElement> sectionElements, ChartStyleSection chartStyleSection, boolean applyStyle) {
@@ -135,6 +136,7 @@ public class PevChartUtil {
 
         targetList.add(RecordTarget.CERTIFICATE_REQUEST.getType());
         targetList.add(RecordTarget.CERTIFICATE_ACCIDENT.getType());
+        targetList.add(RecordTarget.MEDICAL_DEPARTMENT.getType());
         targetList.add(RecordTarget.MEDICAL_DEPARTMENT.getType());
 
         return targetList.contains(recordDetailType);
