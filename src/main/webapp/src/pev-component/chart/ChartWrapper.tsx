@@ -58,7 +58,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                 </React.Fragment>
             )}
             {props.targetRecord.recordDetailType === 'D007' && isChartReplyLoading && <SkeletonChart />}
-            {props.targetRecord.recordDetailType === 'D007' && !isChartReplyLoading && chartReply && (
+            {props.targetRecord.recordDetailType === 'D007' && !isChartReplyLoading && chartReply && chartReply.replyYn === 'Y' && (
                 <React.Fragment>
                     <Box sx={{ my: 4 }} />
                     <Chart

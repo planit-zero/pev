@@ -290,15 +290,21 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public MedicalReply.Response getChartReply(HttpSession session, MedicalReply.Request request) {
+        MedicalReply.Response medicalReply = new MedicalReply.Response();
+
         Record.Response record = medicalService.getMedicalReplyRecord(request);
+
+        if (record == null) {
+            medicalReply.setReplyYn("N");
+            return medicalReply;
+        }
 
         Chart.Request chartRequest = new Chart.Request();
 
         chartRequest.setMaskingYn(request.getMaskingYn());
         chartRequest.setRecord(record);
 
-        MedicalReply.Response medicalReply = new MedicalReply.Response();
-
+        medicalReply.setReplyYn("Y");
         medicalReply.setChart(getChart(session, chartRequest));
         medicalReply.setRecord(record);
 

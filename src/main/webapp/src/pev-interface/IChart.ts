@@ -13,6 +13,7 @@ export interface IChartReplyP {
 }
 
 export interface IChartReplyR {
+    replyYn: string;
     chart: IChart;
     record: IRecord;
 }

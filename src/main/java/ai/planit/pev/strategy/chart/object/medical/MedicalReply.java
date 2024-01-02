@@ -17,6 +17,7 @@ public class MedicalReply {
     @Getter
     @Setter
     public static class Response {
+        private String replyYn;
         private Chart.Response chart;
         private Record.Response record;
     }
