@@ -181,7 +181,7 @@ const Chart = (props: ChartProps) => {
                                 px: 0.5
                             }
                         }}
-                        dangerouslySetInnerHTML={{ __html: value.content }}
+                        dangerouslySetInnerHTML={{ __html: value.controlType === 'RADIO_BUTTON' ? value.desc : value.content }}
                     />
                 )}
             </Box>
