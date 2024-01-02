@@ -1,11 +1,11 @@
-package ai.planit.pev.domain.ods.anesthesia.dto;
+package ai.planit.pev.strategy.chart.object.anesthesia;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class AnesthesiaRecordData {
+public class AnesthesiaRecordHistory {
     private String inptHmi;
     private String inptValCnte;
 }

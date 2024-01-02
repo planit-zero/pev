@@ -3,6 +3,7 @@ package ai.planit.pev.domain.ods.record.service;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
+import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.medical.service.MedicalService;
 import ai.planit.pev.domain.ods.order.service.OrderService;
 import ai.planit.pev.domain.ods.pathology.service.PathologyService;
@@ -34,6 +35,7 @@ public class RecordServiceImpl implements RecordService {
     private final PathologyService pathologyService;
     private final PictureService pictureService;
     private final OrderService orderService;
+    private final AnesthesiaService anesthesiaService;
 
     /**
      * {@inheritDoc}
@@ -224,14 +226,17 @@ public class RecordServiceImpl implements RecordService {
 
         // 진료기록
         if (request.getRecord().getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
-            chartContext.setChartStrategy(new MedicalChartStrategy());
-
-            dataSource = medicalService.getMedicalData(request.getRecord());
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
+                chartContext.setChartStrategy(new AnesthesiaRecordChartStrategy());
+                dataSource = anesthesiaService.getAnesthesiaRecordData(request.getRecord().getOpExptRegId());
+            } else {
+                chartContext.setChartStrategy(new MedicalChartStrategy());
+                dataSource = medicalService.getMedicalData(request.getRecord());
+            }
         }
 
         if (request.getRecord().getRecordDetailType().equals(RecordTarget.ORDER_RECORD.getType())) {
             chartContext.setChartStrategy(new OrderChartStrategy());
-
             dataSource = orderService.getOrderData(session.getAttribute("pev-pid").toString(), request.getRecord());
         }
 
@@ -258,7 +263,6 @@ public class RecordServiceImpl implements RecordService {
         // 스캔자료
         if (request.getRecord().getRecordType().equals(RecordTarget.SCAN_RECORD.getType())) {
             chartContext.setChartStrategy(new ScanChartStrategy());
-
             dataSource = request.getRecord();
         }
 

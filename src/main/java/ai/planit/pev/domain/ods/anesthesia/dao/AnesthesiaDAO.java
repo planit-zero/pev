@@ -1,9 +1,9 @@
 package ai.planit.pev.domain.ods.anesthesia.dao;
 
-import ai.planit.pev.domain.ods.anesthesia.dto.AnesthesiaRecordData;
+import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaRecordHistory;
 
 import java.util.List;
 
 public interface AnesthesiaDAO {
-    List<AnesthesiaRecordData> getAnesthesiaRecordDataList(String opExptRegId);
+    List<AnesthesiaRecordHistory> getAnesthesiaRecordHistories(String opExptRegId);
 }
