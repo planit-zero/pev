@@ -1,10 +1,12 @@
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Backdrop, Box, CircularProgress, Typography, useMediaQuery } from '@mui/material';
 
 // assets
 import { IconPower, IconReportMedical } from '@tabler/icons';
 import { useSelector } from '../../../store';
+import { useSignOutMutation } from '../../../pev-service/UserService';
+import * as React from 'react';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
@@ -14,6 +16,14 @@ const Header = () => {
 
     const { info } = useSelector((state) => state.user);
 
+    const [signOut, { isLoading: isSignOutLoading }] = useSignOutMutation();
+
+    const handleSignOutClick = () => {
+        signOut()
+            .unwrap()
+            .then(() => (window.location.href = 'https://supreme.snuh.org/'));
+    };
+
     return (
         <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'center'} sx={{ pl: '40px' }}>
             <Box component="span" display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={1}>
@@ -22,10 +32,13 @@ const Header = () => {
             </Box>
             {info && (
                 <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={1}>
+                    <Backdrop sx={{ color: '#fff', zIndex: (t) => t.zIndex.drawer + 1 }} open={isSignOutLoading}>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                     <Typography sx={{ fontSize: 'h5.fontSize' }}>
                         {info.deptNm} {info.stfNm}
                     </Typography>
-                    <IconPower color={'#3f51b5'} cursor={'pointer'} />
+                    <IconPower color={'#3f51b5'} cursor={'pointer'} onClick={handleSignOutClick} />
                 </Box>
             )}
         </Box>
