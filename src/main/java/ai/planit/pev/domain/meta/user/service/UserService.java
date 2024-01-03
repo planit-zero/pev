@@ -10,4 +10,6 @@ public interface UserService {
     void checkVerificationCodeAndLogin(HttpSession session, UserLogin userLogin);
 
     IdpLoginUser getIdpLoginUser(HttpSession session, String token);
+
+    void signOut(HttpSession session);
 }

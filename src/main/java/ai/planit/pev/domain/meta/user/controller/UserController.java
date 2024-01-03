@@ -30,4 +30,10 @@ public class UserController {
     public ResponseEntity<?> getIdpLoginUser(HttpSession session, @RequestParam(required = false) String token) {
         return ResponseEntity.ok().body(userService.getIdpLoginUser(session, token));
     }
+
+    @PostMapping("sign-out")
+    public ResponseEntity<?> signOut(HttpSession session) {
+        userService.signOut(session);
+        return ResponseEntity.ok().build();
+    }
 }
