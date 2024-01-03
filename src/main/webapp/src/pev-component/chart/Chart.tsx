@@ -302,7 +302,7 @@ const Chart = (props: ChartProps) => {
                         mr: 1
                     }}
                 >
-                    {record.itemNm}
+                    {record.itemType}
                 </Typography>
                 <Typography
                     display={'inline'}
@@ -315,8 +315,12 @@ const Chart = (props: ChartProps) => {
                 >
                     ({record.writingDate})
                 </Typography>
-                <Typography sx={{ fontSize: 'h4.fontSize', fontWeight: 'bold' }}>작성과: {record.writingDeptNm}</Typography>
-                <Typography sx={{ fontSize: 'h4.fontSize', fontWeight: 'bold' }}>수진과: {record.ptMedDeptNm}</Typography>
+                {Boolean(record.writingDeptNm) && record.writingDeptNm !== '' && (
+                    <Typography sx={{ fontSize: 'h4.fontSize', fontWeight: 'bold' }}>작성과: {record.writingDeptNm}</Typography>
+                )}
+                {Boolean(record.ptMedDeptNm) && record.ptMedDeptNm !== '' && (
+                    <Typography sx={{ fontSize: 'h4.fontSize', fontWeight: 'bold' }}>수진과: {record.ptMedDeptNm}</Typography>
+                )}
             </Box>
         );
     };
