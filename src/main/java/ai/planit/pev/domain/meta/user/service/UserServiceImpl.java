@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             throw new BaseException(ErrorType.IDP_TOKEN_NOT_FOUND);
         }
 
-        if (token != null && Objects.isNull(session.getAttribute("pev-token"))) {
+        if (token != null) {
             session.setAttribute("pev-token", token);
         }
 
