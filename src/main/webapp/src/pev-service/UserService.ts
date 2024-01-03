@@ -12,8 +12,14 @@ export const userApi = createApi({
                 url: token ? `?token=${token}` : '',
                 method: 'GET'
             })
+        }),
+        signOut: builder.mutation<void, void>({
+            query: () => ({
+                url: 'sign-out',
+                method: 'POST'
+            })
         })
     })
 });
 
-export const { useGetIdpLoginUserMutation } = userApi;
+export const { useGetIdpLoginUserMutation, useSignOutMutation } = userApi;
