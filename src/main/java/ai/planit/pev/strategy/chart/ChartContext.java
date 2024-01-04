@@ -3,6 +3,7 @@ package ai.planit.pev.strategy.chart;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.core.webclient.PevWebClient;
 import ai.planit.pev.core.webclient.PevWebClientUtil;
+import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.object.common.Chart;
 import ai.planit.pev.strategy.chart.object.common.ChartData;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
@@ -35,7 +36,10 @@ public class ChartContext {
                     .filter(d -> d.getId().equals(f.getId()) && d.getParentId().equals(f.getParentId()))
                     .findFirst();
 
-            value.ifPresentOrElse(elements::add, () -> elements.add(f));
+            value.ifPresentOrElse(elements::add, () -> {
+                if (f.getClassType().equals(ChartClassType.VALUE)) f.setContent(null);
+                elements.add(f);
+            });
         }
 
         Chart.Response chart = new Chart.Response();

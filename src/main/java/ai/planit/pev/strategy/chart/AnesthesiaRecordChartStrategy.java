@@ -1,6 +1,7 @@
 package ai.planit.pev.strategy.chart;
 
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
+import ai.planit.pev.strategy.chart.constant.ChartControlType;
 import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaFormatValue;
 import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaRecordData;
 import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaRecordHistory;
@@ -29,23 +30,34 @@ public class AnesthesiaRecordChartStrategy implements ChartStrategy {
                     .filter(v -> v.getMdfmCpemNo().equals(valueFormat.getMdfmCpemNo()))
                     .findAny();
 
-            anesthesiaFormatValue.ifPresent(v -> valueFormat.setContent(v.getContent()));
+            anesthesiaFormatValue.ifPresent(v -> {
+                if (valueFormat.getControlType().equals(ChartControlType.COMBO_BOX)) {
+                    if (!valueFormat.getContent().equals(v.getContent())) {
+                        valueFormat.setContent(null);
+                    }
 
-            if (valueFormat.getId().equals("4-0-1")) {
-                StringBuilder sb = new StringBuilder();
-
-                for (AnesthesiaRecordHistory history : anesthesiaRecordData.getHistories()) {
-                    sb.append(history.getInptHmi());
-                    sb.append("\r\n");
-                    sb.append(history.getInptValCnte());
-                    sb.append("\r\n");
-                    sb.append("\r\n");
+                    data.add(valueFormat);
+                } else if (valueFormat.getControlType().equals(ChartControlType.RADIO_BUTTON) || valueFormat.getControlType().equals(ChartControlType.CHECK_BOX)) {
+                    if (v.getContent().equals("1")) data.add(valueFormat);
+                } else {
+                    valueFormat.setContent(v.getContent());
+                    data.add(valueFormat);
                 }
+            });
 
-                valueFormat.setContent(sb.toString());
-            }
-
-            data.add(valueFormat);
+//            if (valueFormat.getId().equals("4-0-1")) {
+//                StringBuilder sb = new StringBuilder();
+//
+//                for (AnesthesiaRecordHistory history : anesthesiaRecordData.getHistories()) {
+//                    sb.append(history.getInptHmi());
+//                    sb.append("\r\n");
+//                    sb.append(history.getInptValCnte());
+//                    sb.append("\r\n");
+//                    sb.append("\r\n");
+//                }
+//
+//                valueFormat.setContent(sb.toString());
+//            }
         }
 
         return data;
