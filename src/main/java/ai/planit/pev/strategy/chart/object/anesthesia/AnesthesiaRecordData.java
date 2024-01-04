@@ -9,4 +9,5 @@ import java.util.List;
 @Setter
 public class AnesthesiaRecordData {
     private List<AnesthesiaRecordHistory> histories;
+    private List<AnesthesiaFormatValue> formatValues;
 }

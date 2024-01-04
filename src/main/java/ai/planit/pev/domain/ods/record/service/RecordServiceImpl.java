@@ -222,13 +222,18 @@ public class RecordServiceImpl implements RecordService {
     public Chart.Response getChart(HttpSession session, Chart.Request request) {
         ChartContext chartContext = new ChartContext();
 
+        List<ChartElement> format = metaRecordService.getRecordFormatList(request.getRecord());
         Object dataSource = null;
 
         // 진료기록
         if (request.getRecord().getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
                 chartContext.setChartStrategy(new AnesthesiaRecordChartStrategy());
-                dataSource = anesthesiaService.getAnesthesiaRecordData(request.getRecord().getOpExptRegId());
+
+                Record.Response anesthesiaRecord = anesthesiaService.getAnesthesiaRecord(request.getRecord().getOpExptRegId());
+
+                format = metaRecordService.getRecordFormatList(anesthesiaRecord);
+                dataSource = anesthesiaService.getAnesthesiaRecordData(RecordTarget.MEDICAL_ANESTHESIA.getType(), request.getRecord().getOpExptRegId());
             } else {
                 chartContext.setChartStrategy(new MedicalChartStrategy());
                 dataSource = medicalService.getMedicalData(request.getRecord());
@@ -266,7 +271,6 @@ public class RecordServiceImpl implements RecordService {
             dataSource = request.getRecord();
         }
 
-        List<ChartElement> format = metaRecordService.getRecordFormatList(request.getRecord());
         List<ChartElement> data = chartContext.getChartStrategy().getData(format, dataSource);
 
         boolean applyStyle = PevChartUtil.applyStyle(request.getRecord().getRecordDetailType());
@@ -283,7 +287,7 @@ public class RecordServiceImpl implements RecordService {
         }
 
         ChartData chartData = new ChartData(data);
-        if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
+//        if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
         return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
     }

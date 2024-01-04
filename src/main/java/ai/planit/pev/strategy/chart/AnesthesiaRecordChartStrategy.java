@@ -1,12 +1,14 @@
 package ai.planit.pev.strategy.chart;
 
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
+import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaFormatValue;
 import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaRecordData;
 import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaRecordHistory;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnesthesiaRecordChartStrategy implements ChartStrategy {
@@ -22,6 +24,13 @@ public class AnesthesiaRecordChartStrategy implements ChartStrategy {
                 .collect(Collectors.toList());
 
         for (ChartElement valueFormat : valueFormats) {
+            Optional<AnesthesiaFormatValue> anesthesiaFormatValue = anesthesiaRecordData.getFormatValues()
+                    .stream()
+                    .filter(v -> v.getMdfmCpemNo().equals(valueFormat.getMdfmCpemNo()))
+                    .findAny();
+
+            anesthesiaFormatValue.ifPresent(v -> valueFormat.setContent(v.getContent()));
+
             if (valueFormat.getId().equals("4-0-1")) {
                 StringBuilder sb = new StringBuilder();
 
@@ -34,8 +43,9 @@ public class AnesthesiaRecordChartStrategy implements ChartStrategy {
                 }
 
                 valueFormat.setContent(sb.toString());
-                data.add(valueFormat);
             }
+
+            data.add(valueFormat);
         }
 
         return data;
