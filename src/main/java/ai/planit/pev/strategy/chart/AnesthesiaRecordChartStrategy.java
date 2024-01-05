@@ -38,7 +38,10 @@ public class AnesthesiaRecordChartStrategy implements ChartStrategy {
 
                     data.add(valueFormat);
                 } else if (valueFormat.getControlType().equals(ChartControlType.RADIO_BUTTON) || valueFormat.getControlType().equals(ChartControlType.CHECK_BOX)) {
-                    if (v.getContent().equals("1")) data.add(valueFormat);
+                    if (v.getContent().equals("1")) {
+                        valueFormat.setDesc(valueFormat.getContent());
+                        data.add(valueFormat);
+                    }
                 } else {
                     valueFormat.setContent(v.getContent());
                     data.add(valueFormat);
