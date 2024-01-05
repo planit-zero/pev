@@ -17,8 +17,8 @@ public class AnesthesiaDAOImpl implements AnesthesiaDAO {
     private final SqlSessionTemplate sqlSessionTemplate;
 
     @Override
-    public Record.Response getAnesthesiaRecord(String opExptRegId) {
-        return sqlSessionTemplate.selectOne("getAnesthesiaFormatInfo", opExptRegId);
+    public Record.Response getAnesthesiaRecord(AnesthesiaFormatRequest request) {
+        return sqlSessionTemplate.selectOne("getAnesthesiaFormatInfo", request);
     }
 
     @Override

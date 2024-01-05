@@ -1,5 +1,6 @@
 package ai.planit.pev.strategy.chart;
 
+import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.constant.ChartControlType;
 import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaFormatValue;
@@ -13,6 +14,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnesthesiaRecordChartStrategy implements ChartStrategy {
+    private final String mdfmClsCd;
+
+    public AnesthesiaRecordChartStrategy(String mdfmClsCd) {
+        this.mdfmClsCd = mdfmClsCd;
+    }
+
     @Override
     public <T> List<ChartElement> getData(List<ChartElement> format, T source) {
         AnesthesiaRecordData anesthesiaRecordData = (AnesthesiaRecordData) source;
@@ -48,19 +55,26 @@ public class AnesthesiaRecordChartStrategy implements ChartStrategy {
                 }
             });
 
-            if (valueFormat.getId().equals("anesthesia-record-history-1-0-1")) {
-                StringBuilder sb = new StringBuilder();
+            if (mdfmClsCd.equals(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
+                if (valueFormat.getId().equals("anesthesia-record-history-1-0-1")) {
+                    StringBuilder sb = new StringBuilder();
 
-                for (AnesthesiaRecordHistory history : anesthesiaRecordData.getHistories()) {
-                    sb.append(history.getInptHmi());
-                    sb.append("\r\n");
-                    sb.append(history.getInptValCnte());
-                    sb.append("\r\n");
-                    sb.append("\r\n");
+                    for (AnesthesiaRecordHistory history : anesthesiaRecordData.getHistories()) {
+                        sb.append(history.getInptHmi());
+                        sb.append("\r\n");
+                        sb.append(history.getInptValCnte());
+                        sb.append("\r\n");
+                        sb.append("\r\n");
+                    }
+
+                    valueFormat.setContent(sb.toString());
+                    data.add(valueFormat);
                 }
 
-                valueFormat.setContent(sb.toString());
-                data.add(valueFormat);
+                if (valueFormat.getId().equals("anesthesia-record-stf-nm-1-0-1")) {
+                    valueFormat.setContent(anesthesiaRecordData.getSurgeryInfo().getStfNm());
+                    data.add(valueFormat);
+                }
             }
 
             if (valueFormat.getId().equals("anesthesia-record-op-nm-1-0-1")) {
@@ -68,10 +82,7 @@ public class AnesthesiaRecordChartStrategy implements ChartStrategy {
                 data.add(valueFormat);
             }
 
-            if (valueFormat.getId().equals("anesthesia-record-stf-nm-1-0-1")) {
-                valueFormat.setContent(anesthesiaRecordData.getSurgeryInfo().getStfNm());
-                data.add(valueFormat);
-            }
+
         }
 
         return data;

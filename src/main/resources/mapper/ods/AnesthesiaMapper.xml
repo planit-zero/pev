@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.anesthesia.dao.AnesthesiaDAO">
     <select id="getAnesthesiaRecord"
-            parameterType="java.lang.String"
+            parameterType="ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaFormatRequest"
             resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT DISTINCT 'DR' AS recordType,
                         MDFM_CLS_CD AS recordDetailType,
@@ -10,7 +10,7 @@
                         MDFM_FOM_SEQ AS mdfmFomSeq
         FROM ODS.S_MRDDRAFE
         WHERE OP_EXPT_REG_ID = #{opExptRegId}
-          AND MDFM_CLS_CD = 'D010'
+          AND MDFM_CLS_CD = #{mdfmClsCd}
     </select>
     <select id="getAnesthesiaRecordHistories"
             parameterType="java.lang.String"
@@ -29,7 +29,7 @@
                MDFM_ELMT_INPT_CNTE AS content
         FROM ODS.S_MRDDRAFE
         WHERE OP_EXPT_REG_ID = #{opExptRegId}
-          AND MDFM_CLS_CD = 'D010'
+          AND MDFM_CLS_CD = #{mdfmClsCd}
     </select>
     <select id="getAnesthesiaSurgeryInfo"
             parameterType="java.lang.String"

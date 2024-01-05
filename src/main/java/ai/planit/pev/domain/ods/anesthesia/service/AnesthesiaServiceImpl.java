@@ -13,8 +13,12 @@ public class AnesthesiaServiceImpl implements AnesthesiaService {
     private final AnesthesiaDAO anesthesiaDAO;
 
     @Override
-    public Record.Response getAnesthesiaRecord(String opExptRegId) {
-        return anesthesiaDAO.getAnesthesiaRecord(opExptRegId);
+    public Record.Response getAnesthesiaRecord(String mdfmClsCd, String opExptRegId) {
+        AnesthesiaFormatRequest request = new AnesthesiaFormatRequest();
+        request.setMdfmClsCd(mdfmClsCd);
+        request.setOpExptRegId(opExptRegId);
+
+        return anesthesiaDAO.getAnesthesiaRecord(request);
     }
 
     @Override

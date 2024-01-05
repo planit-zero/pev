@@ -103,7 +103,9 @@ public class RecordServiceImpl implements RecordService {
         // 조건에 따라 여러 기록을 조회하기 때문에 모든 조회가 끝난 후 한번에 정렬한다.
         recordList = recordList
                 .stream()
-                .sorted(Comparator.comparing(Record.Response::getWritingDate).reversed())
+                .sorted(Comparator
+                        .comparing(Record.Response::getWritingDate).reversed()
+                        .thenComparing(Record.Response::getRecordDetailType))
                 .collect(Collectors.toList());
 
         return recordList;
@@ -229,10 +231,11 @@ public class RecordServiceImpl implements RecordService {
 
         // 진료기록
         if (request.getRecord().getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
-                chartContext.setChartStrategy(new AnesthesiaRecordChartStrategy());
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())
+                    || request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()) ) {
+                chartContext.setChartStrategy(new AnesthesiaRecordChartStrategy(request.getRecord().getRecordDetailType()));
 
-                Record.Response anesthesiaRecord = anesthesiaService.getAnesthesiaRecord(request.getRecord().getOpExptRegId());
+                Record.Response anesthesiaRecord = anesthesiaService.getAnesthesiaRecord(request.getRecord().getRecordDetailType(), request.getRecord().getOpExptRegId());
 
                 format = metaRecordService.getRecordFormatList(anesthesiaRecord);
 
@@ -266,67 +269,69 @@ public class RecordServiceImpl implements RecordService {
 
                 format.add(opNmValue);
 
-                ChartElement stfNmEntity = new ChartElement();
+                if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
+                    ChartElement stfNmEntity = new ChartElement();
 
-                stfNmEntity.setSectionId(-98);
-                stfNmEntity.setId("anesthesia-record-stf-nm-1");
-                stfNmEntity.setParentId("-1000");
-                stfNmEntity.setMdfmCpemNo("anesthesia-record-stf-nm-1");
-                stfNmEntity.setClassType(ChartClassType.ENTITY);
-                stfNmEntity.setControlType(ChartControlType.LABEL);
-                stfNmEntity.setMaskingType(null);
-                stfNmEntity.setContent("Surgeons");
-                stfNmEntity.setDesc(null);
-                stfNmEntity.setStyle(null);
+                    stfNmEntity.setSectionId(-98);
+                    stfNmEntity.setId("anesthesia-record-stf-nm-1");
+                    stfNmEntity.setParentId("-1000");
+                    stfNmEntity.setMdfmCpemNo("anesthesia-record-stf-nm-1");
+                    stfNmEntity.setClassType(ChartClassType.ENTITY);
+                    stfNmEntity.setControlType(ChartControlType.LABEL);
+                    stfNmEntity.setMaskingType(null);
+                    stfNmEntity.setContent("Surgeons");
+                    stfNmEntity.setDesc(null);
+                    stfNmEntity.setStyle(null);
 
-                format.add(stfNmEntity);
+                    format.add(stfNmEntity);
 
-                ChartElement stfNmValue = new ChartElement();
+                    ChartElement stfNmValue = new ChartElement();
 
-                stfNmValue.setSectionId(-98);
-                stfNmValue.setId("anesthesia-record-stf-nm-1-0-1");
-                stfNmValue.setParentId("anesthesia-record-stf-nm-1");
-                stfNmValue.setMdfmCpemNo("anesthesia-record-stf-nm-1-0-1");
-                stfNmValue.setClassType(ChartClassType.VALUE);
-                stfNmValue.setControlType(ChartControlType.TEXT_BOX);
-                stfNmValue.setMaskingType(null);
-                stfNmValue.setContent(null);
-                stfNmValue.setDesc(null);
-                stfNmValue.setStyle(null);
+                    stfNmValue.setSectionId(-98);
+                    stfNmValue.setId("anesthesia-record-stf-nm-1-0-1");
+                    stfNmValue.setParentId("anesthesia-record-stf-nm-1");
+                    stfNmValue.setMdfmCpemNo("anesthesia-record-stf-nm-1-0-1");
+                    stfNmValue.setClassType(ChartClassType.VALUE);
+                    stfNmValue.setControlType(ChartControlType.TEXT_BOX);
+                    stfNmValue.setMaskingType(null);
+                    stfNmValue.setContent(null);
+                    stfNmValue.setDesc(null);
+                    stfNmValue.setStyle(null);
 
-                format.add(stfNmValue);
+                    format.add(stfNmValue);
 
-                ChartElement historyEntity = new ChartElement();
+                    ChartElement historyEntity = new ChartElement();
 
-                historyEntity.setSectionId(99);
-                historyEntity.setId("anesthesia-record-history-1");
-                historyEntity.setParentId("-1000");
-                historyEntity.setMdfmCpemNo("anesthesia-record-history-1");
-                historyEntity.setClassType(ChartClassType.ENTITY);
-                historyEntity.setControlType(ChartControlType.LABEL);
-                historyEntity.setMaskingType(null);
-                historyEntity.setContent("마취기록");
-                historyEntity.setDesc(null);
-                historyEntity.setStyle(null);
+                    historyEntity.setSectionId(99);
+                    historyEntity.setId("anesthesia-record-history-1");
+                    historyEntity.setParentId("-1000");
+                    historyEntity.setMdfmCpemNo("anesthesia-record-history-1");
+                    historyEntity.setClassType(ChartClassType.ENTITY);
+                    historyEntity.setControlType(ChartControlType.LABEL);
+                    historyEntity.setMaskingType(null);
+                    historyEntity.setContent("마취기록");
+                    historyEntity.setDesc(null);
+                    historyEntity.setStyle(null);
 
-                format.add(historyEntity);
+                    format.add(historyEntity);
 
-                ChartElement historyValue = new ChartElement();
+                    ChartElement historyValue = new ChartElement();
 
-                historyValue.setSectionId(99);
-                historyValue.setId("anesthesia-record-history-1-0-1");
-                historyValue.setParentId("anesthesia-record-history-1");
-                historyValue.setMdfmCpemNo("anesthesia-record-history-1-0-1");
-                historyValue.setClassType(ChartClassType.VALUE);
-                historyValue.setControlType(ChartControlType.RICH_TEXT_BOX);
-                historyValue.setMaskingType(null);
-                historyValue.setContent(null);
-                historyValue.setDesc(null);
-                historyValue.setStyle(null);
+                    historyValue.setSectionId(99);
+                    historyValue.setId("anesthesia-record-history-1-0-1");
+                    historyValue.setParentId("anesthesia-record-history-1");
+                    historyValue.setMdfmCpemNo("anesthesia-record-history-1-0-1");
+                    historyValue.setClassType(ChartClassType.VALUE);
+                    historyValue.setControlType(ChartControlType.RICH_TEXT_BOX);
+                    historyValue.setMaskingType(null);
+                    historyValue.setContent(null);
+                    historyValue.setDesc(null);
+                    historyValue.setStyle(null);
 
-                format.add(historyValue);
+                    format.add(historyValue);
+                }
 
-                dataSource = anesthesiaService.getAnesthesiaRecordData(RecordTarget.MEDICAL_ANESTHESIA.getType(), request.getRecord().getOpExptRegId());
+                dataSource = anesthesiaService.getAnesthesiaRecordData(request.getRecord().getRecordDetailType(), request.getRecord().getOpExptRegId());
             } else {
                 chartContext.setChartStrategy(new MedicalChartStrategy());
                 dataSource = medicalService.getMedicalData(request.getRecord());
