@@ -10,4 +10,5 @@ import java.util.List;
 public class AnesthesiaRecordData {
     private List<AnesthesiaRecordHistory> histories;
     private List<AnesthesiaFormatValue> formatValues;
+    private AnesthesiaSurgeryInfo surgeryInfo;
 }

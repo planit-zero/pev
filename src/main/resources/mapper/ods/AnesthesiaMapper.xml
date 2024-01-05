@@ -31,4 +31,12 @@
         WHERE OP_EXPT_REG_ID = #{opExptRegId}
           AND MDFM_CLS_CD = 'D010'
     </select>
+    <select id="getAnesthesiaSurgeryInfo"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaSurgeryInfo">
+        SELECT OP_NM AS opNm,
+               (SELECT MAX(Z.STF_NM) FROM ODS.S_CNLRRUSD Z WHERE Z.SID = A.PFDR_SID) AS stfNm
+        FROM ODS.S_MOOOPPAM A
+        WHERE OP_EXPT_REG_ID = #{opExptRegId}
+    </select>
 </mapper>

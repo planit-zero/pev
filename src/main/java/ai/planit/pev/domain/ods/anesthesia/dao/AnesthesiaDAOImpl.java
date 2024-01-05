@@ -4,6 +4,7 @@ import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaFormatRequest;
 import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaFormatValue;
 import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaRecordHistory;
+import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaSurgeryInfo;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -28,5 +29,10 @@ public class AnesthesiaDAOImpl implements AnesthesiaDAO {
     @Override
     public List<AnesthesiaFormatValue> getAnesthesiaFormatValue(AnesthesiaFormatRequest request) {
         return sqlSessionTemplate.selectList("getAnesthesiaFormatValue", request);
+    }
+
+    @Override
+    public AnesthesiaSurgeryInfo getAnesthesiaSurgeryInfo(String opExptRegId) {
+        return sqlSessionTemplate.selectOne("getAnesthesiaSurgeryInfo", opExptRegId);
     }
 }

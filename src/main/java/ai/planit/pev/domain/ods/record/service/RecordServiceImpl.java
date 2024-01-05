@@ -12,6 +12,8 @@ import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.*;
+import ai.planit.pev.strategy.chart.constant.ChartClassType;
+import ai.planit.pev.strategy.chart.constant.ChartControlType;
 import ai.planit.pev.strategy.chart.object.common.*;
 import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
@@ -233,6 +235,97 @@ public class RecordServiceImpl implements RecordService {
                 Record.Response anesthesiaRecord = anesthesiaService.getAnesthesiaRecord(request.getRecord().getOpExptRegId());
 
                 format = metaRecordService.getRecordFormatList(anesthesiaRecord);
+
+                ChartElement opNmEntity = new ChartElement();
+
+                opNmEntity.setSectionId(-99);
+                opNmEntity.setId("anesthesia-record-op-nm-1");
+                opNmEntity.setParentId("-1000");
+                opNmEntity.setMdfmCpemNo("anesthesia-record-op-nm-1");
+                opNmEntity.setClassType(ChartClassType.ENTITY);
+                opNmEntity.setControlType(ChartControlType.LABEL);
+                opNmEntity.setMaskingType(null);
+                opNmEntity.setContent("수술명");
+                opNmEntity.setDesc(null);
+                opNmEntity.setStyle(null);
+
+                format.add(opNmEntity);
+
+                ChartElement opNmValue = new ChartElement();
+
+                opNmValue.setSectionId(-99);
+                opNmValue.setId("anesthesia-record-op-nm-1-0-1");
+                opNmValue.setParentId("anesthesia-record-op-nm-1");
+                opNmValue.setMdfmCpemNo("anesthesia-record-op-nm-1-0-1");
+                opNmValue.setClassType(ChartClassType.VALUE);
+                opNmValue.setControlType(ChartControlType.TEXT_BOX);
+                opNmValue.setMaskingType(null);
+                opNmValue.setContent(null);
+                opNmValue.setDesc(null);
+                opNmValue.setStyle(null);
+
+                format.add(opNmValue);
+
+                ChartElement stfNmEntity = new ChartElement();
+
+                stfNmEntity.setSectionId(-98);
+                stfNmEntity.setId("anesthesia-record-stf-nm-1");
+                stfNmEntity.setParentId("-1000");
+                stfNmEntity.setMdfmCpemNo("anesthesia-record-stf-nm-1");
+                stfNmEntity.setClassType(ChartClassType.ENTITY);
+                stfNmEntity.setControlType(ChartControlType.LABEL);
+                stfNmEntity.setMaskingType(null);
+                stfNmEntity.setContent("Surgeons");
+                stfNmEntity.setDesc(null);
+                stfNmEntity.setStyle(null);
+
+                format.add(stfNmEntity);
+
+                ChartElement stfNmValue = new ChartElement();
+
+                stfNmValue.setSectionId(-98);
+                stfNmValue.setId("anesthesia-record-stf-nm-1-0-1");
+                stfNmValue.setParentId("anesthesia-record-stf-nm-1");
+                stfNmValue.setMdfmCpemNo("anesthesia-record-stf-nm-1-0-1");
+                stfNmValue.setClassType(ChartClassType.VALUE);
+                stfNmValue.setControlType(ChartControlType.TEXT_BOX);
+                stfNmValue.setMaskingType(null);
+                stfNmValue.setContent(null);
+                stfNmValue.setDesc(null);
+                stfNmValue.setStyle(null);
+
+                format.add(stfNmValue);
+
+                ChartElement historyEntity = new ChartElement();
+
+                historyEntity.setSectionId(99);
+                historyEntity.setId("anesthesia-record-history-1");
+                historyEntity.setParentId("-1000");
+                historyEntity.setMdfmCpemNo("anesthesia-record-history-1");
+                historyEntity.setClassType(ChartClassType.ENTITY);
+                historyEntity.setControlType(ChartControlType.LABEL);
+                historyEntity.setMaskingType(null);
+                historyEntity.setContent("마취기록");
+                historyEntity.setDesc(null);
+                historyEntity.setStyle(null);
+
+                format.add(historyEntity);
+
+                ChartElement historyValue = new ChartElement();
+
+                historyValue.setSectionId(99);
+                historyValue.setId("anesthesia-record-history-1-0-1");
+                historyValue.setParentId("anesthesia-record-history-1");
+                historyValue.setMdfmCpemNo("anesthesia-record-history-1-0-1");
+                historyValue.setClassType(ChartClassType.VALUE);
+                historyValue.setControlType(ChartControlType.RICH_TEXT_BOX);
+                historyValue.setMaskingType(null);
+                historyValue.setContent(null);
+                historyValue.setDesc(null);
+                historyValue.setStyle(null);
+
+                format.add(historyValue);
+
                 dataSource = anesthesiaService.getAnesthesiaRecordData(RecordTarget.MEDICAL_ANESTHESIA.getType(), request.getRecord().getOpExptRegId());
             } else {
                 chartContext.setChartStrategy(new MedicalChartStrategy());

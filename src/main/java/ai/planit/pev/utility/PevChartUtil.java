@@ -18,6 +18,7 @@ public class PevChartUtil {
                 .stream()
                 .map(ChartElement::getSectionId)
                 .distinct()
+                .sorted()
                 .collect(Collectors.toList());
 
         for (Integer sectionId : sectionIds) {

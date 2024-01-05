@@ -45,19 +45,30 @@ public class AnesthesiaRecordChartStrategy implements ChartStrategy {
                 }
             });
 
-//            if (valueFormat.getId().equals("4-0-1")) {
-//                StringBuilder sb = new StringBuilder();
-//
-//                for (AnesthesiaRecordHistory history : anesthesiaRecordData.getHistories()) {
-//                    sb.append(history.getInptHmi());
-//                    sb.append("\r\n");
-//                    sb.append(history.getInptValCnte());
-//                    sb.append("\r\n");
-//                    sb.append("\r\n");
-//                }
-//
-//                valueFormat.setContent(sb.toString());
-//            }
+            if (valueFormat.getId().equals("anesthesia-record-history-1-0-1")) {
+                StringBuilder sb = new StringBuilder();
+
+                for (AnesthesiaRecordHistory history : anesthesiaRecordData.getHistories()) {
+                    sb.append(history.getInptHmi());
+                    sb.append("\r\n");
+                    sb.append(history.getInptValCnte());
+                    sb.append("\r\n");
+                    sb.append("\r\n");
+                }
+
+                valueFormat.setContent(sb.toString());
+                data.add(valueFormat);
+            }
+
+            if (valueFormat.getId().equals("anesthesia-record-op-nm-1-0-1")) {
+                valueFormat.setContent(anesthesiaRecordData.getSurgeryInfo().getOpNm());
+                data.add(valueFormat);
+            }
+
+            if (valueFormat.getId().equals("anesthesia-record-stf-nm-1-0-1")) {
+                valueFormat.setContent(anesthesiaRecordData.getSurgeryInfo().getStfNm());
+                data.add(valueFormat);
+            }
         }
 
         return data;

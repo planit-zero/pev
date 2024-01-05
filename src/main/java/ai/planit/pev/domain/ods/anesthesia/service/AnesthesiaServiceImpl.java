@@ -22,6 +22,7 @@ public class AnesthesiaServiceImpl implements AnesthesiaService {
         AnesthesiaRecordData anesthesiaRecordData = new AnesthesiaRecordData();
 
         anesthesiaRecordData.setHistories(anesthesiaDAO.getAnesthesiaRecordHistories(opExptRegId));
+        anesthesiaRecordData.setSurgeryInfo(anesthesiaDAO.getAnesthesiaSurgeryInfo(opExptRegId));
 
         AnesthesiaFormatRequest request = new AnesthesiaFormatRequest();
         request.setMdfmClsCd(mdfmClsCd);
