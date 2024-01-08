@@ -10,7 +10,12 @@ import { useGetIdpLoginUserMutation } from '../../../pev-service/UserService';
 import { setUserInfo } from '../../../store/slices/user';
 import { CryptoUtils } from '../../../pev-utils/CryptoUtils';
 
-const RecordSearchPanel = () => {
+type RecordSearchPanelProps = {
+    setCurrentIrb: (irb: string | null) => void;
+    setCurrentRid: (rid: string | null) => void;
+};
+
+const RecordSearchPanel = (props: RecordSearchPanelProps) => {
     const [searchParams] = useSearchParams();
 
     const [irb, setIrb] = React.useState<string | null>(null);
@@ -48,8 +53,8 @@ const RecordSearchPanel = () => {
                             .unwrap()
                             .then((r) => {
                                 if (r.data.length > 0 && r.data[0].rid) {
-                                    setIrb(r.irbNo);
-                                    setRid(r.data[0].rid);
+                                    handleIrbChangeByObj(r.irbNo);
+                                    handleRidChange(r.data[0].rid);
 
                                     handleRidSubmit(r.irbNo, r.data[0].rid);
                                 }
@@ -65,10 +70,12 @@ const RecordSearchPanel = () => {
 
     const handleIrbChangeByObj = (irbNo: string) => {
         setIrb(irbNo);
+        props.setCurrentIrb(irbNo);
     };
 
     const handleRidChange = (value: string) => {
         setRid(value);
+        props.setCurrentRid(value);
     };
 
     const handleRidSubmit = (irbStr: string | null, ridStr: string | null) => {

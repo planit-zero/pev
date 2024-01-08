@@ -8,8 +8,14 @@ import { TPactTpCd } from '../../../pev-type/TPactTpCd';
 import { TDept } from '../../../pev-type/TDept';
 import { TWriter } from '../../../pev-type/TWriter';
 import { useGetRecordListMutation } from '../../../pev-service/RecordService';
+import { setTargetRecords } from '../../../store/pev-slices/record';
 
-const ConditionFinder = () => {
+type ConditionFinderProps = {
+    currentIrb: string | null;
+    currentRid: string | null;
+};
+
+const ConditionFinder = (props: ConditionFinderProps) => {
     const initialSearchCondition: ISearchCondition = {
         searchTargets: ['D001', 'D002', 'D003', 'D004'],
         searchFromDate: dayjs().add(-1, 'month').format('YYYY-MM-DD'),
@@ -37,6 +43,11 @@ const ConditionFinder = () => {
     const handleListSearch = () => {
         getRecordList(searchCondition);
     };
+
+    React.useEffect(() => {
+        getRecordList(searchCondition).reset();
+        setTargetRecords([]);
+    }, [props.currentIrb, props.currentRid]);
 
     return (
         <Box sx={{ width: '100%', height: 'calc(100% - 64px)' }}>
