@@ -44,6 +44,14 @@ const RidList = (props: RidListProps) => {
         }
     };
 
+    const handleRowDblClick = (e: any) => {
+        if (e && e.data && e.data.id) {
+            setSelectedPatient(e.data.id);
+            props.onSelect(e.data.id);
+            props.onClose();
+        }
+    };
+
     const handlePatientSelect = () => {
         if (selectedPatient) {
             props.onSelect(selectedPatient.id);
@@ -84,6 +92,7 @@ const RidList = (props: RidListProps) => {
                     wordWrapEnabled={false}
                     noDataText={''}
                     onSelectionChanged={handlePatientSelectionChanged}
+                    onRowDblClick={handleRowDblClick}
                 >
                     <Column dataField={'id'} caption={'연구별 환자 ID'} alignment={'center'} />
                     <Column dataField={'name'} caption={'환자명'} alignment={'center'} />

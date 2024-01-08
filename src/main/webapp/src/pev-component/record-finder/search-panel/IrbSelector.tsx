@@ -36,6 +36,13 @@ const IrbSelector = (props: IrbSelectorProps) => {
         }
     };
 
+    const handleRowDblClick = (e: any) => {
+        if (e && e.data && e.data.irbNo) {
+            props.onChange(e.data.irbNo);
+            setOpen(false);
+        }
+    };
+
     const handleIrbSelect = () => {
         if (selectedIrb) {
             props.onChange(selectedIrb.irbNo);
@@ -92,6 +99,7 @@ const IrbSelector = (props: IrbSelectorProps) => {
                                 wordWrapEnabled={false}
                                 noDataText={''}
                                 onSelectionChanged={handleIrbSelectionChanged}
+                                onRowDblClick={handleRowDblClick}
                             >
                                 <Column dataField={'irbNo'} caption={'IRB 번호'} width={130} alignment={'center'} />
                                 <Column dataField={'irbKrNm'} caption={'연구과제명'} />
