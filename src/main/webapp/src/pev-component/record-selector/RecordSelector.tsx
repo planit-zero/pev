@@ -1,18 +1,17 @@
 import * as React from 'react';
 import { Box, Checkbox, FormControlLabel, Typography } from '@mui/material';
-import { useGetMetaRecordListQuery } from '../../pev-service/MetaRecordService';
-import { IMetaRecord } from '../../pev-interface/IMetaRecord';
+import { IMetaRecord, IMetaRecordList } from '../../pev-interface/IMetaRecord';
 import { useTheme } from '@mui/material/styles';
 import { ISearchCondition, ISearchConditionKeyValue } from '../../pev-interface/IRecord';
 
 type RecordSelectorProps = {
+    metaRecordList: IMetaRecordList;
     searchCondition: ISearchCondition;
     onSearchConditionChange: (conditions: ISearchConditionKeyValue[]) => void;
 };
 
 const RecordSelector = (props: RecordSelectorProps) => {
     const theme = useTheme();
-    const { data } = useGetMetaRecordListQuery();
 
     const [searchTargets, setSearchTargets] = React.useState<string[]>(props.searchCondition.searchTargets);
 
@@ -22,11 +21,11 @@ const RecordSelector = (props: RecordSelectorProps) => {
 
     const MetaRecordBox = (metaRecord: IMetaRecord, idx: number) => {
         const isAllChildrenChecked = (mr: IMetaRecord) => {
-            if (!data) return false;
+            if (!props.metaRecordList) return false;
 
             let result = false;
 
-            const childrenArr = data.metaRecords.filter((d) => d.parentId === mr.id).map((d) => d.id);
+            const childrenArr = props.metaRecordList.metaRecords.filter((d) => d.parentId === mr.id).map((d) => d.id);
 
             for (const child of childrenArr) {
                 result = searchTargets.includes(child);
@@ -36,9 +35,9 @@ const RecordSelector = (props: RecordSelectorProps) => {
         };
 
         const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, mr: IMetaRecord) => {
-            if (!data) return;
+            if (!props.metaRecordList) return;
 
-            const childrenArr = data.metaRecords.filter((d) => d.parentId === mr.id).map((d) => d.id);
+            const childrenArr = props.metaRecordList.metaRecords.filter((d) => d.parentId === mr.id).map((d) => d.id);
 
             if (e.target.checked) {
                 const nextTargets = new Set([...searchTargets, ...childrenArr]);
@@ -90,8 +89,8 @@ const RecordSelector = (props: RecordSelectorProps) => {
 
         return (
             <Box>
-                {data &&
-                    data.metaRecords
+                {props.metaRecordList &&
+                    props.metaRecordList.metaRecords
                         .filter((mr) => mr.parentId === metaRecord.id)
                         .map((mr, idx) => {
                             return (
@@ -142,8 +141,8 @@ const RecordSelector = (props: RecordSelectorProps) => {
                 display: 'flex'
             }}
         >
-            {data &&
-                data.metaRecords
+            {props.metaRecordList &&
+                props.metaRecordList.metaRecords
                     .filter((mr) => mr.parentId === null)
                     .map((mr, idx) => {
                         return MetaRecordBox(mr, idx);
