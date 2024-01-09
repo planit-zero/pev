@@ -38,14 +38,14 @@ const ConditionFinder = (props: ConditionFinderProps) => {
         setSearchCondition(nextSearchCondition);
     };
 
-    const [getRecordList, { data: recordList, isLoading: isRecordListLoading }] = useGetRecordListMutation();
+    const [getRecordList, { data: recordList, isLoading: isRecordListLoading, reset: resetGetRecordList }] = useGetRecordListMutation();
 
     const handleListSearch = () => {
         getRecordList(searchCondition);
     };
 
     React.useEffect(() => {
-        getRecordList(searchCondition).reset();
+        resetGetRecordList();
         setTargetRecords([]);
     }, [props.currentIrb, props.currentRid]);
 
