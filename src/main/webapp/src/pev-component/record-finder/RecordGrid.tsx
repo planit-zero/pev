@@ -4,12 +4,11 @@ import { Bookmark } from '@mui/icons-material';
 import { IRecord } from '../../pev-interface/IRecord';
 import { DataGrid } from 'devextreme-react';
 import { Column, FilterRow, HeaderFilter, Scrolling, Selection } from 'devextreme-react/data-grid';
-import SearchIcon from '@mui/icons-material/Search';
 import { setTargetRecords } from '../../store/pev-slices/record';
 import { setAlert } from '../../store/pev-slices/environment';
 import { TAlert } from '../../pev-type/TAlert';
 import { useSelector } from '../../store';
-import { IconArrowBigRight } from '@tabler/icons';
+import { IconCheck, IconListCheck } from '@tabler/icons';
 
 type ConditionFinderGridProps = {
     recordList: IRecord[];
@@ -21,15 +20,23 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
     const [selectedRecordList, setSelectedRecordList] = React.useState<IRecord[]>([]);
 
     const handleSelectionChanged = (e: any) => {
-        if (e && e.selectedRowsData) setSelectedRecordList(e.selectedRowsData);
+        if (e && e.selectedRowsData) {
+            if (e.selectedRowsData.length === 0) {
+                setTargetRecords([]);
+                return;
+            }
+
+            setSelectedRecordList(e.selectedRowsData.reverse());
+            handleRetrieve(e.selectedRowsData.reverse());
+        }
     };
 
-    const handleRetrieve = () => {
-        if (selectedRecordList.length === 0) {
+    const handleRetrieve = (recordList: IRecord[]) => {
+        if (recordList.length === 0) {
             setAlert({ type: TAlert.WARNING, message: '기록 목록에서 기록을 한 개 이상 선택 후 조회 버튼을 눌러주세요.' });
             return;
         }
-        setTargetRecords(selectedRecordList);
+        setTargetRecords(recordList);
     };
 
     const gridRef = React.useRef<DataGrid>(null);
@@ -40,27 +47,7 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
         }
     }, [finderWidth]);
 
-    const CellTemplate = (e: any) => {
-        return (
-            <Box
-                width={'100%'}
-                height={'100%'}
-                display={'flex'}
-                justifyContent={'center'}
-                alignItems={'center'}
-                sx={{ cursor: 'pointer' }}
-                onClick={() => handleCellClick(e)}
-            >
-                <IconArrowBigRight width={16} height={16} color={'#3f51b5'} />
-            </Box>
-        );
-    };
-
-    const handleCellClick = (e: any) => {
-        if (e && e.data) {
-            setTargetRecords([e.data]);
-        }
-    };
+    const [selectionMode, setSelectionMode] = React.useState<'single' | 'multiple'>('single');
 
     return (
         <Box width={'100%'} height={'100%'}>
@@ -74,20 +61,40 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                         {`조회: ${targetRecords.length} 건`}
                     </Typography>
                 </Box>
-                <Box display={'flex'} alignItems={'center'}>
-                    <Button
-                        variant={'contained'}
-                        size={'small'}
-                        startIcon={<SearchIcon fontSize="small" />}
-                        onClick={handleRetrieve}
-                        disabled={selectedRecordList.length === 0}
-                    >
-                        조회
-                    </Button>
+                <Box display={'flex'} alignItems={'center'} gap={1}>
+                    {selectionMode === 'multiple' && (
+                        <Button
+                            variant={'outlined'}
+                            size={'small'}
+                            startIcon={<IconCheck fontSize="small" />}
+                            onClick={() => setSelectionMode('single')}
+                        >
+                            단일 선택
+                        </Button>
+                    )}
+                    {selectionMode === 'single' && (
+                        <Button
+                            variant={'outlined'}
+                            size={'small'}
+                            startIcon={<IconListCheck fontSize="small" />}
+                            onClick={() => setSelectionMode('multiple')}
+                        >
+                            다중 선택
+                        </Button>
+                    )}
+                    {/*<Button*/}
+                    {/*    variant={'contained'}*/}
+                    {/*    size={'small'}*/}
+                    {/*    startIcon={<SearchIcon fontSize="small" />}*/}
+                    {/*    onClick={() => handleRetrieve(selectedRecordList)}*/}
+                    {/*    disabled={selectedRecordList.length === 0}*/}
+                    {/*>*/}
+                    {/*    조회*/}
+                    {/*</Button>*/}
                 </Box>
             </Box>
             <Divider sx={{ mt: 1, mb: 1 }} />
-            <Box width={'100%'} height={'calc(100% - 48px)'}>
+            <Box width={'100%'} height={'calc(100% - 48px)'} sx={{ userSelect: 'none' }}>
                 <DataGrid
                     ref={gridRef}
                     dataSource={props.recordList}
@@ -98,17 +105,17 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                     wordWrapEnabled={false}
                     noDataText={''}
                     onSelectionChanged={handleSelectionChanged}
+                    // onRowClick={() => handleRetrieve()}
                 >
-                    <Column caption={''} cellRender={CellTemplate} alignment={'center'} width={50} />
-                    <Column dataField={'pactTpNm'} caption={'환자구분'} alignment={'center'} width={110} />
-                    <Column dataField={'itemType'} caption={'항목구분'} alignment={'center'} width={110} />
+                    <Column dataField={'pactTpNm'} caption={'구분'} alignment={'center'} width={85} />
+                    <Column dataField={'itemType'} caption={'유형'} alignment={'center'} width={85} />
                     <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} minWidth={170} />
                     <Column dataField={'writingDate'} caption={'작성일자'} width={110} alignment={'center'} />
                     <Column dataField={'writingDeptNm'} caption={'작성과'} width={100} alignment={'left'} />
                     <Column dataField={'writerNm'} caption={'작성자'} width={100} alignment={'center'} />
                     <Column dataField={'mdrcWrtStsCdYn'} caption={'서명'} alignment={'center'} width={85} />
                     <Scrolling mode={'virtual'} showScrollbar={'always'} />
-                    <Selection mode={'multiple'} showCheckBoxesMode={'onClick'} />
+                    <Selection mode={selectionMode} showCheckBoxesMode={'onClick'} />
                     <FilterRow visible={true} />
                     <HeaderFilter visible={true} />
                 </DataGrid>

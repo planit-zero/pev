@@ -5,6 +5,7 @@ import ChartWrapper from './ChartWrapper';
 import { Paper } from '@mui/material';
 
 type ChartBoxProps = {
+    index: number;
     targetRecord: IRecord;
 };
 
@@ -16,7 +17,7 @@ const ChartBox = (props: ChartBoxProps) => {
     };
 
     return (
-        <Paper sx={{ minWidth: 600, p: 2, mb: 2, borderRadius: 0 }}>
+        <Paper id={`target-record-${props.index}`} sx={{ minWidth: 600, p: 2, mb: 2, borderRadius: 0 }}>
             <ChartToolbar targetRecord={props.targetRecord} isChartLoading={isChartLoading} />
             <ChartWrapper
                 mode={'NORMAL'}
