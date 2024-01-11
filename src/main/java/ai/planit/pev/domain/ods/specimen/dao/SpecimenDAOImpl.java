@@ -1,8 +1,8 @@
 package ai.planit.pev.domain.ods.specimen.dao;
 
-import ai.planit.pev.domain.ods.specimen.dto.SpecimenData;
-import ai.planit.pev.domain.ods.specimen.dto.SpecimenHeaderData;
-import ai.planit.pev.domain.ods.specimen.dto.SpecimenInfo;
+import ai.planit.pev.strategy.chart.object.specimen.SpecimenInfo;
+import ai.planit.pev.strategy.chart.object.specimen.SpecimenRequest;
+import ai.planit.pev.strategy.chart.object.specimen.SpecimenResult;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,20 +14,13 @@ import java.util.List;
 public class SpecimenDAOImpl implements SpecimenDAO {
     private final SqlSessionTemplate sqlSessionTemplate;
 
-    /** {@inheritDoc} */
     @Override
-    public SpecimenInfo.Response getSpecimenInfo(SpecimenInfo.Request request) {
+    public SpecimenInfo getSpecimenInfo(SpecimenRequest request) {
         return sqlSessionTemplate.selectOne("getSpecimenInfo", request);
     }
 
-    /** {@inheritDoc} */
     @Override
-    public List<SpecimenData.Response> getSpecimenData(SpecimenData.Request request) {
-        return sqlSessionTemplate.selectList("getSpecimenData", request);
-    }
-
-    @Override
-    public SpecimenHeaderData getSpecimenHeaderData(String spcmNo) {
-        return sqlSessionTemplate.selectOne("getSpecimenHeaderData", spcmNo);
+    public List<SpecimenResult> getSpecimenResults(SpecimenRequest request) {
+        return sqlSessionTemplate.selectList("getSpecimenResults", request);
     }
 }

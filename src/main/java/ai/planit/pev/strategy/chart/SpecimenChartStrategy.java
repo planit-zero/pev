@@ -1,0 +1,64 @@
+package ai.planit.pev.strategy.chart;
+
+import ai.planit.pev.strategy.chart.constant.ChartClassType;
+import ai.planit.pev.strategy.chart.object.common.ChartElement;
+import ai.planit.pev.strategy.chart.object.specimen.SpecimenData;
+import ai.planit.pev.strategy.chart.object.specimen.SpecimenResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class SpecimenChartStrategy implements ChartStrategy {
+
+    @Override
+    public <T> List<ChartElement> getData(List<ChartElement> format, T source) {
+        SpecimenData specimenData = (SpecimenData) source;
+
+        List<ChartElement> data = new ArrayList<>();
+
+        List<ChartElement> valueFormats = format
+                .stream()
+                .filter(f -> f.getClassType().equals(ChartClassType.VALUE))
+                .collect(Collectors.toList());
+
+        for (ChartElement valueFormat : valueFormats) {
+            // 검사명
+            if (valueFormat.getId().equals("specimen-1-0-1")) {
+                valueFormat.setContent(specimenData.getSpecimenInfo().getExmCtgNm());
+                data.add(valueFormat);
+            }
+
+            // 검체명
+            if (valueFormat.getId().equals("specimen-2-0-1")) {
+                valueFormat.setContent(specimenData.getSpecimenInfo().getSpcmNm());
+                data.add(valueFormat);
+            }
+
+            // 검사결과
+            if (valueFormat.getId().equals("specimen-3-0-1")) {
+                List<SpecimenResult> specimenResults = specimenData.getSpecimenResults();
+
+                StringBuilder sb = new StringBuilder();
+
+                for (SpecimenResult result : specimenResults) {
+                    if (result != null) {
+                        sb.append(result.getResult().replaceAll("\\|\\|\\|", "\t"));
+                        sb.append("\r\n");
+                    }
+                }
+
+                valueFormat.setContent(sb.toString());
+                data.add(valueFormat);
+            }
+
+            // 보고자
+            if (valueFormat.getId().equals("specimen-4-0-1")) {
+                valueFormat.setContent(specimenData.getSpecimenInfo().getItemCbVrfcIptnCnte());
+                data.add(valueFormat);
+            }
+        }
+
+        return data;
+    }
+}

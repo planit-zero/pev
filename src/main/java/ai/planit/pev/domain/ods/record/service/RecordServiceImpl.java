@@ -11,6 +11,7 @@ import ai.planit.pev.domain.ods.picture.service.PictureService;
 import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
+import ai.planit.pev.domain.ods.specimen.service.SpecimenService;
 import ai.planit.pev.strategy.chart.*;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.constant.ChartControlType;
@@ -38,6 +39,7 @@ public class RecordServiceImpl implements RecordService {
     private final PictureService pictureService;
     private final OrderService orderService;
     private final AnesthesiaService anesthesiaService;
+    private final SpecimenService specimenService;
 
     /**
      * {@inheritDoc}
@@ -361,6 +363,12 @@ public class RecordServiceImpl implements RecordService {
             pictureDataRequest.setIptnNo(request.getRecord().getExamKey());
 
             dataSource = pictureService.getPictureData(pictureDataRequest);
+        }
+
+        // 검체검사
+        if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_SPECIMEN.getType())) {
+            chartContext.setChartStrategy(new SpecimenChartStrategy());
+            dataSource = specimenService.getSpecimenData(session, request.getRecord());
         }
 
         // 스캔자료
