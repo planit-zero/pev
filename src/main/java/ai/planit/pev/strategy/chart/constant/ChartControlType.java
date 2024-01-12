@@ -11,5 +11,6 @@ public enum ChartControlType {
     NUMERIC_TEXT_BOX,
     DATE_TEXT_BOX,
     DATA_GRID,
+    TABLE, // 신규추가
     UNKNOWN
 }

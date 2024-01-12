@@ -9,7 +9,8 @@ export type ChartControlType =
     | 'IMAGE'
     | 'NUMERIC_TEXT_BOX'
     | 'DATE_TEXT_BOX'
-    | 'DATA_GRID';
+    | 'DATA_GRID'
+    | 'TABLE';
 export type ChartMaskingType =
     | 'ALL'
     | 'PATIENT_NUMBER'

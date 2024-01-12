@@ -5,8 +5,8 @@
             parameterType="ai.planit.pev.strategy.chart.object.specimen.SpecimenRequest"
             resultType="ai.planit.pev.strategy.chart.object.specimen.SpecimenInfo">
         <![CDATA[
-        SELECT DISTINCT B.EXM_CTG_NM AS exmCtgNm,
-                        C.SPCM_NM AS spcmNm,
+        SELECT DISTINCT B.EXM_CTG_NM             AS exmCtgNm,
+                        C.SPCM_NM                AS spcmNm,
                         A.ITEM_CB_VRFC_IPTN_CNTE AS itemCbVrfcIptnCnte
         FROM ODS.S_MSELMAID A
                  INNER JOIN ODS.S_MSELMCTC B
@@ -22,7 +22,8 @@
             parameterType="ai.planit.pev.strategy.chart.object.specimen.SpecimenRequest"
             resultType="ai.planit.pev.strategy.chart.object.specimen.SpecimenResult">
         <![CDATA[
-        SELECT B.EITM_ABBR || '|||' || A.EXRS_FSRC_DCST_LDAT || '|||(' || D.RFVL_LWLM_CNTE || ' ~ ' || D.RFVL_HGLM_CNTE || ' ' || A.EXRS_UNIT || ')' AS result
+        SELECT ISNULL(B.EITM_ABBR, '') || '|||' || ISNULL(A.EXRS_FSRC_DCST_LDAT, '') || '|||' ||
+               ISNULL(D.RFVL_LWLM_CNTE || ' ~ ' || D.RFVL_HGLM_CNTE || ' ' || A.EXRS_UNIT, '') AS result
         FROM ODS.S_MSELMAID A
                  INNER JOIN ODS.S_MSELMEBM B
                             ON A.EXM_CD = B.EXM_CD
@@ -34,24 +35,25 @@
                                      AND C.SEX_TP_CD = D.SEX_TP_CD
                                      AND D.RFVL_TP_CD = 'R'
                                      AND D.RFVL_AGE_CTG_CD = 'Y'
-                                     AND DATEDIFF('YEAR', C.PT_BRDY_DT, A.ACPT_DTM) BETWEEN D.LWLM_RANG_AGE AND D.HGLM_RANG_AGE
+                                     AND
+                                    DATEDIFF('YEAR', C.PT_BRDY_DT, A.ACPT_DTM) BETWEEN D.LWLM_RANG_AGE AND D.HGLM_RANG_AGE
         WHERE A.PT_NO = #{ptNo}
           AND A.SPCM_NO = #{spcmNo}
           AND A.MED_EXM_CTG_CD = #{medExmCtgCd}
         ORDER BY B.SCRN_SORT_SEQ
         ]]>
     </select>
-<!--    <select id="getSpecimenHeaderData" parameterType="java.lang.String" resultType="SpecimenHeaderData">-->
-<!--        SELECT (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = B.ORD_CTG_CD) AS ordCtgNm,-->
-<!--               B.PBSO_DEPT_CD AS pbsoDeptCd,-->
-<!--               B.PT_HME_DEPT_CD AS ptHmeDeptCd,-->
-<!--               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = B.ANDR_STF_NO) AS andrStfNm,-->
-<!--               B.ORD_DT AS ordDt,-->
-<!--               TO_CHAR(B.ACPT_DTM, 'YYYY-MM-DD HH:MI') AS acptDtm,-->
-<!--               TO_CHAR(B.BRFG_DTM, 'YYYY-MM-DD HH:MI') AS brfgDtm-->
-<!--        FROM ODS.S_MSELMCED A-->
-<!--                 INNER JOIN ODS.S_MOOOREXM B-->
-<!--                            ON A.ORD_ID = B.ORD_ID-->
-<!--        WHERE A.SPCM_NO = #{spcmNo}-->
-<!--    </select>-->
+    <!--    <select id="getSpecimenHeaderData" parameterType="java.lang.String" resultType="SpecimenHeaderData">-->
+    <!--        SELECT (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = B.ORD_CTG_CD) AS ordCtgNm,-->
+    <!--               B.PBSO_DEPT_CD AS pbsoDeptCd,-->
+    <!--               B.PT_HME_DEPT_CD AS ptHmeDeptCd,-->
+    <!--               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = B.ANDR_STF_NO) AS andrStfNm,-->
+    <!--               B.ORD_DT AS ordDt,-->
+    <!--               TO_CHAR(B.ACPT_DTM, 'YYYY-MM-DD HH:MI') AS acptDtm,-->
+    <!--               TO_CHAR(B.BRFG_DTM, 'YYYY-MM-DD HH:MI') AS brfgDtm-->
+    <!--        FROM ODS.S_MSELMCED A-->
+    <!--                 INNER JOIN ODS.S_MOOOREXM B-->
+    <!--                            ON A.ORD_ID = B.ORD_ID-->
+    <!--        WHERE A.SPCM_NO = #{spcmNo}-->
+    <!--    </select>-->
 </mapper>

@@ -167,7 +167,60 @@ const Chart = (props: ChartProps) => {
                 {value.controlType === 'IMAGE' && value.content && (
                     <img style={{ width: '100%', height: '100%', objectFit: 'contain' }} src={value.content} alt={'가명화 이미지'} />
                 )}
-                {value.controlType !== 'IMAGE' && (
+                {value.controlType === 'TABLE' && value.content && (
+                    <Box sx={{ width: '100%' }}>
+                        <table
+                            style={{
+                                width: '100%',
+                                tableLayout: 'fixed',
+                                border: '1px solid black',
+                                borderCollapse: 'collapse'
+                            }}
+                        >
+                            <tbody>
+                                {value.content.split('\r\n').map((c, cIdx) => {
+                                    return (
+                                        <tr key={cIdx}>
+                                            {cIdx === 0 &&
+                                                c.split('|||').map((h, hIdx) => {
+                                                    return (
+                                                        <th
+                                                            key={hIdx}
+                                                            style={{
+                                                                border: '1px solid black',
+                                                                borderCollapse: 'collapse',
+                                                                padding: '4px 8px',
+                                                                backgroundColor: '#3f51b5',
+                                                                color: 'white'
+                                                            }}
+                                                        >
+                                                            {h}
+                                                        </th>
+                                                    );
+                                                })}
+                                            {cIdx !== 0 &&
+                                                c.split('|||').map((d, dIdx) => {
+                                                    return (
+                                                        <td
+                                                            key={dIdx}
+                                                            style={{
+                                                                border: '1px solid black',
+                                                                borderCollapse: 'collapse',
+                                                                padding: '4px 8px'
+                                                            }}
+                                                        >
+                                                            {d}
+                                                        </td>
+                                                    );
+                                                })}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </Box>
+                )}
+                {value.controlType !== 'IMAGE' && value.controlType !== 'TABLE' && (
                     <Box
                         sx={{
                             fontSize: 'h5.fontSize',
