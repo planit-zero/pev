@@ -134,7 +134,7 @@ const RecordSelector = (props: RecordSelectorProps) => {
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: '800px',
+                width: `${props.metaRecordList.metaRecords.filter((mr) => mr.parentId === null).length * 200}px`,
                 height: '80vh',
                 bgcolor: 'background.paper',
                 boxShadow: 24,

@@ -168,50 +168,19 @@ const Chart = (props: ChartProps) => {
                     <img style={{ width: '100%', height: '100%', objectFit: 'contain' }} src={value.content} alt={'가명화 이미지'} />
                 )}
                 {value.controlType === 'TABLE' && value.content && (
-                    <Box sx={{ width: '100%' }}>
-                        <table
-                            style={{
-                                width: '100%',
-                                tableLayout: 'fixed',
-                                border: '1px solid black',
-                                borderCollapse: 'collapse'
-                            }}
-                        >
+                    <Box sx={{ width: '100%', maxHeight: '600px', overflow: 'scroll' }}>
+                        <table className={'table-element'}>
                             <tbody>
                                 {value.content.split('\r\n').map((c, cIdx) => {
                                     return (
                                         <tr key={cIdx}>
                                             {cIdx === 0 &&
                                                 c.split('|||').map((h, hIdx) => {
-                                                    return (
-                                                        <th
-                                                            key={hIdx}
-                                                            style={{
-                                                                border: '1px solid black',
-                                                                borderCollapse: 'collapse',
-                                                                padding: '4px 8px',
-                                                                backgroundColor: '#3f51b5',
-                                                                color: 'white'
-                                                            }}
-                                                        >
-                                                            {h}
-                                                        </th>
-                                                    );
+                                                    return <th key={hIdx}>{h}</th>;
                                                 })}
                                             {cIdx !== 0 &&
                                                 c.split('|||').map((d, dIdx) => {
-                                                    return (
-                                                        <td
-                                                            key={dIdx}
-                                                            style={{
-                                                                border: '1px solid black',
-                                                                borderCollapse: 'collapse',
-                                                                padding: '4px 8px'
-                                                            }}
-                                                        >
-                                                            {d}
-                                                        </td>
-                                                    );
+                                                    return <td key={dIdx}>{d}</td>;
                                                 })}
                                         </tr>
                                     );

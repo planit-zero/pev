@@ -5,6 +5,7 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.medical.service.MedicalService;
+import ai.planit.pev.domain.ods.observation.service.ObservationService;
 import ai.planit.pev.domain.ods.order.service.OrderService;
 import ai.planit.pev.domain.ods.pathology.service.PathologyService;
 import ai.planit.pev.domain.ods.picture.service.PictureService;
@@ -40,6 +41,7 @@ public class RecordServiceImpl implements RecordService {
     private final OrderService orderService;
     private final AnesthesiaService anesthesiaService;
     private final SpecimenService specimenService;
+    private final ObservationService observationService;
 
     /**
      * {@inheritDoc}
@@ -94,13 +96,20 @@ public class RecordServiceImpl implements RecordService {
             recordList.addAll(getExamRecordList(request, examRecordTargets));
         }
 
-        // TODO: 간호기록 목록 연동
+        // 간호기록
+        List<String> nrRecordTargets = searchTargetList
+                .stream()
+                .filter(target -> target.startsWith(RecordTarget.NURS_RECORD.getType()))
+                .collect(Collectors.toList());
 
+        if (nrRecordTargets.size() > 0) {
+            recordList.addAll(getNrRecordList(request, nrRecordTargets));
+        }
+
+        // 스캔자료
         if (searchTargetList.contains(RecordTarget.SCAN_RECORD.getType())) {
             recordList.addAll(recordListDAO.getScanRecordList(request));
         }
-
-        // TODO: 특성화기록 목록 연동
 
         // 조건에 따라 여러 기록을 조회하기 때문에 모든 조회가 끝난 후 한번에 정렬한다.
         recordList = recordList
@@ -223,6 +232,16 @@ public class RecordServiceImpl implements RecordService {
         }
 
         return examRecordList;
+    }
+
+    private List<Record.Response> getNrRecordList(Record.Request request, List<String> nrRecordTargets) {
+        List<Record.Response> nrRecordList = new ArrayList<>();
+
+        if (nrRecordTargets.contains(RecordTarget.NURS_OBSERVATION.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrObservationRecordList(request));
+        }
+
+        return nrRecordList;
     }
 
     public Chart.Response getChart(HttpSession session, Chart.Request request) {
@@ -375,6 +394,15 @@ public class RecordServiceImpl implements RecordService {
         if (request.getRecord().getRecordType().equals(RecordTarget.SCAN_RECORD.getType())) {
             chartContext.setChartStrategy(new ScanChartStrategy());
             dataSource = request.getRecord();
+        }
+
+        // 간호기록
+        if (request.getRecord().getRecordType().equals(RecordTarget.NURS_RECORD.getType())) {
+            // 임상관찰기록
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_OBSERVATION.getType())) {
+                chartContext.setChartStrategy(new ObservationChartStrategy());
+                dataSource = observationService.getObservationData(session, request.getRecord());
+            }
         }
 
         List<ChartElement> data = chartContext.getChartStrategy().getData(format, dataSource);

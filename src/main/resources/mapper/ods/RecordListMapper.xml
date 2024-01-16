@@ -560,4 +560,50 @@
         <!--        <if test="deptType == 'WRITER'">AND A.MTD_DEPT_CD = #{deptCd}</if>-->
         ORDER BY A.ORD_DT DESC, A.BRCD_SEQ
     </select>
+    <select id="getNrObservationRecordList"
+            parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request"
+            resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
+        SELECT DISTINCT 'NR'                                                        AS recordType,
+                        'NR_OBSERVATION'                                            AS recordDetailType,
+                        (SELECT Z.COMN_CD_NM
+                         FROM ODS.S_CCCCCSTE Z
+                         WHERE Z.COMN_GRP_CD = 'N0003023'
+                           AND Z.COMN_CD = A.CLCO_REC_WRT_PATH_TP_CD)               AS itemType,
+                        (SELECT Z.COMN_CD_NM
+                         FROM ODS.S_CCCCCSTE Z
+                         WHERE Z.COMN_GRP_CD = 'N0003023'
+                           AND Z.COMN_CD = A.CLCO_REC_WRT_PATH_TP_CD)               AS itemNm,
+                        A.UITM_DT                                                   AS writingDate,
+                        NULL                                                        AS writingDeptCd,
+                        NULL                                                        AS writingDeptNm,
+                        NULL                                                        AS writerStfNo,
+                        NULL                                                        AS writerNm,
+                        A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.UITM_DT          AS keyId,
+                        A.PACT_ID                                                   AS pactId,
+                        A.PACT_TP_CD                                                AS pactTpCd,
+                        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+                        NULL                                                        AS ptMedDeptCd,
+                        NULL                                                        As ptMedDeptNm,
+                        1                                                           AS sortSeq,
+                        NULL                                                        AS note,
+                        1                                                           AS mdfmId,
+                        1                                                           AS mdfmFomSeq,
+                        NULL                                                        AS mdrcId,
+                        NULL                                                        AS mdrcFomSeq,
+                        NULL                                                        AS examKey,
+                        NULL                                                        AS pacsImgIptnCd,
+                        NULL                                                        AS accsId,
+                        NULL                                                        AS recType,
+                        NULL                                                        AS geneExmYn,
+                        NULL                                                        AS mdrcWrtStsCdYn,
+                        NULL                                                        AS opExptRegId
+        FROM ODS.S_MRNNRVAD A
+                 INNER JOIN ODS.S_MRNNRVAE B
+                            ON A.CLCO_REC_ITEM_ID = B.CLCO_REC_ITEM_ID
+        WHERE PT_NO = #{ptNo}
+          AND A.CLCO_REC_WRT_PATH_TP_CD = '01'
+          AND A.UITM_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+          AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
+        ORDER BY A.UITM_DT DESC
+    </select>
 </mapper>

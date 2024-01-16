@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.observation.dao.ObservationDAO">
+    <select id="getObservationContents"
+            parameterType="ai.planit.pev.strategy.chart.object.observation.ObservationRequest"
+            resultType="ai.planit.pev.strategy.chart.object.observation.ObservationContent">
+        SELECT TO_CHAR(B.ITEM_REC_DTM, 'hh:mi') AS time,
+               C.NR_ITEM_NM AS item,
+               B.REC_CNTE AS value
+        FROM ODS.S_MRNNRVAD A
+                 INNER JOIN ODS.S_MRNNRVAE B
+                            ON A.CLCO_REC_ITEM_ID = B.CLCO_REC_ITEM_ID
+                 INNER JOIN ODS.S_MRNNRIAM C
+                            ON A.NR_ITEM_ID = C.NR_ITEM_ID
+        WHERE A.PT_NO = #{ptNo}
+          AND A.UITM_DT::DATE = #{writingDate}::DATE
+          AND A.PACT_TP_CD = #{pactTpCd}
+        ORDER BY C.SORT_SEQ
+    </select>
+</mapper>

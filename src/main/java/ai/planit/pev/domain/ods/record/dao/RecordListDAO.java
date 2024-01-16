@@ -93,4 +93,6 @@ public interface RecordListDAO {
      * @return 스캔자료 목록
      */
     List<Record.Response> getScanRecordList(Record.Request request);
+
+    List<Record.Response> getNrObservationRecordList(Record.Request request);
 }

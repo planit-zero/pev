@@ -36,6 +36,7 @@ public enum RecordTarget {
 
     // 간호
     NURS_RECORD("NR", "간호기록"),
+    NURS_OBSERVATION("NR_OBSERVATION", "임상관찰기록"),
 
     // 스캔자료
     SCAN_RECORD("SC", "스캔자료"),

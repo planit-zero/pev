@@ -29,6 +29,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
     padding: '20px 40px',
     marginTop: '48px',
     height: 'calc(100vh - 48px)',
+    overflowX: 'scroll',
     overflowY: 'scroll',
     ...(!open && {
         transition: theme.transitions.create('margin', {
