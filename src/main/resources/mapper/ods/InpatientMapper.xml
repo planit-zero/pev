@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.inpatient.dao.InpatientDAO">
+    <select id="getNrInpatientEntities"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+        SELECT 1                AS sectionId,
+               C.NR_ITEM_CTG_ID AS id,
+               '-1000'          AS parentId,
+               C.NR_ITEM_CTG_ID AS mdfmCpemNo,
+               'ENTITY'         AS classType,
+               'LABEL'          AS controlType,
+               NULL             AS maskingType,
+               C.NR_ITEM_CTG_NM AS content,
+               NULL             AS "desc",
+               NULL             AS style
+        FROM ODS.S_MRNNRFAE A
+                 INNER JOIN ODS.S_MRNNRIAM B
+                            ON A.NR_ITEM_ID = B.NR_ITEM_ID
+                                AND B.USE_YN = 'Y'
+                                AND B.MDREC_VWR_PRNT_YN = 'Y'
+                 INNER JOIN ODS.S_MRNNRICD C
+                            ON B.NR_ITEM_CTG_ID = C.NR_ITEM_CTG_ID
+                                AND C.USE_YN = 'Y'
+                                AND C.LST_YN = 'Y'
+                                AND C.NREC_CLS_CD = '01'
+        WHERE A.NREC_ID = #{keyId}
+          AND A.LST_YN = 'Y'
+        ORDER BY A.NREC_DTL_ID, C.SORT_SEQ, B.SORT_SEQ
+    </select>
+    <select id="getNrInpatientAttributes"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+        SELECT 1                AS sectionId,
+               B.NR_ITEM_ID     AS id,
+               C.NR_ITEM_CTG_ID AS parentId,
+               B.NR_ITEM_ID     AS mdfmCpemNo,
+               'ATTRIBUTE'      AS classType,
+               'LABEL'          AS controlType,
+               NULL             AS maskingType,
+               B.NR_ITEM_NM     AS content,
+               NULL             AS "desc",
+               NULL             AS style
+        FROM ODS.S_MRNNRFAE A
+                 INNER JOIN ODS.S_MRNNRIAM B
+                            ON A.NR_ITEM_ID = B.NR_ITEM_ID
+                                AND B.USE_YN = 'Y'
+                                AND B.MDREC_VWR_PRNT_YN = 'Y'
+                 INNER JOIN ODS.S_MRNNRICD C
+                            ON B.NR_ITEM_CTG_ID = C.NR_ITEM_CTG_ID
+                                AND C.USE_YN = 'Y'
+                                AND C.LST_YN = 'Y'
+                                AND C.NREC_CLS_CD = '01'
+        WHERE A.NREC_ID = #{keyId}
+          AND A.LST_YN = 'Y'
+        ORDER BY A.NREC_DTL_ID, C.SORT_SEQ, B.SORT_SEQ
+    </select>
+    <select id="getNrInpatientValues"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+        SELECT 1             AS sectionId,
+               A.NREC_DTL_ID AS id,
+               B.NR_ITEM_ID  AS parentId,
+               A.NREC_DTL_ID AS mdfmCpemNo,
+               'VALUE'       AS classType,
+               CASE
+                   WHEN LENGTH(A.REC_CNTE) >= 50 THEN 'RICH_TEXT_BOX'
+                   ELSE 'TEXT_BOX'
+                   END AS controlType,
+               NULL          AS maskingType,
+               A.REC_CNTE    AS content,
+               NULL          AS "desc",
+               NULL          AS style
+        FROM ODS.S_MRNNRFAE A
+                 INNER JOIN ODS.S_MRNNRIAM B
+                            ON A.NR_ITEM_ID = B.NR_ITEM_ID
+                                AND B.USE_YN = 'Y'
+                                AND B.MDREC_VWR_PRNT_YN = 'Y'
+                 INNER JOIN ODS.S_MRNNRICD C
+                            ON B.NR_ITEM_CTG_ID = C.NR_ITEM_CTG_ID
+                                AND C.USE_YN = 'Y'
+                                AND C.LST_YN = 'Y'
+                                AND C.NREC_CLS_CD = '01'
+        WHERE A.NREC_ID = #{keyId}
+          AND A.LST_YN = 'Y'
+        ORDER BY A.NREC_DTL_ID, C.SORT_SEQ, B.SORT_SEQ
+    </select>
+</mapper>

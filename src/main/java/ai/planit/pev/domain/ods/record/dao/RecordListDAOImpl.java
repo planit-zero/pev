@@ -72,4 +72,9 @@ public class RecordListDAOImpl implements RecordListDAO {
     public List<Record.Response> getNrObservationRecordList(Record.Request request) {
         return sqlSessionTemplate.selectList("getNrObservationRecordList", request);
     }
+
+    @Override
+    public List<Record.Response> getNrInpatientRecordList(Record.Request request) {
+        return sqlSessionTemplate.selectList("getNrInpatientRecordList", request);
+    }
 }
