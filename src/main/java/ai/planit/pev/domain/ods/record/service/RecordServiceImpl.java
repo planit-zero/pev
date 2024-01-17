@@ -4,6 +4,7 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
+import ai.planit.pev.domain.ods.execute.service.ExecuteService;
 import ai.planit.pev.domain.ods.inpatient.service.InpatientService;
 import ai.planit.pev.domain.ods.medical.service.MedicalService;
 import ai.planit.pev.domain.ods.observation.service.ObservationService;
@@ -44,6 +45,7 @@ public class RecordServiceImpl implements RecordService {
     private final SpecimenService specimenService;
     private final ObservationService observationService;
     private final InpatientService inpatientService;
+    private final ExecuteService executeService;
 
     /**
      * {@inheritDoc}
@@ -247,6 +249,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrInpatientRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_EXECUTE.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrExecuteRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -413,6 +419,12 @@ public class RecordServiceImpl implements RecordService {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_INPATIENT.getType())) {
                 chartContext.setChartStrategy(new InpatientChartStrategy());
                 format = inpatientService.getInpatientFormat(request.getRecord());
+                dataSource = null;
+            }
+            // 간호활동수행기록
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_EXECUTE.getType())) {
+                chartContext.setChartStrategy(new ExecuteChartStrategy());
+                format = executeService.getNrExecuteFormat(request.getRecord());
                 dataSource = null;
             }
         }

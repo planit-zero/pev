@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.execute.dao.ExecuteDAO">
+    <select id="getNrExecuteAttributes"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+        SELECT DISTINCT 1                                                    AS sectionId,
+                        C.NR_ITEM_ID                                         AS id,
+                        C.NR_ITEM_NM                                         AS name,
+                        'nr-execute-1'                                       AS parentId,
+                        C.NR_ITEM_ID                                         AS mdfmCpemNo,
+                        'ATTRIBUTE'                                          AS classType,
+                        'LABEL'                                              AS controlType,
+                        NULL                                                 AS maskingType,
+                        C.NR_ITEM_NM || '-' || A.NRAT_FMT_FRQN_KND_CD || '회' AS content,
+                        NULL                                                 AS "desc",
+                        NULL                                                 AS style
+        FROM ODS.S_MRNNRAAD A
+                 INNER JOIN ODS.S_MRNNRAAE B
+                            ON A.NRAT_FMT_ITEM_ID = B.NRAT_FMT_ITEM_ID
+                                AND B.USE_YN = 'Y'
+                                AND B.LST_YN = 'Y'
+                 INNER JOIN ODS.S_MRNNRIAM C
+                            ON A.NR_ITEM_ID = C.NR_ITEM_ID
+                                AND C.USE_YN = 'Y'
+        WHERE A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.UITM_DT = #{keyId}
+          AND A.USE_YN = 'Y'
+        ORDER BY C.NR_ITEM_NM
+    </select>
+    <select id="getNrExecuteValues"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+        SELECT DISTINCT 1                                                                            AS sectionId,
+                        B.NRAT_FMT_ID                                                                AS id,
+                        C.NR_ITEM_NM                                                                 AS name,
+                        B.FMT_HMI                                                                    AS time,
+                        A.NR_ITEM_ID                                                                 AS parentId,
+                        B.NRAT_FMT_ID                                                                AS mdfmCpemNo,
+                        'VALUE'                                                                      AS classType,
+                        'TEXT_BOX'                                                                   AS controlType,
+                        'NAME'                                                                       AS maskingType,
+                        LEFT(B.FMT_HMI, 2) || ':' || RIGHT(B.FMT_HMI, 2) || '/' || B.FMT_SGNT_TP_CD || ' (' ||
+                        (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = B.LSH_STF_NO) || ')' AS content,
+                        NULL                                                                         AS "desc",
+                        NULL                                                                         AS style
+        FROM ODS.S_MRNNRAAD A
+                 INNER JOIN ODS.S_MRNNRAAE B
+                            ON A.NRAT_FMT_ITEM_ID = B.NRAT_FMT_ITEM_ID
+                                AND B.USE_YN = 'Y'
+                                AND B.LST_YN = 'Y'
+                 INNER JOIN ODS.S_MRNNRIAM C
+                            ON A.NR_ITEM_ID = C.NR_ITEM_ID
+                                AND C.USE_YN = 'Y'
+        WHERE A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.UITM_DT = #{keyId}
+          AND A.USE_YN = 'Y'
+        ORDER BY C.NR_ITEM_NM, B.FMT_HMI
+    </select>
+</mapper>

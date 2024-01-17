@@ -38,6 +38,7 @@ public enum RecordTarget {
     NURS_RECORD("NR", "간호기록"),
     NURS_OBSERVATION("NR_OBSERVATION", "임상관찰기록"),
     NURS_INPATIENT("NR_INPATIENT", "임상관찰기록"),
+    NURS_EXECUTE("NR_EXECUTE", "임상관찰기록"),
 
     // 스캔자료
     SCAN_RECORD("SC", "스캔자료"),

@@ -96,4 +96,5 @@ public interface RecordListDAO {
 
     List<Record.Response> getNrObservationRecordList(Record.Request request);
     List<Record.Response> getNrInpatientRecordList(Record.Request request);
+    List<Record.Response> getNrExecuteRecordList(Record.Request request);
 }
