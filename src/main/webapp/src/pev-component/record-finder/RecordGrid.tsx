@@ -8,7 +8,7 @@ import { setTargetRecords } from '../../store/pev-slices/record';
 import { setAlert } from '../../store/pev-slices/environment';
 import { TAlert } from '../../pev-type/TAlert';
 import { useSelector } from '../../store';
-import { IconCheck, IconListCheck } from '@tabler/icons';
+import { IconCheck, IconListCheck, IconSquareX } from '@tabler/icons';
 
 type ConditionFinderGridProps = {
     recordList: IRecord[];
@@ -49,6 +49,12 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
 
     const [selectionMode, setSelectionMode] = React.useState<'single' | 'multiple'>('single');
 
+    const deselectAll = () => {
+        if (gridRef && gridRef.current) {
+            void gridRef.current.instance.deselectAll();
+        }
+    };
+
     return (
         <Box width={'100%'} height={'100%'}>
             <Box width={'100%'} height={'31px'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
@@ -63,14 +69,25 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                 </Box>
                 <Box display={'flex'} alignItems={'center'} gap={1}>
                     {selectionMode === 'multiple' && (
-                        <Button
-                            variant={'outlined'}
-                            size={'small'}
-                            startIcon={<IconCheck fontSize="small" />}
-                            onClick={() => setSelectionMode('single')}
-                        >
-                            단일 선택
-                        </Button>
+                        <React.Fragment>
+                            <Button
+                                variant={'outlined'}
+                                color={'error'}
+                                size={'small'}
+                                startIcon={<IconSquareX fontSize="small" />}
+                                onClick={deselectAll}
+                            >
+                                선택 해제
+                            </Button>
+                            <Button
+                                variant={'outlined'}
+                                size={'small'}
+                                startIcon={<IconCheck fontSize="small" />}
+                                onClick={() => setSelectionMode('single')}
+                            >
+                                단일 선택
+                            </Button>
+                        </React.Fragment>
                     )}
                     {selectionMode === 'single' && (
                         <Button

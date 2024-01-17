@@ -4,7 +4,6 @@ import { Bookmark } from '@mui/icons-material';
 import ConditionFinderPanelDateSetter from './ConditionFinderPanelDateSetter';
 import ConditionFinderPanelDepartmentSetter from './ConditionFinderPanelDepartmentSetter';
 import ConditionFinderPanelPatientTypeSetter from './ConditionFinderPanelPatientTypeSetter';
-import ConditionFinderPanelWriterSetter from './ConditionFinderPanelWriterSetter';
 import ConditionFinderPanelRecordSetter from './ConditionFinderPanelRecordSetter';
 import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
 import SearchIcon from '@mui/icons-material/Search';
@@ -17,7 +16,7 @@ type ConditionFinderPanelProps = {
 
 const ConditionFinderPanel = (props: ConditionFinderPanelProps) => {
     return (
-        <Box width={'100%'} height={290}>
+        <Box width={'100%'} height={247}>
             <Box display={'flex'} alignItems={'center'}>
                 <Bookmark color={'primary'} fontSize={'small'} />
                 <Typography variant={'body1'}>조회조건</Typography>
@@ -27,7 +26,7 @@ const ConditionFinderPanel = (props: ConditionFinderPanelProps) => {
                 sx={{
                     mt: 1,
                     p: 0,
-                    height: '253px',
+                    height: '210px',
                     borderRadius: 0,
                     display: 'flex',
                     flexDirection: 'column',
@@ -47,10 +46,10 @@ const ConditionFinderPanel = (props: ConditionFinderPanelProps) => {
                     searchCondition={props.searchCondition}
                     onSearchConditionChange={props.onSearchConditionChange}
                 />
-                <ConditionFinderPanelWriterSetter
-                    searchCondition={props.searchCondition}
-                    onSearchConditionChange={props.onSearchConditionChange}
-                />
+                {/*<ConditionFinderPanelWriterSetter*/}
+                {/*    searchCondition={props.searchCondition}*/}
+                {/*    onSearchConditionChange={props.onSearchConditionChange}*/}
+                {/*/>*/}
                 <ConditionFinderPanelRecordSetter
                     searchCondition={props.searchCondition}
                     onSearchConditionChange={props.onSearchConditionChange}

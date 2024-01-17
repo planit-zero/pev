@@ -62,7 +62,7 @@ const ConditionFinder = (props: ConditionFinderProps) => {
             />
             <Divider sx={{ my: 1 }} />
             {/*목록 조회 그리드*/}
-            <Box width={'100%'} height={'calc(100% - 307px)'}>
+            <Box width={'100%'} height={'calc(100% - 264px)'}>
                 <RecordGrid recordList={recordList || []} />
             </Box>
         </Box>
