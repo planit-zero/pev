@@ -11,8 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 public class ChartData {
     private List<ChartElement> values;
+    private String pid;
 
-    public ChartData(List<ChartElement> values) {
+    public ChartData(String pid, List<ChartElement> values) {
+        this.pid = pid;
         this.values = values;
     }
 }

@@ -444,7 +444,14 @@ public class RecordServiceImpl implements RecordService {
             style = medicalService.getChartStyleSections(xmlRequest);
         }
 
-        ChartData chartData = new ChartData(data);
+        String pid = (String) session.getAttribute("pev-pid");
+
+        // 세션에 저장된 환자병록번호가 없을 경우 예외 처리한다.
+        if (PevStringUtil.isStringEmpty(pid)) {
+            throw new BaseException(ErrorType.PID_NOT_FOUND_IN_SESSION);
+        }
+
+        ChartData chartData = new ChartData(pid, data);
         if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
         return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
