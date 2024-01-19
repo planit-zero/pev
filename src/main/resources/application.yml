@@ -21,7 +21,7 @@ spring:
         username: pev
         password: planit1127!@
   pid:
-    file: /deview/pev/boot.pid
+    file: /psdEx/pev/boot.pid
 server:
   port: 18083
 idp:
