@@ -3,7 +3,7 @@ spring:
     datasource:
       hikari:
         driver-class-name: com.vertica.jdbc.Driver
-        jdbc-url: jdbc:vertica://172.26.33.19:5433/CDW
+        jdbc-url: jdbc:vertica://172.26.33.19:5433/CDW?BackupServerNode=172.26.33.20:5433,172.26.33.21:5433&ConnectionLoadBalance=1
         username: emr
         password: emr1127!
   irb:
