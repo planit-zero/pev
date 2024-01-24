@@ -5,6 +5,7 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.execute.service.ExecuteService;
+import ai.planit.pev.domain.ods.fall.service.FallService;
 import ai.planit.pev.domain.ods.inpatient.service.InpatientService;
 import ai.planit.pev.domain.ods.medical.service.MedicalService;
 import ai.planit.pev.domain.ods.observation.service.ObservationService;
@@ -46,6 +47,7 @@ public class RecordServiceImpl implements RecordService {
     private final ObservationService observationService;
     private final InpatientService inpatientService;
     private final ExecuteService executeService;
+    private final FallService fallService;
 
     /**
      * {@inheritDoc}
@@ -81,7 +83,7 @@ public class RecordServiceImpl implements RecordService {
                 .filter(target -> target.startsWith("D0"))
                 .collect(Collectors.toList());
 
-        if (medicalRecordTargets.size() > 0) {
+        if (!medicalRecordTargets.isEmpty()) {
             recordList.addAll(getMedicalRecordList(request, medicalRecordTargets));
         }
 
@@ -96,7 +98,7 @@ public class RecordServiceImpl implements RecordService {
                 .filter(target -> target.startsWith(RecordTarget.EXAM_RECORD.getType()))
                 .collect(Collectors.toList());
 
-        if (examRecordTargets.size() > 0) {
+        if (!examRecordTargets.isEmpty()) {
             recordList.addAll(getExamRecordList(request, examRecordTargets));
         }
 
@@ -106,7 +108,7 @@ public class RecordServiceImpl implements RecordService {
                 .filter(target -> target.startsWith(RecordTarget.NURS_RECORD.getType()))
                 .collect(Collectors.toList());
 
-        if (nrRecordTargets.size() > 0) {
+        if (!nrRecordTargets.isEmpty()) {
             recordList.addAll(getNrRecordList(request, nrRecordTargets));
         }
 
@@ -195,7 +197,7 @@ public class RecordServiceImpl implements RecordService {
                 .filter(type -> !type.equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()))
                 .collect(Collectors.toList());
 
-        if (generalTypeList.size() > 0) {
+        if (!generalTypeList.isEmpty()) {
             String[] queryTargets = generalTypeList.toArray(new String[0]);
             request.setQueryTargets(queryTargets);
 
@@ -251,6 +253,10 @@ public class RecordServiceImpl implements RecordService {
 
         if (nrRecordTargets.contains(RecordTarget.NURS_EXECUTE.getType())) {
             nrRecordList.addAll(recordListDAO.getNrExecuteRecordList(request));
+        }
+
+        if (nrRecordTargets.contains(RecordTarget.NURS_FALL.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrFallRecordList(request));
         }
 
         return nrRecordList;
@@ -426,6 +432,11 @@ public class RecordServiceImpl implements RecordService {
                 chartContext.setChartStrategy(new ExecuteChartStrategy());
                 format = executeService.getNrExecuteFormat(request.getRecord());
                 dataSource = null;
+            }
+
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_FALL.getType())) {
+                chartContext.setChartStrategy(new FallChartStrategy());
+                dataSource =  fallService.getFallData(request.getRecord().getKeyId());
             }
         }
 

@@ -82,4 +82,9 @@ public class RecordListDAOImpl implements RecordListDAO {
     public List<Record.Response> getNrExecuteRecordList(Record.Request request) {
         return sqlSessionTemplate.selectList("getNrExecuteRecordList", request);
     }
+
+    @Override
+    public List<Record.Response> getNrFallRecordList(Record.Request request) {
+        return sqlSessionTemplate.selectList("getNrFallRecordList", request);
+    }
 }
