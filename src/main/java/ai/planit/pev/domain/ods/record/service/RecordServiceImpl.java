@@ -4,6 +4,7 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
+import ai.planit.pev.domain.ods.bedsore.service.BedsoreService;
 import ai.planit.pev.domain.ods.execute.service.ExecuteService;
 import ai.planit.pev.domain.ods.fall.service.FallService;
 import ai.planit.pev.domain.ods.inpatient.service.InpatientService;
@@ -48,6 +49,7 @@ public class RecordServiceImpl implements RecordService {
     private final InpatientService inpatientService;
     private final ExecuteService executeService;
     private final FallService fallService;
+    private final BedsoreService bedsoreService;
 
     /**
      * {@inheritDoc}
@@ -259,6 +261,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrFallRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_BEDSORE.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrBedsoreRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -434,9 +440,17 @@ public class RecordServiceImpl implements RecordService {
                 dataSource = null;
             }
 
+            // 낙상위험도평가
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_FALL.getType())) {
                 chartContext.setChartStrategy(new FallChartStrategy());
                 dataSource =  fallService.getFallData(request.getRecord().getKeyId());
+            }
+
+            // 욕창간호기록
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_BEDSORE.getType())) {
+                chartContext.setChartStrategy(new BedsoreChartStrategy());
+                format = bedsoreService.getBedsoreFormat(request.getRecord().getKeyId());
+                dataSource = null;
             }
         }
 

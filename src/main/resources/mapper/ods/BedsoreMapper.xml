@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.bedsore.dao.BedsoreDAO">
+    <select id="getBedsoreContents"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.bedsore.BedsoreContent">
+        <![CDATA[
+        SELECT C.NR_ITEM_NM || '(' || B.BDSR_RGN_ETC_CNTE || ')'                                                 AS region,
+               A.INPT_DTM                                                                                        AS writingDateTime,
+               'Stage ' || A.BDSR_STEP_CTG_CD                                                                    as stage,
+               A.BDSR_SZ_WDTH_VAL::float || '/' || A.BDSR_SZ_VLIN_VAL::float || '/' || A.BDSR_SZ_DPTH_VAL::float as size,
+       (SELECT Z.COMN_CD_NM
+        FROM ODS.S_CCCCCSTE Z
+        WHERE Z.COMN_GRP_CD = 'N0003001'
+          AND Z.COMN_CD = A.BDSR_REC_DRSS_IMPL_TP_CD)                                                    as dressingAction,
+       (SELECT Z.COMN_CD_NM
+        FROM ODS.S_CCCCCSTE Z
+        WHERE Z.COMN_GRP_CD = 'N0003000'
+          AND Z.COMN_CD = D.BDSR_REC_DRSS_MTHD_CD)                                                       as dressingMethod,
+       (SELECT Z.COMN_CD_NM
+        FROM ODS.S_CCCCCSTE Z
+        WHERE Z.COMN_GRP_CD = 'N0000286'
+          AND Z.COMN_CD = E.BDSR_REC_DRSS_KND_CD)                                                        as dressingKind,
+       (SELECT Z.DEPT_NM
+        FROM ODS.S_PDEDBMSM Z
+        WHERE Z.DEPT_CD = A.WRTR_PLWK_DEPT_CD)                                                           AS writingDeptNm,
+       (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.FSR_STF_NO)                             as writerNm
+        FROM ODS.S_MRNNRPCD A
+            INNER JOIN ODS.S_MRNNRPAD B
+        ON A.BDSR_REC_ID = B.BDSR_REC_ID
+            INNER JOIN ODS.S_MRNNRIAM C
+            ON B.BDSR_RGN_NR_ITEM_ID = C.NR_ITEM_ID
+            INNER JOIN ODS.S_MRNNRPDE D
+            ON A.BDSR_REC_ID = D.BDSR_REC_ID
+            AND A.INPT_DTM = D.INPT_DTM
+            AND A.WRT_SEQ = D.WRT_SEQ
+            INNER JOIN ODS.S_MRNNRPFE E
+            ON A.BDSR_REC_ID = E.BDSR_REC_ID
+            AND A.INPT_DTM = E.INPT_DTM
+            AND A.WRT_SEQ = E.WRT_SEQ
+        WHERE A.PT_NO || '_' || A.INPT_DTM::DATE = #{keyId}
+          AND A.LST_YN = 'Y'
+        ORDER BY A.BDSR_REC_ID
+        ]]>
+    </select>
+</mapper>
