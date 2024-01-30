@@ -1,0 +1,5 @@
+spring:
+  pid:
+    file: /deview/pev/boot.pid
+server:
+  port: 8080
