@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.discharge.dao.DischargeDAO">
+    <select id="getNrDischargeContents"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.discharge.DischargeContent">
+        <![CDATA[
+        SELECT CASE
+                   WHEN C.NR_ITEM_ID IN (60000000, 60000010, 60000020, 60000120) THEN '퇴원 시 상태'
+                   WHEN C.NR_ITEM_ID IN (60000040, 60000050, 60000070) THEN '퇴원 후 관리'
+                   WHEN C.NR_ITEM_ID IN (60000090) THEN '퇴원 후 건강관리(기타 안내사항)'
+                   WHEN C.NR_ITEM_ID IN (60000100) THEN '퇴원 후 건강관리 및 문의를 요하는 증상'
+                   END AS title,
+               CASE
+                   WHEN C.NR_ITEM_ID IN (60000090, 60000100) THEN B.REC_CNTE
+                   ELSE C.NR_ITEM_NM || ' : ' || B.REC_CNTE
+                   END AS content
+        FROM ODS.S_MRNNRFAD A
+                 INNER JOIN ODS.S_MRNNRFAE B
+                            ON A.NREC_ID = B.NREC_ID
+                                AND B.LST_YN = 'Y'
+                 INNER JOIN ODS.S_MRNNRIAM C
+                            ON B.NR_ITEM_ID = C.NR_ITEM_ID
+        WHERE A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
+          AND A.NREC_FORM_CD = '601'
+          AND A.LST_YN = 'Y'
+          AND title is not null
+        ORDER BY CASE
+            WHEN C.NR_ITEM_ID IN (60000000, 60000010, 60000020, 60000120) THEN 1
+            WHEN C.NR_ITEM_ID IN (60000040, 60000050, 60000070) THEN 2
+            WHEN C.NR_ITEM_ID IN (60000090) THEN 3
+            WHEN C.NR_ITEM_ID IN (60000100) THEN 4
+        END, C.SORT_SEQ, B.NREC_DTL_ID
+        ]]>
+    </select>
+    <select id="getNrDischargeWriterText"
+            parameterType="java.lang.String"
+            resultType="java.lang.String">
+        SELECT B.STF_NM AS writerNm
+        FROM ODS.S_MRNNRFAD A
+                 INNER JOIN ODS.S_CNLRRUSD B
+                            ON A.FSR_STF_NO = B.STF_NO
+        WHERE A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
+        AND A.NREC_FORM_CD = '601'
+    </select>
+</mapper>

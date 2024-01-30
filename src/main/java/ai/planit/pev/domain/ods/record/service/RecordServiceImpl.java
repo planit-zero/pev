@@ -6,6 +6,7 @@ import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.bedsore.service.BedsoreService;
 import ai.planit.pev.domain.ods.checkout.service.CheckoutService;
+import ai.planit.pev.domain.ods.discharge.service.DischargeService;
 import ai.planit.pev.domain.ods.execute.service.ExecuteService;
 import ai.planit.pev.domain.ods.fall.service.FallService;
 import ai.planit.pev.domain.ods.inpatient.service.InpatientService;
@@ -52,6 +53,7 @@ public class RecordServiceImpl implements RecordService {
     private final FallService fallService;
     private final BedsoreService bedsoreService;
     private final CheckoutService checkoutService;
+    private final DischargeService dischargeService;
 
     /**
      * {@inheritDoc}
@@ -275,6 +277,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrCheckoutRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_DISCHARGE.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrDischargeRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -473,6 +479,12 @@ public class RecordServiceImpl implements RecordService {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_CHECKOUT.getType())) {
                 chartContext.setChartStrategy(new CheckoutChartStrategy());
                 dataSource = checkoutService.getNrCheckoutData(request.getRecord().getKeyId());
+            }
+
+            // 퇴원간호기록
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_DISCHARGE.getType())) {
+                chartContext.setChartStrategy(new DischargeChartStrategy());
+                dataSource = dischargeService.getNrDischargeData(request.getRecord().getKeyId());
             }
         }
 
