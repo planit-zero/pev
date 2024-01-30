@@ -5,6 +5,7 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.bedsore.service.BedsoreService;
+import ai.planit.pev.domain.ods.checkout.service.CheckoutService;
 import ai.planit.pev.domain.ods.execute.service.ExecuteService;
 import ai.planit.pev.domain.ods.fall.service.FallService;
 import ai.planit.pev.domain.ods.inpatient.service.InpatientService;
@@ -50,6 +51,7 @@ public class RecordServiceImpl implements RecordService {
     private final ExecuteService executeService;
     private final FallService fallService;
     private final BedsoreService bedsoreService;
+    private final CheckoutService checkoutService;
 
     /**
      * {@inheritDoc}
@@ -269,6 +271,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrBedsoreEvaluationRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_CHECKOUT.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrCheckoutRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -461,6 +467,12 @@ public class RecordServiceImpl implements RecordService {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_BEDSORE_EVALUATION.getType())) {
                 chartContext.setChartStrategy(new BedsoreEvaluationChartStrategy());
                 dataSource = bedsoreService.getBedsoreEvaluationData(request.getRecord().getKeyId());
+            }
+
+            // 퇴실간호기록
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_CHECKOUT.getType())) {
+                chartContext.setChartStrategy(new CheckoutChartStrategy());
+                dataSource = checkoutService.getNrCheckoutData(request.getRecord().getKeyId());
             }
         }
 
