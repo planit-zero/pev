@@ -44,6 +44,7 @@ public enum RecordTarget {
     NURS_BEDSORE_EVALUATION("NR_BEDSORE_EVALUATION", "욕창위험도평가"),
     NURS_CHECKOUT("NR_CHECKOUT", "퇴실간호기록"),
     NURS_DISCHARGE("NR_DISCHARGE", "퇴원간호기록"),
+    NURS_TRANSFER("NR_TRANSFER", "전과전동간호기록"),
 
     // 스캔자료
     SCAN_RECORD("SC", "스캔자료"),

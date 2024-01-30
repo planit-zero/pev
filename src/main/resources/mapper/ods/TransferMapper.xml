@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.transfer.dao.TransferDAO">
+    <select id="getNrTransferContents"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.transfer.TransferContent">
+        <![CDATA[
+        SELECT CASE
+                   WHEN INSTR(C.NR_ITEM_NM, '>') = 0 THEN C.NR_ITEM_NM
+                   ELSE LEFT(C.NR_ITEM_NM, INSTR(C.NR_ITEM_NM, '>') - 1)
+               END AS title,
+               CASE
+                   WHEN INSTR(C.NR_ITEM_NM, '>') = 0 THEN B.REC_CNTE
+                   ELSE SUBSTRING(C.NR_ITEM_NM, INSTR(C.NR_ITEM_NM, '>') + 2) || ' : ' || B.REC_CNTE
+               END AS content
+        FROM ODS.S_MRNNRFAD A
+        INNER JOIN ODS.S_MRNNRFAE B
+                    ON A.NREC_ID = B.NREC_ID
+                        AND B.LST_YN = 'Y'
+        INNER JOIN ODS.S_MRNNRIAM C
+                    ON B.NR_ITEM_ID = C.NR_ITEM_ID
+        WHERE A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
+        AND A.NREC_FORM_CD = '501'
+        ORDER BY C.SORT_SEQ
+        ]]>
+    </select>
+    <select id="getNrTransferWriterText"
+            parameterType="java.lang.String"
+            resultType="java.lang.String">
+        SELECT B.STF_NM AS writerNm
+        FROM ODS.S_MRNNRFAD A
+                 INNER JOIN ODS.S_CNLRRUSD B
+                            ON A.FSR_STF_NO = B.STF_NO
+        WHERE A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
+        AND A.NREC_FORM_CD = '501'
+    </select>
+</mapper>

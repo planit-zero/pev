@@ -910,4 +910,47 @@
         <if test="deptType == 'WRITER'">AND A.WRTR_PLWK_DEPT_CD = #{deptCd}</if>
         ORDER BY A.REC_WRT_DTM::DATE DESC
     </select>
+    <select id="getNrTransferRecordList"
+            parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request"
+            resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
+        SELECT 'NR'                                                        AS recordType,
+        'NR_TRANSFER'                                              AS recordDetailType,
+        '전과전동간호기록'                                                    AS itemType,
+        '전과전동간호기록'                                                    AS itemNm,
+        A.REC_WRT_DTM::DATE                                         AS writingDate,
+        NULL                                                        AS writingDeptCd,
+        NULL                                                        AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ   AS keyId,
+        A.PACT_ID                                                   AS pactId,
+        A.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM
+        FROM ODS.S_PDEDBMSM Z
+        WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD)                        AS ptMedDeptNm,
+        A.WRT_SEQ                                                   AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
+        FROM ODS.S_MRNNRFAD A
+        WHERE A.PT_NO = #{ptNo}
+        AND A.LST_YN = 'Y'
+        AND A.NREC_FORM_CD = '501'
+        AND A.REC_WRT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+        AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
+        <if test="deptType == 'MEDICAL'">AND A.PT_MTD_DEPT_CD = #{deptCd}</if>
+        <if test="deptType == 'WRITER'">AND A.WRTR_PLWK_DEPT_CD = #{deptCd}</if>
+        ORDER BY A.REC_WRT_DTM::DATE DESC
+    </select>
 </mapper>

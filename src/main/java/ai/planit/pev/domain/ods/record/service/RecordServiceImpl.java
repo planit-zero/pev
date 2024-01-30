@@ -19,6 +19,7 @@ import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.domain.ods.specimen.service.SpecimenService;
+import ai.planit.pev.domain.ods.transfer.service.TransferService;
 import ai.planit.pev.strategy.chart.*;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.constant.ChartControlType;
@@ -54,6 +55,7 @@ public class RecordServiceImpl implements RecordService {
     private final BedsoreService bedsoreService;
     private final CheckoutService checkoutService;
     private final DischargeService dischargeService;
+    private final TransferService transferService;
 
     /**
      * {@inheritDoc}
@@ -281,6 +283,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrDischargeRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_TRANSFER.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrTransferRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -485,6 +491,12 @@ public class RecordServiceImpl implements RecordService {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_DISCHARGE.getType())) {
                 chartContext.setChartStrategy(new DischargeChartStrategy());
                 dataSource = dischargeService.getNrDischargeData(request.getRecord().getKeyId());
+            }
+
+            // 전과전동간호기록
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_TRANSFER.getType())) {
+                chartContext.setChartStrategy(new TransferChartStrategy());
+                dataSource = transferService.getNrTransferData(request.getRecord().getKeyId());
             }
         }
 
