@@ -16,4 +16,29 @@ public class BedsoreDAOImpl implements BedsoreDAO {
     public List<BedsoreContent> getBedsoreContents(String keyId) {
         return sqlSessionTemplate.selectList("getBedsoreContents", keyId);
     }
+
+    @Override
+    public List<String> getBedsoreEvaluationDetailTextList(String keyId) {
+        return sqlSessionTemplate.selectList("getBedsoreEvaluationDetailTextList", keyId);
+    }
+
+    @Override
+    public String getBedsoreEvaluationTotalText(String keyId) {
+        return sqlSessionTemplate.selectOne("getBedsoreEvaluationTotalText", keyId);
+    }
+
+    @Override
+    public List<String> getBedsoreEvaluationPreventTextList(String keyId) {
+        return sqlSessionTemplate.selectList("getBedsoreEvaluationPreventTextList", keyId);
+    }
+
+    @Override
+    public String getBedsoreEvaluationYnText(String keyId) {
+        return sqlSessionTemplate.selectOne("getBedsoreEvaluationYnText", keyId);
+    }
+
+    @Override
+    public String getBedsoreEvaluationWriterText(String keyId) {
+        return sqlSessionTemplate.selectOne("getBedsoreEvaluationWriterText", keyId);
+    }
 }

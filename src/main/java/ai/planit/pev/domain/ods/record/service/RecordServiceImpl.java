@@ -265,6 +265,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrBedsoreRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_BEDSORE_EVALUATION.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrBedsoreEvaluationRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -451,6 +455,12 @@ public class RecordServiceImpl implements RecordService {
                 chartContext.setChartStrategy(new BedsoreChartStrategy());
                 format = bedsoreService.getBedsoreFormat(request.getRecord().getKeyId());
                 dataSource = null;
+            }
+
+            // 욕창위험도평가
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_BEDSORE_EVALUATION.getType())) {
+                chartContext.setChartStrategy(new BedsoreEvaluationChartStrategy());
+                dataSource = bedsoreService.getBedsoreEvaluationData(request.getRecord().getKeyId());
             }
         }
 

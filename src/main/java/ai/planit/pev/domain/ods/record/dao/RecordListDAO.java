@@ -99,4 +99,5 @@ public interface RecordListDAO {
     List<Record.Response> getNrExecuteRecordList(Record.Request request);
     List<Record.Response> getNrFallRecordList(Record.Request request);
     List<Record.Response> getNrBedsoreRecordList(Record.Request request);
+    List<Record.Response> getNrBedsoreEvaluationRecordList(Record.Request request);
 }

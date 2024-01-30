@@ -6,6 +6,7 @@ import ai.planit.pev.domain.ods.bedsore.dao.BedsoreDAO;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.constant.ChartControlType;
 import ai.planit.pev.strategy.chart.object.bedsore.BedsoreContent;
+import ai.planit.pev.strategy.chart.object.bedsore.BedsoreEvaluationData;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -101,5 +102,24 @@ public class BedsoreServiceImpl implements BedsoreService {
         }
 
         return format;
+    }
+
+    @Override
+    public BedsoreEvaluationData getBedsoreEvaluationData(String keyId) {
+        List<String> contents = bedsoreDAO.getBedsoreEvaluationDetailTextList(keyId);
+
+        contents.add(bedsoreDAO.getBedsoreEvaluationTotalText(keyId));
+
+        List<String> preventTextList = bedsoreDAO.getBedsoreEvaluationPreventTextList(keyId);
+        contents.add(String.format("%s : %s", "예방적중재", String.join(", ", preventTextList)));
+
+        contents.add(bedsoreDAO.getBedsoreEvaluationYnText(keyId));
+
+        BedsoreEvaluationData bedsoreEvaluationData = new BedsoreEvaluationData();
+
+        bedsoreEvaluationData.setContents(contents);
+        bedsoreEvaluationData.setWriterNm(bedsoreDAO.getBedsoreEvaluationWriterText(keyId));
+
+        return bedsoreEvaluationData;
     }
 }
