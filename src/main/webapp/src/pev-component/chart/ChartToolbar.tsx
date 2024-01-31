@@ -8,6 +8,7 @@ import ChartReport from './ChartReport';
 type ChartToolbarProps = {
     targetRecord: IRecord;
     isChartLoading: boolean;
+    isChartError: boolean;
 };
 
 const ChartToolbar = (props: ChartToolbarProps) => {
@@ -29,7 +30,7 @@ const ChartToolbar = (props: ChartToolbarProps) => {
                 color={'error'}
                 size={'small'}
                 onClick={() => setActiveModal('REPORT')}
-                disabled={props.isChartLoading}
+                disabled={props.isChartLoading || props.isChartError}
             >
                 가명처리 오류 신고
             </Button>

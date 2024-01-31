@@ -12,8 +12,15 @@ export const reportApi = createApi({
                 method: 'POST',
                 body: payload
             })
+        }),
+        insertChartError: builder.mutation<void, any>({
+            query: (payload) => ({
+                url: 'report/chart',
+                method: 'POST',
+                body: payload
+            })
         })
     })
 });
 
-export const { useInsertReportMutation } = reportApi;
+export const { useInsertReportMutation, useInsertChartErrorMutation } = reportApi;

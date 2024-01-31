@@ -17,4 +17,10 @@
             (#{reportId}, ${index} + 1, #{item.id}, #{item.parentId}, #{item.report}, 'N', null, null)
         </foreach>
     </insert>
+    <insert id="insertChartError"
+            parameterType="ai.planit.pev.domain.meta.report.dto.ChartError">
+        insert into pev_chart_err
+        (stf_no, pid, target_record, load_dtm)
+        values (#{stfNo}, #{pid}, #{targetRecord}, now())
+    </insert>
 </mapper>

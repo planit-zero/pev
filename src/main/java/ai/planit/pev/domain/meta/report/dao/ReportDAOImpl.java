@@ -1,5 +1,6 @@
 package ai.planit.pev.domain.meta.report.dao;
 
+import ai.planit.pev.domain.meta.report.dto.ChartError;
 import ai.planit.pev.domain.meta.report.dto.ChartReport;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -18,5 +19,10 @@ public class ReportDAOImpl implements ReportDAO {
     @Override
     public void insertReportDetail(ChartReport report) {
         sqlSessionTemplate.insert("insertReportDetail", report);
+    }
+
+    @Override
+    public void insertChartError(ChartError chartError) {
+        sqlSessionTemplate.insert("insertChartError", chartError);
     }
 }
