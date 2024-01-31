@@ -214,6 +214,7 @@ const Chart = (props: ChartProps) => {
         if (!element.style) return null;
         if (element.style.id === '-1000') return null;
         if (element.style.visibility === 'Collapsed') return null;
+        if (element.controlType === 'IMAGE' && (!element.content || element.content === '')) return null;
 
         return (
             <Box
