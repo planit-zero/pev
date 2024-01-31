@@ -16,7 +16,7 @@
                         A.MDFM_CPEM_ID                                                       AS id,
                         A.UPR_MDFM_CPEM_ID                                                   AS parentId,
                         CASE
-                            WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN A.ELMT_BSC_CNTE
+                            WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN B.MDFM_ELMT_INPT_CNTE
                             WHEN A.ELMT_CCLS_CD = '7' THEN 'http://hisimg.snuh.org/' || REGEXP_REPLACE(C.INTG_IMG_FILE_PATH_NM, '\\', '/')
                             WHEN A.ELMT_CCLS_CD = '9' THEN LEFT(COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT), 10)
                             ELSE COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT) END            AS content,

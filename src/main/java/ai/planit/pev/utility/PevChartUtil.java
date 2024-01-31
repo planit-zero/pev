@@ -67,7 +67,7 @@ public class PevChartUtil {
         List<ChartAttribute> chartAttributes = getChartAttributes(sectionElements, chartStyleSection, entityElement.getId(), applyStyle);
         List<ChartValue> chartValues = getChartValues(sectionElements, chartStyleSection, entityElement.getId(), applyStyle);
 
-        if (!applyStyle && chartAttributes.size() == 0 && chartValues.size() == 0) return null;
+        if (!applyStyle && chartAttributes.isEmpty() && chartValues.isEmpty()) return null;
 
         entity.setAttributes(chartAttributes);
         entity.setValues(chartValues);
@@ -97,7 +97,7 @@ public class PevChartUtil {
         List<ChartAttribute> chartAttributes = getChartAttributes(sectionElements, chartStyleSection, attributeElement.getId(), applyStyle);
         List<ChartValue> chartValues = getChartValues(sectionElements, chartStyleSection, attributeElement.getId(), applyStyle);
 
-        if (!applyStyle && chartAttributes.size() == 0 && chartValues.size() == 0) return null;
+        if (!applyStyle && chartAttributes.isEmpty() && chartValues.isEmpty()) return null;
 
         attribute.setAttributes(chartAttributes);
         attribute.setValues(chartValues);
@@ -114,7 +114,7 @@ public class PevChartUtil {
                 .collect(Collectors.toList());
 
         for (ChartElement valueElement : valueElements) {
-            if (applyStyle || (valueElement.getContent() != null && !valueElement.getContent().equals(""))) {
+            if (applyStyle || (valueElement.getContent() != null && !valueElement.getContent().isEmpty())) {
                 values.add(getChartValue(valueElement, chartStyleSection));
             }
         }
@@ -137,7 +137,6 @@ public class PevChartUtil {
 
         targetList.add(RecordTarget.CERTIFICATE_REQUEST.getType());
         targetList.add(RecordTarget.CERTIFICATE_ACCIDENT.getType());
-        targetList.add(RecordTarget.MEDICAL_DEPARTMENT.getType());
         targetList.add(RecordTarget.MEDICAL_DEPARTMENT.getType());
 
         return targetList.contains(recordDetailType);
