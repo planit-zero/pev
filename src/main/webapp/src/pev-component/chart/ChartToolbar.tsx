@@ -31,7 +31,7 @@ const ChartToolbar = (props: ChartToolbarProps) => {
                 onClick={() => setActiveModal('REPORT')}
                 disabled={props.isChartLoading}
             >
-                비식별화 처리 미비 신고
+                가명처리 오류 신고
             </Button>
             <Modal open={activeModal !== null} onClose={() => setActiveModal(null)}>
                 <React.Fragment>
