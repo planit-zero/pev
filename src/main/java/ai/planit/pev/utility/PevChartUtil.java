@@ -129,7 +129,25 @@ public class PevChartUtil {
     private static ChartStyleItem getChartStyleItem(ChartStyleSection chartStyleSection, String id) {
         if (chartStyleSection == null) return null;
         Optional<ChartStyleItem> chartStyleItem = chartStyleSection.getItems().stream().filter(i -> i.getId().equals(id)).findAny();
-        return chartStyleItem.orElse(null);
+        return chartStyleItem.orElse(getChartStyleItemWithChildren(chartStyleSection.getItems(), id));
+    }
+
+    private static ChartStyleItem getChartStyleItemWithChildren(List<ChartStyleItem> chartStyleItems, String id) {
+        for (ChartStyleItem chartStyleItem : chartStyleItems) {
+            if (id.equals(chartStyleItem.getId())) return chartStyleItem;
+            if (chartStyleItem.getChildren() != null && !chartStyleItem.getChildren().isEmpty()) {
+                ChartStyleItem childrenItem = getChartStyleItemWithChildren(chartStyleItem.getChildren(), id);
+                if (chartStyleItem.getType().equals("Repeater") && childrenItem != null) {
+                    childrenItem.setPosition(
+                            String.format("%d", Integer.parseInt(chartStyleItem.getTop()) + Integer.parseInt(childrenItem.getTop())),
+                            String.format("%d", Integer.parseInt(chartStyleItem.getLeft()) + Integer.parseInt(childrenItem.getLeft()))
+                    );
+                }
+                return childrenItem;
+            }
+        }
+
+        return null;
     }
 
     public static boolean applyStyle(String recordDetailType) {

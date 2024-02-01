@@ -523,7 +523,7 @@ public class RecordServiceImpl implements RecordService {
         }
 
         ChartData chartData = new ChartData(pid, data);
-        if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
+//        if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
         return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
     }

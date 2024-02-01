@@ -230,7 +230,13 @@ const Chart = (props: ChartProps) => {
                 }}
                 onClick={() => console.log('### element', element)}
             >
-                <Box width={'100%'} height={'100%'} position={'relative'} onClick={() => handleValueClick(element)}>
+                <Box
+                    width={'100%'}
+                    height={'100%'}
+                    position={'relative'}
+                    onClick={() => handleValueClick(element)}
+                    sx={{ p: element.controlType === 'IMAGE' ? 1 : 0 }}
+                >
                     {props.mode === 'REPORT' &&
                         props.reportValues &&
                         props.reportValues.findIndex((v) => v.id === element.id && v.parentId === element.parentId) > -1 && (

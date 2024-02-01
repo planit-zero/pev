@@ -1,6 +1,5 @@
 package ai.planit.pev.strategy.chart.object.common;
 
-import ai.planit.pev.domain.ods.form.dto.FormStyleItem;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -158,5 +157,10 @@ public class ChartStyleItem {
 
     // Children
     @XmlElement(name = "Item")
-    private List<FormStyleItem> children;
+    private List<ChartStyleItem> children;
+
+    public void setPosition(String top, String left) {
+        this.top = top;
+        this.left = left;
+    }
 }
