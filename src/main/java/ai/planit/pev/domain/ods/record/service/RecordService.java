@@ -21,4 +21,6 @@ public interface RecordService {
     Chart.Response getChart(HttpSession session, Chart.Request request);
 
     MedicalReply.Response getChartReply(HttpSession session, MedicalReply.Request request);
+
+    List<Chart.Response> getFunctionChart(HttpSession session, Chart.Request request);
 }

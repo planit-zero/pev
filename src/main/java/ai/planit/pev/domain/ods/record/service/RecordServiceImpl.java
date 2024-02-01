@@ -9,6 +9,7 @@ import ai.planit.pev.domain.ods.checkout.service.CheckoutService;
 import ai.planit.pev.domain.ods.discharge.service.DischargeService;
 import ai.planit.pev.domain.ods.execute.service.ExecuteService;
 import ai.planit.pev.domain.ods.fall.service.FallService;
+import ai.planit.pev.domain.ods.function.service.FunctionService;
 import ai.planit.pev.domain.ods.inpatient.service.InpatientService;
 import ai.planit.pev.domain.ods.medical.service.MedicalService;
 import ai.planit.pev.domain.ods.observation.service.ObservationService;
@@ -56,6 +57,7 @@ public class RecordServiceImpl implements RecordService {
     private final CheckoutService checkoutService;
     private final DischargeService dischargeService;
     private final TransferService transferService;
+    private final FunctionService functionService;
 
     /**
      * {@inheritDoc}
@@ -410,30 +412,38 @@ public class RecordServiceImpl implements RecordService {
             dataSource = orderService.getOrderData(session.getAttribute("pev-pid").toString(), request.getRecord());
         }
 
-        // 병리검사
-        if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
-            chartContext.setChartStrategy(new PathologyChartStrategy());
+        if (request.getRecord().getRecordType().equals(RecordTarget.EXAM_RECORD.getType())) {
+            // 병리검사
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
+                chartContext.setChartStrategy(new PathologyChartStrategy());
 
-            PathologyData.Request pathologyDataRequest = new PathologyData.Request();
-            pathologyDataRequest.setPthlNo(request.getRecord().getExamKey());
+                PathologyData.Request pathologyDataRequest = new PathologyData.Request();
+                pathologyDataRequest.setPthlNo(request.getRecord().getExamKey());
 
-            dataSource = pathologyService.getPathologyData(pathologyDataRequest);
-        }
+                dataSource = pathologyService.getPathologyData(pathologyDataRequest);
+            }
 
-        // 영상검사
-        if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PICTURE.getType())) {
-            chartContext.setChartStrategy(new PictureChartStrategy());
+            // 영상검사
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PICTURE.getType())) {
+                chartContext.setChartStrategy(new PictureChartStrategy());
 
-            PictureData.Request pictureDataRequest = new PictureData.Request();
-            pictureDataRequest.setIptnNo(request.getRecord().getExamKey());
+                PictureData.Request pictureDataRequest = new PictureData.Request();
+                pictureDataRequest.setIptnNo(request.getRecord().getExamKey());
 
-            dataSource = pictureService.getPictureData(pictureDataRequest);
-        }
+                dataSource = pictureService.getPictureData(pictureDataRequest);
+            }
 
-        // 검체검사
-        if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_SPECIMEN.getType())) {
-            chartContext.setChartStrategy(new SpecimenChartStrategy());
-            dataSource = specimenService.getSpecimenData(session, request.getRecord());
+            // 검체검사
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_SPECIMEN.getType())) {
+                chartContext.setChartStrategy(new SpecimenChartStrategy());
+                dataSource = specimenService.getSpecimenData(session, request.getRecord());
+            }
+
+            // 기능검사
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_DEPARTMENT.getType())) {
+                chartContext.setChartStrategy(new FunctionChartStrategy());
+                dataSource = functionService.getFunctionData(request.getRecord().getKeyId());
+            }
         }
 
         // 스캔자료
@@ -549,5 +559,22 @@ public class RecordServiceImpl implements RecordService {
         medicalReply.setRecord(record);
 
         return medicalReply;
+    }
+
+    @Override
+    public List<Chart.Response> getFunctionChart(HttpSession session, Chart.Request request) {
+        List<Chart.Response> functionChartList = new ArrayList<>();
+
+        List<Record.Response> recordList = functionService.getFunctionRecordList(request.getRecord().getKeyId());
+
+        for (Record.Response record : recordList) {
+            Chart.Request chartRequest = new Chart.Request();
+            chartRequest.setMaskingYn(request.getMaskingYn());
+            chartRequest.setRecord(record);
+
+            functionChartList.add(getChart(session, chartRequest));
+        }
+
+        return functionChartList;
     }
 }

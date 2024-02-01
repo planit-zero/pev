@@ -28,7 +28,7 @@ public enum RecordTarget {
     ORDER_RECORD("OR", "처방기록"),
 
     // 검사
-    EXAM_RECORD("EX_", "검사기록"),
+    EXAM_RECORD("EX", "검사기록"),
     EXAM_PICTURE("EX_PICTURE", "영상검사"),
     EXAM_PATHOLOGY("EX_PATHOLOGY", "병리검사"),
     EXAM_SPECIMEN("EX_SPECIMEN", "검체검사"),

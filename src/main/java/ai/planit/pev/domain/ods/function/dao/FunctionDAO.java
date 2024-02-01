@@ -1,12 +1,12 @@
 package ai.planit.pev.domain.ods.function.dao;
 
-import ai.planit.pev.domain.ods.function.dto.FunctionData;
-import ai.planit.pev.domain.ods.function.dto.FunctionDecodeMaster;
+import ai.planit.pev.domain.ods.record.dto.Record;
+import ai.planit.pev.strategy.chart.object.function.FunctionContent;
 
 import java.util.List;
 
 public interface FunctionDAO {
-    List<FunctionDecodeMaster> getFunctionDecodeMasterList(String examKey);
+    List<Record.Response> getFunctionRecordList(String keyId);
 
-    List<FunctionData> getFunctionData(FunctionDecodeMaster master);
+    List<FunctionContent> getFunctionContentList(String keyId);
 }

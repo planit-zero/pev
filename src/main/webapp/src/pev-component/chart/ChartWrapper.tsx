@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IRecord } from '../../pev-interface/IRecord';
 import SkeletonChart from './SkeletonChart';
-import { useGetChartMutation, useGetChartReplyMutation } from '../../pev-service/RecordService';
+import { useGetChartMutation, useGetChartReplyMutation, useGetFunctionChartMutation } from '../../pev-service/RecordService';
 import Chart from './Chart';
 import { IChartP, IChartReplyP, IChartReportValue } from '../../pev-interface/IChart';
 import { ChartWrapperType } from '../../pev-type/TChart';
@@ -21,6 +21,8 @@ type ChartWrapperProps = {
 const ChartWrapper = (props: ChartWrapperProps) => {
     const [getChart, { data: chart, isLoading: isChartLoading, isError: isChartError }] = useGetChartMutation();
     const [getChartReply, { data: chartReply, isLoading: isChartReplyLoading }] = useGetChartReplyMutation();
+    const [getFunctionChart, { data: functionCharts, isLoading: isFunctionChartLoading, isError: isFunctionChartError }] =
+        useGetFunctionChartMutation();
 
     React.useEffect(() => {
         const payload: IChartP = {
@@ -28,17 +30,23 @@ const ChartWrapper = (props: ChartWrapperProps) => {
             record: props.targetRecord
         };
 
-        getChart(payload).then(() => {
-            if (props.targetRecord.recordDetailType === 'D007') {
-                const replyPayload: IChartReplyP = {
-                    maskingYn: props.maskingYn,
-                    mdrcId: props.targetRecord.mdrcId,
-                    mdrcFomSeq: props.targetRecord.mdrcFomSeq
-                };
+        if (props.targetRecord.recordDetailType === 'EX_FUNCTION') {
+            getFunctionChart(payload);
+        } else {
+            getChart(payload)
+                .unwrap()
+                .then(() => {
+                    if (props.targetRecord.recordDetailType === 'D007') {
+                        const replyPayload: IChartReplyP = {
+                            maskingYn: props.maskingYn,
+                            mdrcId: props.targetRecord.mdrcId,
+                            mdrcFomSeq: props.targetRecord.mdrcFomSeq
+                        };
 
-                getChartReply(replyPayload);
-            }
-        });
+                        getChartReply(replyPayload);
+                    }
+                });
+        }
     }, [props.targetRecord]);
 
     React.useEffect(() => {
@@ -51,8 +59,27 @@ const ChartWrapper = (props: ChartWrapperProps) => {
 
     return (
         <React.Fragment>
-            {isChartLoading && <SkeletonChart />}
-            {!isChartLoading && !isChartError && chart && (
+            {((props.targetRecord.recordDetailType !== 'EX_FUNCTION' && isChartLoading) ||
+                (props.targetRecord.recordDetailType === 'EX_FUNCTION' && isFunctionChartLoading)) && <SkeletonChart />}
+            {props.targetRecord.recordDetailType === 'EX_FUNCTION' &&
+                !isFunctionChartLoading &&
+                !isFunctionChartError &&
+                functionCharts &&
+                functionCharts.map((c, idx) => {
+                    return (
+                        <React.Fragment key={idx}>
+                            <Chart
+                                mode={props.mode}
+                                record={props.targetRecord}
+                                chart={c}
+                                reportValues={props.reportValues}
+                                onValueChange={props.onValueChange}
+                                index={idx}
+                            />
+                        </React.Fragment>
+                    );
+                })}
+            {props.targetRecord.recordDetailType !== 'EX_FUNCTION' && !isChartLoading && !isChartError && chart && (
                 <React.Fragment>
                     <Chart
                         mode={props.mode}
@@ -60,6 +87,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                         chart={chart}
                         reportValues={props.reportValues}
                         onValueChange={props.onValueChange}
+                        index={0}
                     />
                 </React.Fragment>
             )}
@@ -78,6 +106,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                             chart={chartReply.chart}
                             reportValues={props.reportValues}
                             onValueChange={props.onValueChange}
+                            index={0}
                         />
                     </React.Fragment>
                 )}

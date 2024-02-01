@@ -1,7 +1,7 @@
 package ai.planit.pev.domain.ods.function.dao;
 
-import ai.planit.pev.domain.ods.function.dto.FunctionData;
-import ai.planit.pev.domain.ods.function.dto.FunctionDecodeMaster;
+import ai.planit.pev.domain.ods.record.dto.Record;
+import ai.planit.pev.strategy.chart.object.function.FunctionContent;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,12 +14,12 @@ public class FunctionDAOImpl implements FunctionDAO {
     private final SqlSessionTemplate sqlSessionTemplate;
 
     @Override
-    public List<FunctionDecodeMaster> getFunctionDecodeMasterList(String examKey) {
-        return sqlSessionTemplate.selectList("getFunctionDecodeMasterList", examKey);
+    public List<Record.Response> getFunctionRecordList(String keyId) {
+        return sqlSessionTemplate.selectList("getFunctionRecordList", keyId);
     }
 
     @Override
-    public List<FunctionData> getFunctionData(FunctionDecodeMaster master) {
-        return sqlSessionTemplate.selectList("getFunctionData", master);
+    public List<FunctionContent> getFunctionContentList(String keyId) {
+        return sqlSessionTemplate.selectList("getFunctionContentList", keyId);
     }
 }

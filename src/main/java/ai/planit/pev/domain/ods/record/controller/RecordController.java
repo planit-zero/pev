@@ -34,4 +34,9 @@ public class RecordController {
     public ResponseEntity<?> getChartReply(HttpSession session, @RequestBody MedicalReply.Request request) {
         return ResponseEntity.ok().body(recordService.getChartReply(session, request));
     }
+
+    @PostMapping("chart/function")
+    public ResponseEntity<?> getFunctionChart(HttpSession session, @RequestBody Chart.Request request) {
+        return ResponseEntity.ok().body(recordService.getFunctionChart(session, request));
+    }
 }

@@ -55,6 +55,13 @@ export const recordApi = createApi({
                 method: 'POST',
                 body: payload
             })
+        }),
+        getFunctionChart: builder.mutation<IChart[], IChartP>({
+            query: (payload) => ({
+                url: 'chart/function',
+                method: 'POST',
+                body: payload
+            })
         })
     })
 });
@@ -64,5 +71,6 @@ export const {
     useGetDeptInfoListQuery,
     useGetRecordListMutation,
     useGetChartMutation,
-    useGetChartReplyMutation
+    useGetChartReplyMutation,
+    useGetFunctionChartMutation
 } = recordApi;

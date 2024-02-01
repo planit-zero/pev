@@ -1,34 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.function.dao.FunctionDAO">
-    <select id="getFunctionDecodeMasterList"
+    <select id="getFunctionRecordList"
             parameterType="java.lang.String"
-            resultType="ai.planit.pev.domain.ods.function.dto.FunctionDecodeMaster">
-        SELECT IPTN_NO AS iptnNo,
-               IPPR_SEQ AS ipprSeq,
-               IPPR_ID AS ipprId,
-               MDFM_ID AS mdfmId,
-               MDFM_FOM_SEQ AS mdfmFomSeq
-        FROM ODS.S_MSERMMLD
-        WHERE IPTN_NO = #{examKey}
+            resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
+        SELECT 'EX'                                                                  AS recordType,
+               'D020'                                                         AS recordDetailType,
+               '기능검사'                                                                AS itemType,
+               (SELECT Z.MDFM_NM
+                FROM ODS.S_MRFMFORM Z
+                WHERE Z.MDFM_ID = A.MDFM_ID
+                  AND Z.MDFM_FOM_SEQ = A.MDFM_FOM_SEQ)                               AS itemNm,
+               A.LSH_DTM                                                             AS writingDate,
+               NULL                                                                  AS writingDeptCd,
+               NULL                                                                  AS writingDeptNm,
+               A.LSH_STF_NO                                                          AS writerStfNm,
+               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.LSH_STF_NO) AS writerStfNm,
+               A.IPPR_ID                                                             AS keyId,
+               NULL                                                                  AS pactId,
+               NULL                                                                  AS pactTpCd,
+               NULL                                                                  AS pactTpNm,
+               NULL                                                                  AS ptMedDeptCd,
+               NULL                                                                  AS ptMedDeptNm,
+               NULL                                                                  AS sortSeq,
+               NULL                                                                  AS note,
+               A.MDFM_ID                                                             AS mdfmId,
+               A.MDFM_FOM_SEQ                                                        AS mdfmFomSeq,
+               NULL                                                                  AS mdrcId,
+               NULL                                                                  AS mdrcFomSeq
+        FROM ODS.S_MSERMMLD A
+        WHERE A.IPTN_NO = #{keyId}
+          AND MDFM_INPT_NOTM > 0
         ORDER BY IPPR_SEQ
     </select>
-    <select id="getFunctionData"
-            parameterType="ai.planit.pev.domain.ods.function.dto.FunctionDecodeMaster"
-            resultType="ai.planit.pev.domain.ods.function.dto.FunctionData">
-        SELECT A.MDFM_CPEM_ID      AS id,
-               A.UPR_MDFM_CPEM_ID  AS parentId,
-               A.ELMT_CCLS_CD      AS controlType,
-               A.MDFM_ELMT_CLS_CD  AS classType,
-               CASE
-                   WHEN A.MDFM_ELMT_CLS_CD != 'V' THEN A.MDFM_CPEM_CNTE
-                   ELSE ISNULL(B.DCST_LDAT, B.IPTN_CNTE) END AS text
-        FROM ODS.S_MRFMFCID A
-                 LEFT OUTER JOIN ODS.S_MSERMDTD B
-                                 ON B.IPPR_ID = #{ipprId}
-                                     AND A.MDFM_CPEM_ID = B.MDFM_CPEM_ID
-        WHERE A.MDFM_ID = #{mdfmId}
-          AND A.MDFM_FOM_SEQ = #{mdfmFomSeq}
-        ORDER BY A.MDFM_CPEM_ID, A.UPR_MDFM_CPEM_ID
+    <select id="getFunctionContentList"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.function.FunctionContent">
+        SELECT A.MDFM_CPEM_ID AS id,
+               A.IPTN_CNTE AS content
+        FROM ODS.S_MSERMDTD A
+        WHERE IPPR_ID = #{keyId}
     </select>
 </mapper>

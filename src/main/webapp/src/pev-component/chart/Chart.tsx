@@ -19,6 +19,7 @@ type ChartProps = {
     chart: IChart;
     reportValues?: IChartReportValue[];
     onValueChange?: (value: IChartReportValue) => void;
+    index: number;
 };
 
 const Chart = (props: ChartProps) => {
@@ -228,7 +229,6 @@ const Chart = (props: ChartProps) => {
                         px: 0.5
                     }
                 }}
-                onClick={() => console.log('### element', element)}
             >
                 <Box
                     width={'100%'}
@@ -263,7 +263,7 @@ const Chart = (props: ChartProps) => {
                         <Box
                             width={'100%'}
                             height={'100%'}
-                            sx={{ p: 0.5, overflowY: 'scroll' }}
+                            sx={{ p: 0.5, overflowY: 'scroll', whiteSpace: 'pre-line' }}
                             dangerouslySetInnerHTML={{ __html: element.content }}
                         />
                     )}
@@ -323,6 +323,7 @@ const Chart = (props: ChartProps) => {
     };
 
     const getHeaderSection = (record: IRecord) => {
+        if (props.index !== 0) return null;
         if (['D009', 'D020', 'D035', 'SC'].includes(record.recordDetailType)) return null;
         return (
             <Box sx={{ mb: 2, fontStyle: 'italic', color: '#aa58d2' }}>
