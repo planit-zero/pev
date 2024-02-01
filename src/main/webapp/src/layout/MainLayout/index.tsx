@@ -1,9 +1,8 @@
 // material-ui
 import { styled, useTheme, Theme } from '@mui/material/styles';
-import { AppBar, Box, CssBaseline, Toolbar } from '@mui/material';
+import { Box, CssBaseline } from '@mui/material';
 
 // project imports
-import Header from './Header';
 import Sidebar from './Sidebar';
 
 import { finderWidthNarrow, finderWidthWide } from 'store/constant';
@@ -11,9 +10,8 @@ import { useSelector } from 'store';
 
 // assets
 import RecordViewer from '../../pev-component/record-viewer/RecordViewer';
-import CommonSnackbar from '../../pev-component/common/CommonSnackbar';
 import * as React from 'react';
-import { IconGridDots, IconHome, IconMessageReport, IconReportMedical, IconSettings } from '@tabler/icons';
+import CommonLayout from '../../pev-component/common/CommonLayout';
 
 interface MainStyleProps {
     theme: Theme;
@@ -66,72 +64,12 @@ const MainLayout = () => {
     const { finderWidth } = useSelector((state) => state.environment);
     const { drawerOpen } = useSelector((state) => state.menu);
 
-    const { info } = useSelector((state) => state.user);
-
-    const header = () => {
-        return (
-            <Toolbar sx={{ height: '48px' }}>
-                <Header />
-            </Toolbar>
-        );
-    };
-
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
 
-            {/* header */}
-            <AppBar
-                enableColorOnDark
-                position="fixed"
-                color="inherit"
-                elevation={0}
-                sx={{ background: theme.palette.background.default, ml: '48px', zIndex: 1 }}
-            >
-                {header()}
-            </AppBar>
-
-            {/* snackbar */}
-            <CommonSnackbar />
-
-            {/* Platform Sidebar */}
-            <Box
-                sx={{
-                    zIndex: 2,
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: 48,
-                    height: '100vh',
-                    backgroundColor: '#3f51b5'
-                }}
-            >
-                <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
-                    <IconGridDots color={'white'} />
-                </Box>
-                <Box
-                    width={48}
-                    height={48}
-                    display={'flex'}
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => (window.location.href = 'https://supreme.snuh.org')}
-                >
-                    <IconHome color={'white'} />
-                </Box>
-                <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
-                    <IconReportMedical color={'white'} />
-                </Box>
-                <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
-                    <IconMessageReport color={'white'} />
-                </Box>
-                {info && info.authCd === 'S' && (
-                    <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
-                        <IconSettings color={'white'} />
-                    </Box>
-                )}
-            </Box>
+            {/* Common Layout */}
+            <CommonLayout />
 
             {/* App Sidebar */}
             <Sidebar />
