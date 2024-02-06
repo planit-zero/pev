@@ -1,14 +1,10 @@
 package ai.planit.pev.domain.meta.report.controller;
 
-import ai.planit.pev.domain.meta.report.dto.ChartError;
-import ai.planit.pev.domain.meta.report.dto.ChartReport;
+import ai.planit.pev.domain.meta.report.dto.*;
 import ai.planit.pev.domain.meta.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,15 +14,42 @@ import javax.servlet.http.HttpSession;
 public class ReportController {
     private final ReportService reportService;
 
+    @PostMapping("report/list")
+    ResponseEntity<?> getReportList(@RequestBody ReportRequest request) {
+        return ResponseEntity.ok().body(reportService.getReportList(request));
+    }
+
+    @GetMapping("report/detail/list")
+    ResponseEntity<?> getReportDetailList(@RequestParam int reportId) {
+        return ResponseEntity.ok().body(reportService.getReportDetailList(reportId));
+    }
+
+    @PostMapping("report/detail")
+    ResponseEntity<?> updateProcess(@RequestBody ReportDetailUpdate reportDetailUpdate) {
+        reportService.updateProcess(reportDetailUpdate);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("report")
-    ResponseEntity<?> insertReport(@RequestBody ChartReport report) {
-        reportService.insertReport(report);
+    ResponseEntity<?> insertReport(HttpSession session, @RequestBody ChartReport report) {
+        reportService.insertReport(session, report);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("report/chart")
     ResponseEntity<?> insertChartError(HttpSession session, @RequestBody ChartError chartError) {
         reportService.insertChartError(session, chartError);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("report/chart/list")
+    ResponseEntity<?> getChartErrorList(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getChartErrorList(session));
+    }
+
+    @PutMapping("report/chart")
+    ResponseEntity<?> updateChartErrorProcess(@RequestParam int errId) {
+        reportService.updateChartErrorProcess(errId);
         return ResponseEntity.ok().build();
     }
 }

@@ -54,6 +54,7 @@ export interface IChartAttribute extends IChartElement {
 export interface IChartValue extends IChartElement {}
 
 export interface IChartReport {
+    stfNo: string;
     recordInfo: string;
     values: IChartReportValue[];
 }
@@ -61,6 +62,52 @@ export interface IChartReport {
 export interface IChartReportValue extends IChartValue {
     confirmYn: 'Y' | 'N';
     report: string;
+}
+
+export interface IReport {
+    rowNum: number;
+    reportId: number;
+    irb: string;
+    rid: string;
+    recordInfo: string;
+    reportUser: string;
+    reportDtm: string;
+    processYn: string;
+    allCount: number;
+    processCount: number;
+}
+
+export interface IReportDetail {
+    valueSeq: number;
+    valueId: string;
+    parentId: string;
+    reportText: string;
+    processYn: string;
+    processText: string;
+    processDtm: string;
+}
+
+export interface IReportDetailUpdate {
+    processText: string;
+    reportId: number;
+    valueSeq: number;
+}
+
+export interface IReportRequest {
+    stfNo: string;
+    authCd: string;
+}
+
+export interface IChartError {
+    rowNum: number;
+    errId: number;
+    stfNo: string;
+    irb: string;
+    rid: string;
+    targetRecord: string;
+    loadDtm: string;
+    processYn: string;
+    processDtm: string;
 }
 
 export interface IChartStyledSection {

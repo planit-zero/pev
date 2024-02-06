@@ -5,6 +5,7 @@ import ChartWrapper from './ChartWrapper';
 import { IChartReport, IChartReportValue } from '../../pev-interface/IChart';
 import { setAlert } from '../../store/pev-slices/environment';
 import { useInsertReportMutation } from '../../pev-service/ReportService';
+import { useSelector } from '../../store';
 
 type ChartReportProps = {
     targetRecord: IRecord;
@@ -12,7 +13,10 @@ type ChartReportProps = {
 };
 
 const ChartReport = (props: ChartReportProps) => {
+    const { info } = useSelector((state) => state.user);
+
     const initialChartReportForm: IChartReport = {
+        stfNo: info?.stfNo || 'UNKNOWN',
         recordInfo: JSON.stringify(props.targetRecord),
         values: []
     };

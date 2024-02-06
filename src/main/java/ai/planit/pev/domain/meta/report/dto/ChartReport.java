@@ -9,6 +9,9 @@ import java.util.List;
 @Setter
 public class ChartReport {
     private int reportId;
+    private String stfNo;
     private String recordInfo;
     private List<ChartReportValue> values;
+    private String irb;
+    private String rid;
 }

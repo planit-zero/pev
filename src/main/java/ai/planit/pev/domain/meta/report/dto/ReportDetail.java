@@ -6,10 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReportDetail {
-    private int reportId;
     private int valueSeq;
     private String valueId;
-    private String valueParentId;
+    private String parentId;
     private String reportText;
     private String processYn;
     private String processText;

@@ -8,6 +8,7 @@ import ai.planit.idp.sdk.option.IdpRequestOptions;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.user.dto.UserLogin;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,11 @@ public class UserServiceImpl implements UserService {
         if (HttpStatus.OK != response.getStatus()) {
             throw new RuntimeException(response.getError().getMessage());
         }
+
+        Gson gson = new Gson();
+        String json = gson.toJson(response.getLoginUser());
+
+        session.setAttribute("pev-user", json);
 
         return response.getLoginUser();
     }

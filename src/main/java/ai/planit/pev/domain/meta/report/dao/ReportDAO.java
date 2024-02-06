@@ -1,7 +1,8 @@
 package ai.planit.pev.domain.meta.report.dao;
 
-import ai.planit.pev.domain.meta.report.dto.ChartError;
-import ai.planit.pev.domain.meta.report.dto.ChartReport;
+import ai.planit.pev.domain.meta.report.dto.*;
+
+import java.util.List;
 
 public interface ReportDAO {
     void insertReport(ChartReport report);
@@ -9,4 +10,14 @@ public interface ReportDAO {
     void insertReportDetail(ChartReport report);
 
     void insertChartError(ChartError chartError);
+
+    List<Report> getReportList(ReportRequest request);
+
+    List<ReportDetail> getReportDetailList(int reportId);
+
+    void updateProcess(ReportDetailUpdate reportDetailUpdate);
+
+    List<ChartError> getChartErrorList(ChartErrorRequest request);
+
+    void updateChartErrorProcess(int errId);
 }

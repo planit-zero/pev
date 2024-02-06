@@ -6,8 +6,8 @@
             useGeneratedKeys="true"
             keyProperty="reportId">
         insert into pev_report
-        (record_info, report_user, report_dtm)
-        values (#{recordInfo}, '테스트', now())
+        (record_info, report_user, report_dtm, irb, rid)
+        values (#{recordInfo}, #{stfNo}, now(), #{irb}, #{rid})
     </insert>
     <insert id="insertReportDetail"
             parameterType="ai.planit.pev.domain.meta.report.dto.ChartReport">
@@ -20,7 +20,79 @@
     <insert id="insertChartError"
             parameterType="ai.planit.pev.domain.meta.report.dto.ChartError">
         insert into pev_chart_err
-        (stf_no, pid, target_record, load_dtm)
-        values (#{stfNo}, #{pid}, #{targetRecord}, now())
+        (stf_no, irb, rid, target_record, process_yn, load_dtm)
+        values (#{stfNo}, #{irb}, #{rid}, #{targetRecord}, 'N', now())
     </insert>
+    <select id="getReportList"
+            parameterType="ai.planit.pev.domain.meta.report.dto.ReportRequest"
+            resultType="ai.planit.pev.domain.meta.report.dto.Report">
+        select row_number() over (order by a.report_id) as rowNum,
+        a.report_id as reportId,
+        a.report_user as reportUser,
+        a.irb as irb,
+        a.rid as rid,
+        a.record_info as recordInfo,
+        to_char(a.report_dtm, 'YYYY-MM-DD hh:mm:ss') as reportDtm,
+        case
+        when
+        (select count(*) from pev_report_detail z where z.report_id = a.report_id and process_dtm is null) > 0
+        then 'N'
+        else 'Y' end as processYn,
+        (select count(*) from pev_report_detail z where z.report_id = a.report_id) as allCount,
+        (select count(*) from pev_report_detail z where z.report_id = a.report_id and process_yn = 'Y') as processCount
+        from pev_report a
+        where
+        <if test='authCd == "S"'>1=1</if>
+        <if test='authCd != "S"'>upper(report_user) = upper(#{stfNo})</if>
+        order by a.report_dtm desc
+    </select>
+    <select id="getReportDetailList"
+            parameterType="java.lang.Integer"
+            resultType="ai.planit.pev.domain.meta.report.dto.ReportDetail">
+        select a.value_seq as valueSeq,
+               a.value_id as valueId,
+               a.value_parent_id as parentId,
+               a.report_text as reportText,
+               a.process_yn as processYn,
+               a.process_text as processText,
+               to_char(a.process_dtm, 'YYYY-MM-DD hh:mm:ss') as processDtm
+        from pev_report_detail a
+        where a.report_id = #{reportId}
+        order by value_seq
+    </select>
+    <update id="updateProcess"
+            parameterType="ai.planit.pev.domain.meta.report.dto.ReportDetailUpdate">
+        update pev_report_detail
+        set process_text = #{processText},
+            process_dtm = now(),
+            process_yn = 'Y'
+        where report_id = #{reportId}
+        and value_seq = #{valueSeq}
+    </update>
+    <select id="getChartErrorList"
+            parameterType="ai.planit.pev.domain.meta.report.dto.ChartErrorRequest"
+            resultType="ai.planit.pev.domain.meta.report.dto.ChartError">
+        select
+            row_number() over (order by err_id) as rowNum,
+            err_id as errId,
+        stf_no as stfNo,
+        irb as irb,
+        rid as rid,
+        target_record as targetRecord,
+        to_char(load_dtm, 'YYYY-MM-DD hh:mm:ss') as loadDtm,
+        process_yn as processYn,
+        case when process_dtm is null then '처리 전' else to_char(process_dtm, 'YYYY-MM-DD hh:mm:ss') end as processDtm
+        from pev_chart_err
+        where
+        <if test='authCd == "S"'>1=1</if>
+        <if test='authCd != "S"'>upper(report_user) = upper(#{stfNo})</if>
+        order by load_dtm desc
+    </select>
+    <update id="updateChartErrorProcess"
+            parameterType="java.lang.Integer">
+        update pev_chart_err
+        set process_yn = 'Y',
+            process_dtm = now()
+        where err_id = #{errId}
+    </update>
 </mapper>

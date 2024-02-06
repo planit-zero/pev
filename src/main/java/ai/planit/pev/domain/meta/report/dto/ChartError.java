@@ -6,7 +6,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChartError {
-    private String pid;
+    private int rowNum;
+    private String errId;
     private String stfNo;
+    private String irb;
+    private String rid;
     private String targetRecord;
+    private String loadDtm;
+    private String processYn;
+    private String processDtm;
 }

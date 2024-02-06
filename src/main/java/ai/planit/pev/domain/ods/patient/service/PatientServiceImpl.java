@@ -35,10 +35,13 @@ public class PatientServiceImpl implements PatientService {
 
     public Patient getPatient(HttpSession session, IdentifiedPatient.Request request) {
         String pid = convertRidToPid(request);
-        session.setAttribute("pev-pid", pid);
 
         Patient patient = patientDAO.getPatient(pid);
         if (patient == null) throw new BaseException(ErrorType.PATIENT_NOT_FOUND);
+
+        session.setAttribute("pev-pid", pid);
+        session.setAttribute("pev-irb", request.getIrb());
+        session.setAttribute("pev-rid", request.getRidList().get(0));
 
         return patient;
     }
