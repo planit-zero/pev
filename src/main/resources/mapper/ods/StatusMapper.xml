@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.status.dao.StatusDAO">
+    <select id="getNrStatusValueList"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+        <![CDATA[
+        SELECT 1                          AS sectionId,
+               B.NREC_DTL_ID              AS id,
+               CASE
+                   WHEN C.NR_ITEM_NM LIKE '%간호단위%' THEN 'nr-status-2'
+                   WHEN C.NR_ITEM_NM LIKE '%수술부단위%' THEN 'nr-status-3'
+                   ELSE 'nr-status-1' END AS parentId,
+               B.NREC_DTL_ID              AS mdfmCpemNo,
+               'VALUE'                    as classType,
+               'RICH_TEXT_BOX'            as controlType,
+               NULL                       AS maskingType,
+               CASE
+                   WHEN C.NR_ITEM_NM LIKE '%간호단위%' THEN REPLACE(C.NR_ITEM_NM, '(간호단위)', '')
+                   WHEN C.NR_ITEM_NM LIKE '%수술부단위%' THEN REPLACE(C.NR_ITEM_NM, '(수술부단위)', '')
+                   ELSE C.NR_ITEM_NM END
+                   || ' : '
+                   ||
+               CASE
+                   WHEN B.REC_CNTE = 'Y' THEN '예'
+                   WHEN B.REC_CNTE = 'N' THEN '아니오'
+                   WHEN B.REC_CNTE = 'NA' THEN '해당없음'
+                   ELSE B.REC_CNTE END    AS content,
+               NULL                       AS "desc",
+               NULL                       AS style
+        FROM ODS.S_MRNNRFAD A
+                 INNER JOIN ODS.S_MRNNRFAE B
+                            ON A.NREC_ID = B.NREC_ID
+                                AND B.LST_YN = 'Y'
+                                AND B.REC_CNTE IS NOT NULL
+                 INNER JOIN ODS.S_MRNNRIAM C
+                            ON B.NR_ITEM_ID = C.NR_ITEM_ID
+        WHERE A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
+        ORDER BY CASE
+            WHEN C.NR_ITEM_NM LIKE '%간호단위%' THEN 2
+            WHEN C.NR_ITEM_NM LIKE '%수술부단위%' THEN 3
+            ELSE 1 END, C.SORT_SEQ
+        ]]>
+    </select>
+</mapper>

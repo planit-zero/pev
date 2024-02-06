@@ -20,6 +20,7 @@ import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.domain.ods.specimen.service.SpecimenService;
+import ai.planit.pev.domain.ods.status.service.StatusService;
 import ai.planit.pev.domain.ods.transfer.service.TransferService;
 import ai.planit.pev.strategy.chart.*;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
@@ -58,6 +59,7 @@ public class RecordServiceImpl implements RecordService {
     private final DischargeService dischargeService;
     private final TransferService transferService;
     private final FunctionService functionService;
+    private final StatusService statusService;
 
     /**
      * {@inheritDoc}
@@ -289,6 +291,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrTransferRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_STATUS.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrStatusRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -507,6 +513,12 @@ public class RecordServiceImpl implements RecordService {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_TRANSFER.getType())) {
                 chartContext.setChartStrategy(new TransferChartStrategy());
                 dataSource = transferService.getNrTransferData(request.getRecord().getKeyId());
+            }
+
+            // 수술전상태확인
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_STATUS.getType())) {
+                chartContext.setChartStrategy(new StatusChartStrategy());
+                dataSource = statusService.getNrStatusValueList(request.getRecord().getKeyId());
             }
         }
 
