@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.dialysis.peritoneal.dao.PeritonealDialysisDAO">
+    <select id="getNrPeritonealDialysisInfo"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.dialysis.peritoneal.PeritonealDialysisInfo">
+        <![CDATA[
+        SELECT A.PT_DLYS_SEQ                                     AS pdNo,
+               CASE
+                   WHEN A.PT_DLYS_SEQ = 1 THEN NULL
+                   ELSE (SELECT Z.ADLY_BDWT
+                         FROM ODS.S_MRNNRHBD Z
+                         WHERE Z.PT_NO = A.PT_NO
+                           AND Z.PT_DLYS_SEQ = (A.PT_DLYS_SEQ - 1)
+                           AND Z.DLYS_TP_CD = 'B'
+                           AND Z.LST_YN = 'Y') END               AS lastWeight,
+               A.ADLY_BDWT                                       AS todayWeight,
+               CASE
+                   WHEN A.PT_DLYS_SEQ = 1 THEN NULL
+                   ELSE A.ADLY_BDWT - (SELECT Z.ADLY_BDWT
+                                       FROM ODS.S_MRNNRHBD Z
+                                       WHERE Z.PT_NO = A.PT_NO
+                                         AND Z.PT_DLYS_SEQ = (A.PT_DLYS_SEQ - 1)
+                                         AND Z.DLYS_TP_CD = 'B'
+                                         AND Z.LST_YN = 'Y') END AS weightChange,
+               A.PERI_ASDP_NM                                    AS nrStfNm,
+               (SELECT Z.COMN_CD_NM
+                FROM ODS.S_CCCCCSTE Z
+                WHERE Z.COMN_GRP_CD = 'N0003030'
+                  AND Z.COMN_CD = A.PEM_DLFL_MNF_CMP_CD)         AS company,
+               (SELECT Z.COMN_CD_NM
+                FROM ODS.S_CCCCCSTE Z
+                WHERE Z.COMN_GRP_CD = 'N0000018'
+                  AND Z.COMN_CD = A.PEM_DLFL_CD)                 AS fluidType,
+               PEM_DLFL_CNCT_UNIT_CD                             AS firstConcentration,
+               TH2_PEM_DLFL_CNCT_UNIT_CD                         AS secondConcentration,
+               TH3_PEM_DLFL_CNCT_UNIT_CD                         AS thirdConcentration,
+               TH4_PEM_DLFL_CNCT_UNIT_CD                         AS fourthConcentration,
+               A.PERI_SCHD_CNTE                                  AS schedule,
+               (SELECT Z.COMN_CD_NM
+                FROM ODS.S_CCCCCSTE Z
+                WHERE Z.COMN_GRP_CD = 'N0000019'
+                  AND Z.COMN_CD = A.PERI_KND_CD)                 AS dialysisType,
+               A.PERI_CNTE                                       AS message,
+               A.GUID_CNTE                                       AS urineVolume
+        FROM ODS.S_MRNNRHBD A
+        WHERE A.PT_NO || '_' || A.PT_DLYS_SEQ = #{keyId}
+          AND A.DLYS_TP_CD = 'B'
+          AND A.LST_YN = 'Y'
+        ]]>
+    </select>
+</mapper>

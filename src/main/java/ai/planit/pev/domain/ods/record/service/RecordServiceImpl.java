@@ -7,6 +7,7 @@ import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.bedsore.service.BedsoreService;
 import ai.planit.pev.domain.ods.checkout.service.CheckoutService;
 import ai.planit.pev.domain.ods.dialysis.blood.service.BloodDialysisService;
+import ai.planit.pev.domain.ods.dialysis.peritoneal.service.PeritonealDialysisService;
 import ai.planit.pev.domain.ods.discharge.service.DischargeService;
 import ai.planit.pev.domain.ods.execute.service.ExecuteService;
 import ai.planit.pev.domain.ods.fall.service.FallService;
@@ -62,6 +63,7 @@ public class RecordServiceImpl implements RecordService {
     private final FunctionService functionService;
     private final StatusService statusService;
     private final BloodDialysisService bloodDialysisService;
+    private final PeritonealDialysisService peritonealDialysisService;
 
     /**
      * {@inheritDoc}
@@ -301,6 +303,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrBloodDialysisRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_PERITONEAL_DIALYSIS.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrPeritonealDialysisRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -531,6 +537,12 @@ public class RecordServiceImpl implements RecordService {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_BLOOD_DIALYSIS.getType())) {
                 chartContext.setChartStrategy(new BloodDialysisChartStrategy());
                 dataSource = bloodDialysisService.getBloodDialysisData(request.getRecord().getKeyId());
+            }
+
+            // 복막투석간호기록
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_PERITONEAL_DIALYSIS.getType())) {
+                chartContext.setChartStrategy(new PeritionealDialysisChartStrategy());
+                dataSource = peritonealDialysisService.getPeritonealDialysisData(request.getRecord().getKeyId());
             }
         }
 
