@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.dialysis.blood.dao.BloodDialysisDAO">
+    <select id="getNrBloodDialysisInfo"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.dialysis.blood.BloodDialysisInfo">
+        <![CDATA[
+        SELECT A.PT_DLYS_SEQ                                     AS hdNo,
+               A.HEMO_MCNR_NO || ' (' || (SELECT Z.COMN_CD_NM
+                                          FROM ODS.S_CCCCCSTE Z
+                                          WHERE Z.COMN_GRP_CD = 'N0003037'
+                                            AND Z.COMN_CD = A.DLYS_REC_HEMO_KND_CD) ||
+               ')'                                               AS machineNo,
+               A.DLYS_TRP_TM_CNTE                                AS duration,
+               A.DLFL_INJT_SPD_NM                                AS dfr,
+               (SELECT Z.COMN_CD_NM
+                FROM ODS.S_CCCCCSTE Z
+                WHERE Z.COMN_GRP_CD = 'N0007011'
+                  AND Z.COMN_CD = A.DLYS_FRVS_RMDE_TP_CD)        AS patientType,
+               A.BDLY_BDWT                                       AS currentPreWeight,
+               A.ADLY_BDWT                                       AS currentPostWeight,
+               A.BDLY_BDWT - A.ADLY_BDWT                         AS currentWeightLost,
+               NULL                                              AS uf,
+               CASE
+                   WHEN A.PT_DLYS_SEQ = 1 THEN NULL
+                   ELSE (SELECT Z.ADLY_BDWT
+                         FROM ODS.S_MRNNRHBD Z
+                         WHERE Z.PT_NO = A.PT_NO
+                           AND Z.PT_DLYS_SEQ = (A.PT_DLYS_SEQ - 1)
+                           AND Z.DLYS_TP_CD = 'A'
+                           AND Z.LST_YN = 'Y') END               AS beforePostWeight,
+               A.LST_DBW_VAL::float                              AS dryWeight,
+                CASE
+                    WHEN A.PT_DLYS_SEQ = 1 THEN NULL
+                    ELSE A.BDLY_BDWT - (SELECT Z.ADLY_BDWT
+                                        FROM ODS.S_MRNNRHBD Z
+                                        WHERE Z.PT_NO = A.PT_NO
+                                          AND Z.PT_DLYS_SEQ = (A.PT_DLYS_SEQ - 1)
+                                          AND Z.DLYS_TP_CD = 'A'
+                                          AND Z.LST_YN = 'Y') END AS beforeWeightGain,
+               A.WHL_UFLT_NM                                     AS tuf,
+               (SELECT Z.COMN_CD_NM
+                FROM ODS.S_CCCCCSTE Z
+                WHERE Z.COMN_GRP_CD = 'N0003029'
+                  AND Z.COMN_CD = A.PRMN_FLUD_TP_CD)             AS primingFluid,
+               A.DLYS_MDPR_NM                                    AS fluidType,
+               A.DLYS_MCNR_NM                                    AS machineType,
+               A.BLVE_KND_NM                                     AS bloodVesselType,
+               A.PRMN_FMPS_NM                                    As primingStfNm,
+               A.DLYS_STR_FMPS_NM                                AS startStfNm,
+               A.DLYS_CFMT_FMPS_NM                               AS assignStfNm,
+               A.DLYS_END_FMPS_NM                                AS finishStfNm
+        FROM ODS.S_MRNNRHBD A
+        WHERE A.PT_NO || '_' || A.PT_DLYS_SEQ = #{keyId}
+          AND A.DLYS_TP_CD = 'A'
+          AND A.LST_YN = 'Y'
+        ]]>
+    </select>
+</mapper>

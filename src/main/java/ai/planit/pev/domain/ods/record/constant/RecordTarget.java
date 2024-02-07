@@ -46,6 +46,7 @@ public enum RecordTarget {
     NURS_DISCHARGE("NR_DISCHARGE", "퇴원간호기록"),
     NURS_TRANSFER("NR_TRANSFER", "전과전동간호기록"),
     NURS_STATUS("NR_STATUS", "수술전상태확인"),
+    NURS_BLOOD_DIALYSIS("NR_BLOOD_DIALYSIS", "혈액투석간호기록"),
 
     // 스캔자료
     SCAN_RECORD("SC", "스캔자료"),

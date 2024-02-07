@@ -6,6 +6,7 @@ import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.bedsore.service.BedsoreService;
 import ai.planit.pev.domain.ods.checkout.service.CheckoutService;
+import ai.planit.pev.domain.ods.dialysis.blood.service.BloodDialysisService;
 import ai.planit.pev.domain.ods.discharge.service.DischargeService;
 import ai.planit.pev.domain.ods.execute.service.ExecuteService;
 import ai.planit.pev.domain.ods.fall.service.FallService;
@@ -60,6 +61,7 @@ public class RecordServiceImpl implements RecordService {
     private final TransferService transferService;
     private final FunctionService functionService;
     private final StatusService statusService;
+    private final BloodDialysisService bloodDialysisService;
 
     /**
      * {@inheritDoc}
@@ -295,6 +297,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrStatusRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_BLOOD_DIALYSIS.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrBloodDialysisRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -520,6 +526,12 @@ public class RecordServiceImpl implements RecordService {
                 chartContext.setChartStrategy(new StatusChartStrategy());
                 dataSource = statusService.getNrStatusValueList(request.getRecord().getKeyId());
             }
+
+            // 혈액투석간호기록
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_BLOOD_DIALYSIS.getType())) {
+                chartContext.setChartStrategy(new BloodDialysisChartStrategy());
+                dataSource = bloodDialysisService.getBloodDialysisData(request.getRecord().getKeyId());
+            }
         }
 
         List<ChartElement> data = chartContext.getChartStrategy().getData(format, dataSource);
@@ -545,7 +557,7 @@ public class RecordServiceImpl implements RecordService {
         }
 
         ChartData chartData = new ChartData(pid, data);
-//        if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
+        if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
         return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
     }

@@ -996,4 +996,53 @@
         <if test="deptType == 'WRITER'">AND A.WRTR_PLWK_DEPT_CD = #{deptCd}</if>
         ORDER BY A.REC_WRT_DTM::DATE DESC
     </select>
+    <select id="getNrBloodDialysisRecordList"
+            parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request"
+            resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
+        SELECT 'NR'                                                        AS recordType,
+        'NR_BLOOD_DIALYSIS'                                         AS recordDetailType,
+        '혈액투석간호기록'                                                  AS itemType,
+        '혈액투석간호기록' || ' (' || B.DLYS_IMPL_DTM || ')'                AS itemNm,
+        B.DLYS_IMPL_DTM::DATE                                       AS writingDate,
+        B.WRTR_PLWK_DEPT_CD                                         AS writingDeptCd,
+        (SELECT Z.DEPT_NM
+        FROM ODS.S_PDEDBMSM Z
+        WHERE Z.DEPT_CD = B.WRTR_PLWK_DEPT_CD)                     AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PT_NO || '_' || A.DLYS_PT_REG_SEQ                         AS keyId,
+        B.PACT_ID                                                   AS pactId,
+        B.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(B.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        B.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM
+        FROM ODS.S_PDEDBMSM Z
+        WHERE Z.DEPT_CD = B.PT_MTD_DEPT_CD)                        AS ptMedDeptNm,
+        NULL                                                        AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
+        FROM ODS.S_MOMNMDPM A
+        INNER JOIN ODS.S_MRNNRHBD B
+        ON A.PT_NO = B.PT_NO
+        AND A.DLYS_PT_REG_SEQ = B.PT_DLYS_SEQ
+        AND B.LST_YN = 'Y'
+        WHERE A.PT_NO = #{ptNo}
+        AND A.DLYS_TP_CD = 'A'
+        AND A.LST_YN = 'Y'
+        AND B.DLYS_IMPL_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+        AND B.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', B.PACT_TP_CD, #{pactTpCd})
+        <if test="deptType == 'MEDICAL'">AND B.PT_MTD_DEPT_CD = #{deptCd}</if>
+        <if test="deptType == 'WRITER'">AND B.WRTR_PLWK_DEPT_CD = #{deptCd}</if>
+        ORDER BY B.DLYS_IMPL_DTM::DATE DESC
+    </select>
 </mapper>
