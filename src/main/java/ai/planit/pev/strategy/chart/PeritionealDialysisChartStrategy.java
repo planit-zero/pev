@@ -3,11 +3,13 @@ package ai.planit.pev.strategy.chart;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
 import ai.planit.pev.strategy.chart.object.dialysis.peritoneal.PeritonealDialysisData;
+import ai.planit.pev.strategy.chart.object.dialysis.peritoneal.PeritonealDialysisObservation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PeritionealDialysisChartStrategy implements ChartStrategy {
@@ -51,6 +53,51 @@ public class PeritionealDialysisChartStrategy implements ChartStrategy {
                 sb.append(String.format("%s : %s\r\n", "복막투석 종류", StringUtils.defaultIfBlank(peritonealDialysisData.getInfo().getDialysisType(), "")));
                 sb.append(String.format("%s : %s\r\n", "메시지", StringUtils.defaultIfBlank(peritonealDialysisData.getInfo().getMessage(), "")));
                 sb.append(String.format("%s : %s\r\n", "Urine vol.", StringUtils.defaultIfBlank(peritonealDialysisData.getInfo().getUrineVolume(), "")));
+
+                valueFormat.setContent(sb.toString());
+                data.add(valueFormat);
+            }
+
+            if (valueFormat.getId().equals("nr-peritoneal-dialysis-2-0-1")) {
+                StringBuilder sb = new StringBuilder();
+
+                List<String> headers = peritonealDialysisData.getObservationList()
+                        .stream()
+                        .map(PeritonealDialysisObservation::getTime)
+                        .distinct()
+                        .sorted()
+                        .collect(Collectors.toList());
+
+                headers.add(0, "구분");
+
+                sb.append(String.join("|||", headers));
+                sb.append(";");
+
+                List<String> itemList = peritonealDialysisData.getObservationList()
+                        .stream()
+                        .map(PeritonealDialysisObservation::getItem)
+                        .distinct()
+                        .collect(Collectors.toList());
+
+                for (int i = 0; i < itemList.size(); i++) {
+                    String item = itemList.get(i);
+
+                    List<String> rows = new ArrayList<>();
+                    rows.add(item);
+
+                    for (String header: headers) {
+                        if (header.equals("구분")) continue;
+                        Optional<PeritonealDialysisObservation> content = peritonealDialysisData.getObservationList()
+                                .stream()
+                                .filter(c -> c.getItem().equals(item) && c.getTime().equals(header))
+                                .findFirst();
+
+                        content.ifPresentOrElse(c -> rows.add(c.getValue()), () -> rows.add(""));
+                    }
+
+                    sb.append(String.join("|||", rows));
+                    if (i < itemList.size() - 1) sb.append(";");
+                }
 
                 valueFormat.setContent(sb.toString());
                 data.add(valueFormat);

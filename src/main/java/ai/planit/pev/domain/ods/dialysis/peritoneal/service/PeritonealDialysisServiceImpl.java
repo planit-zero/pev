@@ -15,6 +15,7 @@ public class PeritonealDialysisServiceImpl implements PeritonealDialysisService 
         PeritonealDialysisData peritonealDialysisData = new PeritonealDialysisData();
 
         peritonealDialysisData.setInfo(peritonealDialysisDAO.getNrPeritonealDialysisInfo(keyId));
+        peritonealDialysisData.setObservationList(peritonealDialysisDAO.getNrPeritonealDialysisObservationList(keyId));
 
         return peritonealDialysisData;
     }
