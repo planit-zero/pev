@@ -51,9 +51,24 @@
                A.DLYS_CFMT_FMPS_NM                               AS assignStfNm,
                A.DLYS_END_FMPS_NM                                AS finishStfNm
         FROM ODS.S_MRNNRHBD A
-        WHERE A.PT_NO || '_' || A.PT_DLYS_SEQ = #{keyId}
+        WHERE A.PT_NO || '_' || A.DLYS_IMPL_DTM::DATE || '_' || A.PT_DLYS_SEQ = #{keyId}
           AND A.DLYS_TP_CD = 'A'
           AND A.LST_YN = 'Y'
         ]]>
+    </select>
+    <select id="getNrBloodDialysisObservationList"
+            parameterType="java.lang.String"
+            resultType="ai.planit.pev.strategy.chart.object.dialysis.blood.BloodDialysisObservation">
+        SELECT TO_CHAR(B.ITEM_REC_DTM, 'hh:mi') AS time,
+               C.NR_ITEM_NM AS item,
+               B.REC_CNTE AS value
+        FROM ODS.S_MRNNRVAD A
+            INNER JOIN ODS.S_MRNNRVAE B
+        ON A.CLCO_REC_ITEM_ID = B.CLCO_REC_ITEM_ID
+            INNER JOIN ODS.S_MRNNRIAM C
+            ON A.NR_ITEM_ID = C.NR_ITEM_ID
+        WHERE #{keyId} LIKE '%' || A.PT_NO || '_' || A.UITM_DT::DATE || '_%'
+          AND A.CLCO_REC_WRT_PATH_TP_CD IN ('02')
+        ORDER BY C.SORT_SEQ
     </select>
 </mapper>

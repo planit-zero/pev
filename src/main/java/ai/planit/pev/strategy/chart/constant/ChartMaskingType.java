@@ -2,6 +2,7 @@ package ai.planit.pev.strategy.chart.constant;
 
 public enum ChartMaskingType {
     ALL,
+    NONE,
     PATIENT_NUMBER,
     NAME,
     DATE,

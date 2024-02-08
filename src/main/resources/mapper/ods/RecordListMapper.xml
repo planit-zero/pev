@@ -1010,7 +1010,7 @@
         WHERE Z.DEPT_CD = B.WRTR_PLWK_DEPT_CD)                     AS writingDeptNm,
         NULL                                                        AS writerStfNo,
         NULL                                                        AS writerStfNm,
-        A.PT_NO || '_' || A.DLYS_PT_REG_SEQ                         AS keyId,
+        A.PT_NO || '_' || B.DLYS_IMPL_DTM::DATE || '_' || B.PT_DLYS_SEQ  AS keyId,
         B.PACT_ID                                                   AS pactId,
         B.PACT_TP_CD                                                AS pactTpCd,
         DECODE(B.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,

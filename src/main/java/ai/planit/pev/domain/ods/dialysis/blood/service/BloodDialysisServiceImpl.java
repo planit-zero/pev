@@ -15,6 +15,7 @@ public class BloodDialysisServiceImpl implements BloodDialysisService{
         BloodDialysisData bloodDialysisData = new BloodDialysisData();
 
         bloodDialysisData.setInfo(bloodDialysisDAO.getNrBloodDialysisInfo(keyId));
+        bloodDialysisData.setObservationList(bloodDialysisDAO.getNrBloodDialysisObservationList(keyId));
 
         return bloodDialysisData;
     }
