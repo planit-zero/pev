@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.note.dao.NoteDAO">
+    <select id="getNrNoteGroupList"
+            parameterType="ai.planit.pev.strategy.chart.object.note.NoteKey"
+            resultType="ai.planit.pev.strategy.chart.object.note.NoteGroup">
+        <![CDATA[
+        SELECT DISTINCT TO_CHAR(A.INPT_DTM, 'hh:mi') AS time,
+                (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.FSR_STF_NO) || ' (' || A.WRTR_PLWK_DEPT_CD ||
+                ')'                          AS stfInfo
+        FROM ODS.S_MRNNRNAD A
+        WHERE A.PT_NO = #{ptNo}
+          AND A.INPT_DTM::DATE = #{inptDtm}
+        ORDER BY TO_CHAR(A.INPT_DTM, 'hh:mi')
+        ]]>
+    </select>
+    <select id="getNrNoteValueList"
+            parameterType="ai.planit.pev.strategy.chart.object.note.NoteKey"
+            resultType="ai.planit.pev.strategy.chart.object.note.NoteValue">
+        <![CDATA[
+        SELECT TO_CHAR(A.INPT_DTM, 'hh:mi') AS time,
+           CASE
+               WHEN C.REC_CNTE IS NULL THEN B.NRST_NM
+               ELSE B.NRST_NM || C.REC_CNTE
+            END AS value
+        FROM ODS.S_MRNNRNAD A
+                 INNER JOIN ODS.S_CCVNVSBM B
+                            ON A.NRST_ID = B.NRST_ID
+                 LEFT OUTER JOIN (SELECT ZA.NDRC_ID, ' (' || ZC.NR_VOC_ABBR_NM || ' : ' || ZB.REC_CNTE || ')' AS REC_CNTE
+                                  FROM ODS.S_MRNNRNAD ZA
+                                           INNER JOIN ODS.S_MRNNRNAE ZB
+                                                      ON ZA.NDRC_ID = ZB.NDRC_ID
+                                           INNER JOIN ODS.S_CCVNVVBM ZC
+                                                      ON ZB.NR_VOC_ID = ZC.NR_VOC_ID
+                                  WHERE ZA.PT_NO = #{ptNo}
+                                    AND ZA.INPT_DTM::DATE = #{inptDtm}
+                                    AND ZA.LST_YN = 'Y') C
+                                 ON A.NDRC_ID = C.NDRC_ID
+        WHERE A.PT_NO = #{ptNo}
+          AND A.INPT_DTM::DATE = #{inptDtm}
+          AND A.LST_YN = 'Y'
+        ORDER BY TO_CHAR(A.INPT_DTM, 'hh:mi'), A.NDRC_ID
+        ]]>
+    </select>
+</mapper>

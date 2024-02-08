@@ -14,6 +14,7 @@ import ai.planit.pev.domain.ods.fall.service.FallService;
 import ai.planit.pev.domain.ods.function.service.FunctionService;
 import ai.planit.pev.domain.ods.inpatient.service.InpatientService;
 import ai.planit.pev.domain.ods.medical.service.MedicalService;
+import ai.planit.pev.domain.ods.note.service.NoteService;
 import ai.planit.pev.domain.ods.observation.service.ObservationService;
 import ai.planit.pev.domain.ods.order.service.OrderService;
 import ai.planit.pev.domain.ods.pathology.service.PathologyService;
@@ -64,6 +65,7 @@ public class RecordServiceImpl implements RecordService {
     private final StatusService statusService;
     private final BloodDialysisService bloodDialysisService;
     private final PeritonealDialysisService peritonealDialysisService;
+    private final NoteService noteService;
 
     /**
      * {@inheritDoc}
@@ -307,6 +309,10 @@ public class RecordServiceImpl implements RecordService {
             nrRecordList.addAll(recordListDAO.getNrPeritonealDialysisRecordList(request));
         }
 
+        if (nrRecordTargets.contains(RecordTarget.NURS_NOTE.getType())) {
+            nrRecordList.addAll(recordListDAO.getNrNoteRecordList(request));
+        }
+
         return nrRecordList;
     }
 
@@ -543,6 +549,12 @@ public class RecordServiceImpl implements RecordService {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_PERITONEAL_DIALYSIS.getType())) {
                 chartContext.setChartStrategy(new PeritionealDialysisChartStrategy());
                 dataSource = peritonealDialysisService.getPeritonealDialysisData(request.getRecord().getKeyId());
+            }
+
+            // 간호일지
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_NOTE.getType())) {
+                chartContext.setChartStrategy(new NoteChartStrategy());
+                dataSource = noteService.getNoteData(request.getRecord().getKeyId());
             }
         }
 
