@@ -166,7 +166,11 @@ const Chart = (props: ChartProps) => {
                         </Box>
                     )}
                 {value.controlType === 'IMAGE' && value.content && (
-                    <img style={{ width: '100%', height: '100%', objectFit: 'contain' }} src={value.content} alt={'가명화 이미지'} />
+                    <img
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        src={`https://deview.snuh.org/masked_images/${value.content}?currentTime=${new Date().getTime()}`}
+                        alt={'가명화 이미지'}
+                    />
                 )}
                 {value.controlType === 'TABLE' && value.content && (
                     <Box sx={{ width: '100%', maxHeight: '600px', overflow: 'scroll', whiteSpace: 'pre-line' }}>
@@ -280,7 +284,11 @@ const Chart = (props: ChartProps) => {
                         </label>
                     )}
                     {element.controlType === 'IMAGE' && element.content && (
-                        <img style={{ width: '100%', height: '100%', objectFit: 'contain' }} src={element.content} alt={element.content} />
+                        <img
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                            src={`https://deview.snuh.org/masked_images/${element.content}?currentTime=${new Date().getTime()}`}
+                            alt={element.content}
+                        />
                     )}
                 </Box>
             </Box>
