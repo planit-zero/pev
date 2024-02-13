@@ -3,7 +3,7 @@
 <mapper namespace="ai.planit.pev.domain.ods.patient.dao.PatientDAO">
     <sql id="selectPatientTable">
         SELECT REGEXP_REPLACE(A.PT_NO, '.', '*')                 AS id,
-               REGEXP_REPLACE(A.PT_NM, '.', '*', 2, 1)           AS name,
+               REGEXP_REPLACE(A.PT_NM, '.', '*', 2)           AS name,
                A.SEX_TP_CD                                       AS gender,
                REGEXP_REPLACE(A.PT_BRDY_DT::VARCHAR, '.', '', 8) AS dob
         FROM ODS.S_PCTPCPAM A
