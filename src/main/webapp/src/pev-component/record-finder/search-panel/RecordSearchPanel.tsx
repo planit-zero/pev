@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Grid } from '@mui/material';
 import IrbSelector from './IrbSelector';
 import RidForm from './RidForm';
-import { useGetPatientMutation, useGetRidByGidMutation } from '../../../pev-service/PatientService';
-import { IPatientR, IPatientRidP, IRidByGidP } from '../../../pev-interface/IPatient';
+import { useGetPatientMutation } from '../../../pev-service/PatientService';
+import { IPatientR, IPatientRidP } from '../../../pev-interface/IPatient';
 import PatientInfo from './PatientInfo';
 import { useSearchParams } from 'react-router-dom';
 import { useGetIdpLoginUserMutation } from '../../../pev-service/UserService';
@@ -24,7 +24,6 @@ const RecordSearchPanel = (props: RecordSearchPanelProps) => {
 
     const [getPatient] = useGetPatientMutation();
     const [getIdpLoginUser] = useGetIdpLoginUserMutation();
-    const [getRidByGid] = useGetRidByGidMutation();
 
     React.useEffect(() => {
         const token = searchParams.get('token');
@@ -41,24 +40,12 @@ const RecordSearchPanel = (props: RecordSearchPanelProps) => {
 
                     if (decryptArr.length == 2) {
                         const irbParam = decryptArr[0];
-                        const gidParam = decryptArr[1];
+                        const ridParam = decryptArr[1];
 
-                        const payload: IRidByGidP = {
-                            stfNo: res.stfNo,
-                            irbNo: irbParam,
-                            data: [{ gid: gidParam }]
-                        };
+                        handleIrbChangeByObj(irbParam);
+                        handleRidChange(ridParam);
 
-                        getRidByGid(payload)
-                            .unwrap()
-                            .then((r) => {
-                                if (r.data.length > 0 && r.data[0].rid) {
-                                    handleIrbChangeByObj(r.irbNo);
-                                    handleRidChange(r.data[0].rid);
-
-                                    handleRidSubmit(r.irbNo, r.data[0].rid);
-                                }
-                            });
+                        handleRidSubmit(irbParam, ridParam);
                     }
                 }
             })
