@@ -6,6 +6,7 @@ import Header from '../../layout/MainLayout/Header';
 import { useSelector } from '../../store';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { useGetTokenInSessionMutation } from '../../pev-service/UserService';
 
 const CommonLayout = () => {
     const theme = useTheme();
@@ -18,6 +19,16 @@ const CommonLayout = () => {
                 <Header />
             </Toolbar>
         );
+    };
+
+    const [getTokenInSession] = useGetTokenInSessionMutation();
+
+    const goToRex = () => {
+        getTokenInSession()
+            .unwrap()
+            .then((data) => {
+                window.location.href = `https://supreme.snuh.org/sso?token=${data.token}`;
+            });
     };
 
     return (
@@ -58,7 +69,7 @@ const CommonLayout = () => {
                     justifyContent={'center'}
                     alignItems={'center'}
                     sx={{ cursor: 'pointer' }}
-                    onClick={() => (window.location.href = 'https://supreme.snuh.org')}
+                    onClick={goToRex}
                 >
                     <IconHome color={'white'} />
                 </Box>

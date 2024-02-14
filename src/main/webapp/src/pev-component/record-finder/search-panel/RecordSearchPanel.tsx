@@ -50,8 +50,7 @@ const RecordSearchPanel = (props: RecordSearchPanelProps) => {
                 }
             })
             .catch((error) => {
-                alert(error.data?.message || '인증 토큰이 존재하지 않습니다.');
-                window.location.href = 'https://supreme.snuh.org/';
+                window.location.href = 'http://172.26.33.22:18020?destination=deview';
             });
     }, []);
 

@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -35,5 +37,15 @@ public class UserController {
     public ResponseEntity<?> signOut(HttpSession session) {
         userService.signOut(session);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("token")
+    public ResponseEntity<?> getTokenInSession(HttpSession session) {
+        String token = (String) session.getAttribute("pev-token");
+
+        Map<String, String> map = new HashMap<>();
+        map.put("token", token);
+
+        return ResponseEntity.ok().body(map);
     }
 }

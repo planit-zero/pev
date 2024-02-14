@@ -4,6 +4,7 @@ import { IRecord } from '../../pev-interface/IRecord';
 import ChartComparator from '../record-comparator/ChartComparator';
 import { ChartWrapperType } from '../../pev-type/TChart';
 import ChartReport from './ChartReport';
+import { useSelector } from '../../store';
 
 type ChartToolbarProps = {
     targetRecord: IRecord;
@@ -14,17 +15,23 @@ type ChartToolbarProps = {
 const ChartToolbar = (props: ChartToolbarProps) => {
     const [activeModal, setActiveModal] = React.useState<ChartWrapperType | null>(null);
 
+    const { info } = useSelector((state) => state.user);
+
     return (
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <Button
-                variant={'contained'}
-                color={'primary'}
-                size={'small'}
-                onClick={() => setActiveModal('COMPARATOR')}
-                disabled={props.isChartLoading}
-            >
-                원본 대조
-            </Button>
+            <Box>
+                {info && info.authCd === 'S' && (
+                    <Button
+                        variant={'contained'}
+                        color={'primary'}
+                        size={'small'}
+                        onClick={() => setActiveModal('COMPARATOR')}
+                        disabled={props.isChartLoading}
+                    >
+                        원본 대조
+                    </Button>
+                )}
+            </Box>
             <Button
                 variant={'contained'}
                 color={'error'}

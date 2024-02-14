@@ -21,7 +21,7 @@ const Header = () => {
     const handleSignOutClick = () => {
         signOut()
             .unwrap()
-            .then(() => (window.location.href = 'https://supreme.snuh.org/'));
+            .then(() => (window.location.href = 'http://172.26.33.22:18020?destination=deview'));
     };
 
     return (
