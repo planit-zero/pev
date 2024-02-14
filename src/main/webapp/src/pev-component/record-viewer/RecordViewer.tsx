@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useDispatch, useSelector } from '../../store';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import { Article, MenuBook } from '@mui/icons-material';
-import RecordSheetContainer from './RecordSheetContainer';
 import { setFinderWidth, setViewMode } from '../../store/pev-slices/environment';
 import { openDrawer } from '../../store/slices/menu';
 import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand } from '@tabler/icons';
@@ -36,12 +35,18 @@ const RecordViewer = () => {
     const resizeToWide = () => {
         if (finderWidth === finderWidthNarrow && !drawerOpen) {
             dispatch(openDrawer(true));
-            setViewMode('double');
         }
+
         if (finderWidth === finderWidthNarrow && drawerOpen) {
             setFinderWidth(finderWidthWide);
-            setViewMode('single');
         }
+
+        setViewMode('single');
+    };
+
+    const changeViewMode = (mode: string) => {
+        dispatch(openDrawer(mode === 'single'));
+        setViewMode(mode);
     };
 
     return (
@@ -80,12 +85,12 @@ const RecordViewer = () => {
                 </Box>
                 <Box position={'fixed'} top={68} right={35} display={'flex'} flexDirection={'column'}>
                     <Tooltip title={'한 페이지 모드로 변경합니다.'} placement={'left'}>
-                        <IconButton color={viewMode === 'single' ? 'primary' : 'default'} onClick={() => setViewMode('single')}>
+                        <IconButton color={viewMode === 'single' ? 'primary' : 'default'} onClick={() => changeViewMode('single')}>
                             <Article />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title={'다중 페이지 모드로 변경합니다.'} placement={'left'}>
-                        <IconButton color={viewMode === 'double' ? 'primary' : 'default'} onClick={() => setViewMode('double')}>
+                        <IconButton color={viewMode === 'double' ? 'primary' : 'default'} onClick={() => changeViewMode('double')}>
                             <MenuBook />
                         </IconButton>
                     </Tooltip>
