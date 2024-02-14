@@ -19,6 +19,10 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
     const { targetRecords } = useSelector((state) => state.record);
     const [selectedRecordList, setSelectedRecordList] = React.useState<IRecord[]>([]);
 
+    React.useEffect(() => {
+        setSelectedRecordList([]);
+    }, [props.recordList.length]);
+
     const handleSelectionChanged = (e: any) => {
         if (e && e.selectedRowsData) {
             if (e.selectedRowsData.length === 0) {
@@ -99,15 +103,6 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                             다중 선택
                         </Button>
                     )}
-                    {/*<Button*/}
-                    {/*    variant={'contained'}*/}
-                    {/*    size={'small'}*/}
-                    {/*    startIcon={<SearchIcon fontSize="small" />}*/}
-                    {/*    onClick={() => handleRetrieve(selectedRecordList)}*/}
-                    {/*    disabled={selectedRecordList.length === 0}*/}
-                    {/*>*/}
-                    {/*    조회*/}
-                    {/*</Button>*/}
                 </Box>
             </Box>
             <Divider sx={{ mt: 1, mb: 1 }} />
@@ -122,7 +117,6 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                     wordWrapEnabled={false}
                     noDataText={''}
                     onSelectionChanged={handleSelectionChanged}
-                    // onRowClick={() => handleRetrieve()}
                 >
                     <Column dataField={'pactTpNm'} caption={'구분'} alignment={'center'} width={85} />
                     <Column dataField={'itemType'} caption={'유형'} alignment={'center'} width={85} />
