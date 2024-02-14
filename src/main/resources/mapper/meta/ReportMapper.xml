@@ -32,7 +32,7 @@
         a.irb as irb,
         a.rid as rid,
         a.record_info as recordInfo,
-        to_char(a.report_dtm, 'YYYY-MM-DD hh:mm:ss') as reportDtm,
+        to_char(a.report_dtm, 'YYYY-MM-DD hh24:mi:ss') as reportDtm,
         case
         when
         (select count(*) from pev_report_detail z where z.report_id = a.report_id and process_dtm is null) > 0
@@ -55,7 +55,7 @@
                a.report_text as reportText,
                a.process_yn as processYn,
                a.process_text as processText,
-               to_char(a.process_dtm, 'YYYY-MM-DD hh:mm:ss') as processDtm
+               to_char(a.process_dtm, 'YYYY-MM-DD hh24:mi:ss') as processDtm
         from pev_report_detail a
         where a.report_id = #{reportId}
         order by value_seq
@@ -79,9 +79,9 @@
         irb as irb,
         rid as rid,
         target_record as targetRecord,
-        to_char(load_dtm, 'YYYY-MM-DD hh:mm:ss') as loadDtm,
+        to_char(load_dtm, 'YYYY-MM-DD hh24:mi:ss') as loadDtm,
         process_yn as processYn,
-        case when process_dtm is null then '처리 전' else to_char(process_dtm, 'YYYY-MM-DD hh:mm:ss') end as processDtm
+        case when process_dtm is null then '처리 전' else to_char(process_dtm, 'YYYY-MM-DD hh24:mi:ss') end as processDtm
         from pev_chart_err
         where
         <if test='authCd == "S"'>1=1</if>
