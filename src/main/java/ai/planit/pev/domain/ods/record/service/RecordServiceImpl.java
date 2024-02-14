@@ -1,5 +1,6 @@
 package ai.planit.pev.domain.ods.record.service;
 
+import ai.planit.idp.sdk.model.IdpLoginUser;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
@@ -34,6 +35,7 @@ import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.strategy.chart.object.picture.PictureData;
 import ai.planit.pev.utility.PevChartUtil;
 import ai.planit.pev.utility.PevStringUtil;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -580,7 +582,16 @@ public class RecordServiceImpl implements RecordService {
             throw new BaseException(ErrorType.PID_NOT_FOUND_IN_SESSION);
         }
 
-        ChartData chartData = new ChartData(pid, data);
+        boolean withOrigin = false;
+        String userStr = (String) session.getAttribute("pev-user");
+
+        if (userStr != null) {
+            Gson gson = new Gson();
+            IdpLoginUser idpLoginUser = gson.fromJson(userStr, IdpLoginUser.class);
+            withOrigin = idpLoginUser.getAuthCd().equals("S");
+        }
+
+        ChartData chartData = new ChartData(pid, data, withOrigin);
         if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
         return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
