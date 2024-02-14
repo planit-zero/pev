@@ -7,6 +7,7 @@ import ai.planit.idp.sdk.model.IdpResponse;
 import ai.planit.idp.sdk.option.IdpRequestOptions;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
+import ai.planit.pev.domain.meta.user.dao.UserDAO;
 import ai.planit.pev.domain.meta.user.dto.UserLogin;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final IdpRequestHandler<IdpLoginUser> idpRequestHandler;
+    private final UserDAO userDAO;
 
     @Override
     public void checkAccountAndSendVerificationCode(UserLogin userLogin) {
@@ -70,6 +72,10 @@ public class UserServiceImpl implements UserService {
 
         if (HttpStatus.OK != response.getStatus()) {
             throw new RuntimeException(response.getError().getMessage());
+        }
+
+        if (!response.getLoginUser().getAuthCd().equals("S")) {
+            userDAO.insertLoginLog(response.getLoginUser());
         }
 
         Gson gson = new Gson();

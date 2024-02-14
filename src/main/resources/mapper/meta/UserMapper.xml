@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.meta.user.dao.UserDAO">
+    <insert id="insertLoginLog"
+            parameterType="ai.planit.idp.sdk.model.IdpLoginUser">
+        insert into pev_login_log
+        (stf_no, stf_nm, dept_cd, dept_nm, auth_cd, login_dtm)
+        values (#{stfNo}, #{stfNm}, #{deptCd}, #{deptNm}, #{authCd}, now())
+    </insert>
+</mapper>
