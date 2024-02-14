@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Button, Divider, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { Bookmark } from '@mui/icons-material';
 import { IRecord } from '../../pev-interface/IRecord';
 import { DataGrid } from 'devextreme-react';
@@ -64,12 +64,7 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
             <Box width={'100%'} height={'31px'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                 <Box display={'flex'} alignItems={'center'}>
                     <Bookmark color={'primary'} fontSize={'small'} />
-                    <Typography variant={'body1'}>
-                        기록목록&emsp;
-                        {`전체: ${props.recordList.length} 건`}&emsp;
-                        {`선택: ${selectedRecordList.length} 건`}&emsp;
-                        {`조회: ${targetRecords.length} 건`}
-                    </Typography>
+                    <Typography variant={'body1'}>기록목록</Typography>
                 </Box>
                 <Box display={'flex'} alignItems={'center'} gap={1}>
                     {selectionMode === 'multiple' && (
@@ -105,8 +100,15 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                     )}
                 </Box>
             </Box>
-            <Divider sx={{ mt: 1, mb: 1 }} />
-            <Box width={'100%'} height={'calc(100% - 48px)'} sx={{ userSelect: 'none' }}>
+            <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'} sx={{ my: 1 }}>
+                <Typography variant={'body1'}>
+                    {`전체: ${props.recordList.length} 건`}&emsp;
+                    {`선택: ${selectedRecordList.length} 건`}&emsp;
+                    {`조회: ${targetRecords.length} 건`}
+                </Typography>
+            </Box>
+            {/*<Divider sx={{ mt: 1, mb: 1 }} />*/}
+            <Box width={'100%'} height={'calc(100% - 67px)'} sx={{ userSelect: 'none' }}>
                 <DataGrid
                     ref={gridRef}
                     dataSource={props.recordList}
