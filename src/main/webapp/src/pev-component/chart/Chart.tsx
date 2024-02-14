@@ -259,7 +259,7 @@ const Chart = (props: ChartProps) => {
                         <Box
                             width={'100%'}
                             height={'100%'}
-                            sx={{ p: 0.5, overflowY: 'auto' }}
+                            sx={{ p: 0.5, overflowY: 'auto', whiteSpace: 'pre-line' }}
                             dangerouslySetInnerHTML={{ __html: element.content }}
                         />
                     )}
