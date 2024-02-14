@@ -9,6 +9,7 @@ import { TDept } from '../../../pev-type/TDept';
 import { TWriter } from '../../../pev-type/TWriter';
 import { useGetRecordListMutation } from '../../../pev-service/RecordService';
 import { setTargetRecords } from '../../../store/pev-slices/record';
+import { setAlert } from '../../../store/pev-slices/environment';
 
 type ConditionFinderProps = {
     currentIrb: string | null;
@@ -41,7 +42,16 @@ const ConditionFinder = (props: ConditionFinderProps) => {
     const [getRecordList, { data: recordList, isLoading: isRecordListLoading, reset: resetGetRecordList }] = useGetRecordListMutation();
 
     const handleListSearch = () => {
-        getRecordList(searchCondition);
+        getRecordList(searchCondition)
+            .unwrap()
+            .then((data) => {
+                if (data.length === 0) {
+                    setAlert({
+                        type: 'warning',
+                        message: '설정한 조건에 따른 기록지가 존재하지 않습니다.'
+                    });
+                }
+            });
     };
 
     React.useEffect(() => {
