@@ -41,15 +41,14 @@ public class SpecimenChartStrategy implements ChartStrategy {
 
                 StringBuilder sb = new StringBuilder();
 
-                sb.append("항목명|||검사결과|||참고치\r\n");
+                sb.append("항목명|||검사결과|||참고치;");
 
                 int index = 1;
 
                 for (SpecimenResult result : specimenResults) {
                     sb.append(result.getResult());
-                    if (index < specimenResults.size()) sb.append("\r\n");
+                    if (index < specimenResults.size()) sb.append(";");
                     index++;
-
                 }
 
                 valueFormat.setContent(sb.toString());
