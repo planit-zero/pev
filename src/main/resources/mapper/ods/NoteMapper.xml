@@ -11,6 +11,8 @@
         FROM ODS.S_MRNNRNAD A
         WHERE A.PT_NO = #{ptNo}
           AND A.INPT_DTM::DATE = #{inptDtm}
+          AND A.LST_YN = 'Y'
+          AND A.USE_YN = 'Y'
         ORDER BY TO_CHAR(A.INPT_DTM, 'hh:mi')
         ]]>
     </select>
@@ -32,13 +34,16 @@
                                                       ON ZA.NDRC_ID = ZB.NDRC_ID
                                            INNER JOIN ODS.S_CCVNVVBM ZC
                                                       ON ZB.NR_VOC_ID = ZC.NR_VOC_ID
+                                                      AND ZA.INPT_DTM::DATE BETWEEN ZC.AVL_STR_DTM::DATE AND ZC.AVL_END_DTM::DATE
                                   WHERE ZA.PT_NO = #{ptNo}
                                     AND ZA.INPT_DTM::DATE = #{inptDtm}
-                                    AND ZA.LST_YN = 'Y') C
+                                    AND ZA.LST_YN = 'Y'
+                                    AND ZA.USE_YN = 'Y') C
                                  ON A.NDRC_ID = C.NDRC_ID
         WHERE A.PT_NO = #{ptNo}
           AND A.INPT_DTM::DATE = #{inptDtm}
           AND A.LST_YN = 'Y'
+          AND A.USE_YN = 'Y'
         ORDER BY TO_CHAR(A.INPT_DTM, 'hh:mi'), A.NDRC_ID
         ]]>
     </select>
