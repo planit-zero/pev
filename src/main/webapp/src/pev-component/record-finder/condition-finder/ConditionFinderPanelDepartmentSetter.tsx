@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { ISearchCondition, ISearchConditionKeyValue } from '../../../pev-interface/IRecord';
-import { Autocomplete, Box, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
+import { Autocomplete, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { Square } from '@mui/icons-material';
 import { TDept } from '../../../pev-type/TDept';
 import { IRecordDeptInfo } from '../../../pev-interface/IRecordInfo';
 import { useGetDepartmentListQuery } from '../../../pev-service/HospitalService';
-import { useSelector } from '../../../store';
-import { finderWidthWide } from '../../../store/constant';
 
 type ConditionFinderPanelDepartmentSetterProps = {
     searchCondition: ISearchCondition;
@@ -14,12 +12,18 @@ type ConditionFinderPanelDepartmentSetterProps = {
 };
 
 const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartmentSetterProps) => {
-    const { finderWidth } = useSelector((state) => state.environment);
-
     const { data: departmentList, isLoading: isDepartmentListLoading } = useGetDepartmentListQuery();
 
     const [deptType, setDeptType] = React.useState<string>(props.searchCondition.deptType);
-    const [, setDeptCd] = React.useState<string | null>(props.searchCondition.deptCd);
+    const [deptCd, setDeptCd] = React.useState<string | null>(props.searchCondition.deptCd);
+
+    React.useEffect(() => {
+        if (props.searchCondition.deptType !== deptType) setDeptType(props.searchCondition.deptType);
+    }, [props.searchCondition.deptType]);
+
+    React.useEffect(() => {
+        if (props.searchCondition.deptCd !== deptCd) setDeptCd(props.searchCondition.deptCd);
+    }, [props.searchCondition.deptCd]);
 
     const handleDeptTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDeptType(event.target.value);
@@ -65,6 +69,7 @@ const ConditionFinderPanelDepartmentSetter = (props: ConditionFinderPanelDepartm
                                     </li>
                                 );
                             }}
+                            value={departmentList?.find((d) => d.deptCd === deptCd) || null}
                             options={departmentList || []}
                             getOptionLabel={(option) => option.deptNm}
                             onChange={handleDeptCdChange}

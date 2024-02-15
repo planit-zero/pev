@@ -12,6 +12,10 @@ type ConditionFinderPanelPatientTypeSetterProps = {
 const ConditionFinderPanelPatientTypeSetter = (props: ConditionFinderPanelPatientTypeSetterProps) => {
     const [pactTpCd, setPactTpCd] = React.useState<string>(props.searchCondition.pactTpCd);
 
+    React.useEffect(() => {
+        if (props.searchCondition.pactTpCd !== pactTpCd) setPactTpCd(props.searchCondition.pactTpCd);
+    }, [props.searchCondition.pactTpCd]);
+
     const handlePactTpCdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPactTpCd(event.target.value);
         props.onSearchConditionChange([{ key: 'pactTpCd', value: event.target.value }]);

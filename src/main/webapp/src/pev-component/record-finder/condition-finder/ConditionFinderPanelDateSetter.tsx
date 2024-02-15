@@ -21,6 +21,14 @@ const ConditionFinderPanelDateSetter = (props: ConditionFinderPanelDateSetterPro
     const [to, setTo] = React.useState<string | null>(props.searchCondition.searchToDate);
     const [period, setPeriod] = React.useState<string>(TDatePeriod.ONE_MONTH);
 
+    React.useEffect(() => {
+        if (props.searchCondition.searchFromDate !== from) setFrom(props.searchCondition.searchFromDate);
+    }, [props.searchCondition.searchFromDate]);
+
+    React.useEffect(() => {
+        if (props.searchCondition.searchToDate !== to) setTo(props.searchCondition.searchToDate);
+    }, [props.searchCondition.searchToDate]);
+
     const handleFromChange = (value: string | null) => {
         let nextValue = value;
         if (value) nextValue = dayjs(value).format('YYYY-MM-DD');

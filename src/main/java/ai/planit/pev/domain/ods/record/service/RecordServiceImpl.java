@@ -83,6 +83,10 @@ public class RecordServiceImpl implements RecordService {
 
         request.setPtNo(pid);
 
+        Gson gson = new Gson();
+        String requestStr = gson.toJson(request, Record.Request.class);
+        session.setAttribute("pev-record-request", requestStr);
+
         return getRecordListByTargets(request);
     }
 

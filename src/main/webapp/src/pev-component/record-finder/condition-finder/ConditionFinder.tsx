@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import { TPactTpCd } from '../../../pev-type/TPactTpCd';
 import { TDept } from '../../../pev-type/TDept';
 import { TWriter } from '../../../pev-type/TWriter';
-import { useGetRecordListMutation } from '../../../pev-service/RecordService';
+import { useGetRecordListMutation, useGetRecordListRequestQuery } from '../../../pev-service/RecordService';
 import { setTargetRecords } from '../../../store/pev-slices/record';
 import { setAlert } from '../../../store/pev-slices/environment';
 
@@ -28,6 +28,22 @@ const ConditionFinder = (props: ConditionFinderProps) => {
     };
 
     const [searchCondition, setSearchCondition] = React.useState<ISearchCondition>(initialSearchCondition);
+
+    const { data: searchConditionInSession, isLoading: searchConditionLoading } = useGetRecordListRequestQuery();
+
+    React.useEffect(() => {
+        if (searchConditionInSession) {
+            setSearchCondition({
+                searchTargets: searchConditionInSession.searchTargets,
+                searchFromDate: searchConditionInSession.searchFromDate,
+                searchToDate: searchConditionInSession.searchToDate,
+                pactTpCd: searchConditionInSession.pactTpCd,
+                deptType: searchConditionInSession.deptType,
+                deptCd: searchConditionInSession.deptCd,
+                writerType: searchConditionInSession.writerType
+            });
+        }
+    }, [searchConditionInSession]);
 
     const handleSearchConditionChange = (conditions: ISearchConditionKeyValue[]) => {
         let nextSearchCondition = { ...searchCondition };
@@ -61,7 +77,10 @@ const ConditionFinder = (props: ConditionFinderProps) => {
 
     return (
         <Box sx={{ width: '100%', height: 'calc(100% - 64px)' }}>
-            <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isRecordListLoading}>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={isRecordListLoading || searchConditionLoading}
+            >
                 <CircularProgress color="inherit" />
             </Backdrop>
             {/*조건 설정 패널*/}

@@ -4,12 +4,10 @@ import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.domain.ods.record.service.RecordService;
 import ai.planit.pev.strategy.chart.object.common.Chart;
 import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,6 +21,16 @@ public class RecordController {
     @PostMapping("list")
     public ResponseEntity<?> getRecordList(HttpSession session, @RequestBody Record.Request request) {
         return ResponseEntity.ok().body(recordService.getRecordList(session, request));
+    }
+
+    @GetMapping("list/request")
+    public ResponseEntity<?> getRecordListRequest(HttpSession session) {
+        String requestInSession = (String) session.getAttribute("pev-record-request");
+
+        Gson gson = new Gson();
+        Record.Request request = gson.fromJson(requestInSession, Record.Request.class);
+
+        return ResponseEntity.ok().body(request);
     }
 
     @PostMapping("chart")

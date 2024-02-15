@@ -42,6 +42,11 @@ export const recordApi = createApi({
                 body: payload
             })
         }),
+        getRecordListRequest: builder.query<ISearchCondition, void>({
+            query: () => ({
+                url: 'list/request'
+            })
+        }),
         getChart: builder.mutation<IChart, IChartP>({
             query: (payload) => ({
                 url: 'chart',
@@ -70,6 +75,7 @@ export const {
     useGetDetailListByConditionMutation,
     useGetDeptInfoListQuery,
     useGetRecordListMutation,
+    useGetRecordListRequestQuery,
     useGetChartMutation,
     useGetChartReplyMutation,
     useGetFunctionChartMutation
