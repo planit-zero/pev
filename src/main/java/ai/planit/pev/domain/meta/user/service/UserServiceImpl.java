@@ -60,21 +60,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public IdpLoginUser getIdpLoginUser(HttpSession session, String token) {
-        if (token == null && Objects.isNull(session.getAttribute("pev-token"))) {
+        String currentToken = null;
+        String tokenInSession = (String) session.getAttribute("pev-token");
+
+        if (token == null && tokenInSession == null) {
             throw new BaseException(ErrorType.IDP_TOKEN_NOT_FOUND);
         }
 
-        if (token != null) {
-            session.setAttribute("pev-token", token);
-        }
+        if (token != null) currentToken = token;
 
-        IdpResponse<IdpLoginUser> response = idpRequestHandler.getIdpLoginUser(session.getAttribute("pev-token").toString());
+        IdpResponse<IdpLoginUser> response = idpRequestHandler.getIdpLoginUser(currentToken);
 
         if (HttpStatus.OK != response.getStatus()) {
             throw new RuntimeException(response.getError().getMessage());
         }
 
-        if (!response.getLoginUser().getAuthCd().equals("S")) {
+        if (tokenInSession == null || !tokenInSession.equals(currentToken)) {
+            session.setAttribute("pev-token", currentToken);
             userDAO.insertLoginLog(response.getLoginUser());
         }
 
