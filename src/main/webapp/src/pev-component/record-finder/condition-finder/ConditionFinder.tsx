@@ -10,6 +10,7 @@ import { TWriter } from '../../../pev-type/TWriter';
 import { useGetRecordListMutation, useGetRecordListRequestQuery } from '../../../pev-service/RecordService';
 import { setTargetRecords } from '../../../store/pev-slices/record';
 import { setAlert } from '../../../store/pev-slices/environment';
+import { useSearchParams } from 'react-router-dom';
 
 type ConditionFinderProps = {
     currentIrb: string | null;
@@ -17,6 +18,8 @@ type ConditionFinderProps = {
 };
 
 const ConditionFinder = (props: ConditionFinderProps) => {
+    const [searchParams] = useSearchParams();
+
     const initialSearchCondition: ISearchCondition = {
         searchTargets: ['D001', 'D002', 'D003', 'D004'],
         searchFromDate: dayjs().add(-1, 'month').format('YYYY-MM-DD'),
@@ -29,10 +32,36 @@ const ConditionFinder = (props: ConditionFinderProps) => {
 
     const [searchCondition, setSearchCondition] = React.useState<ISearchCondition>(initialSearchCondition);
 
+    React.useEffect(() => {
+        const searchTarget = searchParams.get('searchTarget');
+        const searchDate = searchParams.get('searchDate');
+
+        const updateObj: any = {};
+
+        if (searchTarget) {
+            updateObj.searchTargets = [searchTarget];
+        }
+
+        if (searchDate) {
+            updateObj.searchFromDate = searchDate;
+            updateObj.searchToDate = searchDate;
+        }
+
+        if (Object.keys(updateObj).length > 0) {
+            setSearchCondition({
+                ...searchCondition,
+                ...updateObj
+            });
+        }
+    }, []);
+
     const { data: searchConditionInSession, isLoading: searchConditionLoading } = useGetRecordListRequestQuery();
 
     React.useEffect(() => {
-        if (searchConditionInSession) {
+        const searchTarget = searchParams.get('searchTarget');
+        const searchDate = searchParams.get('searchDate');
+
+        if (searchConditionInSession && !searchTarget && !searchDate) {
             setSearchCondition({
                 searchTargets: searchConditionInSession.searchTargets,
                 searchFromDate: searchConditionInSession.searchFromDate,

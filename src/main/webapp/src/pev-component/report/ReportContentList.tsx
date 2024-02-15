@@ -7,6 +7,7 @@ import ReportDetailList from './ReportDetailList';
 import { useSelector } from '../../store';
 import { useUpdateChartErrorProcessMutation } from '../../pev-service/ReportService';
 import { CryptoUtils } from '../../pev-utils/CryptoUtils';
+import { UrlUtils } from '../../pev-utils/UrlUtils';
 
 type ReportContentListProps = {
     contentType: 'masking' | 'chart';
@@ -15,6 +16,7 @@ type ReportContentListProps = {
 
 const ReportContentList = (props: ReportContentListProps) => {
     const { info } = useSelector((state) => state.user);
+    const { profile } = useSelector((state) => state.environment);
 
     const maskingDataSource = props.dataSource as IReport[];
     const chartDataSource = props.dataSource as IChartError[];
@@ -64,10 +66,14 @@ const ReportContentList = (props: ReportContentListProps) => {
         return null;
     };
 
-    const handleRidClick = (irb: string, rid: string) => {
+    const handleRidClick = (irb: string, rid: string, recordInfo: string) => {
         const rawKey = `${irb}|||${rid}`;
         const encryptKey = CryptoUtils.encrypt(rawKey, 'planitsquare2023');
-        const url = `https://deview.snuh.org?key=${encryptKey}`;
+
+        const record: IRecord = JSON.parse(recordInfo);
+        const searchDate = record.writingDate.substring(0, 10);
+
+        const url = `${UrlUtils.getHost(profile)}?key=${encryptKey}&searchTarget=${record.recordDetailType}&searchDate=${searchDate}`;
 
         window.open(url, 'review');
     };
@@ -99,7 +105,7 @@ const ReportContentList = (props: ReportContentListProps) => {
                                 <TableCell align={'center'}>{report.irb}</TableCell>
                                 <TableCell
                                     align={'center'}
-                                    onClick={() => handleRidClick(report.irb, report.rid)}
+                                    onClick={() => handleRidClick(report.irb, report.rid, report.recordInfo)}
                                     sx={{ cursor: 'pointer' }}
                                 >
                                     {report.rid}
@@ -140,7 +146,7 @@ const ReportContentList = (props: ReportContentListProps) => {
                                 <TableCell align={'center'}>{chartError.irb}</TableCell>
                                 <TableCell
                                     align={'center'}
-                                    onClick={() => handleRidClick(chartError.irb, chartError.rid)}
+                                    onClick={() => handleRidClick(chartError.irb, chartError.rid, chartError.targetRecord)}
                                     sx={{ cursor: 'pointer' }}
                                 >
                                     {chartError.rid}

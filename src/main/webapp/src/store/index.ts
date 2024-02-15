@@ -16,6 +16,7 @@ import { irbApi } from '../pev-service/IrbService';
 import { reportApi } from '../pev-service/ReportService';
 import { metaRecordApi } from '../pev-service/MetaRecordService';
 import { userApi } from '../pev-service/UserService';
+import { envApi } from '../pev-service/EnvService';
 
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
@@ -32,7 +33,8 @@ const store = configureStore({
             .concat(irbApi.middleware)
             .concat(reportApi.middleware)
             .concat(metaRecordApi.middleware)
-            .concat(userApi.middleware);
+            .concat(userApi.middleware)
+            .concat(envApi.middleware);
     }
 });
 

@@ -4,6 +4,7 @@ export interface IEnvironment {
     alert: IEnvironmentAlert | null;
     viewMode: string;
     finderWidth: number;
+    profile: string;
 }
 
 export interface IEnvironmentAlert {

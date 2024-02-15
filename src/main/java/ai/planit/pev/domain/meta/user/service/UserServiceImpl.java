@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
             throw new BaseException(ErrorType.IDP_TOKEN_NOT_FOUND);
         }
 
+        if (tokenInSession != null) currentToken = tokenInSession;
         if (token != null) currentToken = token;
 
         IdpResponse<IdpLoginUser> response = idpRequestHandler.getIdpLoginUser(currentToken);

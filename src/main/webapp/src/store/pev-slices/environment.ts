@@ -6,7 +6,8 @@ import { finderWidthNarrow } from '../constant';
 const initialState: IEnvironment = {
     alert: null,
     viewMode: 'single',
-    finderWidth: finderWidthNarrow
+    finderWidth: finderWidthNarrow,
+    profile: 'local'
 };
 
 const environmentSlice = createSlice({
@@ -21,6 +22,9 @@ const environmentSlice = createSlice({
         },
         setFinderWidth(state, action) {
             state.finderWidth = action.payload;
+        },
+        setProfile(state, action) {
+            state.profile = action.payload;
         }
     }
 });
@@ -37,4 +41,8 @@ export const setViewMode = (viewMode: string) => {
 
 export const setFinderWidth = (finderWidth: number) => {
     dispatch(environmentSlice.actions.setFinderWidth(finderWidth));
+};
+
+export const setProfile = (profile: string) => {
+    dispatch(environmentSlice.actions.setProfile(profile));
 };

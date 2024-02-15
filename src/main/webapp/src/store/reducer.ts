@@ -26,6 +26,7 @@ import { irbApi } from '../pev-service/IrbService';
 import { reportApi } from '../pev-service/ReportService';
 import { metaRecordApi } from '../pev-service/MetaRecordService';
 import { userApi } from '../pev-service/UserService';
+import { envApi } from '../pev-service/EnvService';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
@@ -58,7 +59,8 @@ const reducer = combineReducers({
     [irbApi.reducerPath]: irbApi.reducer,
     [reportApi.reducerPath]: reportApi.reducer,
     [metaRecordApi.reducerPath]: metaRecordApi.reducer,
-    [userApi.reducerPath]: userApi.reducer
+    [userApi.reducerPath]: userApi.reducer,
+    [envApi.reducerPath]: envApi.reducer
 });
 
 export default reducer;
