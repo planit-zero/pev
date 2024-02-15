@@ -24,7 +24,7 @@
         values (#{stfNo}, #{irb}, #{rid}, #{targetRecord}, 'N', now())
     </insert>
     <select id="getReportList"
-            parameterType="ai.planit.pev.domain.meta.report.dto.ReportRequest"
+            parameterType="ai.planit.idp.sdk.model.IdpLoginUser"
             resultType="ai.planit.pev.domain.meta.report.dto.Report">
         select row_number() over (order by a.report_id) as rowNum,
         a.report_id as reportId,

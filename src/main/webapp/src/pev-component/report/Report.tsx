@@ -1,27 +1,13 @@
 import * as React from 'react';
 import { Box } from '@mui/material';
 import CommonLayout from '../common/CommonLayout';
-import { useGetChartErrorListQuery, useGetReportListMutation } from '../../pev-service/ReportService';
-import { useSelector } from '../../store';
-import { IReportRequest } from '../../pev-interface/IChart';
+import { useGetChartErrorListQuery, useGetReportListQuery } from '../../pev-service/ReportService';
 import ReportContent from './ReportContent';
 import ReportMenu from './ReportMenu';
 
 const Report = () => {
-    const { info } = useSelector((state) => state.user);
-    const [getReportList, { data: reportList }] = useGetReportListMutation();
+    const { data: reportList } = useGetReportListQuery();
     const { data: chartErrorList } = useGetChartErrorListQuery();
-
-    React.useEffect(() => {
-        if (info) {
-            const payload: IReportRequest = {
-                stfNo: info.stfNo,
-                authCd: info.authCd
-            };
-
-            getReportList(payload);
-        }
-    }, []);
 
     const [menuIndex, setMenuIndex] = React.useState<number>(0);
 

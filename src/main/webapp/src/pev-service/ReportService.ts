@@ -1,19 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IChartError, IReport, IReportDetail, IReportDetailUpdate, IReportRequest } from '../pev-interface/IChart';
+import { IChartError, IReport, IReportDetail, IReportDetailUpdate } from '../pev-interface/IChart';
 
 export const reportApi = createApi({
     reducerPath: 'reportApi',
     baseQuery: fetchBaseQuery({
         baseUrl: 'api/meta'
     }),
-    tagTypes: ['Detail', 'ChartError'],
+    tagTypes: ['Report', 'Detail', 'ChartError'],
     endpoints: (builder) => ({
-        getReportList: builder.mutation<IReport[], IReportRequest>({
-            query: (payload) => ({
+        getReportList: builder.query<IReport[], void>({
+            query: () => ({
                 url: 'report/list',
-                method: 'POST',
-                body: payload
-            })
+                method: 'GET'
+            }),
+            providesTags: ['Report']
         }),
         getReportDetailList: builder.query<IReportDetail[], number>({
             query: (payload) => ({
@@ -27,7 +27,7 @@ export const reportApi = createApi({
                 method: 'POST',
                 body: payload
             }),
-            invalidatesTags: ['Detail']
+            invalidatesTags: ['Report', 'Detail']
         }),
         insertReport: builder.mutation<void, any>({
             query: (payload) => ({
@@ -60,7 +60,7 @@ export const reportApi = createApi({
 });
 
 export const {
-    useGetReportListMutation,
+    useGetReportListQuery,
     useGetReportDetailListQuery,
     useUpdateProcessMutation,
     useInsertReportMutation,

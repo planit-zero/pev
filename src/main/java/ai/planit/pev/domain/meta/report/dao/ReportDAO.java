@@ -1,5 +1,6 @@
 package ai.planit.pev.domain.meta.report.dao;
 
+import ai.planit.idp.sdk.model.IdpLoginUser;
 import ai.planit.pev.domain.meta.report.dto.*;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface ReportDAO {
 
     void insertChartError(ChartError chartError);
 
-    List<Report> getReportList(ReportRequest request);
+    List<Report> getReportList(IdpLoginUser idpLoginUser);
 
     List<ReportDetail> getReportDetailList(int reportId);
 

@@ -10,7 +10,7 @@ public interface ReportService {
 
     void insertChartError(HttpSession session, ChartError chartError);
 
-    List<Report> getReportList(ReportRequest request);
+    List<Report> getReportList(HttpSession session);
 
     List<ReportDetail> getReportDetailList(int reportId);
 

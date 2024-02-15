@@ -1,5 +1,6 @@
 package ai.planit.pev.domain.meta.report.dao;
 
+import ai.planit.idp.sdk.model.IdpLoginUser;
 import ai.planit.pev.domain.meta.report.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -28,8 +29,8 @@ public class ReportDAOImpl implements ReportDAO {
     }
 
     @Override
-    public List<Report> getReportList(ReportRequest request) {
-        return sqlSessionTemplate.selectList("getReportList", request);
+    public List<Report> getReportList(IdpLoginUser idpLoginUser) {
+        return sqlSessionTemplate.selectList("getReportList", idpLoginUser);
     }
 
     @Override

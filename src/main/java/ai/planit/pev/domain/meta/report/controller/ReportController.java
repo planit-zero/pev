@@ -14,9 +14,9 @@ import javax.servlet.http.HttpSession;
 public class ReportController {
     private final ReportService reportService;
 
-    @PostMapping("report/list")
-    ResponseEntity<?> getReportList(@RequestBody ReportRequest request) {
-        return ResponseEntity.ok().body(reportService.getReportList(request));
+    @GetMapping("report/list")
+    ResponseEntity<?> getReportList(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getReportList(session));
     }
 
     @GetMapping("report/detail/list")

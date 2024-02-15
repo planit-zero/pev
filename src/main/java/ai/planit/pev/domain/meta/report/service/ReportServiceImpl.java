@@ -41,8 +41,17 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<Report> getReportList(ReportRequest request) {
-        return reportDAO.getReportList(request);
+    public List<Report> getReportList(HttpSession session) {
+        String userStr = (String) session.getAttribute("pev-user");
+
+        if (userStr == null) {
+            throw new BaseException(ErrorType.IDP_TOKEN_NOT_FOUND);
+        }
+
+        Gson gson = new Gson();
+        IdpLoginUser idpLoginUser = gson.fromJson(userStr, IdpLoginUser.class);
+
+        return reportDAO.getReportList(idpLoginUser);
     }
 
     @Override
