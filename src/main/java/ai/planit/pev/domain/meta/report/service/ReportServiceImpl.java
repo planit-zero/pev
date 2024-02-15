@@ -1,6 +1,8 @@
 package ai.planit.pev.domain.meta.report.service;
 
 import ai.planit.idp.sdk.model.IdpLoginUser;
+import ai.planit.pev.core.exception.BaseException;
+import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.report.dao.ReportDAO;
 import ai.planit.pev.domain.meta.report.dto.*;
 import com.google.gson.Gson;
@@ -58,6 +60,10 @@ public class ReportServiceImpl implements ReportService {
         ChartErrorRequest request = new ChartErrorRequest();
 
         String userInSession = (String) session.getAttribute("pev-user");
+
+        if (userInSession == null) {
+            throw new BaseException(ErrorType.IDP_TOKEN_NOT_FOUND);
+        }
 
         Gson gson = new Gson();
         IdpLoginUser user = gson.fromJson(userInSession, IdpLoginUser.class);
