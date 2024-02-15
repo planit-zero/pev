@@ -101,13 +101,12 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                 </Box>
             </Box>
             <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'} sx={{ my: 1 }}>
-                <Typography variant={'body1'}>
+                <Typography sx={{ fontSize: '13px' }}>
                     {`전체: ${props.recordList.length} 건`}&emsp;
                     {`선택: ${selectedRecordList.length} 건`}&emsp;
                     {`조회: ${targetRecords.length} 건`}
                 </Typography>
             </Box>
-            {/*<Divider sx={{ mt: 1, mb: 1 }} />*/}
             <Box width={'100%'} height={'calc(100% - 67px)'} sx={{ userSelect: 'none' }}>
                 <DataGrid
                     ref={gridRef}
