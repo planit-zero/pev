@@ -13,5 +13,9 @@ public class ResourceConfiguration implements WebMvcConfigurer {
         registry.addResourceHandler("/masked_images/**")
                 .addResourceLocations("file:///data/masked_images/")
                 .setCacheControl(CacheControl.noCache());
+
+        registry.addResourceHandler("/manual/**")
+                .addResourceLocations("file:///deview/pev/manual/")
+                .setCacheControl(CacheControl.noCache());
     }
 }
