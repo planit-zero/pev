@@ -7,6 +7,7 @@ import { IconPower, IconReportMedical } from '@tabler/icons';
 import { useSelector } from '../../../store';
 import { useSignOutMutation } from '../../../pev-service/UserService';
 import * as React from 'react';
+import { UrlUtils } from '../../../pev-utils/UrlUtils';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
@@ -15,13 +16,14 @@ const Header = () => {
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
     const { info } = useSelector((state) => state.user);
+    const { profile } = useSelector((state) => state.environment);
 
     const [signOut, { isLoading: isSignOutLoading }] = useSignOutMutation();
 
     const handleSignOutClick = () => {
         signOut()
             .unwrap()
-            .then(() => (window.location.href = 'http://172.26.33.22:18020?destination=deview'));
+            .then(() => (window.location.href = UrlUtils.getIdpUrl(profile)));
     };
 
     return (

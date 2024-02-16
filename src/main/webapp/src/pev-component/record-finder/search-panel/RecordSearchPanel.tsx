@@ -9,6 +9,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useGetIdpLoginUserMutation } from '../../../pev-service/UserService';
 import { setUserInfo } from '../../../store/slices/user';
 import { CryptoUtils } from '../../../pev-utils/CryptoUtils';
+import { useSelector } from '../../../store';
+import { UrlUtils } from '../../../pev-utils/UrlUtils';
 
 type RecordSearchPanelProps = {
     setCurrentIrb: (irb: string | null) => void;
@@ -17,6 +19,8 @@ type RecordSearchPanelProps = {
 
 const RecordSearchPanel = (props: RecordSearchPanelProps) => {
     const [searchParams] = useSearchParams();
+
+    const { profile } = useSelector((state) => state.environment);
 
     const [irb, setIrb] = React.useState<string | null>(null);
     const [rid, setRid] = React.useState<string>('');
@@ -50,7 +54,7 @@ const RecordSearchPanel = (props: RecordSearchPanelProps) => {
                 }
             })
             .catch((error) => {
-                window.location.href = 'http://172.26.33.22:18020?destination=deview';
+                window.location.href = UrlUtils.getIdpUrl(profile);
             });
     }, []);
 
