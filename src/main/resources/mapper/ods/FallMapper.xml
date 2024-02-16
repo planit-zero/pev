@@ -19,7 +19,7 @@
                  INNER JOIN ODS.S_MOPPCICD C
                             ON A.IFFL_DOR_ASTL_CTG_ID = C.IFFL_DOR_ASTL_CTG_ID
                                 AND A.IFFL_DOR_ASTL_ITEM_ID = C.IFFL_DOR_ASTL_ITEM_ID
-        WHERE A.PT_NO || '_' || A.INPT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
+        WHERE A.PT_NO || '_' || A.INPT_DTM || '_' || A.WRT_SEQ = #{keyId}
         ORDER BY B.SORT_SEQ, C.SORT_SEQ
         ]]>
     </select>
@@ -32,7 +32,7 @@
                  INNER JOIN ODS.S_MOPPCIDC B
                             ON A.IFFL_DOR_ASTL_ID = B.IFFL_DOR_ASTL_ID
                                 AND A.IFFL_DOR_CTG_GRP_CD = B.IFFL_DOR_CTG_GRP_CD
-        WHERE A.PT_NO || '_' || A.INPT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
+        WHERE A.PT_NO || '_' || A.INPT_DTM || '_' || A.WRT_SEQ = #{keyId}
         AND A.LST_YN = 'Y'
         ]]>
     </select>
@@ -44,7 +44,7 @@
         FROM ODS.S_MOPPCIED A
                  INNER JOIN ODS.S_CNLRRUSD B
                             ON A.FSR_STF_NO = B.STF_NO
-        WHERE A.PT_NO || '_' || A.INPT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
+        WHERE A.PT_NO || '_' || A.INPT_DTM || '_' || A.WRT_SEQ = #{keyId}
         AND A.LST_YN = 'Y'
         ]]>
     </select>
