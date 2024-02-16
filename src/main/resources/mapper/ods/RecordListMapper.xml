@@ -673,10 +673,8 @@
         A.PACT_ID                                                   AS pactId,
         A.PACT_TP_CD                                                AS pactTpCd,
         DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
-        (SELECT Z.DEPT_NM
-        FROM ODS.S_PDEDBMSM Z
-        WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD)                         AS ptMedDeptNm,
+        NULL                                            AS ptMedDeptCd,
+        NULL                         AS ptMedDeptNm,
         1                                                           AS sortSeq,
         NULL                                                        AS note,
         1                                                           AS mdfmId,
