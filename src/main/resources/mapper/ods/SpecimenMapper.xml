@@ -7,7 +7,7 @@
         <![CDATA[
         SELECT DISTINCT B.EXM_CTG_NM             AS exmCtgNm,
                         C.SPCM_NM                AS spcmNm,
-                        A.ITEM_CB_VRFC_IPTN_CNTE AS itemCbVrfcIptnCnte
+                        MIN(A.ITEM_CB_VRFC_IPTN_CNTE) AS itemCbVrfcIptnCnte
         FROM ODS.S_MSELMAID A
                  INNER JOIN ODS.S_MSELMCTC B
                             ON A.MED_EXM_CTG_CD = B.EXM_CTG_CD
@@ -17,6 +17,7 @@
           AND A.SPCM_NO = #{spcmNo}
           AND A.MED_EXM_CTG_CD = #{medExmCtgCd}
           AND A.ITEM_CB_VRFC_IPTN_CNTE IS NOT NULL
+        GROUP BY B.EXM_CTG_NM, C.SPCM_NM
         ]]>
     </select>
     <select id="getSpecimenResults"
