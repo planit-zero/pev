@@ -16,6 +16,7 @@
         WHERE A.PT_NO = #{ptNo}
           AND A.SPCM_NO = #{spcmNo}
           AND A.MED_EXM_CTG_CD = #{medExmCtgCd}
+          AND A.ITEM_CB_VRFC_IPTN_CNTE IS NOT NULL
         ]]>
     </select>
     <select id="getSpecimenResults"
