@@ -16,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EnvController {
 
-    @Value("${spring.profiles.active}")
+    @Value("${spring.profiles.active:local}")
     private final List<String> profiles;
 
     @GetMapping("profile")
