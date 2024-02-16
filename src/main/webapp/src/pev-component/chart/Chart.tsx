@@ -228,8 +228,7 @@ const Chart = (props: ChartProps) => {
                     '& em': {
                         color: 'white',
                         backgroundColor: 'grey',
-                        fontStyle: 'normal',
-                        px: 0.5
+                        fontStyle: 'normal'
                     }
                 }}
             >
