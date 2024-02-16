@@ -35,6 +35,7 @@ const ReportContentList = (props: ReportContentListProps) => {
             <TableRow>
                 <TableCell />
                 <TableCell align={'center'}>순번</TableCell>
+                <TableCell align={'center'}>ID</TableCell>
                 <TableCell align={'center'}>신고자</TableCell>
                 <TableCell align={'center'}>IRB</TableCell>
                 <TableCell align={'center'}>연구별 환자 ID</TableCell>
@@ -101,6 +102,7 @@ const ReportContentList = (props: ReportContentListProps) => {
                                     </IconButton>
                                 </TableCell>
                                 <TableCell align={'center'}>{report.rowNum}</TableCell>
+                                <TableCell align={'center'}>{report.reportId}</TableCell>
                                 <TableCell align={'center'}>{report.reportUser}</TableCell>
                                 <TableCell align={'center'}>{report.irb}</TableCell>
                                 <TableCell
