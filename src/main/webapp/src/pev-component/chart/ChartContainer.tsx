@@ -45,10 +45,6 @@ const ChartContainer = () => {
         }
     };
 
-    React.useEffect(() => {
-        console.log(statusList);
-    }, [statusList]);
-
     const ChartBoxWrapper = (targetRecord: IRecordDetailR, idx: number) => {
         if (idx !== 0) {
             const status = statusList.find((s) => s.index === idx - 1);
