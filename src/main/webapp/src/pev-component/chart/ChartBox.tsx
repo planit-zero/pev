@@ -7,6 +7,7 @@ import { Paper } from '@mui/material';
 type ChartBoxProps = {
     index: number;
     targetRecord: IRecord;
+    onStatusChange: (index: number, fulfilledTimeStamp: number | undefined) => void;
 };
 
 const ChartBox = (props: ChartBoxProps) => {
@@ -21,6 +22,10 @@ const ChartBox = (props: ChartBoxProps) => {
         setChartError(isError);
     };
 
+    const handleChartFulfilledTimeStampChange = (fulfilledTimeStamp: number | undefined) => {
+        props.onStatusChange(props.index, fulfilledTimeStamp);
+    };
+
     return (
         <Paper id={`target-record-${props.index}`} sx={{ minWidth: 600, p: 2, mb: 2, borderRadius: 0 }}>
             <ChartToolbar targetRecord={props.targetRecord} isChartLoading={isChartLoading} isChartError={isChartError} />
@@ -30,6 +35,7 @@ const ChartBox = (props: ChartBoxProps) => {
                 targetRecord={props.targetRecord}
                 onChartLoadingChange={handleChartLoadingChange}
                 onChartErrorChange={handleChartErrorChange}
+                onFulfilledTimeStampChange={handleChartFulfilledTimeStampChange}
             />
         </Paper>
     );

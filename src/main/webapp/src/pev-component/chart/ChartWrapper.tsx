@@ -16,10 +16,11 @@ type ChartWrapperProps = {
     onChartErrorChange?: (isError: boolean) => void;
     reportValues?: IChartReportValue[];
     onValueChange?: (value: IChartReportValue) => void;
+    onFulfilledTimeStampChange?: (fulfilledTimeStamp: number | undefined) => void;
 };
 
 const ChartWrapper = (props: ChartWrapperProps) => {
-    const [getChart, { data: chart, isLoading: isChartLoading, isError: isChartError }] = useGetChartMutation();
+    const [getChart, { data: chart, isLoading: isChartLoading, isError: isChartError, fulfilledTimeStamp }] = useGetChartMutation();
     const [getChartReply, { data: chartReply, isLoading: isChartReplyLoading }] = useGetChartReplyMutation();
     const [getFunctionChart, { data: functionCharts, isLoading: isFunctionChartLoading, isError: isFunctionChartError }] =
         useGetFunctionChartMutation();
@@ -55,7 +56,11 @@ const ChartWrapper = (props: ChartWrapperProps) => {
 
     React.useEffect(() => {
         if (props.onChartErrorChange) props.onChartErrorChange(isChartError);
-    });
+    }, [isChartError]);
+
+    React.useEffect(() => {
+        if (props.onFulfilledTimeStampChange) props.onFulfilledTimeStampChange(fulfilledTimeStamp);
+    }, [fulfilledTimeStamp]);
 
     return (
         <React.Fragment>
