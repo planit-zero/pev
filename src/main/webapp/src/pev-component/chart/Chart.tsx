@@ -213,7 +213,9 @@ const Chart = (props: ChartProps) => {
                                 fontStyle: 'normal'
                             }
                         }}
-                        dangerouslySetInnerHTML={{ __html: value.controlType === 'RADIO_BUTTON' ? value.desc : value.content }}
+                        dangerouslySetInnerHTML={{
+                            __html: value.controlType === 'RADIO_BUTTON' || value.controlType === 'CHECK_BOX' ? value.desc : value.content
+                        }}
                     />
                 )}
             </Box>
