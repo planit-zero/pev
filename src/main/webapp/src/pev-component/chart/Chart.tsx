@@ -96,7 +96,7 @@ const Chart = (props: ChartProps) => {
         if (entity.style) return StyledElementWithChildren(entity, eIdx);
         return (
             <Box key={eIdx} onClick={() => console.log('### entity', entity)}>
-                <Typography
+                <Box
                     sx={{
                         fontSize: `h4.fontSize`,
                         fontWeight: 'bold',
@@ -104,9 +104,8 @@ const Chart = (props: ChartProps) => {
                         whiteSpace: 'pre-line',
                         wordBreak: 'break-all'
                     }}
-                >
-                    {entity.content}
-                </Typography>
+                    dangerouslySetInnerHTML={{ __html: entity.content }}
+                />
                 {entity.attributes.map((a, idx) => {
                     return ChartAttribute(a, idx);
                 })}
@@ -121,16 +120,15 @@ const Chart = (props: ChartProps) => {
         if (attribute.style) return StyledElementWithChildren(attribute, aIdx);
         return (
             <Box key={aIdx} sx={{ ml: 1, mb: 1 }} onClick={() => console.log('### attribute', attribute)}>
-                <Typography
+                <Box
                     sx={{
                         fontSize: 'h5.fontSize',
                         color: '#409ac0',
                         whiteSpace: 'pre-line',
                         wordBreak: 'break-all'
                     }}
-                >
-                    {attribute.content}
-                </Typography>
+                    dangerouslySetInnerHTML={{ __html: attribute.content }}
+                />
                 {attribute.attributes.map((a, idx) => {
                     return ChartAttribute(a, idx);
                 })}
@@ -181,11 +179,19 @@ const Chart = (props: ChartProps) => {
                                         <tr key={cIdx}>
                                             {cIdx === 0 &&
                                                 c.split('|||').map((h, hIdx) => {
-                                                    return <th key={hIdx}>{h}</th>;
+                                                    return (
+                                                        <th key={hIdx}>
+                                                            <Box dangerouslySetInnerHTML={{ __html: h }} />
+                                                        </th>
+                                                    );
                                                 })}
                                             {cIdx !== 0 &&
                                                 c.split('|||').map((d, dIdx) => {
-                                                    return <td key={dIdx}>{d}</td>;
+                                                    return (
+                                                        <td key={dIdx}>
+                                                            <Box dangerouslySetInnerHTML={{ __html: d }} />
+                                                        </td>
+                                                    );
                                                 })}
                                         </tr>
                                     );
@@ -272,7 +278,7 @@ const Chart = (props: ChartProps) => {
                     {element.controlType === 'RADIO_BUTTON' && (
                         <label style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
                             <Radio size={'small'} checked={element.content === '1'} readOnly={true} sx={{ p: 0, pr: 0.5 }} />
-                            <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>{element.desc}</Typography>
+                            <Box dangerouslySetInnerHTML={{ __html: element.desc }} />
                         </label>
                     )}
                     {element.controlType === 'CHECK_BOX' && (

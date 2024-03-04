@@ -19,6 +19,7 @@ export interface IChartReplyR {
 }
 
 export interface IChart {
+    data: IChartElement[];
     headerSection: IChartSection | null;
     sections: IChartSection[];
 }
