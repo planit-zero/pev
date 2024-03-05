@@ -27,6 +27,7 @@ import { reportApi } from '../pev-service/ReportService';
 import { metaRecordApi } from '../pev-service/MetaRecordService';
 import { userApi } from '../pev-service/UserService';
 import { envApi } from '../pev-service/EnvService';
+import { imageApi } from '../pev-service/ImageService';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
@@ -60,7 +61,8 @@ const reducer = combineReducers({
     [reportApi.reducerPath]: reportApi.reducer,
     [metaRecordApi.reducerPath]: metaRecordApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
-    [envApi.reducerPath]: envApi.reducer
+    [envApi.reducerPath]: envApi.reducer,
+    [imageApi.reducerPath]: imageApi.reducer
 });
 
 export default reducer;

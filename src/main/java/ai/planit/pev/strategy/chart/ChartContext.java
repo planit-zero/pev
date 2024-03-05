@@ -37,7 +37,10 @@ public class ChartContext {
                     .findFirst();
 
             value.ifPresentOrElse(elements::add, () -> {
-                if (f.getClassType().equals(ChartClassType.VALUE)) f.setContent(null);
+                if (f.getClassType().equals(ChartClassType.VALUE)) {
+                    f.setContent(null);
+                }
+
                 elements.add(f);
             });
         }

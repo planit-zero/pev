@@ -12,6 +12,7 @@ import { Box, Checkbox, Chip, Radio, Typography } from '@mui/material';
 import { ChartWrapperType } from '../../pev-type/TChart';
 import { setAlert } from '../../store/pev-slices/environment';
 import { IRecord } from '../../pev-interface/IRecord';
+import ImageElement from './element/ImageElement';
 
 type ChartProps = {
     mode: ChartWrapperType;
@@ -163,13 +164,7 @@ const Chart = (props: ChartProps) => {
                             />
                         </Box>
                     )}
-                {value.controlType === 'IMAGE' && value.content && (
-                    <img
-                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                        src={`https://deview.snuh.org/masked_images/${value.content}?currentTime=${new Date().getTime()}`}
-                        alt={'가명화 이미지'}
-                    />
-                )}
+                {value.controlType === 'IMAGE' && value.content && <ImageElement content={value.content} />}
                 {value.controlType === 'TABLE' && value.content && (
                     <Box sx={{ width: '100%', maxHeight: '600px', overflow: 'scroll', whiteSpace: 'pre-line' }}>
                         <table className={'table-element'}>
@@ -289,13 +284,7 @@ const Chart = (props: ChartProps) => {
                             <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>{element.desc}</Typography>
                         </label>
                     )}
-                    {element.controlType === 'IMAGE' && element.content && (
-                        <img
-                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                            src={`https://deview.snuh.org/masked_images/${element.content}?currentTime=${new Date().getTime()}`}
-                            alt={element.content}
-                        />
-                    )}
+                    {element.controlType === 'IMAGE' && element.content && <ImageElement content={element.content} />}
                 </Box>
             </Box>
         );

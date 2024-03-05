@@ -1,7 +1,6 @@
 package ai.planit.pev.strategy.chart;
 
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
-import ai.planit.pev.strategy.chart.constant.ChartControlType;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
 import ai.planit.pev.strategy.chart.object.function.FunctionContent;
 import ai.planit.pev.strategy.chart.object.function.FunctionData;
@@ -31,17 +30,7 @@ public class FunctionChartStrategy implements ChartStrategy {
                     .filter(m -> m.getId().equals(valueFormat.getId()))
                     .findAny();
 
-            functionContent.ifPresentOrElse(m -> {
-                String content;
-
-                if (valueFormat.getControlType().equals(ChartControlType.IMAGE)) {
-                    content = String.format("%s%s", "http://hisimg.snuh.org/", m.getContent());
-                } else {
-                    content = m.getContent();
-                }
-
-                valueFormat.setContent(content == null ? "" : content);
-            }, () -> valueFormat.setContent(""));
+            functionContent.ifPresentOrElse(m -> valueFormat.setContent(m.getContent() == null ? "" : m.getContent()), () -> valueFormat.setContent(""));
 
             data.add(valueFormat);
         }
