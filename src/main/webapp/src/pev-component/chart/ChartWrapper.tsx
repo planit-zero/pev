@@ -224,6 +224,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                         <React.Fragment key={idx}>
                             <Chart
                                 mode={props.mode}
+                                maskingYn={props.maskingYn}
                                 record={props.targetRecord}
                                 chart={c}
                                 reportValues={props.reportValues}
@@ -237,6 +238,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                 <React.Fragment>
                     <Chart
                         mode={props.mode}
+                        maskingYn={props.maskingYn}
                         record={props.targetRecord}
                         chart={chart}
                         reportValues={props.reportValues}
@@ -256,6 +258,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                         <Box sx={{ my: 4 }} />
                         <Chart
                             mode={props.mode}
+                            maskingYn={props.maskingYn}
                             record={chartReply.record}
                             chart={chartReply.chart}
                             reportValues={props.reportValues}

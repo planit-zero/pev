@@ -16,6 +16,7 @@ import ImageElement from './element/ImageElement';
 
 type ChartProps = {
     mode: ChartWrapperType;
+    maskingYn: 'Y' | 'N';
     record: IRecord;
     chart: IChart;
     reportValues?: IChartReportValue[];
@@ -27,6 +28,7 @@ const Chart = (props: ChartProps) => {
     const styleSx = (element: IChartEntity | IChartAttribute | IChartValue) => {
         const getColor = (color: string) => {
             if (!color) return 'inherit';
+            if (color.substring(3) === 'FFFFFF') return 'transparent';
             return `#${color.substring(3)}`;
         };
 
@@ -164,7 +166,7 @@ const Chart = (props: ChartProps) => {
                             />
                         </Box>
                     )}
-                {value.controlType === 'IMAGE' && value.content && <ImageElement content={value.content} />}
+                {value.controlType === 'IMAGE' && value.content && <ImageElement maskingYn={props.maskingYn} content={value.content} />}
                 {value.controlType === 'TABLE' && value.content && (
                     <Box sx={{ width: '100%', maxHeight: '600px', overflow: 'scroll', whiteSpace: 'pre-line' }}>
                         <table className={'table-element'}>
@@ -284,7 +286,9 @@ const Chart = (props: ChartProps) => {
                             <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>{element.desc}</Typography>
                         </label>
                     )}
-                    {element.controlType === 'IMAGE' && element.content && <ImageElement content={element.content} />}
+                    {element.controlType === 'IMAGE' && element.content && (
+                        <ImageElement maskingYn={props.maskingYn} content={element.content} />
+                    )}
                 </Box>
             </Box>
         );
