@@ -350,7 +350,7 @@
                   AND Z.HSP_TP_CD = C.HSP_TP_CD)                           AS writingDeptNm
              , NULL                                                        AS writerStfNo
              , NULL                                                        AS writerNm
-             , M.IPTN_NO                                                   AS keyId
+             , M.ORD_CD                                                   AS keyId
              , C.PACT_ID                                                   AS pactId
              , C.PACT_TP_CD                                                AS pactTpCd
              , DECODE(C.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm

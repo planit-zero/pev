@@ -8,6 +8,7 @@ public class PictureData {
     @Setter
     public static class Request {
         private String iptnNo; // 판독번호
+        private String ordCd;
     }
 
     @Getter

@@ -459,6 +459,7 @@ public class RecordServiceImpl implements RecordService {
 
                 PictureData.Request pictureDataRequest = new PictureData.Request();
                 pictureDataRequest.setIptnNo(request.getRecord().getExamKey());
+                pictureDataRequest.setOrdCd(request.getRecord().getKeyId());
 
                 dataSource = pictureService.getPictureData(pictureDataRequest);
             }

@@ -21,6 +21,7 @@
                             ON A.IPTN_NO = B.IPTN_NO
                  INNER JOIN ODS.S_MOOOREXM C
                             ON A.ORD_ID = C.ORD_ID
-        WHERE A.IPTN_NO = #{iptnNo};
+        WHERE A.IPTN_NO = #{iptnNo}
+        AND A.ORD_CD = #{ordCd};
     </select>
 </mapper>
