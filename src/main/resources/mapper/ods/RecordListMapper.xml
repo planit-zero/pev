@@ -554,10 +554,8 @@
         LEFT OUTER JOIN ODS.S_PDEDBMSM C
         ON A.MTD_DEPT_CD = C.DEPT_CD
         WHERE A.PT_NO = #{ptNo}
-        AND A.LSH_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+        AND A.ORD_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
         AND NVL(A.SCAN_TP_CD, 'A') NOT IN ('M', 'O')
-        <!--        <if test="deptType == 'MEDICAL'">AND A.MTD_DEPT_CD = #{deptCd}</if>-->
-        <!--        <if test="deptType == 'WRITER'">AND A.MTD_DEPT_CD = #{deptCd}</if>-->
         ORDER BY A.ORD_DT DESC, A.BRCD_SEQ
     </select>
     <select id="getNrObservationRecordList"
