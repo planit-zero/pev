@@ -57,7 +57,9 @@ public class SpecimenChartStrategy implements ChartStrategy {
 
             // 보고자
             if (valueFormat.getId().equals("specimen-4-0-1")) {
-                valueFormat.setContent(specimenData.getSpecimenInfo().getItemCbVrfcIptnCnte());
+                String content = specimenData.getSpecimenInfo().getItemCbVrfcIptnCnte();
+
+                valueFormat.setContent(content == null ? "" : content);
                 data.add(valueFormat);
             }
         }
