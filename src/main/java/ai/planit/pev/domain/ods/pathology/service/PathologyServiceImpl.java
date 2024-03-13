@@ -13,7 +13,7 @@ public class PathologyServiceImpl implements PathologyService {
     public PathologyData.Response getPathologyData(PathologyData.Request request) {
         PathologyData.Response pathologyData = new PathologyData.Response();
 
-        pathologyData.setPathologyContent(pathologyDAO.getPathologyData(request));
+        pathologyData.setPathologyContentList(pathologyDAO.getPathologyContentList(request));
         pathologyData.setPathologyProcessList(pathologyDAO.getPathologyProcessList(request));
 
         return pathologyData;

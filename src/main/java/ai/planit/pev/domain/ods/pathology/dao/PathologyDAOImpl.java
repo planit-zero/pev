@@ -16,8 +16,8 @@ public class PathologyDAOImpl implements PathologyDAO {
 
     /** {@inheritDoc} */
     @Override
-    public PathologyContent getPathologyData(PathologyData.Request request) {
-        return sqlSessionTemplate.selectOne("getPathologyData", request);
+    public List<PathologyContent> getPathologyContentList(PathologyData.Request request) {
+        return sqlSessionTemplate.selectList("getPathologyContentList", request);
     }
 
     /** {@inheritDoc} */

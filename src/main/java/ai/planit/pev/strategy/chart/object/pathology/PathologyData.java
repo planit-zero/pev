@@ -15,7 +15,7 @@ public class PathologyData {
     @Getter
     @Setter
     public static class Response {
-        private PathologyContent pathologyContent;
+        private List<PathologyContent> pathologyContentList;
         private List<PathologyProcess> pathologyProcessList;
     }
 }

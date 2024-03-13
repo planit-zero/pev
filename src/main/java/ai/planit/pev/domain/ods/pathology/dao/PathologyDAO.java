@@ -13,7 +13,7 @@ public interface PathologyDAO {
      * @param request 병리번호
      * @return 병리검사 기록지 데이터
      */
-    PathologyContent getPathologyData(PathologyData.Request request);
+    List<PathologyContent> getPathologyContentList(PathologyData.Request request);
 
     /**
      * 병리검사 기록지 작업 정보 조회
