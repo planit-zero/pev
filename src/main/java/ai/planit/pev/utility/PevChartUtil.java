@@ -11,25 +11,30 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PevChartUtil {
+
+    /**
+     * 차트 Section 조합
+     */
     public static List<ChartSection> getChartSections(List<ChartElement> elements, List<ChartStyleSection> style, boolean applyStyle) {
         List<ChartSection> sections = new ArrayList<>();
 
-        List<Integer> sectionIds = elements
-                .stream()
-                .map(ChartElement::getSectionId)
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+        List<Integer> sectionIds = elements.stream()
+                                            .map(ChartElement::getSectionId)
+                                            .distinct()
+                                            .sorted()
+                                            .collect(Collectors.toList());
 
         for (Integer sectionId : sectionIds) {
-            List<ChartElement> sectionElements = elements
-                    .stream()
-                    .filter(se -> se.getSectionId() == sectionId)
-                    .collect(Collectors.toList());
+            List<ChartElement> sectionElements = elements.stream()
+                                                        .filter(se -> se.getSectionId() == sectionId)
+                                                        .collect(Collectors.toList());
 
-            Optional<ChartStyleSection> chartStyleSection = style.stream().filter(s -> s.getMdfmSctnSeq() == sectionId).findAny();
+            Optional<ChartStyleSection> chartStyleSection = style.stream()
+                                                                .filter(s -> s.getMdfmSctnSeq() == sectionId)
+                                                                .findAny();
 
-            sections.add(getChartSection(sectionId, sectionElements, chartStyleSection.orElse(null), applyStyle));
+            ChartSection chartSection = getChartSection(sectionId, sectionElements, chartStyleSection.orElse(null), applyStyle);
+            sections.add(chartSection);
         }
 
         return sections;

@@ -74,12 +74,7 @@ public class RecordServiceImpl implements RecordService {
      */
     @Override
     public List<Record.Response> getRecordList(HttpSession session, Record.Request request) {
-        String pid = (String) session.getAttribute("pev-pid");
-
-        // 세션에 저장된 환자병록번호가 없을 경우 예외 처리한다.
-        if (PevStringUtil.isStringEmpty(pid)) {
-            throw new BaseException(ErrorType.PID_NOT_FOUND_IN_SESSION);
-        }
+        String pid = getPid(session);
 
         request.setPtNo(pid);
 
@@ -325,7 +320,9 @@ public class RecordServiceImpl implements RecordService {
     public Chart.Response getChart(HttpSession session, Chart.Request request) {
         ChartContext chartContext = new ChartContext();
 
+        // 기록유형 포멧 불러오기
         List<ChartElement> format = metaRecordService.getRecordFormatList(request.getRecord());
+
         Object dataSource = null;
 
         // 진료기록
@@ -565,10 +562,29 @@ public class RecordServiceImpl implements RecordService {
             }
         }
 
+        // 포멧에 Value 값 매칭
         List<ChartElement> data = chartContext.getChartStrategy().getData(format, dataSource);
 
+        // 스타일
         boolean applyStyle = PevChartUtil.applyStyle(request.getRecord().getRecordDetailType());
+        List<ChartStyleSection> style = getStyle(request, applyStyle);
 
+        // PID
+        String pid = getPid(session);
+
+        // 각 사용자의 규칙
+        boolean withOrigin = getWithOrigin(session);
+        ChartData chartData = new ChartData(pid, data, withOrigin);
+        if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
+
+        // 차트 조합 및 정리
+        return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
+    }
+
+    /**
+     * 스타일
+     */
+    private List<ChartStyleSection> getStyle(Chart.Request request, boolean applyStyle) {
         List<ChartStyleSection> style = new ArrayList<>();
 
         if (applyStyle) {
@@ -580,6 +596,13 @@ public class RecordServiceImpl implements RecordService {
             style = medicalService.getChartStyleSections(xmlRequest);
         }
 
+        return style;
+    }
+
+    /**
+     * PID
+     */
+    private String getPid(HttpSession session) {
         String pid = (String) session.getAttribute("pev-pid");
 
         // 세션에 저장된 환자병록번호가 없을 경우 예외 처리한다.
@@ -587,6 +610,13 @@ public class RecordServiceImpl implements RecordService {
             throw new BaseException(ErrorType.PID_NOT_FOUND_IN_SESSION);
         }
 
+        return pid;
+    }
+
+    /**
+     * 각 사용자의 규칙
+     */
+    private boolean getWithOrigin(HttpSession session) {
         boolean withOrigin = false;
         String userStr = (String) session.getAttribute("pev-user");
 
@@ -596,10 +626,7 @@ public class RecordServiceImpl implements RecordService {
             withOrigin = idpLoginUser.getAuthCd().equals("S");
         }
 
-        ChartData chartData = new ChartData(pid, data, withOrigin);
-        if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
-
-        return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
+        return withOrigin;
     }
 
     @Override

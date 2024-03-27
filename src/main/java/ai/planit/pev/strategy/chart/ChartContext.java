@@ -4,10 +4,7 @@ import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.core.webclient.PevWebClient;
 import ai.planit.pev.core.webclient.PevWebClientUtil;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
-import ai.planit.pev.strategy.chart.object.common.Chart;
-import ai.planit.pev.strategy.chart.object.common.ChartData;
-import ai.planit.pev.strategy.chart.object.common.ChartElement;
-import ai.planit.pev.strategy.chart.object.common.ChartStyleSection;
+import ai.planit.pev.strategy.chart.object.common.*;
 import ai.planit.pev.utility.PevChartUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,7 +44,10 @@ public class ChartContext {
 
         Chart.Response chart = new Chart.Response();
         chart.setData(data);
-        chart.setSections(PevChartUtil.getChartSections(elements, style, applyStyle));
+
+        // 차트 Section 조합
+        List<ChartSection> chartSections = PevChartUtil.getChartSections(elements, style, applyStyle);
+        chart.setSections(chartSections);
 
         return chart;
     }
