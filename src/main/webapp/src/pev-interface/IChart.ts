@@ -167,3 +167,13 @@ export interface IChartStyledItem {
     value: string;
     children: IChartStyledItem[];
 }
+
+export interface ILog {
+    rowNum: number;
+    stfNo: string;
+    stfNm: string;
+    deptCd: string;
+    deptNm: string;
+    authCd: string;
+    loginDtm: string;
+}

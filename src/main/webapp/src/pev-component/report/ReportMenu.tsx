@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Paper } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import { ErrorOutline, HourglassTop } from '@mui/icons-material';
+import { ErrorOutline, HourglassTop, AccessTime, Assessment } from '@mui/icons-material';
 
 type ReportMenuProps = {
     menuIndex: number;
@@ -58,11 +58,29 @@ const ReportMenu = (props: ReportMenuProps) => {
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding={true}>
-                    <ListItemButton selected={props.menuIndex === 7} onClick={() => props.setMenuIndex(6)}>
+                    <ListItemButton selected={props.menuIndex === 6} onClick={() => props.setMenuIndex(6)}>
                         <ListItemIcon>
                             <ErrorOutline />
                         </ListItemIcon>
                         <ListItemText primary={'처리되지 않은 신고 내역'} />
+                    </ListItemButton>
+                </ListItem>
+                <Divider />
+                <ListSubheader component={'div'}>사용자 접속</ListSubheader>
+                <ListItem disablePadding={true}>
+                    <ListItemButton selected={props.menuIndex === 7} onClick={() => props.setMenuIndex(7)}>
+                        <ListItemIcon>
+                            <AccessTime />
+                        </ListItemIcon>
+                        <ListItemText primary={'로그'} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding={true}>
+                    <ListItemButton selected={props.menuIndex === 8} onClick={() => props.setMenuIndex(8)}>
+                        <ListItemIcon>
+                            <Assessment />
+                        </ListItemIcon>
+                        <ListItemText primary={'통계'} />
                     </ListItemButton>
                 </ListItem>
             </List>

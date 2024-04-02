@@ -87,4 +87,9 @@ public class ReportServiceImpl implements ReportService {
     public void updateChartErrorProcess(int errId) {
         reportDAO.updateChartErrorProcess(errId);
     }
+
+    @Override
+    public List<Log> getLogAll(HttpSession session) {
+        return reportDAO.getLogAll();
+    }
 }

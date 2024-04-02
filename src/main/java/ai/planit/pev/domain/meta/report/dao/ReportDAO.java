@@ -21,4 +21,6 @@ public interface ReportDAO {
     List<ChartError> getChartErrorList(ChartErrorRequest request);
 
     void updateChartErrorProcess(int errId);
+
+    List<Log> getLogAll();
 }

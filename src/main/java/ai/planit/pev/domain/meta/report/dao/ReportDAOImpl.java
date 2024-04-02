@@ -52,4 +52,9 @@ public class ReportDAOImpl implements ReportDAO {
     public void updateChartErrorProcess(int errId) {
         sqlSessionTemplate.update("updateChartErrorProcess", errId);
     }
+
+    @Override
+    public List<Log> getLogAll() {
+        return sqlSessionTemplate.selectList("getLogAll");
+    }
 }

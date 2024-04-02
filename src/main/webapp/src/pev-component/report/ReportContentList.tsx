@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Collapse, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { IRecord } from '../../pev-interface/IRecord';
-import { IChartError, IReport } from '../../pev-interface/IChart';
+import { IChartError, ILog, IReport } from '../../pev-interface/IChart';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import ReportDetailList from './ReportDetailList';
 import { useSelector } from '../../store';
@@ -10,8 +10,8 @@ import { CryptoUtils } from '../../pev-utils/CryptoUtils';
 import { UrlUtils } from '../../pev-utils/UrlUtils';
 
 type ReportContentListProps = {
-    contentType: 'masking' | 'chart';
-    dataSource: IReport[] | IChartError[];
+    contentType: 'masking' | 'chart' | 'log' | '';
+    dataSource: IReport[] | IChartError[] | ILog[];
 };
 
 const ReportContentList = (props: ReportContentListProps) => {
@@ -20,6 +20,7 @@ const ReportContentList = (props: ReportContentListProps) => {
 
     const maskingDataSource = props.dataSource as IReport[];
     const chartDataSource = props.dataSource as IChartError[];
+    const logDataSource = props.dataSource as ILog[];
 
     const getRecordInfoText = (recordInfo: string) => {
         const record: IRecord = JSON.parse(recordInfo);
@@ -61,9 +62,24 @@ const ReportContentList = (props: ReportContentListProps) => {
         );
     };
 
+    const LogTableHead = () => {
+        return (
+            <TableRow>
+                <TableCell align={'center'}>순번</TableCell>
+                <TableCell align={'center'}>ID</TableCell>
+                <TableCell align={'center'}>이름</TableCell>
+                <TableCell align={'center'}>소속번호</TableCell>
+                <TableCell align={'center'}>소속명</TableCell>
+                <TableCell align={'center'}>권한</TableCell>
+                <TableCell align={'center'}>접속일시</TableCell>
+            </TableRow>
+        );
+    };
+
     const CommonTableHead = () => {
         if (props.contentType === 'masking') return MaskingTableHead();
         if (props.contentType === 'chart') return ChartTableHead();
+        if (props.contentType === 'log') return LogTableHead();
         return null;
     };
 
@@ -172,9 +188,32 @@ const ReportContentList = (props: ReportContentListProps) => {
         );
     };
 
+    const LogTableBody = () => {
+        return (
+            <React.Fragment>
+                {logDataSource.map((log, idx) => {
+                    return (
+                        <React.Fragment key={idx}>
+                            <TableRow>
+                                <TableCell align={'center'}>{log.rowNum}</TableCell>
+                                <TableCell align={'center'}>{log.stfNo}</TableCell>
+                                <TableCell align={'center'}>{log.stfNm}</TableCell>
+                                <TableCell align={'center'}>{log.deptCd}</TableCell>
+                                <TableCell align={'center'}>{log.deptNm}</TableCell>
+                                <TableCell align={'center'}>{log.authCd}</TableCell>
+                                <TableCell align={'center'}>{log.loginDtm}</TableCell>
+                            </TableRow>
+                        </React.Fragment>
+                    );
+                })}
+            </React.Fragment>
+        );
+    };
+
     const CommonTableBody = () => {
         if (props.contentType === 'masking') return MaskingTableBody();
         if (props.contentType === 'chart') return ChartTableBody();
+        if (props.contentType === 'log') return LogTableBody();
         return null;
     };
 

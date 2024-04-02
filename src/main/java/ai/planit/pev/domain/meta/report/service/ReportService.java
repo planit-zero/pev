@@ -19,4 +19,6 @@ public interface ReportService {
     List<ChartError> getChartErrorList(HttpSession session);
 
     void updateChartErrorProcess(int errId);
+
+    List<Log> getLogAll(HttpSession session);
 }

@@ -52,4 +52,9 @@ public class ReportController {
         reportService.updateChartErrorProcess(errId);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("report/log/all")
+    ResponseEntity<?> getLogAll(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getLogAll(session));
+    }
 }

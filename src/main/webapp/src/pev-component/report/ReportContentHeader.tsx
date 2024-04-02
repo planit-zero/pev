@@ -15,7 +15,7 @@ const ReportContentHeader = (props: ReportContentHeaderProps) => {
                     {props.menuGroupText} / {props.menuText}
                 </Typography>
                 <Typography sx={{ fontSize: 'h5.fontSize' }}>
-                    총 {props.count} 건의 {props.menuText}이 있습니다.
+                    총 {props.count} 건의 {props.menuText} 존재.
                 </Typography>
             </Box>
         </Paper>
