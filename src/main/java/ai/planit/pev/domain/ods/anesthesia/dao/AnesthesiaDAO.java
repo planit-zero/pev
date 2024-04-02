@@ -10,7 +10,10 @@ import java.util.List;
 
 public interface AnesthesiaDAO {
     Record.Response getAnesthesiaRecord(AnesthesiaFormatRequest request);
+
     List<AnesthesiaRecordHistory> getAnesthesiaRecordHistories(String opExptRegId);
+
     List<AnesthesiaFormatValue> getAnesthesiaFormatValue(AnesthesiaFormatRequest request);
+
     AnesthesiaSurgeryInfo getAnesthesiaSurgeryInfo(String opExptRegId);
 }

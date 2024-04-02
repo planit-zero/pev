@@ -40,7 +40,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -317,6 +320,7 @@ public class RecordServiceImpl implements RecordService {
         return nrRecordList;
     }
 
+    @Override
     public Chart.Response getChart(HttpSession session, Chart.Request request) {
         ChartContext chartContext = new ChartContext();
 
@@ -327,8 +331,8 @@ public class RecordServiceImpl implements RecordService {
 
         // 진료기록
         if (request.getRecord().getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())
-                    || request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()) ) {
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType()) ||
+                    request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()) ) {
                 chartContext.setChartStrategy(new AnesthesiaRecordChartStrategy(request.getRecord().getRecordDetailType()));
 
                 Record.Response anesthesiaRecord = anesthesiaService.getAnesthesiaRecord(request.getRecord().getRecordDetailType(), request.getRecord().getOpExptRegId());
@@ -434,6 +438,7 @@ public class RecordServiceImpl implements RecordService {
             }
         }
 
+        // 처방기록
         if (request.getRecord().getRecordDetailType().equals(RecordTarget.ORDER_RECORD.getType())) {
             chartContext.setChartStrategy(new OrderChartStrategy());
             dataSource = orderService.getOrderData(session.getAttribute("pev-pid").toString(), request.getRecord());
