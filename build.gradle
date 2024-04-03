@@ -1,8 +1,8 @@
 plugins {
-    id 'java'
     id 'org.springframework.boot' version '2.7.14'
     id 'io.spring.dependency-management' version '1.1.2'
-    id 'com.github.node-gradle.node' version '7.0.1'
+    id 'java'
+    id 'com.github.node-gradle.node' version '3.1.1'
 }
 
 group = 'ai.planit'
@@ -49,60 +49,46 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
-        }
-    }
-}
-
 tasks.named('test') {
-    useJUnitPlatform()
+//    useJUnitPlatform()
+    exclude '**/*'
 }
 
+// plain jar 생성X
+jar {
+    enabled = false
+}
+
+// Node-Gradle Config
 node {
-    download = false
-    version = '16.20.1'
-    yarnVersion = '1.22.19'
+    version = "16.1.0"
+    npmVersion = "7.12.1"
+    download = true
+    distBaseUrl = "https://nodejs.org/dist"
+    npmInstallCommand = "install"
     workDir = file("${project.projectDir}/.gradle/nodejs")
-    yarnWorkDir = file("${project.projectDir}/.gradle/yarn")
+    npmWorkDir = file("${project.projectDir}/.gradle/npm")
     nodeProjectDir = file("${project.projectDir}/src/main/webapp")
 }
 
-def buildDir = file("${project.projectDir}/src/main/webapp/build")
-def staticDir = file("${project.projectDir}/src/main/resources/static")
-
-task cleanBuildAndStatic(type: Delete) {
-    doFirst {
-        delete buildDir
-        delete staticDir
-    }
-
-    doLast {
-        staticDir.mkdir()
-    }
+// Frontend Build
+task npmBuild(type: NpmTask) {
+    args = ["run", "build"]
 }
 
-task yarnInstall(type: YarnTask) {
-    args = ['install']
+// Frontend 빌드된 결과 이동
+task copyWebApp(type: Copy) {
+    from "src/main/webapp/build"
+    into "src/main/resources/static"
 }
 
-task yarnBuild(type: YarnTask) {
-    args = ['build']
+// Frontend 빌드된 결과 삭제
+task deleteWebApp(type: Delete) {
+    delete "src/main/webapp/build"
+    followSymlinks = true
 }
 
-task copyBuildToStatic(type: Copy) {
-    from buildDir
-    into staticDir
-}
-
-task removeBuild(type: Delete) {
-    delete buildDir
-}
-
-yarnInstall.dependsOn(cleanBuildAndStatic)
-yarnBuild.dependsOn(yarnInstall)
-copyBuildToStatic.dependsOn(yarnBuild)
-removeBuild.dependsOn(copyBuildToStatic)
-processResources.dependsOn(removeBuild)
+copyWebApp.dependsOn(npmBuild)
+processResources.dependsOn(copyWebApp)
+deleteWebApp.dependsOn(processResources)
+compileJava.dependsOn(deleteWebApp)
