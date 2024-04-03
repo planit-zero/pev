@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.meta.event.dao.EventDAO">
+
+    <insert id="insertEvent" parameterType="ai.planit.pev.domain.meta.event.dto.Event" useGeneratedKeys="true" keyProperty="id">
+        insert into pev_event_log (type, pt_no, search_targets, search_from_date, search_to_date, pact_tp_cd, dept_type, dept_cd, stf_no, stf_nm, load_dtm)
+        values (#{type}, #{ptNo}, #{searchTargets}, #{searchFromDate}, #{searchToDate}, #{pactTpCd}, #{deptType}, #{deptCd}, #{stfNo}, #{stfNm}, now())
+    </insert>
+
+</mapper>

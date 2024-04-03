@@ -92,7 +92,7 @@
                dept_cd as deptCd,
                dept_nm as deptNm,
                auth_cd as authCd,
-               login_dtm as loginDtm
+               to_char(login_dtm, 'YYYY-MM-DD HH24:MI:SS') as loginDtm
         from pev_login_log
         order by login_dtm desc
     </select>

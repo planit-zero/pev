@@ -1,0 +1,18 @@
+package ai.planit.pev.domain.meta.event.dao;
+
+import ai.planit.pev.domain.meta.event.dto.Event;
+import lombok.RequiredArgsConstructor;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class EventDAOImpl implements EventDAO {
+    private final SqlSessionTemplate sqlSessionTemplate;
+
+    @Override
+    public void insertEvent(Event event) {
+        sqlSessionTemplate.insert("insertEvent", event);
+    }
+
+}

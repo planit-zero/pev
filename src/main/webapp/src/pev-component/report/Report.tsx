@@ -5,6 +5,8 @@ import { useGetChartErrorListQuery, useGetLogAllListQuery, useGetReportListQuery
 import ReportContent from './ReportContent';
 import ReportMenu from './ReportMenu';
 
+export type ContentTypeProps = 'masking' | 'chart' | 'log' | 'statistics' | '';
+
 const Report = () => {
     const { data: reportList } = useGetReportListQuery();
     const { data: chartErrorList } = useGetChartErrorListQuery();
@@ -21,7 +23,7 @@ const Report = () => {
         if (menuIndex === 4) return chartErrorList;
         if (menuIndex === 5) return chartErrorList.filter((c) => c.processYn === 'Y');
         if (menuIndex === 6) return chartErrorList.filter((c) => c.processYn === 'N');
-        if (menuIndex === 7) return logAllList;
+        if (menuIndex === 7 || menuIndex === 8) return logAllList;
     };
 
     const getMenuGroupText = () => {
@@ -41,10 +43,11 @@ const Report = () => {
         return ``;
     };
 
-    const getContentType = (): 'masking' | 'chart' | 'log' | `` => {
+    const getContentType = (): ContentTypeProps => {
         if (menuIndex === 0 || menuIndex === 1 || menuIndex === 2 || menuIndex === 3) return `masking`;
         if (menuIndex === 4 || menuIndex === 5 || menuIndex === 6) return `chart`;
         if (menuIndex === 7) return `log`;
+        if (menuIndex === 8) return `statistics`;
         return ``;
     };
 

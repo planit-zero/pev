@@ -8,9 +8,10 @@ import { useSelector } from '../../store';
 import { useUpdateChartErrorProcessMutation } from '../../pev-service/ReportService';
 import { CryptoUtils } from '../../pev-utils/CryptoUtils';
 import { UrlUtils } from '../../pev-utils/UrlUtils';
+import { ContentTypeProps } from './Report';
 
 type ReportContentListProps = {
-    contentType: 'masking' | 'chart' | 'log' | '';
+    contentType: ContentTypeProps;
     dataSource: IReport[] | IChartError[] | ILog[];
 };
 
@@ -66,11 +67,10 @@ const ReportContentList = (props: ReportContentListProps) => {
         return (
             <TableRow>
                 <TableCell align={'center'}>순번</TableCell>
-                <TableCell align={'center'}>ID</TableCell>
-                <TableCell align={'center'}>이름</TableCell>
-                <TableCell align={'center'}>소속번호</TableCell>
-                <TableCell align={'center'}>소속명</TableCell>
-                <TableCell align={'center'}>권한</TableCell>
+                <TableCell align={'center'}>사번</TableCell>
+                <TableCell align={'center'}>직원명</TableCell>
+                <TableCell align={'center'}>부서코드</TableCell>
+                <TableCell align={'center'}>부서명</TableCell>
                 <TableCell align={'center'}>접속일시</TableCell>
             </TableRow>
         );
@@ -200,7 +200,6 @@ const ReportContentList = (props: ReportContentListProps) => {
                                 <TableCell align={'center'}>{log.stfNm}</TableCell>
                                 <TableCell align={'center'}>{log.deptCd}</TableCell>
                                 <TableCell align={'center'}>{log.deptNm}</TableCell>
-                                <TableCell align={'center'}>{log.authCd}</TableCell>
                                 <TableCell align={'center'}>{log.loginDtm}</TableCell>
                             </TableRow>
                         </React.Fragment>
@@ -210,10 +209,19 @@ const ReportContentList = (props: ReportContentListProps) => {
         );
     };
 
+    const StatisticsBody = () => {
+        return (
+            <React.Fragment>
+                <h1>통계</h1>
+            </React.Fragment>
+        );
+    };
+
     const CommonTableBody = () => {
         if (props.contentType === 'masking') return MaskingTableBody();
         if (props.contentType === 'chart') return ChartTableBody();
         if (props.contentType === 'log') return LogTableBody();
+        if (props.contentType === 'statistics') return StatisticsBody();
         return null;
     };
 

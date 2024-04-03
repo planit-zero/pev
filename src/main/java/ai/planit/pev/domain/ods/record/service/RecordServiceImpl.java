@@ -3,6 +3,8 @@ package ai.planit.pev.domain.ods.record.service;
 import ai.planit.idp.sdk.model.IdpLoginUser;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
+import ai.planit.pev.domain.meta.event.dao.EventDAO;
+import ai.planit.pev.domain.meta.event.dto.Event;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.bedsore.service.BedsoreService;
@@ -33,6 +35,7 @@ import ai.planit.pev.strategy.chart.object.common.*;
 import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.strategy.chart.object.picture.PictureData;
+import ai.planit.pev.utility.SessionUtil;
 import ai.planit.pev.utility.PevChartUtil;
 import ai.planit.pev.utility.PevStringUtil;
 import com.google.gson.Gson;
@@ -71,15 +74,23 @@ public class RecordServiceImpl implements RecordService {
     private final BloodDialysisService bloodDialysisService;
     private final PeritonealDialysisService peritonealDialysisService;
     private final NoteService noteService;
+    private final EventDAO eventDAO;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public List<Record.Response> getRecordList(HttpSession session, Record.Request request) {
-        String pid = getPid(session);
-
+        String pid = SessionUtil.getPid(session);
         request.setPtNo(pid);
+
+        IdpLoginUser loginUser = SessionUtil.getLoginUser(session);
+
+        // 이벤트 로그
+        Event event = new Event(request);
+        event.setStfNo(loginUser.getStfNo());
+        event.setStfNm(loginUser.getStfNm());
+        eventDAO.insertEvent(event);
 
         Gson gson = new Gson();
         String requestStr = gson.toJson(request, Record.Request.class);
@@ -575,7 +586,7 @@ public class RecordServiceImpl implements RecordService {
         List<ChartStyleSection> style = getStyle(request, applyStyle);
 
         // PID
-        String pid = getPid(session);
+        String pid = SessionUtil.getPid(session);
 
         // 각 사용자의 규칙
         boolean withOrigin = getWithOrigin(session);
@@ -602,20 +613,6 @@ public class RecordServiceImpl implements RecordService {
         }
 
         return style;
-    }
-
-    /**
-     * PID
-     */
-    private String getPid(HttpSession session) {
-        String pid = (String) session.getAttribute("pev-pid");
-
-        // 세션에 저장된 환자병록번호가 없을 경우 예외 처리한다.
-        if (PevStringUtil.isStringEmpty(pid)) {
-            throw new BaseException(ErrorType.PID_NOT_FOUND_IN_SESSION);
-        }
-
-        return pid;
     }
 
     /**

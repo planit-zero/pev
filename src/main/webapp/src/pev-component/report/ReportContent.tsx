@@ -3,9 +3,10 @@ import { Box } from '@mui/material';
 import ReportContentHeader from './ReportContentHeader';
 import ReportContentList from './ReportContentList';
 import { IChartError, ILog, IReport } from '../../pev-interface/IChart';
+import { ContentTypeProps } from './Report';
 
 type ReportContentProps = {
-    contentType: 'masking' | 'chart' | 'log' | '';
+    contentType: ContentTypeProps;
     menuText: string;
     menuGroupText: string;
     dataSource: IReport[] | IChartError[] | ILog[];

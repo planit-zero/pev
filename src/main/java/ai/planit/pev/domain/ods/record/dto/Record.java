@@ -8,14 +8,14 @@ public class Record {
     @Getter
     @Setter
     public static class Request {
-        private String ptNo;
-        private String[] searchTargets;
+        private String ptNo; // 병록번호
+        private String[] searchTargets; // 기록유형
         private String[] queryTargets;
-        private String searchFromDate;
-        private String searchToDate;
-        private String pactTpCd;
-        private String deptType;
-        private String deptCd;
+        private String searchFromDate; // 기록일자
+        private String searchToDate; // 기록일자
+        private String pactTpCd; // 환자구분
+        private String deptType; // 진료과
+        private String deptCd; // 진료과 - 작성과
         private String writerType;
         private String writerStfNo;
     }

@@ -7,10 +7,10 @@ import lombok.Setter;
 @Setter
 public class Log {
     private int rowNum;
-    private String stfNo;
-    private String stfNm;
-    private String deptCd;
-    private String deptNm;
+    private String stfNo; // 사번
+    private String stfNm; // 직원명
+    private String deptCd; // 부서코드
+    private String deptNm; // 부서명
     private String authCd;
-    private String loginDtm;
+    private String loginDtm; // 접속일시
 }

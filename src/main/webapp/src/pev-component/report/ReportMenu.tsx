@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Paper } from '@mui/material';
-import Check from '@mui/icons-material/Check';
-import { ErrorOutline, HourglassTop, AccessTime, Assessment } from '@mui/icons-material';
+import { AttachEmail, Check, ErrorOutline, HourglassTop, AccountBox, Assessment } from '@mui/icons-material';
 
 type ReportMenuProps = {
     menuIndex: number;
@@ -15,6 +14,9 @@ const ReportMenu = (props: ReportMenuProps) => {
                 <ListSubheader component={'div'}>가명처리 오류신고</ListSubheader>
                 <ListItem disablePadding={true}>
                     <ListItemButton selected={props.menuIndex === 0} onClick={() => props.setMenuIndex(0)}>
+                        <ListItemIcon>
+                            <AttachEmail />
+                        </ListItemIcon>
                         <ListItemText primary={'모든 신고 내역'} />
                     </ListItemButton>
                 </ListItem>
@@ -46,6 +48,9 @@ const ReportMenu = (props: ReportMenuProps) => {
                 <ListSubheader component={'div'}>기록지 오류신고</ListSubheader>
                 <ListItem disablePadding={true}>
                     <ListItemButton selected={props.menuIndex === 4} onClick={() => props.setMenuIndex(4)}>
+                        <ListItemIcon>
+                            <AttachEmail />
+                        </ListItemIcon>
                         <ListItemText primary={'모든 신고 내역'} />
                     </ListItemButton>
                 </ListItem>
@@ -70,7 +75,7 @@ const ReportMenu = (props: ReportMenuProps) => {
                 <ListItem disablePadding={true}>
                     <ListItemButton selected={props.menuIndex === 7} onClick={() => props.setMenuIndex(7)}>
                         <ListItemIcon>
-                            <AccessTime />
+                            <AccountBox />
                         </ListItemIcon>
                         <ListItemText primary={'로그'} />
                     </ListItemButton>
