@@ -54,7 +54,7 @@ public class ReportDAOImpl implements ReportDAO {
     }
 
     @Override
-    public List<Log> getLogAll() {
-        return sqlSessionTemplate.selectList("getLogAll");
+    public List<Log> getLogUser() {
+        return sqlSessionTemplate.selectList("getLogUser");
     }
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Collapse, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { IRecord } from '../../pev-interface/IRecord';
-import { IChartError, ILog, IReport } from '../../pev-interface/IChart';
+import { IChartError, ILogEvent, ILogUser, IReport, ReportContentType } from '../../pev-interface/IChart';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import ReportDetailList from './ReportDetailList';
 import { useSelector } from '../../store';
@@ -12,7 +12,7 @@ import { ContentTypeProps } from './Report';
 
 type ReportContentListProps = {
     contentType: ContentTypeProps;
-    dataSource: IReport[] | IChartError[] | ILog[];
+    dataSource: ReportContentType;
 };
 
 const ReportContentList = (props: ReportContentListProps) => {
@@ -21,7 +21,8 @@ const ReportContentList = (props: ReportContentListProps) => {
 
     const maskingDataSource = props.dataSource as IReport[];
     const chartDataSource = props.dataSource as IChartError[];
-    const logDataSource = props.dataSource as ILog[];
+    const logUserDataSource = props.dataSource as ILogUser[];
+    const logEventDataSource = props.dataSource as ILogEvent[];
 
     const getRecordInfoText = (recordInfo: string) => {
         const record: IRecord = JSON.parse(recordInfo);
@@ -63,7 +64,7 @@ const ReportContentList = (props: ReportContentListProps) => {
         );
     };
 
-    const LogTableHead = () => {
+    const LogUserTableHead = () => {
         return (
             <TableRow>
                 <TableCell align={'center'}>순번</TableCell>
@@ -76,10 +77,29 @@ const ReportContentList = (props: ReportContentListProps) => {
         );
     };
 
+    const LogEventTableHead = () => {
+        return (
+            <TableRow>
+                <TableCell align={'center'}>순번</TableCell>
+                <TableCell align={'center'}>타입</TableCell>
+                <TableCell align={'center'}>병록번호</TableCell>
+                <TableCell align={'center'}>기록유형</TableCell>
+                <TableCell align={'center'}>기록일자</TableCell>
+                <TableCell align={'center'}>환자구분</TableCell>
+                <TableCell align={'center'}>진료과</TableCell>
+                <TableCell align={'center'}>작성과</TableCell>
+                <TableCell align={'center'}>사번</TableCell>
+                <TableCell align={'center'}>직원명</TableCell>
+                <TableCell align={'center'}>발생일시</TableCell>
+            </TableRow>
+        );
+    };
+
     const CommonTableHead = () => {
         if (props.contentType === 'masking') return MaskingTableHead();
         if (props.contentType === 'chart') return ChartTableHead();
-        if (props.contentType === 'log') return LogTableHead();
+        if (props.contentType === 'logUser') return LogUserTableHead();
+        if (props.contentType === 'logEvent') return LogEventTableHead();
         return null;
     };
 
@@ -188,10 +208,10 @@ const ReportContentList = (props: ReportContentListProps) => {
         );
     };
 
-    const LogTableBody = () => {
+    const LogUserTableBody = () => {
         return (
             <React.Fragment>
-                {logDataSource.map((log, idx) => {
+                {logUserDataSource.map((log, idx) => {
                     return (
                         <React.Fragment key={idx}>
                             <TableRow>
@@ -209,10 +229,30 @@ const ReportContentList = (props: ReportContentListProps) => {
         );
     };
 
-    const StatisticsBody = () => {
+    const LogEventTableBody = () => {
         return (
             <React.Fragment>
-                <h1>통계</h1>
+                {logEventDataSource.map((log, idx) => {
+                    return (
+                        <React.Fragment key={idx}>
+                            <TableRow>
+                                <TableCell align={'center'}>{log.id}</TableCell>
+                                <TableCell align={'center'}>{log.type}</TableCell>
+                                <TableCell align={'center'}>{log.ptNo}</TableCell>
+                                <TableCell align={'center'}>{log.searchTargets}</TableCell>
+                                <TableCell align={'center'}>
+                                    {log.searchFromDate} ~ {log.searchToDate}
+                                </TableCell>
+                                <TableCell align={'center'}>{log.pactTpCd}</TableCell>
+                                <TableCell align={'center'}>{log.deptType}</TableCell>
+                                <TableCell align={'center'}>{log.deptCd}</TableCell>
+                                <TableCell align={'center'}>{log.stfNo}</TableCell>
+                                <TableCell align={'center'}>{log.stfNm}</TableCell>
+                                <TableCell align={'center'}>{log.loadDtm}</TableCell>
+                            </TableRow>
+                        </React.Fragment>
+                    );
+                })}
             </React.Fragment>
         );
     };
@@ -220,8 +260,8 @@ const ReportContentList = (props: ReportContentListProps) => {
     const CommonTableBody = () => {
         if (props.contentType === 'masking') return MaskingTableBody();
         if (props.contentType === 'chart') return ChartTableBody();
-        if (props.contentType === 'log') return LogTableBody();
-        if (props.contentType === 'statistics') return StatisticsBody();
+        if (props.contentType === 'logUser') return LogUserTableBody();
+        if (props.contentType === 'logEvent') return LogEventTableBody();
         return null;
     };
 

@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class EventDAOImpl implements EventDAO {
@@ -15,4 +17,8 @@ public class EventDAOImpl implements EventDAO {
         sqlSessionTemplate.insert("insertEvent", event);
     }
 
+    @Override
+    public List<Event> getLogEvent() {
+        return sqlSessionTemplate.selectList("getLogEvent");
+    }
 }

@@ -85,7 +85,7 @@
         where err_id = #{errId}
     </update>
 
-    <select id="getLogAll" resultType="ai.planit.pev.domain.meta.report.dto.Log">
+    <select id="getLogUser" resultType="ai.planit.pev.domain.meta.report.dto.Log">
         select row_number() over (order by login_dtm) as rowNum,
                stf_no as stfNo,
                stf_nm as stfNm,

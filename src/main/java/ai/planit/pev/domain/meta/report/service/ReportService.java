@@ -1,5 +1,6 @@
 package ai.planit.pev.domain.meta.report.service;
 
+import ai.planit.pev.domain.meta.event.dto.Event;
 import ai.planit.pev.domain.meta.report.dto.*;
 
 import javax.servlet.http.HttpSession;
@@ -20,5 +21,7 @@ public interface ReportService {
 
     void updateChartErrorProcess(int errId);
 
-    List<Log> getLogAll(HttpSession session);
+    List<Log> getLogUser(HttpSession session);
+
+    List<Event> getLogEvent(HttpSession session);
 }

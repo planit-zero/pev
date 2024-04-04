@@ -71,13 +71,13 @@ const ReportMenu = (props: ReportMenuProps) => {
                     </ListItemButton>
                 </ListItem>
                 <Divider />
-                <ListSubheader component={'div'}>사용자 접속</ListSubheader>
+                <ListSubheader component={'div'}>로그</ListSubheader>
                 <ListItem disablePadding={true}>
                     <ListItemButton selected={props.menuIndex === 7} onClick={() => props.setMenuIndex(7)}>
                         <ListItemIcon>
                             <AccountBox />
                         </ListItemIcon>
-                        <ListItemText primary={'로그'} />
+                        <ListItemText primary={'사용자 접속'} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding={true}>
@@ -85,7 +85,7 @@ const ReportMenu = (props: ReportMenuProps) => {
                         <ListItemIcon>
                             <Assessment />
                         </ListItemIcon>
-                        <ListItemText primary={'통계'} />
+                        <ListItemText primary={'목록 조회'} />
                     </ListItemButton>
                 </ListItem>
             </List>

@@ -61,19 +61,22 @@ jar {
 
 // Node-Gradle Config
 node {
-    version = "16.1.0"
-    npmVersion = "7.12.1"
-    download = true
-    distBaseUrl = "https://nodejs.org/dist"
-    npmInstallCommand = "install"
+    download = false
+    version = '16.20.1'
+    yarnVersion = '1.22.19'
     workDir = file("${project.projectDir}/.gradle/nodejs")
-    npmWorkDir = file("${project.projectDir}/.gradle/npm")
+    yarnWorkDir = file("${project.projectDir}/.gradle/yarn")
     nodeProjectDir = file("${project.projectDir}/src/main/webapp")
 }
 
+// Frontend Install
+task yarnInstall(type: YarnTask) {
+    args = ['install']
+}
+
 // Frontend Build
-task npmBuild(type: NpmTask) {
-    args = ["run", "build"]
+task yarnBuild(type: YarnTask) {
+    args = ['build']
 }
 
 // Frontend 빌드된 결과 이동
@@ -88,7 +91,7 @@ task deleteWebApp(type: Delete) {
     followSymlinks = true
 }
 
-copyWebApp.dependsOn(npmBuild)
-processResources.dependsOn(copyWebApp)
-deleteWebApp.dependsOn(processResources)
-compileJava.dependsOn(deleteWebApp)
+yarnBuild.dependsOn(yarnInstall)
+copyWebApp.dependsOn(yarnBuild)
+deleteWebApp.dependsOn(copyWebApp)
+processResources.dependsOn(deleteWebApp)

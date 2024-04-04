@@ -22,5 +22,5 @@ public interface ReportDAO {
 
     void updateChartErrorProcess(int errId);
 
-    List<Log> getLogAll();
+    List<Log> getLogUser();
 }

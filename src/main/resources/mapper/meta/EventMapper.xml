@@ -7,4 +7,21 @@
         values (#{type}, #{ptNo}, #{searchTargets}, #{searchFromDate}, #{searchToDate}, #{pactTpCd}, #{deptType}, #{deptCd}, #{stfNo}, #{stfNm}, now())
     </insert>
 
+    <select id="getLogEvent" resultType="ai.planit.pev.domain.meta.event.dto.Event">
+        select id as id,
+               type as type,
+               pt_no as ptNo,
+               search_targets as searchTargets,
+               search_from_date as searchFromDate,
+               search_to_date as searchToDate,
+               pact_tp_cd as pactTpCd,
+               dept_type as deptType,
+               dept_cd as deptCd,
+               stf_no as stfNo,
+               stf_nm as stfNm,
+               to_char(load_dtm, 'YYYY-MM-DD HH24:MI:SS') as loadDtm
+        from pev_event_log
+        order by load_dtm desc
+    </select>
+
 </mapper>

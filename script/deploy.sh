@@ -28,14 +28,17 @@ fi;
 echo "======== 빌드 ========"
 ./gradlew clean build
 
-echo "======== JAR 파일 제거 ========"
-ssh $serverWithPort "rm /deview/pev/*.jar"
+echo "======== 서버 중지 ========"
+ssh $serverWithPort "sh /deview/pev/stop.sh"
+
+echo "======== 백업 폴더 비우기 ========"
+ssh $serverWithPort "rm /deview/pev/BAK/*.jar"
+
+echo "======== 기존 JAR 파일 백업 폴더로 이동 ========"
+ssh $serverWithPort "mv /deview/pev/*.jar /deview/pev/BAK/"
 
 echo "======== JAR 파일 이동 ========"
 scp -P 9101 ./build/libs/*.jar $server:/deview/pev/
-
-echo "======== 서버 중지 ========"
-ssh $serverWithPort "sh /deview/pev/stop.sh"
 
 echo "======== 서버 실행 ========"
 ssh $serverWithPort "sh /deview/pev/start.sh"

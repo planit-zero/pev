@@ -3,6 +3,8 @@ package ai.planit.pev.domain.meta.report.service;
 import ai.planit.idp.sdk.model.IdpLoginUser;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
+import ai.planit.pev.domain.meta.event.dao.EventDAO;
+import ai.planit.pev.domain.meta.event.dto.Event;
 import ai.planit.pev.domain.meta.report.dao.ReportDAO;
 import ai.planit.pev.domain.meta.report.dto.*;
 import com.google.gson.Gson;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
     private final ReportDAO reportDAO;
+    private final EventDAO eventDAO;
 
     @Override
     public void insertReport(HttpSession session, ChartReport report) {
@@ -89,7 +92,13 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<Log> getLogAll(HttpSession session) {
-        return reportDAO.getLogAll();
+    public List<Log> getLogUser(HttpSession session) {
+        return reportDAO.getLogUser();
     }
+
+    @Override
+    public List<Event> getLogEvent(HttpSession session) {
+        return eventDAO.getLogEvent();
+    }
+
 }

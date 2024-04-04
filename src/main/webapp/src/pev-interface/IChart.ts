@@ -168,7 +168,7 @@ export interface IChartStyledItem {
     children: IChartStyledItem[];
 }
 
-export interface ILog {
+export interface ILogUser {
     rowNum: number;
     stfNo: string;
     stfNm: string;
@@ -177,3 +177,20 @@ export interface ILog {
     authCd: string;
     loginDtm: string;
 }
+
+export interface ILogEvent {
+    id: number;
+    type: string;
+    ptNo: string;
+    searchTargets: string;
+    searchFromDate: string;
+    searchToDate: string;
+    pactTpCd: string;
+    deptType: string;
+    deptCd: string;
+    stfNo: string;
+    stfNm: string;
+    loadDtm: string;
+}
+
+export type ReportContentType = IReport[] | IChartError[] | ILogUser[] | ILogEvent[];

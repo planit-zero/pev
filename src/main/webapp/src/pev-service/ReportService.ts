@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IChartError, ILog, IReport, IReportDetail, IReportDetailUpdate } from '../pev-interface/IChart';
+import { IChartError, ILogEvent, ILogUser, IReport, IReportDetail, IReportDetailUpdate } from '../pev-interface/IChart';
 
 export const reportApi = createApi({
     reducerPath: 'reportApi',
@@ -56,9 +56,15 @@ export const reportApi = createApi({
             }),
             invalidatesTags: ['ChartError']
         }),
-        getLogAllList: builder.query<ILog[], void>({
+        getLogUserList: builder.query<ILogUser[], void>({
             query: () => ({
-                url: 'report/log/all',
+                url: 'report/log/user',
+                method: 'GET'
+            })
+        }),
+        getLogEventList: builder.query<ILogEvent[], void>({
+            query: () => ({
+                url: 'report/log/event',
                 method: 'GET'
             })
         })
@@ -73,5 +79,6 @@ export const {
     useInsertChartErrorMutation,
     useGetChartErrorListQuery,
     useUpdateChartErrorProcessMutation,
-    useGetLogAllListQuery
+    useGetLogUserListQuery,
+    useGetLogEventListQuery
 } = reportApi;

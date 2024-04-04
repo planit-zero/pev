@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Box } from '@mui/material';
 import ReportContentHeader from './ReportContentHeader';
 import ReportContentList from './ReportContentList';
-import { IChartError, ILog, IReport } from '../../pev-interface/IChart';
+import { ReportContentType } from '../../pev-interface/IChart';
 import { ContentTypeProps } from './Report';
 
 type ReportContentProps = {
     contentType: ContentTypeProps;
     menuText: string;
     menuGroupText: string;
-    dataSource: IReport[] | IChartError[] | ILog[];
+    dataSource: ReportContentType;
 };
 
 const ReportContent = (props: ReportContentProps) => {

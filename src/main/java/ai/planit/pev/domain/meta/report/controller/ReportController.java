@@ -53,8 +53,13 @@ public class ReportController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("report/log/all")
-    ResponseEntity<?> getLogAll(HttpSession session) {
-        return ResponseEntity.ok().body(reportService.getLogAll(session));
+    @GetMapping("report/log/user")
+    ResponseEntity<?> getLogUser(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getLogUser(session));
+    }
+
+    @GetMapping("report/log/event")
+    ResponseEntity<?> getLogEvent(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getLogEvent(session));
     }
 }
