@@ -209,3 +209,8 @@ export interface IEventSearchTargetDistribution {
     searchTargets: string;
     count: number;
 }
+
+export interface IUserLoginDeptStatistics {
+    deptNm: string;
+    count: number;
+}

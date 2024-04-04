@@ -23,6 +23,7 @@
         select date_trunc('week', login_dtm)::date as weekFromMonday,
                 count(*) as count
         from pev_login_log
+        where dept_nm != '플랜잇'
         group by weekFromMonday
         order by weekFromMonday
     </select>
@@ -31,8 +32,19 @@
         select EXTRACT(hour from login_dtm) as hour,
                count(*) as count
         from pev_login_log
+        where dept_nm != '플랜잇'
         group by hour
         order by hour
+    </select>
+
+    <select id="getStatisticsUserDept" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginDept">
+        select dept_nm as deptNm,
+               count(*) as count
+        from pev_login_log
+        where dept_nm != '플랜잇'
+        group by dept_nm
+        order by count desc
+        limit 10
     </select>
 
 </mapper>

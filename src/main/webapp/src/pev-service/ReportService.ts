@@ -7,6 +7,7 @@ import {
     IReport,
     IReportDetail,
     IReportDetailUpdate,
+    IUserLoginDeptStatistics,
     IUserLoginHourStatistics,
     IUserLoginWeekStatistics
 } from '../pev-interface/IChart';
@@ -95,6 +96,12 @@ export const reportApi = createApi({
                 url: 'report/statistics/event/search-targets-distribution',
                 method: 'GET'
             })
+        }),
+        getStatisticsUserDeptList: builder.query<IUserLoginDeptStatistics[], void>({
+            query: () => ({
+                url: 'report/statistics/user/dept',
+                method: 'GET'
+            })
         })
     })
 });
@@ -111,5 +118,6 @@ export const {
     useGetLogEventListQuery,
     useGetStatisticsUserWeekListQuery,
     useGetStatisticsUserHourListQuery,
-    useGetEventSearchTargetDistributionListQuery
+    useGetEventSearchTargetDistributionListQuery,
+    useGetStatisticsUserDeptListQuery
 } = reportApi;

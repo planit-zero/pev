@@ -3,7 +3,8 @@ import { Card, Paper } from '@mui/material';
 import {
     useGetStatisticsUserWeekListQuery,
     useGetStatisticsUserHourListQuery,
-    useGetEventSearchTargetDistributionListQuery
+    useGetEventSearchTargetDistributionListQuery,
+    useGetStatisticsUserDeptListQuery
 } from '../../pev-service/ReportService';
 import Chart, { ArgumentAxis, Export, Format, Label, Legend, Series, Tooltip } from 'devextreme-react/chart';
 import { PieChart } from 'devextreme-react';
@@ -17,10 +18,17 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
     const { data: statisticsUserWeekList } = useGetStatisticsUserWeekListQuery();
     const { data: statisticsUserHourList } = useGetStatisticsUserHourListQuery();
     const { data: eventSearchTargetDistributionList } = useGetEventSearchTargetDistributionListQuery();
+    const { data: statisticsUserDeptList } = useGetStatisticsUserDeptListQuery();
 
     const getStatisticsUserWeek = () => {
         if (props.menuIndex === 7) return userChart();
         if (props.menuIndex === 8) return searchChart();
+    };
+
+    const deptTooltip = (arg: { argument: string; value: number }) => {
+        return {
+            text: `${arg.argument} - ${arg.value}`
+        };
     };
 
     const userChart = () => {
@@ -37,7 +45,7 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
                         <Tooltip enabled={true} />
                     </Chart>
                 </Card>
-                <Card>
+                <Card sx={{ marginBottom: '10vh' }}>
                     <Chart title={'접속 시간대'} dataSource={statisticsUserHourList} height={'35vh'}>
                         <ArgumentAxis tickInterval={1}>
                             <Label format="decimal" />
@@ -48,17 +56,28 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
                         <Tooltip enabled={true} />
                     </Chart>
                 </Card>
+                <Card>
+                    <Chart title={'상위 접속 부서'} dataSource={statisticsUserDeptList} height={'35vh'}>
+                        <ArgumentAxis>
+                            <Label format="decimal" overlappingBehavior={'none'} />
+                        </ArgumentAxis>
+                        <Series argumentField={'deptNm'} valueField={'count'} type={'bar'} color={'#3f51b5'} />
+                        <Legend visible={false} />
+                        <Export enabled={true} />
+                        <Tooltip enabled={true} customizeTooltip={deptTooltip} />
+                    </Chart>
+                </Card>
             </>
         );
     };
 
-    const customizeTooltip = (arg: { argument: string; percent: number }) => {
+    const searchTooltip = (arg: { argument: string; percent: number }) => {
         return {
             text: `${arg.argument} - ${(arg.percent * 100).toFixed(2)}%`
         };
     };
 
-    const customizeText = (arg: any) => {
+    const searchLabel = (arg: any) => {
         return arg.argument;
     };
 
@@ -81,12 +100,12 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
                             columnCount={4}
                         />
                         <Series argumentField="searchTargets" valueField={'count'}>
-                            <Label visible={true} format="fixedPoint" customizeText={customizeText}>
+                            <Label visible={true} format="fixedPoint" customizeText={searchLabel}>
                                 <Connector visible={true} />
                             </Label>
                         </Series>
                         <Export enabled={true} />
-                        <Tooltip enabled={true} customizeTooltip={customizeTooltip}>
+                        <Tooltip enabled={true} customizeTooltip={searchTooltip}>
                             <Format type={'millions'} />
                         </Tooltip>
                     </PieChart>
@@ -95,7 +114,11 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
         );
     };
 
-    return <Paper sx={{ width: '40%', height: 'calc(100% - 75px)', p: '20px', ml: '15px' }}>{getStatisticsUserWeek()}</Paper>;
+    return (
+        <Paper sx={{ width: '40%', height: 'calc(100% - 75px)', p: '20px', ml: '15px', overflowY: 'scroll' }}>
+            {getStatisticsUserWeek()}
+        </Paper>
+    );
 };
 
 export default ReportContentStatistics;

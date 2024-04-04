@@ -77,4 +77,9 @@ public class ReportController {
     ResponseEntity<?> getEventSearchTargetDistribution(HttpSession session) {
         return ResponseEntity.ok().body(reportService.getEventSearchTargetDistribution(session));
     }
+
+    @GetMapping("report/statistics/user/dept")
+    ResponseEntity<?> getStatisticsUserDept(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getStatisticsUserDept(session));
+    }
 }

@@ -3,6 +3,7 @@ package ai.planit.pev.domain.meta.report.service;
 import ai.planit.pev.domain.meta.event.dto.Event;
 import ai.planit.pev.domain.meta.event.dto.EventSearchTargetDistribution;
 import ai.planit.pev.domain.meta.report.dto.*;
+import ai.planit.pev.domain.meta.user.dto.UserLoginDept;
 import ai.planit.pev.domain.meta.user.dto.UserLoginHour;
 import ai.planit.pev.domain.meta.user.dto.UserLoginWeek;
 
@@ -33,4 +34,6 @@ public interface ReportService {
     List<UserLoginHour> getStatisticsUserHour(HttpSession session);
 
     List<EventSearchTargetDistribution> getEventSearchTargetDistribution(HttpSession session);
+
+    List<UserLoginDept> getStatisticsUserDept(HttpSession session);
 }
