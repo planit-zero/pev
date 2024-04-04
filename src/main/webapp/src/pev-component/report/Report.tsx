@@ -80,6 +80,7 @@ const Report = () => {
                     menuText={getMenuText()}
                     menuGroupText={getMenuGroupText()}
                     dataSource={getDataByMenu() || []}
+                    menuIndex={menuIndex}
                 />
             </Box>
         </Box>

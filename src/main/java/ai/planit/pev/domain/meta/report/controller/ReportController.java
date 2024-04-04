@@ -62,4 +62,19 @@ public class ReportController {
     ResponseEntity<?> getLogEvent(HttpSession session) {
         return ResponseEntity.ok().body(reportService.getLogEvent(session));
     }
+
+    @GetMapping("report/statistics/user/week")
+    ResponseEntity<?> getStatisticsUserWeek(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getStatisticsUserWeek(session));
+    }
+
+    @GetMapping("report/statistics/user/hour")
+    ResponseEntity<?> getStatisticsUserHour(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getStatisticsUserHour(session));
+    }
+
+    @GetMapping("report/statistics/event/search-targets-distribution")
+    ResponseEntity<?> getEventSearchTargetDistribution(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getEventSearchTargetDistribution(session));
+    }
 }

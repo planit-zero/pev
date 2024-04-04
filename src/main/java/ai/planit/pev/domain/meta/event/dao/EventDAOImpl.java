@@ -1,6 +1,7 @@
 package ai.planit.pev.domain.meta.event.dao;
 
 import ai.planit.pev.domain.meta.event.dto.Event;
+import ai.planit.pev.domain.meta.event.dto.EventSearchTargetDistribution;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,10 @@ public class EventDAOImpl implements EventDAO {
     @Override
     public List<Event> getLogEvent() {
         return sqlSessionTemplate.selectList("getLogEvent");
+    }
+
+    @Override
+    public List<EventSearchTargetDistribution> getEventSearchTargetDistribution() {
+        return sqlSessionTemplate.selectList("getEventSearchTargetDistribution");
     }
 }

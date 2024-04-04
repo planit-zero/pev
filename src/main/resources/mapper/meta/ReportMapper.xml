@@ -85,17 +85,4 @@
         where err_id = #{errId}
     </update>
 
-    <select id="getLogUser" resultType="ai.planit.pev.domain.meta.report.dto.Log">
-        select row_number() over (order by login_dtm) as rowNum,
-               stf_no as stfNo,
-               stf_nm as stfNm,
-               dept_cd as deptCd,
-               dept_nm as deptNm,
-               auth_cd as authCd,
-               to_char(login_dtm, 'YYYY-MM-DD HH24:MI:SS') as loginDtm
-        from pev_login_log
-        order by login_dtm desc
-    </select>
-
-
 </mapper>

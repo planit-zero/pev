@@ -5,8 +5,12 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.event.dao.EventDAO;
 import ai.planit.pev.domain.meta.event.dto.Event;
+import ai.planit.pev.domain.meta.event.dto.EventSearchTargetDistribution;
 import ai.planit.pev.domain.meta.report.dao.ReportDAO;
 import ai.planit.pev.domain.meta.report.dto.*;
+import ai.planit.pev.domain.meta.user.dao.UserDAO;
+import ai.planit.pev.domain.meta.user.dto.UserLoginHour;
+import ai.planit.pev.domain.meta.user.dto.UserLoginWeek;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
     private final ReportDAO reportDAO;
+    private final UserDAO userDAO;
     private final EventDAO eventDAO;
 
     @Override
@@ -93,7 +98,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<Log> getLogUser(HttpSession session) {
-        return reportDAO.getLogUser();
+        return userDAO.getLogUser();
     }
 
     @Override
@@ -101,4 +106,18 @@ public class ReportServiceImpl implements ReportService {
         return eventDAO.getLogEvent();
     }
 
+    @Override
+    public List<UserLoginWeek> getStatisticsUserWeek(HttpSession session) {
+        return userDAO.getStatisticsUserWeek();
+    }
+
+    @Override
+    public List<UserLoginHour> getStatisticsUserHour(HttpSession session) {
+        return userDAO.getStatisticsUserHour();
+    }
+
+    @Override
+    public List<EventSearchTargetDistribution> getEventSearchTargetDistribution(HttpSession session) {
+        return eventDAO.getEventSearchTargetDistribution();
+    }
 }

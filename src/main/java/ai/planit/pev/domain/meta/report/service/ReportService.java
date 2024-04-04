@@ -1,7 +1,10 @@
 package ai.planit.pev.domain.meta.report.service;
 
 import ai.planit.pev.domain.meta.event.dto.Event;
+import ai.planit.pev.domain.meta.event.dto.EventSearchTargetDistribution;
 import ai.planit.pev.domain.meta.report.dto.*;
+import ai.planit.pev.domain.meta.user.dto.UserLoginHour;
+import ai.planit.pev.domain.meta.user.dto.UserLoginWeek;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -24,4 +27,10 @@ public interface ReportService {
     List<Log> getLogUser(HttpSession session);
 
     List<Event> getLogEvent(HttpSession session);
+
+    List<UserLoginWeek> getStatisticsUserWeek(HttpSession session);
+
+    List<UserLoginHour> getStatisticsUserHour(HttpSession session);
+
+    List<EventSearchTargetDistribution> getEventSearchTargetDistribution(HttpSession session);
 }

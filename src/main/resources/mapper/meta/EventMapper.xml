@@ -24,4 +24,12 @@
         order by load_dtm desc
     </select>
 
+    <select id="getEventSearchTargetDistribution" resultType="ai.planit.pev.domain.meta.event.dto.EventSearchTargetDistribution">
+        select unnest(string_to_array(search_targets, ', ')) as searchTargets,
+               count(*) as count
+        from pev_event_log
+        group by searchTargets
+        order by count desc
+    </select>
+
 </mapper>

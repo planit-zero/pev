@@ -10,12 +10,13 @@ import { CryptoUtils } from '../../pev-utils/CryptoUtils';
 import { UrlUtils } from '../../pev-utils/UrlUtils';
 import { ContentTypeProps } from './Report';
 
-type ReportContentListProps = {
+type ReportContentGridProps = {
     contentType: ContentTypeProps;
     dataSource: ReportContentType;
+    isLogPage: boolean;
 };
 
-const ReportContentList = (props: ReportContentListProps) => {
+const ReportContentGrid = (props: ReportContentGridProps) => {
     const { info } = useSelector((state) => state.user);
     const { profile } = useSelector((state) => state.environment);
 
@@ -81,7 +82,6 @@ const ReportContentList = (props: ReportContentListProps) => {
         return (
             <TableRow>
                 <TableCell align={'center'}>순번</TableCell>
-                <TableCell align={'center'}>타입</TableCell>
                 <TableCell align={'center'}>병록번호</TableCell>
                 <TableCell align={'center'}>기록유형</TableCell>
                 <TableCell align={'center'}>기록일자</TableCell>
@@ -89,7 +89,6 @@ const ReportContentList = (props: ReportContentListProps) => {
                 <TableCell align={'center'}>진료과</TableCell>
                 <TableCell align={'center'}>작성과</TableCell>
                 <TableCell align={'center'}>사번</TableCell>
-                <TableCell align={'center'}>직원명</TableCell>
                 <TableCell align={'center'}>발생일시</TableCell>
             </TableRow>
         );
@@ -229,6 +228,19 @@ const ReportContentList = (props: ReportContentListProps) => {
         );
     };
 
+    const getPactTpCdDesc = (pactTpCd: string) => {
+        if (pactTpCd === 'I') return '입원';
+        if (pactTpCd === 'O') return '외래';
+        if (pactTpCd === 'E') return '응급';
+        return '전체';
+    };
+
+    const getDeptTypeDesc = (deptType: string) => {
+        if (deptType === 'MEDICAL') return '수진과';
+        if (deptType === 'WRITER') return '작성과';
+        return '전체';
+    };
+
     const LogEventTableBody = () => {
         return (
             <React.Fragment>
@@ -237,17 +249,15 @@ const ReportContentList = (props: ReportContentListProps) => {
                         <React.Fragment key={idx}>
                             <TableRow>
                                 <TableCell align={'center'}>{log.id}</TableCell>
-                                <TableCell align={'center'}>{log.type}</TableCell>
                                 <TableCell align={'center'}>{log.ptNo}</TableCell>
                                 <TableCell align={'center'}>{log.searchTargets}</TableCell>
                                 <TableCell align={'center'}>
                                     {log.searchFromDate} ~ {log.searchToDate}
                                 </TableCell>
-                                <TableCell align={'center'}>{log.pactTpCd}</TableCell>
-                                <TableCell align={'center'}>{log.deptType}</TableCell>
+                                <TableCell align={'center'}>{getPactTpCdDesc(log.pactTpCd)}</TableCell>
+                                <TableCell align={'center'}>{getDeptTypeDesc(log.deptType)}</TableCell>
                                 <TableCell align={'center'}>{log.deptCd}</TableCell>
                                 <TableCell align={'center'}>{log.stfNo}</TableCell>
-                                <TableCell align={'center'}>{log.stfNm}</TableCell>
                                 <TableCell align={'center'}>{log.loadDtm}</TableCell>
                             </TableRow>
                         </React.Fragment>
@@ -265,8 +275,13 @@ const ReportContentList = (props: ReportContentListProps) => {
         return null;
     };
 
+    const getWidth = () => {
+        if (props.isLogPage) return '60%';
+        return '100%';
+    };
+
     return (
-        <Paper sx={{ width: '100%', height: 'calc(100% - 75px)', p: '20px', overflowY: 'scroll' }}>
+        <Paper sx={{ width: getWidth(), height: 'calc(100% - 75px)', p: '20px', overflowY: 'scroll' }}>
             <Table
                 sx={{
                     '& .MuiTableRow-root:hover': {
@@ -286,4 +301,4 @@ const ReportContentList = (props: ReportContentListProps) => {
     );
 };
 
-export default ReportContentList;
+export default ReportContentGrid;

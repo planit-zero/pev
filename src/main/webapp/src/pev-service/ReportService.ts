@@ -1,5 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IChartError, ILogEvent, ILogUser, IReport, IReportDetail, IReportDetailUpdate } from '../pev-interface/IChart';
+import {
+    IChartError,
+    IEventSearchTargetDistribution,
+    ILogEvent,
+    ILogUser,
+    IReport,
+    IReportDetail,
+    IReportDetailUpdate,
+    IUserLoginHourStatistics,
+    IUserLoginWeekStatistics
+} from '../pev-interface/IChart';
 
 export const reportApi = createApi({
     reducerPath: 'reportApi',
@@ -67,6 +77,24 @@ export const reportApi = createApi({
                 url: 'report/log/event',
                 method: 'GET'
             })
+        }),
+        getStatisticsUserWeekList: builder.query<IUserLoginWeekStatistics[], void>({
+            query: () => ({
+                url: 'report/statistics/user/week',
+                method: 'GET'
+            })
+        }),
+        getStatisticsUserHourList: builder.query<IUserLoginHourStatistics[], void>({
+            query: () => ({
+                url: 'report/statistics/user/hour',
+                method: 'GET'
+            })
+        }),
+        getEventSearchTargetDistributionList: builder.query<IEventSearchTargetDistribution[], void>({
+            query: () => ({
+                url: 'report/statistics/event/search-targets-distribution',
+                method: 'GET'
+            })
         })
     })
 });
@@ -80,5 +108,8 @@ export const {
     useGetChartErrorListQuery,
     useUpdateChartErrorProcessMutation,
     useGetLogUserListQuery,
-    useGetLogEventListQuery
+    useGetLogEventListQuery,
+    useGetStatisticsUserWeekListQuery,
+    useGetStatisticsUserHourListQuery,
+    useGetEventSearchTargetDistributionListQuery
 } = reportApi;

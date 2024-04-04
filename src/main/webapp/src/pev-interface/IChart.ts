@@ -194,3 +194,18 @@ export interface ILogEvent {
 }
 
 export type ReportContentType = IReport[] | IChartError[] | ILogUser[] | ILogEvent[];
+
+export interface IUserLoginWeekStatistics {
+    weekFromMonday: string;
+    count: number;
+}
+
+export interface IUserLoginHourStatistics {
+    hour: number;
+    count: number;
+}
+
+export interface IEventSearchTargetDistribution {
+    searchTargets: string;
+    count: number;
+}

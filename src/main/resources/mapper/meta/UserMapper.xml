@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.meta.user.dao.UserDAO">
+
     <insert id="insertLoginLog" parameterType="ai.planit.idp.sdk.model.IdpLoginUser">
         insert into pev_login_log (stf_no, stf_nm, dept_cd, dept_nm, auth_cd, login_dtm)
         values (#{stfNo}, #{stfNm}, #{deptCd}, #{deptNm}, #{authCd}, now())
     </insert>
+
+    <select id="getLogUser" resultType="ai.planit.pev.domain.meta.report.dto.Log">
+        select row_number() over (order by login_dtm) as rowNum,
+                stf_no as stfNo,
+               stf_nm as stfNm,
+               dept_cd as deptCd,
+               dept_nm as deptNm,
+               auth_cd as authCd,
+               to_char(login_dtm, 'YYYY-MM-DD HH24:MI:SS') as loginDtm
+        from pev_login_log
+        order by login_dtm desc
+    </select>
+
+    <select id="getStatisticsUserWeek" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginWeek">
+        select date_trunc('week', login_dtm)::date as weekFromMonday,
+                count(*) as count
+        from pev_login_log
+        group by weekFromMonday
+        order by weekFromMonday
+    </select>
+
+    <select id="getStatisticsUserHour" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginHour">
+        select EXTRACT(hour from login_dtm) as hour,
+               count(*) as count
+        from pev_login_log
+        group by hour
+        order by hour
+    </select>
+
 </mapper>
