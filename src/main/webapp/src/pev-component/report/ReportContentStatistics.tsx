@@ -34,8 +34,8 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
     const userChart = () => {
         return (
             <>
-                <Card sx={{ marginBottom: '10vh' }}>
-                    <Chart title={'주간 접속 분포'} dataSource={statisticsUserWeekList} height={'35vh'}>
+                <Card sx={{ marginBottom: '5vh' }}>
+                    <Chart title={'주간 접속 분포'} dataSource={statisticsUserWeekList} height={'30vh'}>
                         <ArgumentAxis>
                             <Label format="decimal" />
                         </ArgumentAxis>
@@ -45,8 +45,8 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
                         <Tooltip enabled={true} />
                     </Chart>
                 </Card>
-                <Card sx={{ marginBottom: '10vh' }}>
-                    <Chart title={'접속 시간대'} dataSource={statisticsUserHourList} height={'35vh'}>
+                <Card sx={{ marginBottom: '5vh' }}>
+                    <Chart title={'접속 시간대'} dataSource={statisticsUserHourList} height={'30vh'}>
                         <ArgumentAxis tickInterval={1}>
                             <Label format="decimal" />
                         </ArgumentAxis>
@@ -57,7 +57,7 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
                     </Chart>
                 </Card>
                 <Card>
-                    <Chart title={'상위 접속 부서'} dataSource={statisticsUserDeptList} height={'35vh'}>
+                    <Chart title={'상위 접속 부서'} dataSource={statisticsUserDeptList} height={'30vh'}>
                         <ArgumentAxis>
                             <Label format="decimal" overlappingBehavior={'none'} />
                         </ArgumentAxis>
