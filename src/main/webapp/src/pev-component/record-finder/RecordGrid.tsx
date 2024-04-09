@@ -122,7 +122,14 @@ const RecordGrid = (props: ConditionFinderGridProps) => {
                     <Column dataField={'pactTpNm'} caption={'구분'} alignment={'center'} width={85} />
                     <Column dataField={'itemType'} caption={'유형'} alignment={'center'} width={85} />
                     <Column dataField={'itemNm'} caption={'항목명'} alignment={'left'} minWidth={170} />
-                    <Column dataField={'writingDate'} caption={'작성일자'} width={110} alignment={'center'} />
+                    <Column
+                        dataField={'writingDate'}
+                        caption={'작성일자'}
+                        width={110}
+                        alignment={'center'}
+                        dataType={'date'}
+                        format={'yyyy-MM-dd'}
+                    />
                     <Column dataField={'writingDeptNm'} caption={'작성과'} width={100} alignment={'left'} />
                     <Column dataField={'writerNm'} caption={'작성자'} width={100} alignment={'center'} />
                     <Column dataField={'mdrcWrtStsCdYn'} caption={'서명'} alignment={'center'} width={85} />
