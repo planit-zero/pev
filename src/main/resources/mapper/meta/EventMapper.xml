@@ -30,6 +30,7 @@
         from pev_event_log
         group by searchTargets
         order by count desc
+        limit 10
     </select>
 
 </mapper>
