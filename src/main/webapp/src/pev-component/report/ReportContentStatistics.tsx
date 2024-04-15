@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, Paper } from '@mui/material';
+import { Box, Card, Paper } from '@mui/material';
 import {
     useGetStatisticsUserWeekListQuery,
     useGetStatisticsUserHourListQuery,
@@ -7,7 +7,7 @@ import {
     useGetStatisticsUserDeptListQuery
 } from '../../pev-service/ReportService';
 import Chart, { ArgumentAxis, Export, Format, Label, Legend, Series, Tooltip } from 'devextreme-react/chart';
-import { PieChart } from 'devextreme-react';
+import { DataGrid, PieChart, Popup } from 'devextreme-react';
 import { Connector } from 'devextreme-react/pie-chart';
 
 type ReportContentStatisticsProps = {
@@ -15,6 +15,9 @@ type ReportContentStatisticsProps = {
 };
 
 const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
+    const [open, setOpen] = React.useState<boolean>(false);
+    const [modalDataSource, setModalDataSource] = React.useState<any>([]);
+
     const { data: statisticsUserWeekList } = useGetStatisticsUserWeekListQuery();
     const { data: statisticsUserHourList } = useGetStatisticsUserHourListQuery();
     const { data: eventSearchTargetDistributionList } = useGetEventSearchTargetDistributionListQuery();
@@ -34,8 +37,8 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
     const userChart = () => {
         return (
             <>
-                <Card sx={{ marginBottom: '5vh' }}>
-                    <Chart title={'주간 접속 분포'} dataSource={statisticsUserWeekList} height={'30vh'}>
+                <Card sx={{ marginBottom: '5vh' }} onClick={() => openModal(statisticsUserWeekList)}>
+                    <Chart title={'주간 접속 분포'} dataSource={statisticsUserWeekList?.slice(0, 5).reverse()} height={'30vh'}>
                         <ArgumentAxis>
                             <Label format="decimal" />
                         </ArgumentAxis>
@@ -45,7 +48,7 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
                         <Tooltip enabled={true} />
                     </Chart>
                 </Card>
-                <Card sx={{ marginBottom: '5vh' }}>
+                <Card sx={{ marginBottom: '5vh' }} onClick={() => openModal(statisticsUserHourList)}>
                     <Chart title={'접속 시간대'} dataSource={statisticsUserHourList} height={'30vh'}>
                         <ArgumentAxis tickInterval={1}>
                             <Label format="decimal" />
@@ -56,8 +59,8 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
                         <Tooltip enabled={true} />
                     </Chart>
                 </Card>
-                <Card>
-                    <Chart title={'상위 접속 부서'} dataSource={statisticsUserDeptList} height={'30vh'}>
+                <Card onClick={() => openModal(statisticsUserDeptList)}>
+                    <Chart title={'상위 접속 부서'} dataSource={statisticsUserDeptList?.slice(0, 10)} height={'30vh'}>
                         <ArgumentAxis>
                             <Label format="decimal" overlappingBehavior={'none'} />
                         </ArgumentAxis>
@@ -83,41 +86,81 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
 
     const searchChart = () => {
         return (
-            <>
-                <Card>
-                    <PieChart
-                        type={'doughnut'}
-                        title={'기록유형 분포'}
-                        palette={'Soft Pastel'}
-                        dataSource={eventSearchTargetDistributionList}
-                        height={'80vh'}
-                    >
-                        <Legend
-                            orientation={'horizontal'}
-                            itemTextPosition={'right'}
-                            horizontalAlignment={'center'}
-                            verticalAlignment={'bottom'}
-                            columnCount={4}
-                        />
-                        <Series argumentField="searchTargets" valueField={'count'}>
-                            <Label visible={true} format="fixedPoint" customizeText={searchLabel}>
-                                <Connector visible={true} />
-                            </Label>
-                        </Series>
-                        <Export enabled={true} />
-                        <Tooltip enabled={true} customizeTooltip={searchTooltip}>
-                            <Format type={'millions'} />
-                        </Tooltip>
-                    </PieChart>
-                </Card>
-            </>
+            <Card onClick={() => openModal(eventSearchTargetDistributionList)}>
+                <PieChart
+                    type={'doughnut'}
+                    title={'기록유형 분포'}
+                    palette={'Soft Pastel'}
+                    dataSource={eventSearchTargetDistributionList?.slice(0, 10)}
+                    height={'80vh'}
+                >
+                    <Legend
+                        orientation={'horizontal'}
+                        itemTextPosition={'right'}
+                        horizontalAlignment={'center'}
+                        verticalAlignment={'bottom'}
+                        columnCount={4}
+                    />
+                    <Series argumentField="searchTargets" valueField={'count'}>
+                        <Label visible={true} format="fixedPoint" customizeText={searchLabel}>
+                            <Connector visible={true} />
+                        </Label>
+                    </Series>
+                    <Export enabled={true} />
+                    <Tooltip enabled={true} customizeTooltip={searchTooltip}>
+                        <Format type={'millions'} />
+                    </Tooltip>
+                </PieChart>
+            </Card>
+        );
+    };
+
+    const openModal = (datasource: any) => {
+        setModalDataSource(datasource);
+        setOpen(true);
+    };
+
+    const handlePopupHidden = React.useCallback(() => {
+        setOpen(false);
+    }, [setOpen]);
+
+    const renderPopup = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <DataGrid
+                    dataSource={modalDataSource}
+                    showBorders={true}
+                    showColumnLines={true}
+                    showRowLines={true}
+                    scrolling={{ mode: 'infinite' }}
+                />
+            </Box>
+        );
+    };
+
+    const getModal = () => {
+        return (
+           <Popup
+               showTitle={true}
+               title={'Log 원본'}
+               dragEnabled={true}
+               hideOnOutsideClick={true}
+               visible={open}
+               onHiding={handlePopupHidden}
+               contentRender={renderPopup}
+               showCloseButton={true}
+               width={'30vw'}
+           />
         );
     };
 
     return (
-        <Paper sx={{ width: '40%', height: 'calc(100% - 75px)', p: '20px', ml: '15px', overflowY: 'scroll' }}>
-            {getStatisticsUserWeek()}
-        </Paper>
+        <>
+            <Paper sx={{ width: '40%', height: 'calc(100% - 75px)', p: '20px', ml: '15px', overflowY: 'scroll' }}>
+                {getStatisticsUserWeek()}
+            </Paper>
+            {getModal()}
+        </>
     );
 };
 

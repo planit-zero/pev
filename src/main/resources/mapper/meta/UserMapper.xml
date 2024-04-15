@@ -25,8 +25,7 @@
         from pev_login_log
         where dept_nm != '플랜잇'
         group by weekFromMonday
-        order by weekFromMonday
-        limit 10
+        order by weekFromMonday desc
     </select>
 
     <select id="getStatisticsUserHour" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginHour">
@@ -45,7 +44,6 @@
         where dept_nm != '플랜잇'
         group by dept_nm
         order by count desc
-        limit 10
     </select>
 
 </mapper>
