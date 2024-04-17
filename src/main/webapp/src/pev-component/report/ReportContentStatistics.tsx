@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Box, Card, Paper } from '@mui/material';
 import {
-    useGetStatisticsUserWeekListQuery,
+    useGetStatisticsUserMonthListQuery,
     useGetStatisticsUserHourListQuery,
     useGetEventSearchTargetDistributionListQuery,
     useGetStatisticsUserDeptListQuery
@@ -18,12 +18,12 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
     const [open, setOpen] = React.useState<boolean>(false);
     const [modalDataSource, setModalDataSource] = React.useState<any>([]);
 
-    const { data: statisticsUserWeekList } = useGetStatisticsUserWeekListQuery();
+    const { data: statisticsUserMonthList } = useGetStatisticsUserMonthListQuery();
     const { data: statisticsUserHourList } = useGetStatisticsUserHourListQuery();
     const { data: eventSearchTargetDistributionList } = useGetEventSearchTargetDistributionListQuery();
     const { data: statisticsUserDeptList } = useGetStatisticsUserDeptListQuery();
 
-    const getStatisticsUserWeek = () => {
+    const getStatisticsUserMonth = () => {
         if (props.menuIndex === 7) return userChart();
         if (props.menuIndex === 8) return searchChart();
     };
@@ -37,8 +37,8 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
     const userChart = () => {
         return (
             <>
-                <Card sx={{ marginBottom: '5vh' }} onClick={() => openModal(statisticsUserWeekList)}>
-                    <Chart title={'주간 접속 분포'} dataSource={statisticsUserWeekList?.slice(0, 5).reverse()} height={'30vh'}>
+                <Card sx={{ marginBottom: '5vh' }} onClick={() => openModal(statisticsUserMonthList)}>
+                    <Chart title={'월간 접속 분포'} dataSource={statisticsUserMonthList?.slice(0, 5).reverse()} height={'30vh'}>
                         <ArgumentAxis>
                             <Label format="decimal" />
                         </ArgumentAxis>
@@ -157,7 +157,7 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
     return (
         <>
             <Paper sx={{ width: '40%', height: 'calc(100% - 75px)', p: '20px', ml: '15px', overflowY: 'scroll' }}>
-                {getStatisticsUserWeek()}
+                {getStatisticsUserMonth()}
             </Paper>
             {getModal()}
         </>

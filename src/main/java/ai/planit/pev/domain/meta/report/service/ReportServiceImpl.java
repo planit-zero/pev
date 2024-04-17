@@ -108,8 +108,8 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<UserLoginWeek> getStatisticsUserWeek(HttpSession session) {
-        return userDAO.getStatisticsUserWeek();
+    public List<UserLoginWeek> getStatisticsUserMonth(HttpSession session) {
+        return userDAO.getStatisticsUserMonth();
     }
 
     @Override

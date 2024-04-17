@@ -19,8 +19,8 @@
         order by login_dtm desc
     </select>
 
-    <select id="getStatisticsUserWeek" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginWeek">
-        select date_trunc('week', login_dtm)::date as weekFromMonday,
+    <select id="getStatisticsUserMonth" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginWeek">
+        select date_trunc('month', login_dtm)::date as weekFromMonday,
                 count(*) as count
         from pev_login_log
         where dept_nm != '플랜잇'

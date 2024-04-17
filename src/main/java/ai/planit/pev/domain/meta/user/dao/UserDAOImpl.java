@@ -27,8 +27,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<UserLoginWeek> getStatisticsUserWeek() {
-        return sqlSessionTemplate.selectList("getStatisticsUserWeek");
+    public List<UserLoginWeek> getStatisticsUserMonth() {
+        return sqlSessionTemplate.selectList("getStatisticsUserMonth");
     }
 
     @Override

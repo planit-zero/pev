@@ -79,9 +79,9 @@ export const reportApi = createApi({
                 method: 'GET'
             })
         }),
-        getStatisticsUserWeekList: builder.query<IUserLoginWeekStatistics[], void>({
+        getStatisticsUserMonthList: builder.query<IUserLoginWeekStatistics[], void>({
             query: () => ({
-                url: 'report/statistics/user/week',
+                url: 'report/statistics/user/month',
                 method: 'GET'
             })
         }),
@@ -116,7 +116,7 @@ export const {
     useUpdateChartErrorProcessMutation,
     useGetLogUserListQuery,
     useGetLogEventListQuery,
-    useGetStatisticsUserWeekListQuery,
+    useGetStatisticsUserMonthListQuery,
     useGetStatisticsUserHourListQuery,
     useGetEventSearchTargetDistributionListQuery,
     useGetStatisticsUserDeptListQuery

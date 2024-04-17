@@ -29,7 +29,7 @@ public interface ReportService {
 
     List<Event> getLogEvent(HttpSession session);
 
-    List<UserLoginWeek> getStatisticsUserWeek(HttpSession session);
+    List<UserLoginWeek> getStatisticsUserMonth(HttpSession session);
 
     List<UserLoginHour> getStatisticsUserHour(HttpSession session);
 

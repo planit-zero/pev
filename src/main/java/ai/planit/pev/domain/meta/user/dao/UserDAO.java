@@ -13,7 +13,7 @@ public interface UserDAO {
 
     List<Log> getLogUser();
 
-    List<UserLoginWeek> getStatisticsUserWeek();
+    List<UserLoginWeek> getStatisticsUserMonth();
 
     List<UserLoginHour> getStatisticsUserHour();
 
