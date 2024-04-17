@@ -96,7 +96,15 @@ const CommonLayout = () => {
                     <IconMessageReport color={'white'} />
                 </Box>
                 {info && info.authCd === 'S' && (
-                    <Box width={48} height={48} display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{ cursor: 'pointer' }}>
+                    <Box
+                        width={48}
+                        height={48}
+                        display={'flex'}
+                        justifyContent={'center'}
+                        alignItems={'center'}
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => window.location.href = 'http://172.26.33.22:18081'}
+                    >
                         <IconSettings color={'white'} />
                     </Box>
                 )}

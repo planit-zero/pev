@@ -142,7 +142,7 @@ const ReportContentStatistics = (props: ReportContentStatisticsProps) => {
         return (
            <Popup
                showTitle={true}
-               title={'Log 원본'}
+               title={'원본 데이터'}
                dragEnabled={true}
                hideOnOutsideClick={true}
                visible={open}
