@@ -4,7 +4,7 @@ export const UrlUtils = {
         return 'https://deview.snuh.org';
     },
     getIdpUrl: (profile: string): string => {
-        if (profile === 'local') return 'http://172.26.33.22:18020?destination=deview_local';
+        // if (profile === 'local') return 'http://172.26.33.22:18020?destination=deview_local';
         return 'http://172.26.33.22:18020?destination=deview';
     }
 };
