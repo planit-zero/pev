@@ -1,14 +1,27 @@
 import * as React from 'react';
-import { Button, Collapse, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { IRecord } from '../../pev-interface/IRecord';
-import { IChartError, ILogEvent, ILogUser, IReport, ReportContentType } from '../../pev-interface/IChart';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import {useState} from 'react';
+import {
+    Button,
+    Collapse,
+    IconButton,
+    InputAdornment,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    TextField
+} from '@mui/material';
+import {IRecord} from '../../pev-interface/IRecord';
+import {IChartError, ILogEvent, ILogUser, IReport, ReportContentType} from '../../pev-interface/IChart';
+import {AccountCircle, KeyboardArrowDown, KeyboardArrowUp} from '@mui/icons-material';
 import ReportDetailList from './ReportDetailList';
-import { useSelector } from '../../store';
-import { useUpdateChartErrorProcessMutation } from '../../pev-service/ReportService';
-import { CryptoUtils } from '../../pev-utils/CryptoUtils';
-import { UrlUtils } from '../../pev-utils/UrlUtils';
-import { ContentTypeProps } from './Report';
+import {useSelector} from '../../store';
+import {useUpdateChartErrorProcessMutation} from '../../pev-service/ReportService';
+import {CryptoUtils} from '../../pev-utils/CryptoUtils';
+import {UrlUtils} from '../../pev-utils/UrlUtils';
+import {ContentTypeProps} from './Report';
 
 type ReportContentGridProps = {
     contentType: ContentTypeProps;
@@ -22,8 +35,10 @@ const ReportContentGrid = (props: ReportContentGridProps) => {
 
     const maskingDataSource = props.dataSource as IReport[];
     const chartDataSource = props.dataSource as IChartError[];
-    const logUserDataSource = props.dataSource as ILogUser[];
+    const logUserDataSourceOrigin = props.dataSource as ILogUser[];
     const logEventDataSource = props.dataSource as ILogEvent[];
+
+    const [logUserDataSource, setLogUserDataSource] = useState<ILogUser[]>(logUserDataSourceOrigin);
 
     const getRecordInfoText = (recordInfo: string) => {
         const record: IRecord = JSON.parse(recordInfo);
@@ -65,16 +80,44 @@ const ReportContentGrid = (props: ReportContentGridProps) => {
         );
     };
 
+    const searchUser = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            const { value } = e.target as HTMLInputElement;
+            if (value) {
+                setLogUserDataSource(logUserDataSourceOrigin.filter(i => i.stfNo.includes(value) || i.stfNm.includes(value)));
+            } else {
+                setLogUserDataSource(logUserDataSourceOrigin);
+            }
+        }
+    }
+
     const LogUserTableHead = () => {
         return (
-            <TableRow>
-                <TableCell align={'center'}>순번</TableCell>
-                <TableCell align={'center'}>사번</TableCell>
-                <TableCell align={'center'}>직원명</TableCell>
-                <TableCell align={'center'}>부서코드</TableCell>
-                <TableCell align={'center'}>부서명</TableCell>
-                <TableCell align={'center'}>접속일시</TableCell>
-            </TableRow>
+            <>
+                <TextField
+                    label="사용자 검색 (사번 or 직원명) + Enter 키"
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <AccountCircle />
+                            </InputAdornment>
+                        ),
+                    }}
+                    variant="standard"
+                    onKeyUp={searchUser}
+                />
+                <Button variant={'contained'} size={'small'} onClick={() => setLogUserDataSource(logUserDataSourceOrigin)}>
+                    초기화
+                </Button>
+                <TableRow>
+                    <TableCell align={'center'}>순번</TableCell>
+                    <TableCell align={'center'}>사번</TableCell>
+                    <TableCell align={'center'}>직원명</TableCell>
+                    <TableCell align={'center'}>부서코드</TableCell>
+                    <TableCell align={'center'}>부서명</TableCell>
+                    <TableCell align={'center'}>접속일시</TableCell>
+                </TableRow>
+            </>
         );
     };
 
