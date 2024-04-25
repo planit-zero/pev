@@ -130,14 +130,8 @@ const RecordSelector = (props: RecordSelectorProps) => {
     return (
         <Box
             sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: `${props.metaRecordList.metaRecords.filter((mr) => mr.parentId === null).length * 200}px`,
-                height: '80vh',
+                height: '100%',
                 bgcolor: 'background.paper',
-                boxShadow: 24,
                 display: 'flex'
             }}
         >
@@ -146,7 +140,8 @@ const RecordSelector = (props: RecordSelectorProps) => {
                     .filter((mr) => mr.parentId === null)
                     .map((mr, idx) => {
                         return MetaRecordBox(mr, idx);
-                    })}
+                    })
+            }
         </Box>
     );
 };
