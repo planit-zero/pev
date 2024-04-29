@@ -47,4 +47,5 @@ public class RecordController {
     public ResponseEntity<?> getFunctionChart(HttpSession session, @RequestBody Chart.Request request) {
         return ResponseEntity.ok().body(recordService.getFunctionChart(session, request));
     }
+
 }
