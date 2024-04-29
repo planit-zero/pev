@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {AppBar, Box, Toolbar, Typography} from '@mui/material';
 import CommonSnackbar from './CommonSnackbar';
-import { faGrid, faChartMixed, faCircleQuestion, faHouseChimney, faMagnifyingGlass, faAddressCard, faGear } from '@fortawesome/pro-solid-svg-icons';
+import { faGrid, faChartMixed, faCircleQuestion, faHouseChimney, faMagnifyingGlass, faAddressCard, faGear, faClipboardMedical } from '@fortawesome/pro-solid-svg-icons';
 import Header from '../../layout/MainLayout/Header';
 import { useSelector } from '../../store';
 import { useTheme } from '@mui/material/styles';
@@ -117,6 +117,16 @@ const CommonLayout = () => {
                 >
                     <FontAwesomeIcon icon={faAddressCard} size='lg' style={{ color: 'white' }} />
                     {getFont('가명화 시스템')}
+                </Box>
+                <Box
+                    height={55}
+                    display={'flex'}
+                    alignItems={'center'}
+                    sx={{ cursor: 'pointer', padding: '0 15px' }}
+                    onClick={() => window.location.href = 'https://deview.snuh.org/'}
+                >
+                    <FontAwesomeIcon icon={faClipboardMedical} size='xl' style={{ color: 'white' }} />
+                    {getFont('가명의무기록 뷰어')}
                 </Box>
                 <Box
                     height={55}

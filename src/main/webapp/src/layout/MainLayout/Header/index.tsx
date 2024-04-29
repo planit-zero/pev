@@ -35,7 +35,7 @@ const Header = () => {
                 alignItems={'center'}
                 gap={1}
                 sx={{ cursor: 'pointer' }}
-                onClick={() => window.location.href = 'https://deview.snuh.org'}
+                onClick={() => window.location.href = 'https://deview.snuh.org/'}
             >
                 <IconReportMedical color={'#3f51b5'} />
                 {!matchDownMd && <Typography sx={{ fontSize: 'h3.fontSize', fontWeight: 'bold' }}>가명의무기록 뷰어</Typography>}
