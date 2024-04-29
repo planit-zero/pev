@@ -28,7 +28,15 @@ const Header = () => {
 
     return (
         <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'center'} sx={{ pl: '40px' }}>
-            <Box component="span" display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={1}>
+            <Box
+                component="span"
+                display={'flex'}
+                justifyContent={'flex-start'}
+                alignItems={'center'}
+                gap={1}
+                sx={{ cursor: 'pointer' }}
+                onClick={() => window.location.href = 'https://deview.snuh.org'}
+            >
                 <IconReportMedical color={'#3f51b5'} />
                 {!matchDownMd && <Typography sx={{ fontSize: 'h3.fontSize', fontWeight: 'bold' }}>가명의무기록 뷰어</Typography>}
             </Box>
