@@ -58,19 +58,23 @@ const ConditionFinderPanelRecordSetter = (props: ConditionFinderPanelRecordSette
         setOpen(false);
     }, [setOpen]);
 
-    const submitButton = React.useCallback(() => ({
-        icon: 'save',
-        stylingMode: 'contained',
-        text: '적용',
-        onClick: null,
-    }), []);
+    const submitButton = () => {
+        return {
+            icon: 'save',
+            stylingMode: 'contained',
+            text: '적용',
+            onClick: handlePopupHidden,
+        };
+    };
 
-    const closeButton = React.useCallback(() => ({
-        text: '닫기',
-        stylingMode: 'outlined',
-        type: 'normal',
-        onClick: handlePopupHidden,
-    }), []);
+    const closeButton = () => {
+        return {
+            text: '닫기',
+            stylingMode: 'outlined',
+            type: 'normal',
+            onClick: handlePopupHidden,
+        };
+    };
 
     return (
         <Grid container display={'flex'} alignItems={'center'}>
