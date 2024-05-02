@@ -196,9 +196,8 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 진료기록 - 마취기록, 마취 전 평가
-        if (medicalRecordTargets
-                .contains(RecordTarget.MEDICAL_ANESTHESIA.getType())
-                || medicalRecordTargets.contains(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType())) {
+        if (medicalRecordTargets.contains(RecordTarget.MEDICAL_ANESTHESIA.getType()) ||
+                medicalRecordTargets.contains(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType())) {
             String[] queryTargets = {
                     RecordTarget.MEDICAL_ANESTHESIA.getType(),
                     RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()

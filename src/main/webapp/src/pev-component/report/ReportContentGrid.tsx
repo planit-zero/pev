@@ -250,10 +250,17 @@ const ReportContentGrid = (props: ReportContentGridProps) => {
         );
     };
 
+    const getLogUserDataSource = (): ILogUser[] => {
+        if (logUserDataSource.length !== 0) {
+            return logUserDataSource;
+        }
+        return logUserDataSourceOrigin;
+    }
+
     const LogUserTableBody = () => {
         return (
             <React.Fragment>
-                {logUserDataSource.map((log, idx) => {
+                {getLogUserDataSource().map((log, idx) => {
                     return (
                         <React.Fragment key={idx}>
                             <TableRow>
