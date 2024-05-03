@@ -5,8 +5,10 @@ import { useGetChartMutation, useGetChartReplyMutation, useGetFunctionChartMutat
 import Chart from './Chart';
 import { IChart, IChartP, IChartReplyP, IChartReplyR, IChartReportValue } from '../../pev-interface/IChart';
 import { ChartWrapperType } from '../../pev-type/TChart';
-import { Box } from '@mui/material';
+import {Box, Button} from '@mui/material';
 import ChartError from './ChartError';
+import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
+import {Popup} from 'devextreme-react';
 
 type ChartWrapperProps = {
     mode: ChartWrapperType;
@@ -36,6 +38,8 @@ const ChartWrapper = (props: ChartWrapperProps) => {
 
     const [orgFunctionCharts, setOrgFunctionCharts] = React.useState<IChart[] | null>(null);
     const [functionCharts, setFunctionCharts] = React.useState<IChart[] | null>(null);
+
+    const [openModal, setOpenModal] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         const payload: IChartP = {
@@ -193,6 +197,10 @@ const ChartWrapper = (props: ChartWrapperProps) => {
         setFunctionCharts(nextFunctionCharts);
     };
 
+    const handlePopupHidden = React.useCallback(() => {
+        setOpenModal(false);
+    }, [setOpenModal]);
+
     React.useEffect(() => {
         if (props.targetRecord.recordDetailType === 'D007') {
             if (!chartReply) return;
@@ -210,6 +218,31 @@ const ChartWrapper = (props: ChartWrapperProps) => {
             if (!props.searchTimeStamp) setChart(orgChart);
         }
     }, [props.searchTimeStamp]);
+
+    const getObservationChart = () => {
+        return (
+            <Chart
+                mode={props.mode}
+                maskingYn={props.maskingYn}
+                record={props.targetRecord}
+                chart={chart}
+                reportValues={props.reportValues}
+                onValueChange={props.onValueChange}
+                index={0}
+                openModal={openModal}
+            />
+        );
+    };
+
+    const isObservationChart = () => {
+        if (props.targetRecord.recordDetailType !== 'EX_FUNCTION' && !isChartLoading && !isChartError && chart) {
+            if (props.targetRecord.recordDetailType === 'NR_OBSERVATION') {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     return (
         <React.Fragment>
@@ -230,11 +263,12 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                                 reportValues={props.reportValues}
                                 onValueChange={props.onValueChange}
                                 index={idx}
+                                openModal={false}
                             />
                         </React.Fragment>
                     );
                 })}
-            {props.targetRecord.recordDetailType !== 'EX_FUNCTION' && !isChartLoading && !isChartError && chart && (
+            {!isObservationChart() && (
                 <React.Fragment>
                     <Chart
                         mode={props.mode}
@@ -244,7 +278,18 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                         reportValues={props.reportValues}
                         onValueChange={props.onValueChange}
                         index={0}
+                        openModal={false}
                     />
+                </React.Fragment>
+            )}
+            {isObservationChart() && (
+                <React.Fragment>
+                    <Box sx={{display: 'flex', justifyContent: 'end'}}>
+                        <Button variant="outlined" startIcon={<SettingsOverscanIcon />} onClick={() => setOpenModal(true)}>
+                            확대
+                        </Button>
+                    </Box>
+                    {getObservationChart()}
                 </React.Fragment>
             )}
             {!isChartLoading && isChartError && <ChartError targetRecord={props.targetRecord} />}
@@ -264,9 +309,22 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                             reportValues={props.reportValues}
                             onValueChange={props.onValueChange}
                             index={0}
+                            openModal={false}
                         />
                     </React.Fragment>
-                )}
+            )}
+            <Popup
+                showTitle={true}
+                title={'임상관찰기록'}
+                dragEnabled={true}
+                hideOnOutsideClick={true}
+                visible={openModal}
+                onHiding={handlePopupHidden}
+                contentRender={getObservationChart}
+                showCloseButton={true}
+                width={'85vw'}
+                height={'85vh'}
+            />
         </React.Fragment>
     );
 };

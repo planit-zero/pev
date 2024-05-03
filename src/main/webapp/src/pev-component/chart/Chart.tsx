@@ -18,10 +18,11 @@ type ChartProps = {
     mode: ChartWrapperType;
     maskingYn: 'Y' | 'N';
     record: IRecord;
-    chart: IChart;
+    chart: IChart | null;
     reportValues?: IChartReportValue[];
     onValueChange?: (value: IChartReportValue) => void;
     index: number;
+    openModal: boolean;
 };
 
 const Chart = (props: ChartProps) => {
@@ -85,8 +86,8 @@ const Chart = (props: ChartProps) => {
             <Box
                 key={sIdx}
                 position={'relative'}
-                width={section.style ? `${section.style.width}px` : '600px'}
-                height={section.style ? `${section.style.height}px` : 'fit-content'}
+                width={props.openModal ? '100%' : (section.style ? `${section.style.width}px` : '600px')}
+                height={props.openModal ? '100%' : (section.style ? `${section.style.height}px` : 'fit-content')}
             >
                 {section.entities.map((e, idx) => {
                     return ChartEntity(e, idx);
@@ -148,8 +149,7 @@ const Chart = (props: ChartProps) => {
             <Box
                 key={vIdx}
                 sx={{
-                    ml: 1,
-                    mb: 1,
+                    m: 1,
                     backgroundColor: props.mode === 'REPORT' ? 'pink' : 'transparent',
                     position: 'relative'
                 }}
@@ -168,7 +168,7 @@ const Chart = (props: ChartProps) => {
                     )}
                 {value.controlType === 'IMAGE' && value.content && <ImageElement maskingYn={props.maskingYn} content={value.content} />}
                 {value.controlType === 'TABLE' && value.content && (
-                    <Box sx={{ width: '100%', maxHeight: '600px', overflow: 'scroll', whiteSpace: 'pre-line' }}>
+                    <Box sx={{ width: '100%', maxHeight: props.openModal ? '70vh' : '600px', overflow: 'scroll', whiteSpace: 'pre-line' }}>
                         <table className={'table-element'}>
                             <tbody>
                                 {value.content.split(';').map((c, cIdx) => {
@@ -370,7 +370,7 @@ const Chart = (props: ChartProps) => {
     return (
         <React.Fragment>
             {getHeaderSection(props.record)}
-            {props.chart.sections.map((s, idx) => {
+            {props.chart?.sections.map((s, idx) => {
                 return ChartSection(s, idx);
             })}
         </React.Fragment>

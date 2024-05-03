@@ -13,7 +13,7 @@ type ConditionFinderPanelRecordSetterProps = {
 };
 
 const ConditionFinderPanelRecordSetter = (props: ConditionFinderPanelRecordSetterProps) => {
-    const [open, setOpen] = React.useState<boolean>(false);
+    const [openModal, setOpenModal] = React.useState<boolean>(false);
 
     const { data: metaRecordList } = useGetMetaRecordListQuery();
 
@@ -55,8 +55,8 @@ const ConditionFinderPanelRecordSetter = (props: ConditionFinderPanelRecordSette
     };
 
     const handlePopupHidden = React.useCallback(() => {
-        setOpen(false);
-    }, [setOpen]);
+        setOpenModal(false);
+    }, [setOpenModal]);
 
     const submitButton = () => {
         return {
@@ -84,7 +84,7 @@ const ConditionFinderPanelRecordSetter = (props: ConditionFinderPanelRecordSette
             </Grid>
             <Grid item xs={10} display={'flex'} alignItems={'center'}>
                 <Box sx={{ width: '100%' }}>
-                    <Button variant={'outlined'} size={'small'} onClick={() => setOpen(true)}>
+                    <Button variant={'outlined'} size={'small'} onClick={() => setOpenModal(true)}>
                         기록유형 선택
                     </Button>
                     <Tooltip
@@ -103,7 +103,7 @@ const ConditionFinderPanelRecordSetter = (props: ConditionFinderPanelRecordSette
                         showTitle={true}
                         title={'기록유형 선택'}
                         dragEnabled={true}
-                        visible={open}
+                        visible={openModal}
                         onHiding={handlePopupHidden}
                         contentRender={renderPopup}
                         showCloseButton={true}
