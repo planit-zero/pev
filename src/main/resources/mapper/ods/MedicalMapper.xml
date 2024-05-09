@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.medical.dao.MedicalDAO">
-    <select id="getMedicalData"
-            parameterType="ai.planit.pev.domain.ods.record.dto.Record$Response"
-            resultType="ai.planit.pev.strategy.chart.object.medical.MedicalData">
+
+    <select id="getMedicalData" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Response" resultType="ai.planit.pev.strategy.chart.object.medical.MedicalData">
         SELECT M.sectionId,
                M.id,
                M.parentId,
@@ -46,9 +45,8 @@
                                      AND D.MDRC_FOM_SEQ = #{mdrcFomSeq}
                                      AND M.imageSeq = D.IMG_SEQ
     </select>
-    <select id="getMedicalRecordFormatList"
-            parameterType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Request"
-            resultType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Response">
+
+    <select id="getMedicalRecordFormatList" parameterType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Request" resultType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Response">
         SELECT MDFM_CLS_CD                           AS recordId,
         MDFM_ID                               AS mdfmId,
         MDFM_FOM_SEQ                          AS mdfmFomSeq,
@@ -85,9 +83,8 @@
         ]]>
         ORDER BY MDFM_CLS_CD, MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ, MDFM_CPEM_ID, UPR_MDFM_CPEM_ID
     </select>
-    <select id="getChartStyleList"
-            parameterType="ai.planit.pev.strategy.chart.object.common.ChartStyleXml$Request"
-            resultType="ai.planit.pev.strategy.chart.object.common.ChartStyleXml$Response">
+
+    <select id="getChartStyleList" parameterType="ai.planit.pev.strategy.chart.object.common.ChartStyleXml$Request" resultType="ai.planit.pev.strategy.chart.object.common.ChartStyleXml$Response">
         SELECT MDFM_ID            AS mdfmId,
                MDFM_FOM_SEQ       AS mdfmFormSeq,
                MDFM_SCTN_SEQ      AS mdfmSctnSeq,
@@ -98,9 +95,8 @@
           AND MDFM_FOM_SEQ = #{mdfmFomSeq}
         ORDER BY MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ
     </select>
-    <select id="getMedicalReplyRecord"
-            parameterType="ai.planit.pev.strategy.chart.object.medical.MedicalReply$Request"
-            resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
+
+    <select id="getMedicalReplyRecord" parameterType="ai.planit.pev.strategy.chart.object.medical.MedicalReply$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'DR' AS recordType,
         A.MDFM_CLS_CD AS recordDetailType,
         (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS
@@ -143,4 +139,5 @@
         AND A.MDRC_DC_TP_CD = 'C'
         AND NOT EXISTS(SELECT 1 FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO AND Z.OCTY_TP_CD = 'Z06')
     </select>
+
 </mapper>
