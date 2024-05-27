@@ -4,6 +4,7 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.dto.MetaRecordFormat;
 import ai.planit.pev.domain.ods.medical.dao.MedicalDAO;
+import ai.planit.pev.domain.ods.medical.dto.MedicalImage;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.object.common.ChartStyleSection;
 import ai.planit.pev.strategy.chart.object.common.ChartStyleXml;
@@ -27,6 +28,11 @@ public class MedicalServiceImpl implements MedicalService {
     @Override
     public List<MedicalData> getMedicalData(Record.Response record) {
         return medicalDAO.getMedicalData(record);
+    }
+
+    @Override
+    public List<String> getMedicalImageData(MedicalImage.Request request) {
+        return medicalDAO.getMedicalImageData(request);
     }
 
     @Override

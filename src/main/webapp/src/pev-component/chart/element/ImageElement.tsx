@@ -122,7 +122,7 @@ const ImageElement = (props: ImageElementProps) => {
                                     overflow: 'scroll'
                                 }}
                             >
-                                <img src={getUrl()} alt={'가명화 이미'} width={size.width || '100%'} height={size.height || '100%'} />
+                                <img src={getUrl()} alt={'가명화 이미지'} width={size.width || '100%'} height={size.height || '100%'} />
                             </Box>
                         </Box>
                     </Modal>

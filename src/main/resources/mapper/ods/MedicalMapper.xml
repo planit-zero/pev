@@ -46,6 +46,14 @@
                                      AND M.imageSeq = D.IMG_SEQ
     </select>
 
+    <select id="getMedicalImageData" parameterType="ai.planit.pev.domain.ods.medical.dto.MedicalImage$Request" resultType="java.lang.String">
+        SELECT INTG_IMG_FILE_PATH_NM
+        FROM ODS.S_MRDDRIMD
+        WHERE MDRC_ID = #{mdrcId}
+        AND MDRC_FOM_SEQ = #{mdrcFomSeq}
+        ORDER BY INTG_IMG_FILE_PATH_NM
+    </select>
+
     <select id="getMedicalRecordFormatList" parameterType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Request" resultType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Response">
         SELECT MDFM_CLS_CD                           AS recordId,
         MDFM_ID                               AS mdfmId,

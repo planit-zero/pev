@@ -96,6 +96,15 @@ const Chart = (props: ChartProps) => {
         );
     };
 
+    const MedicalImageSection = (path: string) => {
+        const content = 'http://hisimg.snuh.org/' + path;
+        return (
+            <Box width={'600px'}>
+                <ImageElement maskingYn={'Y'} content={content} />
+            </Box>
+        )
+    }
+
     const ChartEntity = (entity: IChartEntity, eIdx: number) => {
         if (entity.style) return StyledElementWithChildren(entity, eIdx);
         return (
@@ -372,6 +381,9 @@ const Chart = (props: ChartProps) => {
             {getHeaderSection(props.record)}
             {props.chart?.sections.map((s, idx) => {
                 return ChartSection(s, idx);
+            })}
+            {props.chart?.medicalImages?.map((path) => {
+                return MedicalImageSection(path);
             })}
         </React.Fragment>
     );

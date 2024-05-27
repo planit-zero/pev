@@ -16,6 +16,7 @@ import ai.planit.pev.domain.ods.execute.service.ExecuteService;
 import ai.planit.pev.domain.ods.fall.service.FallService;
 import ai.planit.pev.domain.ods.function.service.FunctionService;
 import ai.planit.pev.domain.ods.inpatient.service.InpatientService;
+import ai.planit.pev.domain.ods.medical.dto.MedicalImage;
 import ai.planit.pev.domain.ods.medical.service.MedicalService;
 import ai.planit.pev.domain.ods.note.service.NoteService;
 import ai.planit.pev.domain.ods.observation.service.ObservationService;
@@ -40,6 +41,7 @@ import ai.planit.pev.utility.PevChartUtil;
 import ai.planit.pev.utility.PevStringUtil;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -51,6 +53,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RecordServiceImpl implements RecordService {
 
     private final RecordListDAO recordListDAO;
@@ -339,6 +342,9 @@ public class RecordServiceImpl implements RecordService {
 
         Object dataSource = null;
 
+        // 진료기록 이미지
+        List<String> medicalImageData = new ArrayList<>();
+
         // 진료기록
         if (request.getRecord().getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType()) ||
@@ -446,6 +452,11 @@ public class RecordServiceImpl implements RecordService {
                 chartContext.setChartStrategy(new MedicalChartStrategy());
                 dataSource = medicalService.getMedicalData(request.getRecord());
             }
+
+            // 진료기록 이미지 정보 확인
+            int mdrcId = request.getRecord().getMdrcId();
+            int mdrcFomSeq = request.getRecord().getMdrcFomSeq();
+            medicalImageData = medicalService.getMedicalImageData(new MedicalImage.Request(mdrcId, mdrcFomSeq));
         }
 
         // 처방기록
@@ -593,7 +604,14 @@ public class RecordServiceImpl implements RecordService {
         if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
         // 차트 조합 및 정리
-        return chartContext.getChart(format, chartData.getValues(), style, applyStyle);
+        Chart.Response chart = chartContext.getChart(format, chartData.getValues(), style, applyStyle);
+
+        // 진료기록 이미지 추가
+        if (!medicalImageData.isEmpty()) {
+            chart.setMedicalImages(medicalImageData);
+        }
+
+        return chart;
     }
 
     /**
@@ -669,4 +687,5 @@ public class RecordServiceImpl implements RecordService {
 
         return functionChartList;
     }
+
 }
