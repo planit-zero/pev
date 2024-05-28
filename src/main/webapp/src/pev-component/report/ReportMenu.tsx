@@ -28,14 +28,14 @@ const ReportMenu = (props: ReportMenuProps) => {
                         <ListItemText primary={'처리된 신고 내역'} />
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding={true}>
-                    <ListItemButton selected={props.menuIndex === 2} onClick={() => props.setMenuIndex(2)}>
-                        <ListItemIcon>
-                            <HourglassTop />
-                        </ListItemIcon>
-                        <ListItemText primary={'처리 중인 신고 내역'} />
-                    </ListItemButton>
-                </ListItem>
+                {/*<ListItem disablePadding={true}>*/}
+                {/*    <ListItemButton selected={props.menuIndex === 2} onClick={() => props.setMenuIndex(2)}>*/}
+                {/*        <ListItemIcon>*/}
+                {/*            <HourglassTop />*/}
+                {/*        </ListItemIcon>*/}
+                {/*        <ListItemText primary={'처리 중인 신고 내역'} />*/}
+                {/*    </ListItemButton>*/}
+                {/*</ListItem>*/}
                 <ListItem disablePadding={true}>
                     <ListItemButton selected={props.menuIndex === 3} onClick={() => props.setMenuIndex(3)}>
                         <ListItemIcon>
