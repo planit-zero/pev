@@ -20,7 +20,7 @@ const IrbSelector = (props: IrbSelectorProps) => {
     const stfNoForIrb = () => {
         if (!info) return '66206';
         if (!info.stfNo) return '66206';
-        if (info.stfNo && (info.stfNo === 'CHUCK' || info.stfNo === 'EVAN')) return '66206';
+        if (info.stfNo && (info.stfNo === 'EVAN' || info.stfNo === 'LESLEY')) return '66206';
         return info.stfNo;
     };
 
