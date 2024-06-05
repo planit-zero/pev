@@ -18,6 +18,7 @@ import ai.planit.pev.domain.ods.function.service.FunctionService;
 import ai.planit.pev.domain.ods.inpatient.service.InpatientService;
 import ai.planit.pev.domain.ods.medical.dto.MedicalImage;
 import ai.planit.pev.domain.ods.medical.service.MedicalService;
+import ai.planit.pev.domain.ods.note.dao.NoteDAO;
 import ai.planit.pev.domain.ods.note.service.NoteService;
 import ai.planit.pev.domain.ods.observation.service.ObservationService;
 import ai.planit.pev.domain.ods.order.service.OrderService;
@@ -34,6 +35,7 @@ import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.constant.ChartControlType;
 import ai.planit.pev.strategy.chart.object.common.*;
 import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
+import ai.planit.pev.strategy.chart.object.note.NoteData;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.strategy.chart.object.picture.PictureData;
 import ai.planit.pev.utility.SessionUtil;
@@ -78,6 +80,7 @@ public class RecordServiceImpl implements RecordService {
     private final PeritonealDialysisService peritonealDialysisService;
     private final NoteService noteService;
     private final EventDAO eventDAO;
+    private final NoteDAO noteDAO;
 
     /**
      * {@inheritDoc}
@@ -342,8 +345,8 @@ public class RecordServiceImpl implements RecordService {
 
         Object dataSource = null;
 
-        // 진료기록 이미지
-        List<String> medicalImageData = new ArrayList<>();
+        // 서식 내 이미지
+        List<String> imageData = new ArrayList<>();
 
         // 진료기록
         if (request.getRecord().getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
@@ -453,10 +456,10 @@ public class RecordServiceImpl implements RecordService {
                 dataSource = medicalService.getMedicalData(request.getRecord());
             }
 
-            // 진료기록 이미지 정보 확인
+            // 진료기록 내 이미지 정보 확인
             int mdrcId = request.getRecord().getMdrcId();
             int mdrcFomSeq = request.getRecord().getMdrcFomSeq();
-            medicalImageData = medicalService.getMedicalImageData(new MedicalImage.Request(mdrcId, mdrcFomSeq));
+            imageData = medicalService.getMedicalImageData(new MedicalImage.Request(mdrcId, mdrcFomSeq));
         }
 
         // 처방기록
@@ -585,6 +588,13 @@ public class RecordServiceImpl implements RecordService {
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_NOTE.getType())) {
                 chartContext.setChartStrategy(new NoteChartStrategy());
                 dataSource = noteService.getNoteData(request.getRecord().getKeyId());
+
+                // 간호일지 서식 내 이미지
+                if (dataSource != null) {
+                    NoteData noteData = (NoteData) dataSource;
+                    List<String> ndrcIdList = noteData.getValueList().stream().map(noteValue -> noteValue.getNdrcId()).collect(Collectors.toList());
+                    imageData = noteDAO.getImagePath(ndrcIdList);
+                }
             }
         }
 
@@ -607,8 +617,8 @@ public class RecordServiceImpl implements RecordService {
         Chart.Response chart = chartContext.getChart(format, chartData.getValues(), style, applyStyle);
 
         // 진료기록 이미지 추가
-        if (!medicalImageData.isEmpty()) {
-            chart.setMedicalImages(medicalImageData);
+        if (!imageData.isEmpty()) {
+            chart.setMedicalImages(imageData);
         }
 
         return chart;

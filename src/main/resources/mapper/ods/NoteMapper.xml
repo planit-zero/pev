@@ -21,7 +21,8 @@
         SELECT TO_CHAR(A.INPT_DTM, 'hh:mi') AS time,
                CASE WHEN C.REC_CNTE IS NULL THEN B.NRST_NM
                ELSE B.NRST_NM || C.REC_CNTE
-               END AS value
+               END AS value,
+               A.NDRC_ID AS ndrcId
         FROM ODS.S_MRNNRNAD A
         INNER JOIN ODS.S_CCVNVSBM B ON A.NRST_ID = B.NRST_ID
         LEFT OUTER JOIN (
@@ -41,5 +42,14 @@
         AND A.USE_YN = 'Y'
         ORDER BY TO_CHAR(A.INPT_DTM, 'hh:mi'), A.NDRC_ID
         ]]>
+    </select>
+
+    <select id="getImagePath" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT SPLIT_PART(IMG_PATH_CNTE, '⊂?⊃', 2) AS imgPath
+        FROM ODS.S_MRNNRNBE
+        WHERE NDRC_ID IN
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
     </select>
 </mapper>

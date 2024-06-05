@@ -8,4 +8,5 @@ import lombok.Setter;
 public class NoteValue {
     private String time;
     private String value;
+    private String ndrcId;
 }

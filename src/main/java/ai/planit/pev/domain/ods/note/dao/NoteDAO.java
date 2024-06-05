@@ -9,4 +9,5 @@ import java.util.List;
 public interface NoteDAO {
     List<NoteGroup> getNrNoteGroupList(NoteKey noteKey);
     List<NoteValue> getNrNoteValueList(NoteKey noteKey);
+    List<String> getImagePath(List<String> ndrcIdList);
 }
