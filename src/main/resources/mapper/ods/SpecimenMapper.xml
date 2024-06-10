@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.specimen.dao.SpecimenDAO">
-    <select id="getSpecimenInfo"
-            parameterType="ai.planit.pev.strategy.chart.object.specimen.SpecimenRequest"
-            resultType="ai.planit.pev.strategy.chart.object.specimen.SpecimenInfo">
+
+    <select id="getSpecimenInfo" parameterType="ai.planit.pev.strategy.chart.object.specimen.SpecimenRequest" resultType="ai.planit.pev.strategy.chart.object.specimen.SpecimenInfo">
         <![CDATA[
         SELECT DISTINCT B.EXM_CTG_NM             AS exmCtgNm,
                         C.SPCM_NM                AS spcmNm,
@@ -19,9 +18,8 @@
         GROUP BY B.EXM_CTG_NM, C.SPCM_NM
         ]]>
     </select>
-    <select id="getSpecimenResults"
-            parameterType="ai.planit.pev.strategy.chart.object.specimen.SpecimenRequest"
-            resultType="ai.planit.pev.strategy.chart.object.specimen.SpecimenResult">
+
+    <select id="getSpecimenResults" parameterType="ai.planit.pev.strategy.chart.object.specimen.SpecimenRequest" resultType="ai.planit.pev.strategy.chart.object.specimen.SpecimenResult">
         <![CDATA[
         SELECT ISNULL(B.EITM_ABBR, '') || '|||' || ISNULL(A.EXRS_FSRC_DCST_LDAT, '') || '|||' ||
                ISNULL(D.RFVL_LWLM_CNTE || ' ~ ' || D.RFVL_HGLM_CNTE || ' ' || A.EXRS_UNIT, '') AS result
@@ -44,6 +42,7 @@
         ORDER BY B.SCRN_SORT_SEQ
         ]]>
     </select>
+
     <!--    <select id="getSpecimenHeaderData" parameterType="java.lang.String" resultType="SpecimenHeaderData">-->
     <!--        SELECT (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = B.ORD_CTG_CD) AS ordCtgNm,-->
     <!--               B.PBSO_DEPT_CD AS pbsoDeptCd,-->
@@ -57,4 +56,5 @@
     <!--                            ON A.ORD_ID = B.ORD_ID-->
     <!--        WHERE A.SPCM_NO = #{spcmNo}-->
     <!--    </select>-->
+
 </mapper>
