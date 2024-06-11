@@ -18,7 +18,7 @@ public class AnesthesiaServiceImpl implements AnesthesiaService {
         request.setMdfmClsCd(mdfmClsCd);
         request.setOpExptRegId(opExptRegId);
 
-        return anesthesiaDAO.getAnesthesiaRecord(request);
+        return anesthesiaDAO.getAnesthesiaRecord(request).get(0);
     }
 
     @Override
