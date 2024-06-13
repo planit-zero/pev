@@ -4,6 +4,7 @@ package ai.planit.pev.utility;
 import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.object.common.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,9 +120,10 @@ public class PevChartUtil {
                 .collect(Collectors.toList());
 
         for (ChartElement valueElement : valueElements) {
-            if (applyStyle || (valueElement.getContent() != null && !valueElement.getContent().isEmpty())) {
+            if (applyStyle || !StringUtils.isEmpty(valueElement.getContent())) {
                 values.add(getChartValue(valueElement, chartStyleSection));
             }
+            values.addAll(getChartValues(sectionElements, chartStyleSection, valueElement.getId(), applyStyle));
         }
 
         return values;
