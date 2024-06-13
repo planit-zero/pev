@@ -9,6 +9,7 @@ import {Box, Button} from '@mui/material';
 import ChartError from './ChartError';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import {Popup} from 'devextreme-react';
+import ChartScroll from "./ChartScroll";
 
 type ChartWrapperProps = {
     mode: ChartWrapperType;
@@ -246,8 +247,22 @@ const ChartWrapper = (props: ChartWrapperProps) => {
 
     return (
         <React.Fragment>
-            {((props.targetRecord.recordDetailType !== 'EX_FUNCTION' && isChartLoading) ||
+            {((props.targetRecord.recordDetailType !== 'EX_FUNCTION' && isChartLoading && props.targetRecord.recordType !== 'NR') ||
                 (props.targetRecord.recordDetailType === 'EX_FUNCTION' && isFunctionChartLoading)) && <SkeletonChart />}
+            {props.targetRecord.recordType === 'NR' &&
+                <React.Fragment>
+                    <ChartScroll
+                        mode={props.mode}
+                        maskingYn={props.maskingYn}
+                        record={props.targetRecord}
+                        chart={chart}
+                        reportValues={props.reportValues}
+                        onValueChange={props.onValueChange}
+                        index={0}
+                        openModal={false}
+                    />
+                </React.Fragment>
+            }
             {props.targetRecord.recordDetailType === 'EX_FUNCTION' &&
                 !isFunctionChartLoading &&
                 !isFunctionChartError &&
@@ -268,7 +283,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                         </React.Fragment>
                     );
                 })}
-            {!isObservationChart() && (
+            {!isObservationChart() && props.targetRecord.recordType !== 'NR' && (
                 <React.Fragment>
                     <Chart
                         mode={props.mode}
