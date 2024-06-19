@@ -160,7 +160,8 @@ const Chart = (props: ChartProps) => {
                 sx={{
                     m: 1,
                     backgroundColor: props.mode === 'REPORT' ? 'pink' : 'transparent',
-                    position: 'relative'
+                    position: 'relative',
+                    cursor: 'pointer'
                 }}
                 onClick={() => handleValueClick(value)}
             >
@@ -319,8 +320,6 @@ const Chart = (props: ChartProps) => {
 
     const handleValueClick = (value: IChartValue) => {
         if (value.classType !== 'VALUE') return;
-        console.log('### value', value);
-
         if (props.mode !== 'REPORT') return;
         if (!props.onValueChange) return;
         if (!props.reportValues) return;
