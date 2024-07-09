@@ -9,6 +9,7 @@ import { useSelector } from '../../../store';
 type IrbSelectorProps = {
     irb: string | null;
     onChange: (irbNo: string) => void;
+    feasibility: boolean;
 };
 
 const IrbSelector = (props: IrbSelectorProps) => {
@@ -61,16 +62,32 @@ const IrbSelector = (props: IrbSelectorProps) => {
         }
     };
 
+    const clickIrbSelect = () => {
+        if (props.feasibility) {
+            return;
+        } else {
+            setOpen(true);
+        }
+    }
+
     return (
         <React.Fragment>
             <Button
                 variant={'contained'}
                 size={'small'}
                 sx={{ width: '100%', height: '100%', borderRadius: 2, boxShadow: 'none' }}
-                onClick={() => setOpen(true)}
+                onClick={clickIrbSelect}
             >
                 <Typography sx={{ fontSize: 'h5.fontSize' }}>
-                    <strong>IRB</strong>&emsp;{props.irb ? props.irb : '선택하지 않음'}
+                    {!props.feasibility && (
+                        <>
+                            <strong>IRB</strong>&emsp;
+                            {props.irb ? props.irb : '선택하지 않음'}
+                        </>
+                    )}
+                    {props.feasibility && (
+                        <strong>{props.irb ? props.irb : '선택하지 않음'}</strong>
+                    )}
                 </Typography>
             </Button>
             <Modal open={open} onClose={() => setOpen(false)}>

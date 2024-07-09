@@ -10,6 +10,7 @@ type RidFormProps = {
     rid: string;
     onChange: (value: string) => void;
     onSubmit: (irb: string | null, rid: string | null) => void;
+    feasibility: boolean;
 };
 
 const OutlineInputStyle = styled(OutlinedInput, { shouldForwardProp })(() => ({
@@ -38,24 +39,31 @@ const RidForm = (props: RidFormProps) => {
         props.onSubmit(props.irb, ridStr);
     };
 
+    const getRidValue = (): string => {
+        if (props.feasibility) {
+            return '********'
+        }
+        return props.rid;
+    }
+
     return (
         <React.Fragment>
             <OutlineInputStyle
                 id="input-search-header"
-                value={props.rid}
+                value={getRidValue()}
                 onChange={(e) => props.onChange(e.target.value)}
-                disabled={!props.irb}
+                disabled={!props.irb || props.feasibility}
                 placeholder="연구별 환자 ID"
                 startAdornment={
                     <InputAdornment position="start">
-                        <IconButton sx={{ width: 32, height: 32 }} onClick={() => setOpen(true)} disabled={!props.irb}>
+                        <IconButton sx={{ width: 32, height: 32 }} onClick={() => setOpen(true)} disabled={!props.irb || props.feasibility}>
                             <IconList />
                         </IconButton>
                     </InputAdornment>
                 }
                 endAdornment={
                     <InputAdornment position="end">
-                        <IconButton sx={{ width: 32, height: 32 }} onClick={handleRidSearch} disabled={!props.irb}>
+                        <IconButton sx={{ width: 32, height: 32 }} onClick={handleRidSearch} disabled={!props.irb || props.feasibility}>
                             <IconSearch />
                         </IconButton>
                     </InputAdornment>
