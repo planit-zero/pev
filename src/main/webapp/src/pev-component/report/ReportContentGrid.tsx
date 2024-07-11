@@ -146,7 +146,7 @@ const ReportContentGrid = (props: ReportContentGridProps) => {
     };
 
     const handleRidClick = (irb: string, rid: string, recordInfo: string) => {
-        const rawKey = `${irb}|||${rid}`;
+        const rawKey = `${irb}|||${rid}|||false`;
         const encryptKey = CryptoUtils.encrypt(rawKey, 'planitsquare2023');
 
         const record: IRecord = JSON.parse(recordInfo);
