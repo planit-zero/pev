@@ -9,6 +9,7 @@ import ai.planit.pev.domain.meta.record.service.MetaRecordService;
 import ai.planit.pev.domain.ods.anesthesia.service.AnesthesiaService;
 import ai.planit.pev.domain.ods.bedsore.service.BedsoreService;
 import ai.planit.pev.domain.ods.checkout.service.CheckoutService;
+import ai.planit.pev.domain.ods.cpr.service.CprService;
 import ai.planit.pev.domain.ods.dialysis.blood.service.BloodDialysisService;
 import ai.planit.pev.domain.ods.dialysis.peritoneal.service.PeritonealDialysisService;
 import ai.planit.pev.domain.ods.discharge.service.DischargeService;
@@ -36,6 +37,7 @@ import ai.planit.pev.strategy.chart.constant.ChartControlType;
 import ai.planit.pev.strategy.chart.object.common.*;
 import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
 import ai.planit.pev.strategy.chart.object.note.NoteData;
+import ai.planit.pev.strategy.chart.object.note.NoteValue;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.strategy.chart.object.picture.PictureData;
 import ai.planit.pev.utility.SessionUtil;
@@ -79,6 +81,7 @@ public class RecordServiceImpl implements RecordService {
     private final BloodDialysisService bloodDialysisService;
     private final PeritonealDialysisService peritonealDialysisService;
     private final NoteService noteService;
+    private final CprService cprService;
     private final EventDAO eventDAO;
     private final NoteDAO noteDAO;
 
@@ -154,6 +157,16 @@ public class RecordServiceImpl implements RecordService {
         // 스캔자료
         if (searchTargetList.contains(RecordTarget.SCAN_RECORD.getType())) {
             recordList.addAll(recordListDAO.getScanRecordList(request));
+        }
+
+        // 특성화 기록
+        List<String> crRecordTargets = searchTargetList
+                .stream()
+                .filter(target -> target.startsWith("CR"))
+                .collect(Collectors.toList());
+
+        if (!crRecordTargets.isEmpty()) {
+            recordList.addAll(getCrRecordList(request, crRecordTargets));
         }
 
         // 조건에 따라 여러 기록을 조회하기 때문에 모든 조회가 끝난 후 한번에 정렬한다.
@@ -336,6 +349,17 @@ public class RecordServiceImpl implements RecordService {
         return nrRecordList;
     }
 
+    private List<Record.Response> getCrRecordList(Record.Request request, List<String> crRecordTargets) {
+        List<Record.Response> crRecordList = new ArrayList<>();
+
+        // CPR 발생보고서
+        if (crRecordTargets.contains(RecordTarget.CHARACTERIZATION_CPR.getType())) {
+            crRecordList.addAll(recordListDAO.getCrCprRecordList(request));
+        }
+
+        return crRecordList;
+    }
+
     @Override
     public Chart.Response getChart(HttpSession session, Chart.Request request) {
         ChartContext chartContext = new ChartContext();
@@ -457,7 +481,7 @@ public class RecordServiceImpl implements RecordService {
             }
 
             // 진료기록 내 이미지 정보 확인
-            int mdrcId = request.getRecord().getMdrcId();
+            int mdrcId = (int) request.getRecord().getMdrcId();
             int mdrcFomSeq = request.getRecord().getMdrcFomSeq();
             imageData = medicalService.getMedicalImageData(new MedicalImage.Request(mdrcId, mdrcFomSeq));
         }
@@ -592,9 +616,18 @@ public class RecordServiceImpl implements RecordService {
                 // 간호일지 서식 내 이미지
                 if (dataSource != null) {
                     NoteData noteData = (NoteData) dataSource;
-                    List<String> ndrcIdList = noteData.getValueList().stream().map(noteValue -> noteValue.getNdrcId()).collect(Collectors.toList());
+                    List<String> ndrcIdList = noteData.getValueList().stream().map(NoteValue::getNdrcId).collect(Collectors.toList());
                     imageData = noteDAO.getImagePath(ndrcIdList);
                 }
+            }
+        }
+
+        // 특성화 기록
+        if (request.getRecord().getRecordType().equals(RecordTarget.CHARACTERIZATION_RECORD.getType())) {
+            // CPR 발생보고서
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.CHARACTERIZATION_CPR.getType())) {
+                chartContext.setChartStrategy(new CprChartStrategy());
+                dataSource = cprService.getCprData(request.getRecord());
             }
         }
 

@@ -55,6 +55,7 @@ public enum RecordTarget {
 
     // 특성화기록
     CHARACTERIZATION_RECORD("CR", "특성화기록"),
+    CHARACTERIZATION_CPR("CR_CPR", "CPR발생보고서"),
     ;
 
 

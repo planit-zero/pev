@@ -1044,4 +1044,39 @@
         ORDER BY writingDate DESC
     </select>
 
+    <select id="getCrCprRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
+        SELECT 'CR'                                                                 AS recordType,
+               'CR_CPR'                                                             AS recordDetailType,
+               'CPR발생보고서'                                                      AS itemType,
+               A.FSR_PRGM_NM                                                        AS itemNm,
+               TO_CHAR(A.FSR_DTM, 'YYYY-MM-DD HH24:MI:SS')                          AS writingDate,
+               A.PT_CLCTN_DEPT_CD                                                   AS writingDeptCd,
+               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_CLCTN_DEPT_CD) AS writingDeptNm,
+               A.FSR_STF_NO                                                         AS writerStfNo,
+               NULL                                                                 AS writerNm,
+               NULL                                                                 AS keyId,
+               A.PACT_ID                                                            AS pactId,
+               A.PACT_TP_CD                                                         AS pactTpCd,
+               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL)    AS pactTpNm,
+               NULL                                                                 AS ptMedDeptCd,
+               NULL                                                                 AS ptMedDeptNm,
+               NULL                                                                 AS sortSeq,
+               NULL                                                                 AS note,
+               1                                                                    AS mdfmId,
+               1                                                                    AS mdfmFomSeq,
+               A.CPR_ID                                                             AS mdrcId,
+               NULL                                                                 AS mdrcFomSeq,
+               NULL                                                                 AS examKey,
+               NULL                                                                 AS pacsImgIptnCd,
+               NULL                                                                 AS accsId,
+               NULL                                                                 AS recType,
+               NULL                                                                 AS geneExmYn,
+               NULL                                                                 AS mdrcWrtStsCdYn,
+               NULL                                                                 AS opExptRegId
+        FROM ODS.S_MRCCRPAD A
+        WHERE A.PT_NO = #{ptNo}
+        AND A.FSR_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+        ORDER BY A.FSR_DTM DESC
+    </select>
+
 </mapper>

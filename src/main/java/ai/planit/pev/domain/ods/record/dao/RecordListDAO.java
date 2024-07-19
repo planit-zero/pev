@@ -109,4 +109,6 @@ public interface RecordListDAO {
     List<Record.Response> getNrPeritonealDialysisRecordList(Record.Request request);
     List<Record.Response> getNrNoteRecordList(Record.Request request);
 
+    List<Record.Response> getCrCprRecordList(Record.Request request);
+
 }

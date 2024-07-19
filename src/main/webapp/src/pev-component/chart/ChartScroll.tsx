@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Chart from "./Chart";
 import {
     IChart,
     IChartAttribute,
@@ -14,7 +13,6 @@ import { ChartWrapperType } from '../../pev-type/TChart';
 import { setAlert } from '../../store/pev-slices/environment';
 import { IRecord } from '../../pev-interface/IRecord';
 import ImageElement from './element/ImageElement';
-import chart from "./Chart";
 
 type ChartProps = {
     mode: ChartWrapperType;

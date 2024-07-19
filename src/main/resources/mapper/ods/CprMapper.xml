@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ai.planit.pev.domain.ods.cpr.dao.CprDAO">
+
+    <select id="getCprData" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Response" resultType="ai.planit.pev.strategy.chart.object.cpr.CprData">
+        SELECT B.NR_ITEM_ID AS id,
+               B.REC_CNTE AS content,
+               C.NR_ITEM_NM AS desc
+        FROM ODS.S_MRCCRPAD A
+                 INNER JOIN ODS.S_MRCCRPAE B ON A.CPR_ID = B.CPR_ID
+                 INNER JOIN ODS.S_MRNNRIAM C ON B.NR_ITEM_ID = C.NR_ITEM_ID
+        WHERE A.CPR_ID = #{mdrcId}
+    </select>
+
+</mapper>

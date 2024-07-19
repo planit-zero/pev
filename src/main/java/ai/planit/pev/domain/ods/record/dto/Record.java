@@ -42,7 +42,7 @@ public class Record {
         private String note;
         private int mdfmId;
         private int mdfmFomSeq;
-        private int mdrcId;
+        private long mdrcId;
         private int mdrcFomSeq;
         private String examKey;
         private String pacsImgIptnCd;
