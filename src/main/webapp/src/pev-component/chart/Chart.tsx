@@ -179,7 +179,7 @@ const Chart = (props: ChartProps) => {
                 {value.controlType === 'IMAGE' && value.content && <ImageElement maskingYn={props.maskingYn} content={value.content} />}
                 {value.controlType === 'TABLE' && value.content && (
                     <Box sx={{ width: '100%', maxHeight: props.openModal ? '70vh' : '600px', overflow: 'scroll', whiteSpace: 'pre-line' }}>
-                        <table className={'table-element'}>
+                        <table className={props.record.recordDetailType.includes('CR_') ? 'table-element-cr' : 'table-element'}>
                             <tbody>
                                 {value.content.split(';').map((c, cIdx) => {
                                     return (
@@ -191,7 +191,7 @@ const Chart = (props: ChartProps) => {
                                                             <Box dangerouslySetInnerHTML={{ __html: h }} />
                                                         </th>
                                                     );
-                                                })}
+                                            })}
                                             {cIdx !== 0 &&
                                                 c.split('|||').map((d, dIdx) => {
                                                     return (
@@ -199,7 +199,7 @@ const Chart = (props: ChartProps) => {
                                                             <Box dangerouslySetInnerHTML={{ __html: d }} />
                                                         </td>
                                                     );
-                                                })}
+                                            })}
                                         </tr>
                                     );
                                 })}

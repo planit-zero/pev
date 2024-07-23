@@ -3,6 +3,7 @@ package ai.planit.pev.strategy.chart;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.object.common.ChartElement;
 import ai.planit.pev.strategy.chart.object.cpr.CprData;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,9 +66,15 @@ public class CprChartStrategy implements ChartStrategy {
             // 심정지 발생 전 마지막 활력징후
             if (formId.equals("cpr-4-0-1")) {
                 sb.append("측정된 시간|||SBP|||DBP|||HR/PR|||PR|||BT|||SpO2;");
-                sb.append(cprDataMap.getOrDefault(7010290, "")).append("|||").append(cprDataMap.getOrDefault(7010300, "")).append("|||").append(cprDataMap.getOrDefault(7010310, "")).append("|||").append(cprDataMap.getOrDefault(7010320, "")).append("|||").append(cprDataMap.getOrDefault(7010330, "")).append("|||").append(cprDataMap.getOrDefault(7010690, "")).append("|||").append(cprDataMap.getOrDefault(7010340, "")).append(";");
-                sb.append(cprDataMap.getOrDefault(7010350, "")).append("|||").append(cprDataMap.getOrDefault(7010360, "")).append("|||").append(cprDataMap.getOrDefault(7010370, "")).append("|||").append(cprDataMap.getOrDefault(7010380, "")).append("|||").append(cprDataMap.getOrDefault(7010390, "")).append("|||").append(cprDataMap.getOrDefault(7010700, "")).append("|||").append(cprDataMap.getOrDefault(7010400, "")).append(";");
-                sb.append(cprDataMap.getOrDefault(7010410, "")).append("|||").append(cprDataMap.getOrDefault(7010420, "")).append("|||").append(cprDataMap.getOrDefault(7010430, "")).append("|||").append(cprDataMap.getOrDefault(7010440, "")).append("|||").append(cprDataMap.getOrDefault(7010450, "")).append("|||").append(cprDataMap.getOrDefault(7010710, "")).append("|||").append(cprDataMap.getOrDefault(7010460, "")).append(";");
+                if (!StringUtils.isEmpty(cprDataMap.get(7010290))) {
+                    sb.append(cprDataMap.get(7010290)).append("|||").append(cprDataMap.getOrDefault(7010300, "")).append("|||").append(cprDataMap.getOrDefault(7010310, "")).append("|||").append(cprDataMap.getOrDefault(7010320, "")).append("|||").append(cprDataMap.getOrDefault(7010330, "")).append("|||").append(cprDataMap.getOrDefault(7010690, "")).append("|||").append(cprDataMap.getOrDefault(7010340, "")).append(";");
+                }
+                if (!StringUtils.isEmpty(cprDataMap.get(7010350))) {
+                    sb.append(cprDataMap.get(7010350)).append("|||").append(cprDataMap.getOrDefault(7010360, "")).append("|||").append(cprDataMap.getOrDefault(7010370, "")).append("|||").append(cprDataMap.getOrDefault(7010380, "")).append("|||").append(cprDataMap.getOrDefault(7010390, "")).append("|||").append(cprDataMap.getOrDefault(7010700, "")).append("|||").append(cprDataMap.getOrDefault(7010400, "")).append(";");
+                }
+                if (!StringUtils.isEmpty(cprDataMap.get(7010410))) {
+                    sb.append(cprDataMap.get(7010410)).append("|||").append(cprDataMap.getOrDefault(7010420, "")).append("|||").append(cprDataMap.getOrDefault(7010430, "")).append("|||").append(cprDataMap.getOrDefault(7010440, "")).append("|||").append(cprDataMap.getOrDefault(7010450, "")).append("|||").append(cprDataMap.getOrDefault(7010710, "")).append("|||").append(cprDataMap.getOrDefault(7010460, "")).append(";");
+                }
             }
 
             // 심폐정지
