@@ -7,11 +7,14 @@ import ai.planit.pev.strategy.chart.object.common.ChartStyleSection;
 import ai.planit.pev.strategy.chart.object.common.ChartStyleXml;
 import ai.planit.pev.strategy.chart.object.medical.MedicalData;
 import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
+import ai.planit.pev.strategy.chart.object.medical.SurgeryData;
 
 import java.util.List;
 
 public interface MedicalService {
     List<MedicalData> getMedicalData(Record.Response record);
+
+    List<SurgeryData> getSurgeryData(Record.Response record);
 
     List<String> getMedicalImageData(MedicalImage.Request request);
 

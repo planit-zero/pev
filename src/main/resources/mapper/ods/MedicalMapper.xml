@@ -46,6 +46,92 @@
                                      AND M.imageSeq = D.IMG_SEQ
     </select>
 
+    <select id="getMedicalData2">
+        SELECT M.sectionId,
+               M.id,
+               M.parentId,
+               CASE
+                   WHEN M.elmtCclsCd = '7' AND D.INTG_IMG_FILE_PATH_NM IS NOT NULL THEN 'http://hisimg.snuh.org/' || REGEXP_REPLACE(D.INTG_IMG_FILE_PATH_NM, '\\', '/')
+                   ELSE M.content END AS content,
+               M."desc"
+        FROM (
+                 SELECT DISTINCT A.MDFM_SCTN_SEQ                                             AS sectionId,
+                                 A.MDFM_CPEM_ID                                                       AS id,
+                                 A.UPR_MDFM_CPEM_ID                                                   AS parentId,
+                                 CASE
+                                     WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN B.MDFM_ELMT_INPT_CNTE
+                                     WHEN A.ELMT_CCLS_CD = '7' THEN 'http://hisimg.snuh.org/' || REGEXP_REPLACE(C.INTG_IMG_FILE_PATH_NM, '\\', '/')
+                                     WHEN A.ELMT_CCLS_CD = '9' THEN LEFT(COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT), 10)
+                     ELSE COALESCE(B.MDFM_ELMT_INPT_CNTE, C.DCST_LDAT) END            AS content,
+                     CASE
+                     WHEN A.ELMT_CCLS_CD IN ('4', '5', '6') THEN A.MDFM_CPEM_CNTE END AS "desc",
+                     A.ELMT_CCLS_CD                                                       AS elmtCclsCd,
+                     CASE
+                     WHEN A.ELMT_CCLS_CD = '7' THEN (
+                     ROW_NUMBER() OVER (PARTITION BY A.ELMT_CCLS_CD ORDER BY A.MDFM_CPEM_ID) - 1)
+                     ELSE -1 END                                                      AS imageSeq
+                 FROM ODS.S_MRFMFCID A
+                     LEFT OUTER JOIN ODS.S_MRDDRECE B
+                 ON B.MDRC_ID = '45274491'
+                     AND B.MDRC_FOM_SEQ = '2'
+                     AND A.MDFM_CPEM_ID = B.MDFM_CPEM_ID
+                     LEFT OUTER JOIN ODS.S_MRDDRLFE C
+                     ON C.MDRC_ID = '45274491'
+                     AND C.MDRC_FOM_SEQ = '2'
+                     AND A.MDFM_CPEM_ID = C.MDFM_CPEM_ID
+                 WHERE 1=1
+                   AND C.DCST_LDAT IS NOT NULL
+                   AND A.MDFM_FOM_SEQ = '2'
+                   AND A.MDFM_ELMT_CLS_CD = 'V'
+                 ORDER BY A.MDFM_SCTN_SEQ, A.MDFM_CPEM_ID, A.UPR_MDFM_CPEM_ID
+             ) M
+                 LEFT OUTER JOIN ODS.S_MRDDRIMD D
+                                 ON D.MDRC_ID = '45274491'
+                                     AND D.MDRC_FOM_SEQ = '2'
+                                     AND M.imageSeq = D.IMG_SEQ
+    </select>
+
+    <select id="getSurgeryData" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Response" resultType="ai.planit.pev.strategy.chart.object.medical.SurgeryData">
+        SELECT
+            (CASE WHEN A.OPRC_ELMT_CLS_CD IN ('13','14') THEN 1
+                  WHEN A.OPRC_ELMT_CLS_CD IN ('11','12') THEN 2
+                  WHEN A.OPRC_ELMT_CLS_CD IN ('15','16') THEN 3
+                  WHEN A.OPRC_ELMT_CLS_CD IN ('17') THEN 4
+                  WHEN A.OPRC_ELMT_CLS_CD IN ('21') THEN 5
+                  WHEN A.OPRC_ELMT_CLS_CD IN ('22') THEN 6
+                  WHEN A.OPRC_ELMT_CLS_CD IN ('23') THEN 7
+                  WHEN A.OPRC_ELMT_CLS_CD IN ('32') THEN 8
+                  WHEN A.OPRC_ELMT_CLS_CD IN ('31') THEN 9
+                  WHEN A.OPRC_ELMT_CLS_CD IN ('33') THEN 10
+                END) AS id
+             ,(CASE WHEN A.OPRC_ELMT_CLS_CD IN ('13','14') THEN '수술전진단명'
+                    WHEN A.OPRC_ELMT_CLS_CD IN ('11','12') THEN '수술명'
+                    WHEN A.OPRC_ELMT_CLS_CD IN ('15','16') THEN '수술후진단명'
+                    WHEN A.OPRC_ELMT_CLS_CD IN ('17') THEN '수술기타'
+                    WHEN A.OPRC_ELMT_CLS_CD IN ('21') THEN '수술전기록_예정수술명'
+                    WHEN A.OPRC_ELMT_CLS_CD IN ('22') THEN '수술전기록_수술전진단명'
+                    WHEN A.OPRC_ELMT_CLS_CD IN ('23') THEN '수술전기록_기타'
+                    WHEN A.OPRC_ELMT_CLS_CD IN ('32') THEN '수술후기록_수술후진단명'
+                    WHEN A.OPRC_ELMT_CLS_CD IN ('31') THEN '수술후기록_최종수술명'
+                    WHEN A.OPRC_ELMT_CLS_CD IN ('33') THEN '수술후기록_기타'
+            END) AS title
+             ,SORT_SEQ AS sortSeq
+             ,OP_NM_DGNS_NM AS dgndNm
+             ,ANST_KND_NM AS kndNm
+             ,OP_DTM AS opDtm
+             ,(SELECT STF_NM FROM ODS.S_CNLRRUSD WHERE STF_NO = TH1_PFDR_STF_NO	) AS pfdr1Nm
+             ,(SELECT STF_NM FROM ODS.S_CNLRRUSD WHERE STF_NO = TH2_PFDR_STF_NO	) AS pfdr2Nm
+             ,(SELECT STF_NM FROM ODS.S_CNLRRUSD WHERE STF_NO = TH3_PFDR_STF_NO	) AS pfdr3Nm
+             ,(SELECT STF_NM FROM ODS.S_CNLRRUSD WHERE STF_NO = TH1_ATDR_STF_NO	) AS atdr1Nm
+             ,(SELECT STF_NM FROM ODS.S_CNLRRUSD WHERE STF_NO = TH2_ATDR_STF_NO	) AS atdr2Nm
+             ,(SELECT STF_NM FROM ODS.S_CNLRRUSD WHERE STF_NO = TH3_ATDR_STF_NO	) AS atdr3Nm
+             ,(SELECT STF_NM FROM ODS.S_CNLRRUSD WHERE STF_NO = TH4_ATDR_STF_NO	) AS atdr4Nm
+        FROM ODS.S_MRDDRONE A
+        WHERE A.MDRC_ID      = #{mdrcId}
+          AND A.MDRC_FOM_SEQ = #{mdrcFomSeq}
+        ORDER BY id, sortSeq
+    </select>
+
     <select id="getMedicalImageData" parameterType="ai.planit.pev.domain.ods.medical.dto.MedicalImage$Request" resultType="java.lang.String">
         SELECT INTG_IMG_FILE_PATH_NM
         FROM ODS.S_MRDDRIMD

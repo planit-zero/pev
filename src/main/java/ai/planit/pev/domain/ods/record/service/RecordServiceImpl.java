@@ -35,7 +35,9 @@ import ai.planit.pev.strategy.chart.*;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.constant.ChartControlType;
 import ai.planit.pev.strategy.chart.object.common.*;
+import ai.planit.pev.strategy.chart.object.medical.MedicalData;
 import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
+import ai.planit.pev.strategy.chart.object.medical.SurgeryData;
 import ai.planit.pev.strategy.chart.object.note.NoteData;
 import ai.planit.pev.strategy.chart.object.note.NoteValue;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
@@ -477,7 +479,16 @@ public class RecordServiceImpl implements RecordService {
                 dataSource = anesthesiaService.getAnesthesiaRecordData(request.getRecord().getRecordDetailType(), request.getRecord().getOpExptRegId());
             } else {
                 chartContext.setChartStrategy(new MedicalChartStrategy());
-                dataSource = medicalService.getMedicalData(request.getRecord());
+                List<MedicalData> medicalData = medicalService.getMedicalData(request.getRecord());
+
+                // 수술기록
+                if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_SURGERY.getType())) {
+                    List<SurgeryData> surgeryData = medicalService.getSurgeryData(request.getRecord());
+                    List<MedicalData> medicalSurgeryData = MedicalData.of(surgeryData);
+                    medicalData.addAll(medicalSurgeryData);
+                }
+
+                dataSource = medicalData;
             }
 
             // 진료기록 내 이미지 정보 확인
@@ -492,6 +503,7 @@ public class RecordServiceImpl implements RecordService {
             dataSource = orderService.getOrderData(session.getAttribute("pev-pid").toString(), request.getRecord());
         }
 
+        // 검사기록
         if (request.getRecord().getRecordType().equals(RecordTarget.EXAM_RECORD.getType())) {
             // 병리검사
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
