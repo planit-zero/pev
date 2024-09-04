@@ -25,7 +25,8 @@
         where record_id = #{recordDetailType}
           and mdfm_id = #{mdfmId}
           and mdfm_fom_seq = #{mdfmFomSeq}
-        order by section_id, parent_id, id:: numeric desc
+        <if test='recordDetailType == "D005"'>order by section_id, parent_id, id:: numeric desc</if>
+        <if test='recordDetailType != "D005"'>order by section_id, id, parent_id</if>
     </select>
 
     <insert id="reloadMedicalRecordFormat" parameterType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Response">
