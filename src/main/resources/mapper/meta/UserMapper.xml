@@ -27,6 +27,7 @@
         where dept_nm != '플랜잇'
         group by weekFromMonday
         order by weekFromMonday desc
+        limit 12
     </select>
 
     <select id="getStatisticsUserDay" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginDay">
@@ -36,6 +37,7 @@
         where dept_nm != '플랜잇'
         group by day
         order by day desc
+        limit 365
     </select>
 
     <select id="getStatisticsUserHour" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginHour">
