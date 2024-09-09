@@ -22,11 +22,20 @@
 
     <select id="getStatisticsUserMonth" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginWeek">
         select date_trunc('month', login_dtm)::date as weekFromMonday,
-                count(*) as count
+               count(*) as count
         from pev_login_log
         where dept_nm != '플랜잇'
         group by weekFromMonday
         order by weekFromMonday desc
+    </select>
+
+    <select id="getStatisticsUserDay" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginDay">
+        select date_trunc('day', login_dtm)::date as day,
+               count(*) as count
+        from pev_login_log
+        where dept_nm != '플랜잇'
+        group by day
+        order by day desc
     </select>
 
     <select id="getStatisticsUserHour" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginHour">

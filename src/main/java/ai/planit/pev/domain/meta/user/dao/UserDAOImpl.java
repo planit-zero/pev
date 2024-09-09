@@ -2,6 +2,7 @@ package ai.planit.pev.domain.meta.user.dao;
 
 import ai.planit.idp.sdk.model.IdpLoginUser;
 import ai.planit.pev.domain.meta.report.dto.Log;
+import ai.planit.pev.domain.meta.user.dto.UserLoginDay;
 import ai.planit.pev.domain.meta.user.dto.UserLoginDept;
 import ai.planit.pev.domain.meta.user.dto.UserLoginHour;
 import ai.planit.pev.domain.meta.user.dto.UserLoginWeek;
@@ -29,6 +30,11 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public List<UserLoginWeek> getStatisticsUserMonth() {
         return sqlSessionTemplate.selectList("getStatisticsUserMonth");
+    }
+
+    @Override
+    public List<UserLoginDay> getStatisticsUserDay() {
+        return sqlSessionTemplate.selectList("getStatisticsUserDay");
     }
 
     @Override
