@@ -37,7 +37,7 @@
         where dept_nm != '플랜잇'
         group by day
         order by day desc
-        limit 365
+        limit 14
     </select>
 
     <select id="getStatisticsUserHour" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginHour">
