@@ -86,8 +86,8 @@ const Chart = (props: ChartProps) => {
             <Box
                 key={sIdx}
                 position={'relative'}
-                width={props.openModal ? '100%' : (section.style ? `${section.style.width}px` : '600px')}
-                height={props.openModal ? '100%' : (section.style ? `${section.style.height}px` : 'fit-content')}
+                width={props.openModal ? '100%' : section.style ? `${section.style.width}px` : '600px'}
+                height={props.openModal ? '100%' : section.style ? `${section.style.height}px` : 'fit-content'}
             >
                 {section.entities.map((e, idx) => {
                     return ChartEntity(e, idx);
@@ -102,8 +102,8 @@ const Chart = (props: ChartProps) => {
             <Box width={'600px'}>
                 <ImageElement maskingYn={'Y'} content={content} />
             </Box>
-        )
-    }
+        );
+    };
 
     const ChartEntity = (entity: IChartEntity, eIdx: number) => {
         if (entity.style) return StyledElementWithChildren(entity, eIdx);
@@ -178,7 +178,19 @@ const Chart = (props: ChartProps) => {
                     )}
                 {value.controlType === 'IMAGE' && value.content && <ImageElement maskingYn={props.maskingYn} content={value.content} />}
                 {value.controlType === 'TABLE' && value.content && (
-                    <Box sx={{ width: '100%', maxHeight: props.openModal ? '70vh' : '600px', overflow: 'scroll', whiteSpace: 'pre-line' }}>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            maxHeight: props.openModal ? '70vh' : '600px',
+                            overflow: 'scroll',
+                            whiteSpace: 'pre-line',
+                            '& em': {
+                                color: 'white',
+                                backgroundColor: 'grey',
+                                fontStyle: 'normal'
+                            }
+                        }}
+                    >
                         <table className={props.record.recordDetailType.includes('CR_') ? 'table-element-cr' : 'table-element'}>
                             <tbody>
                                 {value.content.split(';').map((c, cIdx) => {
@@ -191,7 +203,7 @@ const Chart = (props: ChartProps) => {
                                                             <Box dangerouslySetInnerHTML={{ __html: h }} />
                                                         </th>
                                                     );
-                                            })}
+                                                })}
                                             {cIdx !== 0 &&
                                                 c.split('|||').map((d, dIdx) => {
                                                     return (
@@ -199,7 +211,7 @@ const Chart = (props: ChartProps) => {
                                                             <Box dangerouslySetInnerHTML={{ __html: d }} />
                                                         </td>
                                                     );
-                                            })}
+                                                })}
                                         </tr>
                                     );
                                 })}
