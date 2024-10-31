@@ -10,6 +10,7 @@
                  INNER JOIN ODS.S_MRCCRPAE B ON A.CPR_ID = B.CPR_ID
                  INNER JOIN ODS.S_MRNNRIAM C ON B.NR_ITEM_ID = C.NR_ITEM_ID
         WHERE A.CPR_ID = #{mdrcId}
+        GROUP BY B.NR_ITEM_ID, B.REC_CNTE, C.NR_ITEM_NM
     </select>
 
 </mapper>
