@@ -21,7 +21,7 @@ const IrbSelector = (props: IrbSelectorProps) => {
     const stfNoForIrb = () => {
         if (!info) return '66206';
         if (!info.stfNo) return '66206';
-        if (info.stfNo && (info.stfNo === 'EVAN' || info.stfNo === 'LESLEY')) return '66206';
+        if (info.stfNo && (info.stfNo === 'EVAN' || info.stfNo === 'LESLEY' || info.stfNo === 'ADMIN')) return '66206';
         return info.stfNo;
     };
 
@@ -68,7 +68,7 @@ const IrbSelector = (props: IrbSelectorProps) => {
         } else {
             setOpen(true);
         }
-    }
+    };
 
     return (
         <React.Fragment>
@@ -85,9 +85,7 @@ const IrbSelector = (props: IrbSelectorProps) => {
                             {props.irb ? props.irb : '선택하지 않음'}
                         </>
                     )}
-                    {props.feasibility && (
-                        <strong>{props.irb ? props.irb : '선택하지 않음'}</strong>
-                    )}
+                    {props.feasibility && <strong>{props.irb ? props.irb : '선택하지 않음'}</strong>}
                 </Typography>
             </Button>
             <Modal open={open} onClose={() => setOpen(false)}>
