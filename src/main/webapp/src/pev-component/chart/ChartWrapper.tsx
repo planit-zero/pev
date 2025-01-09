@@ -5,11 +5,11 @@ import { useGetChartMutation, useGetChartReplyMutation, useGetFunctionChartMutat
 import Chart from './Chart';
 import { IChart, IChartP, IChartReplyP, IChartReplyR, IChartReportValue } from '../../pev-interface/IChart';
 import { ChartWrapperType } from '../../pev-type/TChart';
-import {Box, Button} from '@mui/material';
+import { Box, Button } from '@mui/material';
 import ChartError from './ChartError';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
-import {Popup} from 'devextreme-react';
-import ChartScroll from "./ChartScroll";
+import { Popup } from 'devextreme-react';
+import ChartScroll from './ChartScroll';
 
 type ChartWrapperProps = {
     mode: ChartWrapperType;
@@ -220,7 +220,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
         }
     }, [props.searchTimeStamp]);
 
-    const getObservationChart = () => {
+    const getObservationChartOnPopUp = () => {
         return (
             <Chart
                 mode={props.mode}
@@ -243,13 +243,13 @@ const ChartWrapper = (props: ChartWrapperProps) => {
         }
 
         return false;
-    }
+    };
 
     return (
         <React.Fragment>
             {((props.targetRecord.recordDetailType !== 'EX_FUNCTION' && isChartLoading && props.targetRecord.recordType !== 'NR') ||
                 (props.targetRecord.recordDetailType === 'EX_FUNCTION' && isFunctionChartLoading)) && <SkeletonChart />}
-            {props.targetRecord.recordType === 'NR' &&
+            {props.targetRecord.recordType === 'NR' && !isObservationChart() && (
                 <React.Fragment>
                     <ChartScroll
                         mode={props.mode}
@@ -262,7 +262,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                         openModal={false}
                     />
                 </React.Fragment>
-            }
+            )}
             {props.targetRecord.recordDetailType === 'EX_FUNCTION' &&
                 !isFunctionChartLoading &&
                 !isFunctionChartError &&
@@ -299,12 +299,21 @@ const ChartWrapper = (props: ChartWrapperProps) => {
             )}
             {isObservationChart() && (
                 <React.Fragment>
-                    <Box sx={{display: 'flex', justifyContent: 'end'}}>
+                    <Box sx={{ display: 'flex', justifyContent: 'end' }}>
                         <Button variant="outlined" startIcon={<SettingsOverscanIcon />} onClick={() => setOpenModal(true)}>
                             확대
                         </Button>
                     </Box>
-                    {getObservationChart()}
+                    <Chart
+                        mode={props.mode}
+                        maskingYn={props.maskingYn}
+                        record={props.targetRecord}
+                        chart={chart}
+                        reportValues={props.reportValues}
+                        onValueChange={props.onValueChange}
+                        index={0}
+                        openModal={false}
+                    />
                 </React.Fragment>
             )}
             {!isChartLoading && isChartError && <ChartError targetRecord={props.targetRecord} />}
@@ -327,7 +336,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                             openModal={false}
                         />
                     </React.Fragment>
-            )}
+                )}
             <Popup
                 showTitle={true}
                 title={'임상관찰기록'}
@@ -335,7 +344,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                 hideOnOutsideClick={true}
                 visible={openModal}
                 onHiding={handlePopupHidden}
-                contentRender={getObservationChart}
+                contentRender={getObservationChartOnPopUp}
                 showCloseButton={true}
                 width={'85vw'}
                 height={'85vh'}

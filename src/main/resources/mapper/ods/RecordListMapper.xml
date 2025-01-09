@@ -553,8 +553,7 @@
                         NULL                                                        AS mdrcWrtStsCdYn,
                         NULL                                                        AS opExptRegId
         FROM ODS.S_MRNNRVAD A
-                 INNER JOIN ODS.S_MRNNRVAE B
-                            ON A.CLCO_REC_ITEM_ID = B.CLCO_REC_ITEM_ID
+--         INNER JOIN ODS.S_MRNNRVAE B ON A.CLCO_REC_ITEM_ID = B.CLCO_REC_ITEM_ID
         WHERE PT_NO = #{ptNo}
           AND A.CLCO_REC_WRT_PATH_TP_CD = '01'
           AND A.UITM_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
