@@ -141,7 +141,7 @@
     </select>
 
     <select id="getMedicalRecordFormatList" parameterType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Request" resultType="ai.planit.pev.domain.meta.record.dto.MetaRecordFormat$Response">
-        SELECT MDFM_CLS_CD                           AS recordId,
+        SELECT MDFM_CLS_CD                    AS recordId,
         MDFM_ID                               AS mdfmId,
         MDFM_FOM_SEQ                          AS mdfmFomSeq,
         MDFM_SCTN_SEQ                         AS sectionId,
@@ -170,10 +170,10 @@
         ELMT_BSC_CNTE                         AS "desc",
         LSH_DTM                               AS loadDtm
         FROM ods.S_MRFMFCID
+        WHERE MDFM_CLS_CD IN ('D001', 'D002', 'D003', 'D004', 'D005', 'D006', 'D007', 'D008', 'D009', 'D010', 'D011', 'D020', 'D030', 'D031', 'D035')
         <![CDATA[
-        WHERE LSH_DTM::DATE >= #{startDate}::DATE
-          AND LSH_DTM::DATE <= #{endDate}::DATE
-          AND MDFM_CLS_CD = #{recordId}
+          AND LSH_DTM::DATE >= #{startDate}::DATE
+          AND LSH_DTM::DATE < #{endDate}::DATE
         ]]>
         ORDER BY MDFM_CLS_CD, MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ, MDFM_CPEM_ID, UPR_MDFM_CPEM_ID
     </select>

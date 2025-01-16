@@ -3,6 +3,7 @@ package ai.planit.pev.domain.meta.record.dto;
 import ai.planit.pev.strategy.chart.constant.ChartClassType;
 import ai.planit.pev.strategy.chart.constant.ChartControlType;
 import ai.planit.pev.strategy.chart.constant.ChartMaskingType;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +12,8 @@ import java.sql.Timestamp;
 public class MetaRecordFormat {
     @Getter
     @Setter
+    @Builder
     public static class Request {
-        private String recordId;
         private String startDate;
         private String endDate;
     }
