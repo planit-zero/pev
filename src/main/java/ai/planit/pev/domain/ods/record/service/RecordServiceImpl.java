@@ -376,8 +376,8 @@ public class RecordServiceImpl implements RecordService {
 
         // 진료기록
         if (request.getRecord().getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType()) ||
-                    request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()) ) {
+            // 마취 관련
+            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType()) || request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()) ) {
                 chartContext.setChartStrategy(new AnesthesiaRecordChartStrategy(request.getRecord().getRecordDetailType()));
 
                 Record.Response anesthesiaRecord = anesthesiaService.getAnesthesiaRecord(request.getRecord().getRecordDetailType(), request.getRecord().getOpExptRegId());
