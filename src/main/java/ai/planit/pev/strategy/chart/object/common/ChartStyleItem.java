@@ -31,6 +31,7 @@ public class ChartStyleItem {
     private String isSuffix;
 
     @XmlAttribute(name = "Visibility")
+    @Setter
     private String visibility;
 
     @XmlAttribute(name = "Printable")
@@ -71,6 +72,21 @@ public class ChartStyleItem {
 
     @XmlAttribute(name = "MaxWidth")
     private String maxWidth;
+
+    @XmlAttribute(name = "HorizontalContentAlignment")
+    private String horizontalContentAlignment;
+
+    @XmlAttribute(name = "VerticalContentAlignment")
+    private String verticalContentAlignment;
+
+    @XmlAttribute(name = "Suffix")
+    private String suffix;
+
+    @XmlAttribute(name = "DateFormat")
+    private String dateFormat;
+
+    @XmlAttribute(name = "GridInfo")
+    private String gridInfo;
 
     @XmlAttribute(name = "Height")
     private String height;
@@ -197,7 +213,7 @@ public class ChartStyleItem {
         return getTopInt() + getHeightInt();
     }
 
-    public int getFontSize() {
+    public int getFontSizeInt() {
         return Integer.parseInt(fontSize);
     }
 

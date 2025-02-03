@@ -1,6 +1,7 @@
 package ai.planit.pev.strategy.chart.object.common;
 
 import ai.planit.pev.domain.ods.record.dto.Record;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

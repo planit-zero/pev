@@ -91,7 +91,7 @@ task deleteWebApp(type: Delete) {
     followSymlinks = true
 }
 
-yarnBuild.dependsOn(yarnInstall)
-copyWebApp.dependsOn(yarnBuild)
-deleteWebApp.dependsOn(copyWebApp)
-processResources.dependsOn(deleteWebApp)
+//yarnBuild.dependsOn(yarnInstall)
+//copyWebApp.dependsOn(yarnBuild)
+//deleteWebApp.dependsOn(copyWebApp)
+//processResources.dependsOn(deleteWebApp)
