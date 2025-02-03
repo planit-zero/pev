@@ -36,9 +36,9 @@ public enum RecordTarget {
 
     // 간호
     NURS_RECORD("NR", "간호기록"),
+    NURS_INPATIENT("NR_INPATIENT", "입원간호정보"),
     NURS_OBSERVATION("NR_OBSERVATION", "임상관찰기록"),
-    NURS_INPATIENT("NR_INPATIENT", "임상관찰기록"),
-    NURS_EXECUTE("NR_EXECUTE", "임상관찰기록"),
+    NURS_EXECUTE("NR_EXECUTE", "간호활동수행기록"),
     NURS_FALL("NR_FALL", "낙상위험도평가"),
     NURS_BEDSORE("NR_BEDSORE", "욕창간호기록"),
     NURS_BEDSORE_EVALUATION("NR_BEDSORE_EVALUATION", "욕창위험도평가"),
@@ -55,6 +55,7 @@ public enum RecordTarget {
 
     // 특성화기록
     CHARACTERIZATION_RECORD("CR", "특성화기록"),
+    CHARACTERIZATION_CPR("CR_CPR", "CPR발생보고서"),
     ;
 
 

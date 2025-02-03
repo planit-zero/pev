@@ -25,7 +25,7 @@ type ChartProps = {
     openModal: boolean;
 };
 
-const Chart = (props: ChartProps) => {
+const ChartScroll = (props: ChartProps) => {
     const styleSx = (element: IChartEntity | IChartAttribute | IChartValue) => {
         const getColor = (color: string) => {
             if (!color) return 'inherit';
@@ -86,8 +86,8 @@ const Chart = (props: ChartProps) => {
             <Box
                 key={sIdx}
                 position={'relative'}
-                width={props.openModal ? '100%' : section.style ? `${section.style.width}px` : '600px'}
-                height={props.openModal ? '100%' : section.style ? `${section.style.height}px` : 'fit-content'}
+                width={props.openModal ? '100%' : (section.style ? `${section.style.width}px` : '600px')}
+                height={props.openModal ? '100%' : (section.style ? `${section.style.height}px` : 'fit-content')}
             >
                 {section.entities.map((e, idx) => {
                     return ChartEntity(e, idx);
@@ -102,8 +102,8 @@ const Chart = (props: ChartProps) => {
             <Box width={'600px'}>
                 <ImageElement maskingYn={'Y'} content={content} />
             </Box>
-        );
-    };
+        )
+    }
 
     const ChartEntity = (entity: IChartEntity, eIdx: number) => {
         if (entity.style) return StyledElementWithChildren(entity, eIdx);
@@ -160,8 +160,7 @@ const Chart = (props: ChartProps) => {
                 sx={{
                     m: 1,
                     backgroundColor: props.mode === 'REPORT' ? 'pink' : 'transparent',
-                    position: 'relative',
-                    cursor: 'pointer'
+                    position: 'relative'
                 }}
                 onClick={() => handleValueClick(value)}
             >
@@ -178,43 +177,31 @@ const Chart = (props: ChartProps) => {
                     )}
                 {value.controlType === 'IMAGE' && value.content && <ImageElement maskingYn={props.maskingYn} content={value.content} />}
                 {value.controlType === 'TABLE' && value.content && (
-                    <Box
-                        sx={{
-                            width: '100%',
-                            maxHeight: props.openModal ? '70vh' : '600px',
-                            overflow: 'scroll',
-                            whiteSpace: 'pre-line',
-                            '& em': {
-                                color: 'white',
-                                backgroundColor: 'grey',
-                                fontStyle: 'normal'
-                            }
-                        }}
-                    >
-                        <table className={props.record.recordDetailType.includes('CR_') ? 'table-element-cr' : 'table-element'}>
+                    <Box sx={{ width: '100%', maxHeight: props.openModal ? '70vh' : '600px', overflow: 'scroll', whiteSpace: 'pre-line' }}>
+                        <table className={'table-element'}>
                             <tbody>
-                                {value.content.split(';').map((c, cIdx) => {
-                                    return (
-                                        <tr key={cIdx}>
-                                            {cIdx === 0 &&
-                                                c.split('|||').map((h, hIdx) => {
-                                                    return (
-                                                        <th key={hIdx}>
-                                                            <Box dangerouslySetInnerHTML={{ __html: h }} />
-                                                        </th>
-                                                    );
-                                                })}
-                                            {cIdx !== 0 &&
-                                                c.split('|||').map((d, dIdx) => {
-                                                    return (
-                                                        <td key={dIdx}>
-                                                            <Box dangerouslySetInnerHTML={{ __html: d }} />
-                                                        </td>
-                                                    );
-                                                })}
-                                        </tr>
-                                    );
-                                })}
+                            {value.content.split(';').map((c, cIdx) => {
+                                return (
+                                    <tr key={cIdx}>
+                                        {cIdx === 0 &&
+                                            c.split('|||').map((h, hIdx) => {
+                                                return (
+                                                    <th key={hIdx}>
+                                                        <Box dangerouslySetInnerHTML={{ __html: h }} />
+                                                    </th>
+                                                );
+                                            })}
+                                        {cIdx !== 0 &&
+                                            c.split('|||').map((d, dIdx) => {
+                                                return (
+                                                    <td key={dIdx}>
+                                                        <Box dangerouslySetInnerHTML={{ __html: d }} />
+                                                    </td>
+                                                );
+                                            })}
+                                    </tr>
+                                );
+                            })}
                             </tbody>
                         </table>
                     </Box>
@@ -332,6 +319,8 @@ const Chart = (props: ChartProps) => {
 
     const handleValueClick = (value: IChartValue) => {
         if (value.classType !== 'VALUE') return;
+        console.log('### value', value);
+
         if (props.mode !== 'REPORT') return;
         if (!props.onValueChange) return;
         if (!props.reportValues) return;
@@ -389,15 +378,28 @@ const Chart = (props: ChartProps) => {
 
     return (
         <React.Fragment>
-            {getHeaderSection(props.record)}
-            {props.chart?.sections.map((s, idx) => {
-                return ChartSection(s, idx);
-            })}
-            {props.chart?.medicalImages?.map((path) => {
-                return MedicalImageSection(path);
-            })}
+            <Box sx={{
+                position: 'sticky', top: -20,
+                zIndex: 1000,
+                backgroundColor: 'white',
+                width: '100%',
+            }}>
+                {getHeaderSection(props.record)}
+            </Box>
+            <Box sx={{
+                height: '80vh',
+                overflowY: 'auto',
+                paddingTop: '1px'
+            }}>
+                {props.chart?.sections.map((s, idx) => {
+                    return ChartSection(s, idx);
+                })}
+                {props.chart?.medicalImages?.map((path) => {
+                    return MedicalImageSection(path);
+                })}
+            </Box>
         </React.Fragment>
     );
 };
 
-export default Chart;
+export default ChartScroll;

@@ -22,6 +22,7 @@
                to_char(load_dtm, 'YYYY-MM-DD HH24:MI:SS') as loadDtm
         from pev_event_log
         order by load_dtm desc
+        limit 500
     </select>
 
     <select id="getEventSearchTargetDistribution" resultType="ai.planit.pev.domain.meta.event.dto.EventSearchTargetDistribution">

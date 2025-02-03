@@ -49,6 +49,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+// Apache Tomcat 버전 설정 (보안)
+ext['tomcat.version'] = '9.0.98'
+
 tasks.named('test') {
 //    useJUnitPlatform()
     exclude '**/*'

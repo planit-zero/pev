@@ -10,7 +10,7 @@ spring:
     datasource:
       hikari:
         driver-class-name: oracle.jdbc.OracleDriver
-        jdbc-url: jdbc:oracle:thin:@//192.168.1.14:13625/orcl
+        jdbc-url: jdbc:oracle:thin:@//172.26.76.38:13625/orcl
         username: SNUHOCS
         password: GRtocTjqQx7@$
   meta:

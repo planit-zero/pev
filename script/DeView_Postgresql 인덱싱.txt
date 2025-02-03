@@ -1,0 +1,441 @@
+-- AnesthesiaMapper
+CREATE INDEX idx_s_mrddrafe_opexptregid_mdfmclscd
+    ON ODS.S_MRDDRAFE (OP_EXPT_REG_ID, MDFM_CLS_CD);
+
+CREATE INDEX idx_s_mrddrare_opexptregid_afchg_inpthmi
+    ON ODS.S_MRDDRARE (OP_EXPT_REG_ID, AFCHG_ANRM_REC_VAL_ID, INPT_HMI);
+
+CREATE INDEX idx_s_moooppam_opexptregid
+    ON ODS.S_MOOOPPAM (OP_EXPT_REG_ID);
+
+CREATE INDEX idx_s_cnlrrusd_sid
+    ON ODS.S_CNLRRUSD (SID);
+
+-- BedsoreMapper
+CREATE INDEX idx_s_mrnnrpcd_ptno_inptdtm_bdsrrecid
+    ON ODS.S_MRNNRPCD (PT_NO, INPT_DTM, BDSR_REC_ID);
+
+CREATE INDEX idx_s_mrnnrpad_bdsrrecid
+    ON ODS.S_MRNNRPAD (BDSR_REC_ID);
+
+CREATE INDEX idx_s_mrnnriam_nritemid
+    ON ODS.S_MRNNRIAM (NR_ITEM_ID);
+
+CREATE INDEX idx_s_mrnnrpde_bdsrrecid_inptdtm_wrtseq
+    ON ODS.S_MRNNRPDE (BDSR_REC_ID, INPT_DTM, WRT_SEQ);
+
+CREATE INDEX idx_s_mrnnrpfe_bdsrrecid_inptdtm_wrtseq
+    ON ODS.S_MRNNRPFE (BDSR_REC_ID, INPT_DTM, WRT_SEQ);
+
+CREATE INDEX idx_s_ccccste_comn_grp_cd_comn_cd
+    ON ODS.S_CCCCCSTE (COMN_GRP_CD, COMN_CD);
+
+CREATE INDEX idx_s_pdedbmsm_deptcd
+    ON ODS.S_PDEDBMSM (DEPT_CD);
+
+CREATE INDEX idx_s_cnlrrusd_stfno
+    ON ODS.S_CNLRRUSD (STF_NO);
+
+CREATE INDEX idx_s_moppcbed_ptno_inptdtm_wrtseq_lstyn
+    ON ODS.S_MOPPCBED (PT_NO, INPT_DTM, WRT_SEQ, LST_YN);
+
+CREATE INDEX idx_s_moppcbee_ptno_inptdtm_wrtseq
+    ON ODS.S_MOPPCBEE (PT_NO, INPT_DTM, WRT_SEQ);
+
+CREATE INDEX idx_s_moppcbcd_astlitemid
+    ON ODS.S_MOPPCBCD (BDSR_DOR_ASTL_ITEM_ID);
+
+CREATE INDEX idx_s_moppcbbd_astlctgid_sortseq
+    ON ODS.S_MOPPCBBD (BDSR_DOR_ASTL_CTG_ID, SORT_SEQ);
+
+CREATE INDEX idx_s_moppcbed_ptno_inptdtm_wrtseq_astlid_grp_cd
+    ON ODS.S_MOPPCBED (PT_NO, INPT_DTM, WRT_SEQ, BDSR_DOR_ASTL_ID, BDSR_DOR_CTG_GRP_CD);
+
+CREATE INDEX idx_s_moppcbdc_astlid_grp_cd_avlstr_avlend
+    ON ODS.S_MOPPCBDC (BDSR_DOR_ASTL_ID, BDSR_DOR_CTG_GRP_CD, AVL_STR_DTM, AVL_END_DTM);
+
+CREATE INDEX idx_s_moppcbed_ptno_inptdtm_wrtseq
+    ON ODS.S_MOPPCBED (PT_NO, INPT_DTM, WRT_SEQ);
+
+-- BloodDialysisMapper
+CREATE INDEX idx_s_mrnnrhbd_ptno_dlysimpldtm_seq_tp_lstyn
+    ON ODS.S_MRNNRHBD (PT_NO, DLYS_IMPL_DTM, PT_DLYS_SEQ, DLYS_TP_CD, LST_YN);
+
+CREATE INDEX idx_s_mrnnrhbd_ptno_seq_tp_lstyn
+    ON ODS.S_MRNNRHBD (PT_NO, PT_DLYS_SEQ, DLYS_TP_CD, LST_YN);
+
+CREATE INDEX idx_s_mrnnrvad_ptno_uitmdt_wrtpathtpcd
+    ON ODS.S_MRNNRVAD (PT_NO, UITM_DT, CLCO_REC_WRT_PATH_TP_CD);
+
+CREATE INDEX idx_s_mrnnrvae_clcorecitemid
+    ON ODS.S_MRNNRVAE (CLCO_REC_ITEM_ID);
+
+CREATE INDEX idx_s_mrnnriam_nritemid_sortseq
+    ON ODS.S_MRNNRIAM (NR_ITEM_ID, SORT_SEQ);
+
+-- CheckoutMapper
+CREATE INDEX idx_s_mrnnrfad_ptno_recwrt_dtm_wrtseq_formcd
+    ON ODS.S_MRNNRFAD (PT_NO, REC_WRT_DTM, WRT_SEQ, NREC_FORM_CD);
+
+CREATE INDEX idx_s_mrnnrfae_nrecid
+    ON ODS.S_MRNNRFAE (NREC_ID);
+
+CREATE INDEX idx_s_mrnnricd_ctgid_sortseq
+    ON ODS.S_MRNNRICD (NR_ITEM_CTG_ID, SORT_SEQ);
+
+CREATE INDEX idx_s_cnlrrusd_stfno
+    ON ODS.S_CNLRRUSD (STF_NO);
+
+-- DischargeMapper
+CREATE INDEX idx_s_mrnnrfad_ptno_recwrt_dtm_wrtseq_formcd_lstyn
+    ON ODS.S_MRNNRFAD (PT_NO, REC_WRT_DTM, WRT_SEQ, NREC_FORM_CD, LST_YN);
+
+CREATE INDEX idx_s_mrnnrfae_nrecid_lstyn
+    ON ODS.S_MRNNRFAE (NREC_ID, LST_YN);
+
+-- ExecuteMapper
+CREATE INDEX idx_s_mrnnraad_pact_tp_cd_ptno_uitmdt_useyn
+    ON ODS.S_MRNNRAAD (PACT_TP_CD, PT_NO, UITM_DT, USE_YN);
+
+CREATE INDEX idx_s_mrnnaae_nrat_fmt_item_id_useyn_lstyn
+    ON ODS.S_MRNNRAAE (NRAT_FMT_ITEM_ID, USE_YN, LST_YN);
+
+CREATE INDEX idx_s_mrnnriam_nritemid_useyn
+    ON ODS.S_MRNNRIAM (NR_ITEM_ID, USE_YN);
+
+CREATE INDEX idx_s_mrnnraae_nrat_fmt_item_id_useyn_lstyn
+    ON ODS.S_MRNNRAAE (NRAT_FMT_ITEM_ID, USE_YN, LST_YN);
+
+-- FallMapper
+CREATE INDEX idx_s_moppciee_ptno_inptdtm_wrtseq
+    ON ODS.S_MOPPCIEE (PT_NO, INPT_DTM, WRT_SEQ);
+
+CREATE INDEX idx_s_moppcibd_astlctgid
+    ON ODS.S_MOPPCIBD (IFFL_DOR_ASTL_CTG_ID);
+
+CREATE INDEX idx_s_moppcicd_astlctgid_itemid
+    ON ODS.S_MOPPCICD (IFFL_DOR_ASTL_CTG_ID, IFFL_DOR_ASTL_ITEM_ID);
+
+CREATE INDEX idx_s_moppcied_ptno_inptdtm_wrtseq_lstyn
+    ON ODS.S_MOPPCIED (PT_NO, INPT_DTM, WRT_SEQ, LST_YN);
+
+CREATE INDEX idx_s_moppcidc_astlid_grp_cd
+    ON ODS.S_MOPPCIDC (IFFL_DOR_ASTL_ID, IFFL_DOR_CTG_GRP_CD);
+
+-- FormMapper
+CREATE INDEX idx_s_mrfmfid_mdfmid_fomseq
+    ON ODS.S_MRFMFCID (MDFM_ID, MDFM_FOM_SEQ);
+
+CREATE INDEX idx_s_mrddrece_mdrcid_fomseq_cpeid
+    ON ODS.S_MRDDRECE (MDRC_ID, MDRC_FOM_SEQ, MDFM_CPEM_ID);
+
+CREATE INDEX idx_s_mrddrlfe_mdrcid_fomseq_cpeid
+    ON ODS.S_MRDDRLFE (MDRC_ID, MDRC_FOM_SEQ, MDFM_CPEM_ID);
+
+CREATE INDEX idx_s_mrddrimd_mdrcid_fomseq_imgseq
+    ON ODS.S_MRDDRIMD (MDRC_ID, MDRC_FOM_SEQ, IMG_SEQ);
+
+CREATE INDEX idx_s_mrfmfscd_mdfmid_fomseq_sctnseq
+    ON ODS.S_MRFMFSCD (MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ);
+
+-- FunctionMapper
+CREATE INDEX idx_s_msermmld_iptno_notm_ipprseq
+    ON ODS.S_MSERMMLD (IPTN_NO, MDFM_INPT_NOTM, IPPR_SEQ);
+
+CREATE INDEX idx_s_mrfmform_mdfm_id_fomseq
+    ON ODS.S_MRFMFORM (MDFM_ID, MDFM_FOM_SEQ);
+
+CREATE INDEX idx_s_cnlrrusd_stf_no
+    ON ODS.S_CNLRRUSD (STF_NO);
+
+CREATE INDEX idx_s_msermdtd_ipprid_mdfmcpeid
+    ON ODS.S_MSERMDTD (IPPR_ID, MDFM_CPEM_ID);
+
+CREATE INDEX idx_s_msermmld_ipprid_mdfmid_fomseq
+    ON ODS.S_MSERMMLD (IPPR_ID, MDFM_ID, MDFM_FOM_SEQ);
+
+CREATE INDEX idx_s_mrfmfid_mdfmid_fomseq_cpeid
+    ON ODS.S_MRFMFCID (MDFM_ID, MDFM_FOM_SEQ, MDFM_CPEM_ID);
+
+-- InpatientMapper
+CREATE INDEX idx_s_mrnnriam_nritemid_useyn_prntyn
+    ON ODS.S_MRNNRIAM (NR_ITEM_ID, USE_YN, MDREC_VWR_PRNT_YN);
+
+CREATE INDEX idx_s_mrnnricd_nritemctgid_useyn_lstyn_cls
+    ON ODS.S_MRNNRICD (NR_ITEM_CTG_ID, USE_YN, LST_YN, NREC_CLS_CD);
+
+-- MedicalMapper
+CREATE INDEX idx_s_mrfmfcid_mdfmid_fomseq_elmtcls
+    ON ODS.S_MRFMFCID (MDFM_ID, MDFM_FOM_SEQ, MDFM_ELMT_CLS_CD);
+
+CREATE INDEX idx_s_mrddrimd_mdrcid_fomseq_imgpath
+    ON ODS.S_MRDDRIMD (MDRC_ID, MDRC_FOM_SEQ, INTG_IMG_FILE_PATH_NM);
+
+CREATE INDEX idx_s_mrfmfcid_lshdtm_mdfmcls_mdfmid
+    ON ods.S_MRFMFCID (LSH_DTM, MDFM_CLS_CD, MDFM_ID);
+
+CREATE INDEX idx_s_mrfmfcid_order
+    ON ods.S_MRFMFCID (MDFM_CLS_CD, MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ, MDFM_CPEM_ID, UPR_MDFM_CPEM_ID);
+
+CREATE INDEX idx_s_mrfmfscd_mdfmcls_mdfmid_fomseq_sctnseq
+    ON ODS.S_MRFMFSCD (MDFM_CLS_CD, MDFM_ID, MDFM_FOM_SEQ, MDFM_SCTN_SEQ);
+
+CREATE INDEX idx_s_mrddrecm_mdfm_cls_cd_lstyn_mdrc_dc_tp_cd
+    ON ODS.S_MRDDRECM (MDFM_CLS_CD, LST_YN, MDRC_DC_TP_CD);
+
+CREATE INDEX idx_s_mrddrcne_mdrc_id_fomseq
+    ON ODS.S_MRDDRCNE (MDRC_ID, MDRC_FOM_SEQ);
+
+CREATE INDEX idx_s_cnlrrusd_stfno_octy_tp_cd
+    ON ODS.S_CNLRRUSD (STF_NO, OCTY_TP_CD);
+
+-- NoteMapper
+CREATE INDEX idx_s_mrnnrnad_ptno_inptdtm_lstyn_useyn
+    ON ODS.S_MRNNRNAD (PT_NO, INPT_DTM, LST_YN, USE_YN);
+
+CREATE INDEX idx_s_ccvnvsbm_nrst_id
+    ON ODS.S_CCVNVSBM (NRST_ID);
+
+CREATE INDEX idx_s_mrnnrnae_ndrc_id
+    ON ODS.S_MRNNRNAE (NDRC_ID);
+
+CREATE INDEX idx_s_ccvnvvbm_nrvocid_avldtm
+    ON ODS.S_CCVNVVBM (NR_VOC_ID, AVL_STR_DTM, AVL_END_DTM);
+
+CREATE INDEX idx_s_mrnnrnbe_ndrc_id
+    ON ODS.S_MRNNRNBE (NDRC_ID);
+
+-- ObservationMapper
+CREATE INDEX idx_s_mrnnrvad_ptno_uitmdt_pacttpcd
+    ON ODS.S_MRNNRVAD (PT_NO, UITM_DT, PACT_TP_CD);
+
+-- OdsMapper
+CREATE INDEX idx_s_acpprodam_pt_no
+    ON ODS.S_ACPPRODM (PT_NO);
+
+CREATE INDEX idx_s_acpprodam_pt_no_med_dt
+    ON ODS.S_ACPPRODM (PT_NO, MED_DT, PACT_ID);
+
+CREATE INDEX idx_s_acppraam_pt_no_ads_dt
+    ON ODS.S_ACPPRAAM (PT_NO, ADS_DT, PACT_ID);
+
+CREATE INDEX idx_s_acppretm_pt_no_emrm_arvl_dtm
+    ON ODS.S_ACPPRETM (PT_NO, EMRM_ARVL_DTM, PACT_ID);
+
+CREATE INDEX idx_s_moopteld_pact_id
+    ON ODS.S_MOOPTELD (PACT_ID, ANDR_STF_NO, EMRG_ANDR_TP_CD);
+
+CREATE INDEX idx_s_mselmced_pt_no_ord_id_ord_dt
+    ON ODS.S_MSELMCED (PT_NO, ORD_ID, ORD_DT);
+
+CREATE INDEX idx_s_moooexm_pt_no_ord_id_spcm_no
+    ON ODS.S_MOOOREXM (PT_NO, ORD_ID, SPCM_PTHL_IPTN_IFY_NO);
+
+CREATE INDEX idx_s_mselmrrd_exm_cd_sex_tp_cd
+    ON ODS.S_MSELMRRD (EXM_CD, SEX_TP_CD);
+
+CREATE INDEX idx_s_cccccste_comn_grp_cd_comn_cd
+    ON ODS.S_CCCCCSTE (COMN_GRP_CD, COMN_CD);
+
+CREATE INDEX idx_s_ccooocsc_ord_slip_ctg_cd
+    ON ODS.S_CCOOCCSC (ORD_SLIP_CTG_CD);
+
+CREATE INDEX idx_s_mselmccc_spcm_cd
+    ON ODS.S_MSELMCCC (SPCM_CD);
+
+CREATE INDEX idx_s_msermaad_pt_no_ord_id_ord_dt
+    ON ODS.S_MSERMAAD (PT_NO, ORD_ID, ORD_DT);
+
+CREATE INDEX idx_s_moooexm_pt_no_ord_id
+    ON ODS.S_MOOOREXM (PT_NO, ORD_ID);
+
+CREATE INDEX idx_s_msermld_iptn_no_mdfm_id
+    ON ODS.S_MSERMMLD (IPTN_NO, MDFM_ID, MDFM_FOM_SEQ);
+
+CREATE INDEX idx_s_msermdtd_ippr_id_mdfm_cpem_id
+    ON ODS.S_MSERMDTD (IPPR_ID, MDFM_CPEM_ID);
+
+CREATE INDEX idx_s_moooexm_pt_no_ord_id_oddsc_tp_cd
+    ON ODS.S_MOOOREXM (PT_NO, ORD_ID, ODDSC_TP_CD);
+
+CREATE INDEX idx_s_ccooocsc_ord_slip_ctg_cd_ord_slip_tp_cd
+    ON ODS.S_CCOOCCSC (ORD_SLIP_CTG_CD, ORD_SLIP_TP_CD);
+
+CREATE INDEX idx_s_moooexm_pt_no_spcm_pthl_ord_dt_oddsc_tp_cd
+    ON ODS.S_MOOOREXM (PT_NO, SPCM_PTHL_IPTN_IFY_NO, ORD_DT, ODDSC_TP_CD);
+
+CREATE INDEX idx_s_mooordrm_pt_no_ord_cd_mnf_cmp_cd_ord_dt
+    ON ODS.S_MOOORDRM (PT_NO, ORD_CD, MNF_CMP_CD, ORD_DT);
+
+CREATE INDEX idx_lt_mdpr_mdpr_id_rprn_mdpr_cd
+    ON ODS.LT_MDPR (MDPR_ID, RPRN_MDPR_CD);
+
+-- OrderMapper
+CREATE INDEX idx_s_mooorptd_ptno_medpact_orddt_popcd_stfno
+    ON ODS.S_MOOORPTD (PT_NO, MED_PACT_TP_CD, PT_HME_DEPT_CD, ORD_DT, ODAPL_POP_CD, FSR_STF_NO);
+
+CREATE INDEX idx_s_mooorptd_ptno_medpact_orddt_popcd_stfno_ordctg_sortseq
+    ON ODS.S_MOOORPTD (PT_NO, MED_PACT_TP_CD, ORD_DT, ODAPL_POP_CD, FSR_STF_NO, ORD_CTG_CD, SCRN_SORT_SEQ);
+
+-- PathologyMapper
+CREATE INDEX idx_s_msepmpmd_pthl_no
+    ON ODS.S_MSEPMPMD (PTHL_NO);
+
+CREATE INDEX idx_s_msepmprd_pthl_no_pro_sts_cd
+    ON ODS.S_MSEPMPRD (PTHL_NO, PTHL_PRO_STS_CD);
+
+CREATE INDEX idx_s_cccccute_comn_grp_cd_comn_cd
+    ON ODS.S_CCCCCUTE (COMN_GRP_CD, COMN_CD);
+
+-- PeritonealDialysisMapper
+CREATE INDEX idx_s_mrnnhbd_pt_no_dlys_tp_cd_lst_yn_dlys_seq
+    ON ODS.S_MRNNRHBD (PT_NO, DLYS_TP_CD, LST_YN, PT_DLYS_SEQ);
+
+CREATE INDEX idx_s_mrnnrvad_pt_no_uitm_dt_wrt_path
+    ON ODS.S_MRNNRVAD (PT_NO, UITM_DT, CLCO_REC_WRT_PATH_TP_CD);
+
+CREATE INDEX idx_s_mrnnrvae_clco_rec_item_id
+    ON ODS.S_MRNNRVAE (CLCO_REC_ITEM_ID);
+
+-- PictureMapper
+CREATE INDEX idx_s_msermaad_iptn_no_ord_cd
+    ON ODS.S_MSERMAAD (IPTN_NO, ORD_CD);
+
+CREATE INDEX idx_s_moooexm_ord_id
+    ON ODS.S_MOOOREXM (ORD_ID);
+
+CREATE INDEX idx_s_ccoocbac_ord_cd
+    ON ODS.S_CCOOCBAC (ORD_CD);
+
+-- RecordListMapper
+CREATE INDEX idx_s_mrddrecm_pt_no_cls_cd_dates
+    ON ODS.S_MRDDRECM (PT_NO, MDFM_CLS_CD, MED_DT, MDF_REC_DTM, PACT_TP_CD, LST_YN, MDRC_DC_TP_CD);
+
+CREATE INDEX idx_s_mrfmform_mdfm_id_fom_seq
+    ON ODS.S_MRFMFORM (MDFM_ID, MDFM_FOM_SEQ);
+
+CREATE INDEX idx_s_mrddrecm_pt_no_mdfm_cls_cd_pact_tp_cd
+    ON ODS.S_MRDDRECM (PT_NO, MDFM_CLS_CD, PACT_TP_CD, MDF_REC_DTM, LST_YN, MDRC_DC_TP_CD);
+
+CREATE INDEX idx_s_mrddrone_mdrc_id_fom_seq_op_dtm_oprc_elmt_cls_cd
+    ON ODS.S_MRDDRONE (MDRC_ID, MDRC_FOM_SEQ, OP_DTM, OPRC_ELMT_CLS_CD);
+
+CREATE INDEX idx_s_mrddrecm_pt_no_pact_id_mdfm_cls_cd_pact_tp_cd
+    ON ODS.S_MRDDRECM (PT_NO, PACT_ID, MDFM_CLS_CD, PACT_TP_CD, MDF_REC_DTM, LST_YN, MDRC_DC_TP_CD);
+
+CREATE INDEX idx_s_acppraam_pt_no_pact_id_ds_dtm
+    ON ODS.S_ACPPRAAM (PT_NO, PACT_ID, DS_DTM);
+
+CREATE INDEX idx_s_acppretm_pt_no_pact_id_chot_dtm
+    ON ODS.S_ACPPRETM (PT_NO, PACT_ID, CHOT_DTM);
+
+CREATE INDEX idx_s_cnlrrusd_stf_no_octy_tp_cd
+    ON ODS.S_CNLRRUSD (STF_NO, OCTY_TP_CD);
+
+CREATE INDEX idx_s_mrddrecm_pt_no_mdfm_cls_cd
+    ON ODS.S_MRDDRECM (PT_NO, MDFM_CLS_CD, MDF_REC_DTM, PACT_TP_CD, LST_YN, MDRC_DC_TP_CD);
+
+CREATE INDEX idx_s_mrddrard_pt_no_op_expt_reg_id_lsh_dtm
+    ON ODS.S_MRDDRARD (PT_NO, OP_EXPT_REG_ID, LSH_DTM);
+
+CREATE INDEX idx_s_mrddrafe_op_expt_reg_id_mdfm_cls_cd_afchg_anrm_rec_val_id_lsh_dtm
+    ON ODS.S_MRDDRAFE (OP_EXPT_REG_ID, MDFM_CLS_CD, AFCHG_ANRM_REC_VAL_ID, LSH_DTM);
+
+CREATE INDEX idx_s_mooorptd_pt_no_ord_dt_pt_hme_dept_cd_odds_tp_cd_ord_grp_cd_med_pact_tp_cd
+    ON ODS.S_MOOORPTD (PT_NO, ORD_DT, PT_HME_DEPT_CD, ODDSC_TP_CD, ORD_GRP_CD, MED_PACT_TP_CD);
+
+CREATE INDEX idx_s_msermaad_pt_no_phtg_dtm_ord_ctg_cd_exm_prgr_sts_cd_hsp_tp_cd
+    ON ODS.S_MSERMAAD (PT_NO, PHTG_DTM, ORD_CTG_CD, EXM_PRGR_STS_CD, HSP_TP_CD);
+
+CREATE INDEX idx_s_msermmmc_exm_cd
+    ON ODS.S_MSERMMMC (EXM_CD);
+
+CREATE INDEX idx_s_mooorexm_ord_id_hsp_tp_cd_pact_tp_cd
+    ON ODS.S_MOOOREXM (ORD_ID, HSP_TP_CD, PACT_TP_CD);
+
+CREATE INDEX idx_s_msepmpmd_pt_no_acpt_dtm_plex_prgr_sts_cd
+    ON ODS.S_MSEPMPMD (PT_NO, ACPT_DTM, PLEX_PRGR_STS_CD);
+
+CREATE INDEX idx_s_mselmced_spcm_no
+    ON ODS.S_MSELMCED (SPCM_NO);
+
+CREATE INDEX idx_s_mooorexm_ord_id_pact_tp_cd
+    ON ODS.S_MOOOREXM (ORD_ID, PACT_TP_CD);
+
+CREATE INDEX idx_s_mselmaid_pt_no_acpt_dtm_rslt_brfg_yn
+    ON ODS.S_MSELMAID (PT_NO, ACPT_DTM, RSLT_BRFG_YN);
+
+CREATE INDEX idx_s_ccooccsc_ord_slip_ctg_cd
+    ON ODS.S_CCOOCCSC (ORD_SLIP_CTG_CD);
+
+CREATE INDEX idx_s_msermaad_pt_no_ord_ctg_cd_phtg_dtm_exm_prgr_sts_cd
+    ON ODS.S_MSERMAAD (PT_NO, ORD_CTG_CD, PHTG_DTM, EXM_PRGR_STS_CD);
+
+CREATE INDEX idx_s_msmcsmtm_pt_no_ord_dt_scan_tp_cd
+    ON ODS.S_MSMCSMTM (PT_NO, ORD_DT, SCAN_TP_CD);
+
+CREATE INDEX idx_s_msmcsocc_odf_page_cd
+    ON ODS.S_MSMCSOCC (ODF_PAGE_CD);
+
+CREATE INDEX idx_s_mrnnrvad_pt_no_clco_rec_wrt_path_tp_cd_uitm_dt_pact_tp_cd
+    ON ODS.S_MRNNRVAD (PT_NO, CLCO_REC_WRT_PATH_TP_CD, UITM_DT, PACT_TP_CD);
+
+CREATE INDEX idx_s_mrnnrfad_pt_no_rec_wrt_dtm_pact_tp_cd
+    ON ODS.S_MRNNRFAD (PT_NO, REC_WRT_DTM, PACT_TP_CD);
+
+CREATE INDEX idx_s_mrnnrcbc_nrec_form_cd_nrec_cls_cd
+    ON ODS.S_MRNNRCBC (NREC_FORM_CD, NREC_CLS_CD);
+
+CREATE INDEX idx_s_mrnnrcac_nrec_cls_cd
+    ON ODS.S_MRNNRCAC (NREC_CLS_CD);
+
+CREATE INDEX idx_s_mrnnraad_pt_no_uitm_dt_pact_tp_cd
+    ON ODS.S_MRNNRAAD (PT_NO, UITM_DT, PACT_TP_CD);
+
+CREATE INDEX idx_s_moppcied_pt_no_inpt_dtm_pact_tp_cd_lst_yn
+    ON ODS.S_MOPPCIED (PT_NO, INPT_DTM, PACT_TP_CD, LST_YN);
+
+CREATE INDEX idx_s_mrnnrpcd_pt_no_inpt_dtm_lst_yn_pt_mtd_dept_cd
+    ON ODS.S_MRNNRPCD (PT_NO, INPT_DTM, LST_YN, PT_MTD_DEPT_CD);
+
+CREATE INDEX idx_s_moppcbed_pt_no_inpt_dtm_lst_yn_pact_tp_cd
+    ON ODS.S_MOPPCBED (PT_NO, INPT_DTM, LST_YN, PACT_TP_CD);
+
+CREATE INDEX idx_s_mrnnrfad_pt_no_rec_wrt_dtm_nrec_form_cd_lst_yn_pact_tp_cd
+    ON ODS.S_MRNNRFAD (PT_NO, REC_WRT_DTM, NREC_FORM_CD, LST_YN, PACT_TP_CD, PT_MTD_DEPT_CD);
+
+CREATE INDEX idx_s_momnmdpm_pt_no_dlys_tp_cd_lst_yn
+    ON ODS.S_MOMNMDPM (PT_NO, DLYS_TP_CD, LST_YN);
+
+CREATE INDEX idx_s_mrnnrhbd_pt_no_dlys_impl_dtm_pact_tp_cd_pt_dlys_seq_lst_yn_pt_mtd_dept_cd_wrtr_plwk_dept_cd
+    ON ODS.S_MRNNRHBD (PT_NO, DLYS_IMPL_DTM, PACT_TP_CD, PT_DLYS_SEQ, LST_YN, PT_MTD_DEPT_CD, WRTR_PLWK_DEPT_CD);
+
+CREATE INDEX idx_s_mrnnrhbd_pt_no_dlys_tp_cd_lst_yn_dlys_impl_dtm_pact_tp_cd
+    ON ODS.S_MRNNRHBD (PT_NO, DLYS_TP_CD, LST_YN, DLYS_IMPL_DTM, PACT_TP_CD, PT_MTD_DEPT_CD, WRTR_PLWK_DEPT_CD);
+
+CREATE INDEX idx_s_mrnnrnad_pt_no_inpt_dtm_lst_yn_pact_tp_cd_pt_mtd_dept_cd
+    ON ODS.S_MRNNRNAD (PT_NO, INPT_DTM, LST_YN, PACT_TP_CD, PT_MTD_DEPT_CD, WRTR_PLWK_DEPT_CD);
+
+-- SpecimenMapper
+CREATE INDEX idx_s_mselmaid_pt_no_spcm_no_med_exm_ctg_cd
+    ON ODS.S_MSELMAID (PT_NO, SPCM_NO, MED_EXM_CTG_CD);
+
+CREATE INDEX idx_s_mselmctc_exm_ctg_cd
+    ON ODS.S_MSELMCTC (EXM_CTG_CD);
+
+CREATE INDEX idx_s_mselmebm_exm_cd
+    ON ODS.S_MSELMEBM (EXM_CD);
+
+-- StatusMapper
+CREATE INDEX idx_s_mrnnrfad_pt_no_rec_wrt_dtm_wrt_seq
+    ON ODS.S_MRNNRFAD (PT_NO, REC_WRT_DTM, WRT_SEQ);
+
+CREATE INDEX idx_s_mrnnriam_nr_item_id
+    ON ODS.S_MRNNRIAM (NR_ITEM_ID);
+
+-- TransferMapper
+CREATE INDEX idx_s_mrnnrfad_pact_tp_cd_pt_no_rec_wrt_dtm_wrt_seq_nrec_form_cd_lst_yn
+    ON ODS.S_MRNNRFAD (PACT_TP_CD, PT_NO, REC_WRT_DTM, WRT_SEQ, NREC_FORM_CD, LST_YN);
+
+CREATE INDEX idx_s_mrnnrfae_nrec_id_lst_yn
+    ON ODS.S_MRNNRFAE (NREC_ID, LST_YN);

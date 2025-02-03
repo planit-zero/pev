@@ -68,6 +68,11 @@ public class ReportController {
         return ResponseEntity.ok().body(reportService.getStatisticsUserMonth(session));
     }
 
+    @GetMapping("report/statistics/user/day")
+    ResponseEntity<?> getStatisticsUserDay(HttpSession session) {
+        return ResponseEntity.ok().body(reportService.getStatisticsUserDay(session));
+    }
+
     @GetMapping("report/statistics/user/hour")
     ResponseEntity<?> getStatisticsUserHour(HttpSession session) {
         return ResponseEntity.ok().body(reportService.getStatisticsUserHour(session));

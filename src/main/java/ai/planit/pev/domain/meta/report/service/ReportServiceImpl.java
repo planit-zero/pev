@@ -9,6 +9,7 @@ import ai.planit.pev.domain.meta.event.dto.EventSearchTargetDistribution;
 import ai.planit.pev.domain.meta.report.dao.ReportDAO;
 import ai.planit.pev.domain.meta.report.dto.*;
 import ai.planit.pev.domain.meta.user.dao.UserDAO;
+import ai.planit.pev.domain.meta.user.dto.UserLoginDay;
 import ai.planit.pev.domain.meta.user.dto.UserLoginDept;
 import ai.planit.pev.domain.meta.user.dto.UserLoginHour;
 import ai.planit.pev.domain.meta.user.dto.UserLoginWeek;
@@ -110,6 +111,11 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<UserLoginWeek> getStatisticsUserMonth(HttpSession session) {
         return userDAO.getStatisticsUserMonth();
+    }
+
+    @Override
+    public List<UserLoginDay> getStatisticsUserDay(HttpSession session) {
+        return userDAO.getStatisticsUserDay();
     }
 
     @Override

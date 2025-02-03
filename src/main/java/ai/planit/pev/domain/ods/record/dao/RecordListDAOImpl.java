@@ -132,4 +132,10 @@ public class RecordListDAOImpl implements RecordListDAO {
     public List<Record.Response> getNrNoteRecordList(Record.Request request) {
         return sqlSessionTemplate.selectList("getNrNoteRecordList", request);
     }
+
+    @Override
+    public List<Record.Response> getCrCprRecordList(Record.Request request) {
+        return sqlSessionTemplate.selectList("getCrCprRecordList", request);
+    }
+
 }

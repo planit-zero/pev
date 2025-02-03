@@ -16,16 +16,28 @@
                auth_cd as authCd,
                to_char(login_dtm, 'YYYY-MM-DD HH24:MI:SS') as loginDtm
         from pev_login_log
+        where dept_nm != '플랜잇'
         order by login_dtm desc
     </select>
 
     <select id="getStatisticsUserMonth" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginWeek">
         select date_trunc('month', login_dtm)::date as weekFromMonday,
-                count(*) as count
+               count(*) as count
         from pev_login_log
         where dept_nm != '플랜잇'
         group by weekFromMonday
         order by weekFromMonday desc
+        limit 12
+    </select>
+
+    <select id="getStatisticsUserDay" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginDay">
+        select date_trunc('day', login_dtm)::date as day,
+               count(*) as count
+        from pev_login_log
+        where dept_nm != '플랜잇'
+        group by day
+        order by day desc
+        limit 14
     </select>
 
     <select id="getStatisticsUserHour" resultType="ai.planit.pev.domain.meta.user.dto.UserLoginHour">

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Grid } from '@mui/material';
 import IrbSelector from './IrbSelector';
 import RidForm from './RidForm';
-import { useGetPatientMutation } from '../../../pev-service/PatientService';
-import { IPatientR, IPatientRidP } from '../../../pev-interface/IPatient';
+import {useGetPatientMutation, useGetRidByGidMutation} from '../../../pev-service/PatientService';
+import {IPatientR, IPatientRidP, IRidByGidP} from '../../../pev-interface/IPatient';
 import PatientInfo from './PatientInfo';
 import { useSearchParams } from 'react-router-dom';
 import { useGetIdpLoginUserMutation } from '../../../pev-service/UserService';
@@ -25,38 +25,61 @@ const RecordSearchPanel = (props: RecordSearchPanelProps) => {
     const [irb, setIrb] = React.useState<string | null>(null);
     const [rid, setRid] = React.useState<string>('');
     const [patient, setPatient] = React.useState<IPatientR | null>(null);
+    const [feasibility, setFeasibility] = React.useState<boolean>(false);
 
     const [getPatient] = useGetPatientMutation();
+    const [getRidByGid] = useGetRidByGidMutation();
     const [getIdpLoginUser] = useGetIdpLoginUserMutation();
 
     React.useEffect(() => {
-        const token = searchParams.get('token');
-        const key = searchParams.get('key');
-
-        getIdpLoginUser(token)
-            .unwrap()
-            .then((res) => {
-                setUserInfo(res);
-
-                if (key) {
-                    const decryptStr = CryptoUtils.decrypt(key, 'planitsquare2023');
-                    const decryptArr = decryptStr.split('|||');
-
-                    if (decryptArr.length == 2) {
-                        const irbParam = decryptArr[0];
-                        const ridParam = decryptArr[1];
-
-                        handleIrbChangeByObj(irbParam);
-                        handleRidChange(ridParam);
-
-                        handleRidSubmit(irbParam, ridParam);
-                    }
-                }
-            })
-            .catch((error) => {
-                window.location.href = UrlUtils.getIdpUrl(profile);
-            });
+        handlePanel()
     }, []);
+
+    const handlePanel = async () => {
+        try {
+            const token = searchParams.get('token');
+            const key = searchParams.get('key');
+            const user = await getIdpLoginUser(token).unwrap()
+
+            setUserInfo(user);
+
+            if (key) {
+                const decryptStr = CryptoUtils.decrypt(key, 'planitsquare2023');
+                const decryptArr = decryptStr.split('|||');
+
+                if (decryptArr.length === 3) {
+                    let irbParam = decryptArr[0];
+                    let ridParam = decryptArr[1];
+                    const feasibilityParam = decryptArr[2];
+
+                    // 미리보기 기능이라면
+                    if (feasibilityParam === 'true') {
+                        const gid = ridParam;
+                        irbParam = 'FEASIBILITY_CHECK';
+                        setFeasibility(true);
+
+                        const payload: IRidByGidP = {
+                            stfNo: user.stfNo,
+                            irbNo: irbParam,
+                            data: [{gid}]
+                        }
+
+                        // GID -> RID
+                        const response = await getRidByGid(payload).unwrap();
+
+                        ridParam = response.data[0].rid || '';
+                    }
+
+                    handleIrbChangeByObj(irbParam);
+                    handleRidChange(ridParam);
+
+                    handleRidSubmit(irbParam, ridParam);
+                }
+            }
+        } catch(err) {
+            window.location.href = UrlUtils.getIdpUrl(profile);
+        }
+    }
 
     const handleIrbChangeByObj = (irbNo: string) => {
         setIrb(irbNo);
@@ -86,10 +109,10 @@ const RecordSearchPanel = (props: RecordSearchPanelProps) => {
     return (
         <Grid container spacing={1}>
             <Grid item xs={3.5}>
-                <IrbSelector irb={irb} onChange={handleIrbChangeByObj} />
+                <IrbSelector irb={irb} onChange={handleIrbChangeByObj} feasibility={feasibility} />
             </Grid>
             <Grid item xs={5}>
-                <RidForm irb={irb} rid={rid} onChange={handleRidChange} onSubmit={handleRidSubmit} />
+                <RidForm irb={irb} rid={rid} onChange={handleRidChange} onSubmit={handleRidSubmit} feasibility={feasibility} />
             </Grid>
             <Grid item xs={3.5}>
                 <PatientInfo patient={patient} />

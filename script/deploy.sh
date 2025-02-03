@@ -1,7 +1,9 @@
 #!/bin/sh
 
-serverWithPort="snuhds@172.23.100.18 -p 9101"
 server="snuhds@172.23.100.18"
+serverWithPort="$server -p 9101"
+dir=/deview/pev
+TIME=$(date "+%Y-%m-%d_%H:%M")
 
 # ssh key 없다면 설치
 if [ ! -d ~/.ssh ]; then
@@ -28,17 +30,14 @@ fi;
 echo "======== 빌드 ========"
 ./gradlew clean build
 
-echo "======== 서버 중지 ========"
-ssh $serverWithPort "sh /deview/pev/stop.sh"
-
-echo "======== 백업 폴더 비우기 ========"
-ssh $serverWithPort "rm /deview/pev/BAK/*.jar"
-
 echo "======== 기존 JAR 파일 백업 폴더로 이동 ========"
-ssh $serverWithPort "mv /deview/pev/*.jar /deview/pev/BAK/"
+ssh $serverWithPort "mv $dir/*.jar $dir/BAK/$TIME.jar"
 
 echo "======== JAR 파일 이동 ========"
-scp -P 9101 ./build/libs/*.jar $server:/deview/pev/
+scp -P 9101 ./build/libs/*.jar $server:$dir
+
+echo "======== 서버 중지 ========"
+ssh $serverWithPort "sh $dir/stop.sh"
 
 echo "======== 서버 실행 ========"
-ssh $serverWithPort "sh /deview/pev/start.sh"
+ssh $serverWithPort "sh $dir/start.sh"

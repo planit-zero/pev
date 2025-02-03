@@ -46,6 +46,7 @@ const ImageElement = (props: ImageElementProps) => {
             if (!maskedImage) return ``;
             return `https://deview.snuh.org/masked_images/${maskedImage.url}`;
         } else {
+            // console.log(props.content);
             return `${props.content}`;
         }
     };
@@ -122,7 +123,7 @@ const ImageElement = (props: ImageElementProps) => {
                                     overflow: 'scroll'
                                 }}
                             >
-                                <img src={getUrl()} alt={'가명화 이미'} width={size.width || '100%'} height={size.height || '100%'} />
+                                <img src={getUrl()} alt={'가명화 이미지'} width={size.width || '100%'} height={size.height || '100%'} />
                             </Box>
                         </Box>
                     </Modal>

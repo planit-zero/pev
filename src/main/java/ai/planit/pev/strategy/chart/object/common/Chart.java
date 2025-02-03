@@ -23,5 +23,6 @@ public class Chart {
         private List<ChartElement> data;
         private ChartSection headerSection;
         private List<ChartSection> sections;
+        private List<String> medicalImages;
     }
 }

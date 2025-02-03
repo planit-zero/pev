@@ -22,6 +22,7 @@ export interface IChart {
     data: IChartElement[];
     headerSection: IChartSection | null;
     sections: IChartSection[];
+    medicalImages: string[] | null;
 }
 
 export interface IChartSection {

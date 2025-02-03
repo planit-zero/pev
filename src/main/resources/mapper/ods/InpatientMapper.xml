@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.inpatient.dao.InpatientDAO">
-    <select id="getNrInpatientEntities"
-            parameterType="java.lang.String"
-            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+
+    <select id="getNrInpatientEntities" parameterType="java.lang.String" resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
         SELECT 1                AS sectionId,
                C.NR_ITEM_CTG_ID AS id,
                '-1000'          AS parentId,
@@ -28,9 +27,8 @@
           AND A.LST_YN = 'Y'
         ORDER BY A.NREC_DTL_ID, C.SORT_SEQ, B.SORT_SEQ
     </select>
-    <select id="getNrInpatientAttributes"
-            parameterType="java.lang.String"
-            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+
+    <select id="getNrInpatientAttributes" parameterType="java.lang.String" resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
         SELECT 1                AS sectionId,
                B.NR_ITEM_ID     AS id,
                C.NR_ITEM_CTG_ID AS parentId,
@@ -55,9 +53,8 @@
           AND A.LST_YN = 'Y'
         ORDER BY A.NREC_DTL_ID, C.SORT_SEQ, B.SORT_SEQ
     </select>
-    <select id="getNrInpatientValues"
-            parameterType="java.lang.String"
-            resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
+
+    <select id="getNrInpatientValues" parameterType="java.lang.String" resultType="ai.planit.pev.strategy.chart.object.common.ChartElement">
         SELECT 1             AS sectionId,
                A.NREC_DTL_ID AS id,
                B.NR_ITEM_ID  AS parentId,
@@ -67,7 +64,10 @@
                    WHEN LENGTH(A.REC_CNTE) >= 50 THEN 'RICH_TEXT_BOX'
                    ELSE 'TEXT_BOX'
                    END AS controlType,
-               NULL          AS maskingType,
+               CASE
+                   WHEN B.NR_ITEM_ID = 55 THEN 'STAFF_NUMBER'
+                   ELSE NULL
+                   END AS maskingType,
                A.REC_CNTE    AS content,
                NULL          AS "desc",
                NULL          AS style
@@ -85,4 +85,5 @@
           AND A.LST_YN = 'Y'
         ORDER BY A.NREC_DTL_ID, C.SORT_SEQ, B.SORT_SEQ
     </select>
+
 </mapper>

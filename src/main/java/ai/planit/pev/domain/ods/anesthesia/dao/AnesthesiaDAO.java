@@ -9,7 +9,7 @@ import ai.planit.pev.strategy.chart.object.anesthesia.AnesthesiaSurgeryInfo;
 import java.util.List;
 
 public interface AnesthesiaDAO {
-    Record.Response getAnesthesiaRecord(AnesthesiaFormatRequest request);
+    List<Record.Response> getAnesthesiaRecord(AnesthesiaFormatRequest request);
 
     List<AnesthesiaRecordHistory> getAnesthesiaRecordHistories(String opExptRegId);
 

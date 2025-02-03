@@ -43,7 +43,7 @@ const Report = () => {
     const getMenuText = () => {
         if (menuIndex === 0 || menuIndex === 4) return `모든 신고내역`;
         if (menuIndex === 1 || menuIndex === 5) return `처리된 신고내역`;
-        if (menuIndex === 2) return `처리 중인 신고내역`;
+        // if (menuIndex === 2) return `처리 중인 신고내역`;
         if (menuIndex === 3 || menuIndex === 6) return `처리되지 않은 신고내역`;
         if (menuIndex === 7) return `사용자 접속`;
         if (menuIndex === 8) return `목록 조회`;

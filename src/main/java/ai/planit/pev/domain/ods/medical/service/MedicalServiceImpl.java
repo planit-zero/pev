@@ -4,11 +4,13 @@ import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.meta.record.dto.MetaRecordFormat;
 import ai.planit.pev.domain.ods.medical.dao.MedicalDAO;
+import ai.planit.pev.domain.ods.medical.dto.MedicalImage;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.strategy.chart.object.common.ChartStyleSection;
 import ai.planit.pev.strategy.chart.object.common.ChartStyleXml;
 import ai.planit.pev.strategy.chart.object.medical.MedicalData;
 import ai.planit.pev.strategy.chart.object.medical.MedicalReply;
+import ai.planit.pev.strategy.chart.object.medical.SurgeryData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,16 @@ public class MedicalServiceImpl implements MedicalService {
     @Override
     public List<MedicalData> getMedicalData(Record.Response record) {
         return medicalDAO.getMedicalData(record);
+    }
+
+    @Override
+    public List<SurgeryData> getSurgeryData(Record.Response record) {
+        return medicalDAO.getSurgeryData(record);
+    }
+
+    @Override
+    public List<String> getMedicalImageData(MedicalImage.Request request) {
+        return medicalDAO.getMedicalImageData(request);
     }
 
     @Override

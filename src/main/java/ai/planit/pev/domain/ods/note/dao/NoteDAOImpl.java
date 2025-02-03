@@ -23,4 +23,10 @@ public class NoteDAOImpl implements NoteDAO {
     public List<NoteValue> getNrNoteValueList(NoteKey noteKey) {
         return sqlSessionTemplate.selectList("getNrNoteValueList", noteKey);
     }
+
+    @Override
+    public List<String> getImagePath(List<String> ndrcIdList) {
+        return sqlSessionTemplate.selectList("getImagePath", ndrcIdList);
+    }
+
 }
