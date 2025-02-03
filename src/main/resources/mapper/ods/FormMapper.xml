@@ -42,18 +42,18 @@
                                      ELSE - 1 END                       AS imageSeq
                           FROM ODS.S_MRFMFCID A
                                    LEFT OUTER JOIN ODS.S_MRDDRECE B
-                                                   ON B.MDRC_ID = #{mdrcId}
+                                                   ON B.MDRC_ID = #{}
                                                        AND B.MDRC_FOM_SEQ = #{mdrcFomSeq}
                                                        AND A.MDFM_CPEM_ID = B.MDFM_CPEM_ID
                                    LEFT OUTER JOIN ODS.S_MRDDRLFE C
-                                                   ON C.MDRC_ID = #{mdrcId}
+                                                   ON C.MDRC_ID = #{}
                                                        AND C.MDRC_FOM_SEQ = #{mdrcFomSeq}
                                                        AND A.MDFM_CPEM_ID = C.MDFM_CPEM_ID
                           WHERE A.MDFM_ID = #{mdfmId}
                             AND A.MDFM_FOM_SEQ = #{mdfmFomSeq}
                       ) M
                           LEFT OUTER JOIN ODS.S_MRDDRIMD D
-                                          ON D.MDRC_ID = #{mdrcId}
+                                          ON D.MDRC_ID = #{}
                                               AND D.MDRC_FOM_SEQ = #{mdrcFomSeq}
                                               AND M.imageSeq = D.IMG_SEQ
              ) T

@@ -2,10 +2,12 @@ package ai.planit.pev.strategy.chart.object.common;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 public class ChartStyleItem {
@@ -151,6 +153,9 @@ public class ChartStyleItem {
     @XmlAttribute(name = "VerticalInterval")
     private String verticalInterval;
 
+    @XmlAttribute(name = "DefaultValue")
+    private String defaultValue;
+
     // Value
     @Setter
     private String value;
@@ -162,5 +167,41 @@ public class ChartStyleItem {
     public void setPosition(String top, String left) {
         this.top = top;
         this.left = left;
+    }
+
+    public int getIndentUnitInt() {
+        return Integer.parseInt(indentUnit);
+    }
+
+    public int getTopInt() {
+        return StringUtils.isNotEmpty(top) ? Integer.valueOf(top) : 0;
+    }
+
+    public int getLeftInt() {
+        return StringUtils.isNotEmpty(left) ? Integer.valueOf(left) : 0;
+    }
+
+    public int getWidthInt() {
+        return Integer.valueOf(width);
+    }
+
+    public int getHeightInt() {
+        return StringUtils.isEmpty(height) || "NaN".equals(height) ? getMinHeightInt(): Integer.valueOf(height);
+    }
+
+    public int getMinHeightInt() {
+        return Integer.valueOf(minHeight);
+    }
+
+    public int getYPoint() {
+        return getTopInt() + getHeightInt();
+    }
+
+    public int getFontSize() {
+        return Integer.parseInt(fontSize);
+    }
+
+    public String getValue() {
+        return StringUtils.isNotEmpty(value) ? value : Optional.ofNullable(defaultValue).orElse("");
     }
 }
