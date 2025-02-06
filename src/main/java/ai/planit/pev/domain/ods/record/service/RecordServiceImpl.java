@@ -477,6 +477,7 @@ public class RecordServiceImpl implements RecordService {
                 }
 
                 dataSource = anesthesiaService.getAnesthesiaRecordData(request.getRecord().getRecordDetailType(), request.getRecord().getOpExptRegId());
+
             } else {
                 chartContext.setChartStrategy(new MedicalChartStrategy());
                 List<MedicalData> medicalData = medicalService.getMedicalData(request.getRecord());
@@ -532,7 +533,7 @@ public class RecordServiceImpl implements RecordService {
                 dataSource = specimenService.getSpecimenData(session, request.getRecord());
             }
 
-            // 기능검사
+            // 기능검사 (과별서식)
             if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_DEPARTMENT.getType())) {
                 chartContext.setChartStrategy(new FunctionChartStrategy());
                 dataSource = functionService.getFunctionData(request.getRecord().getKeyId());

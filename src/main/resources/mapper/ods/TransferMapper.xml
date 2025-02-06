@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.transfer.dao.TransferDAO">
-    <select id="getNrTransferContents"
-            parameterType="java.lang.String"
-            resultType="ai.planit.pev.strategy.chart.object.transfer.TransferContent">
+
+    <select id="getNrTransferContents" parameterType="java.lang.String" resultType="ai.planit.pev.strategy.chart.object.transfer.TransferContent">
         <![CDATA[
         SELECT CASE
                    WHEN INSTR(C.NR_ITEM_NM, '>') = 0 THEN C.NR_ITEM_NM
@@ -25,9 +24,8 @@
         ORDER BY C.SORT_SEQ
         ]]>
     </select>
-    <select id="getNrTransferWriterText"
-            parameterType="java.lang.String"
-            resultType="java.lang.String">
+
+    <select id="getNrTransferWriterText" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT B.STF_NM AS writerNm
         FROM ODS.S_MRNNRFAD A
                  INNER JOIN ODS.S_CNLRRUSD B
@@ -35,5 +33,8 @@
         WHERE A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
         AND A.NREC_FORM_CD = '501'
         AND A.LST_YN = 'Y'
+        ORDER BY A.LSH_DTM DESC
+        LIMIT 1
     </select>
+
 </mapper>
