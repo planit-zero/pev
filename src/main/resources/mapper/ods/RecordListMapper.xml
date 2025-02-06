@@ -4,40 +4,40 @@
 
     <select id="getMedicalRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'DR' AS recordType,
-               A.MDFM_CLS_CD AS recordDetailType,
-               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType,
-               CASE
-                   WHEN A.MDFM_CLS_CD IN ('D009', 'D020', 'D035')
-                   THEN (SELECT Z.MDFM_NM FROM ODS.S_MRFMFORM Z WHERE Z.MDFM_ID = A.MDFM_ID AND Z.MDFM_FOM_SEQ = A.MDFM_FOM_SEQ)
-                   ELSE (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD)
-               END AS itemNm,
-               CASE
-                   WHEN A.MDFM_CLS_CD IN ('D001', 'D002', 'D003', 'D004', 'D031') THEN TO_CHAR(A.MED_DT::DATETIME)
-                   ELSE TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD HH24:MI:SS')
-               END AS writingDate,
-               A.WRTR_DEPT_CD AS writingDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
-               A.WRT_STF_NO AS writerStfNo,
-               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
-               A.MDRC_ID || '_' || A.MDRC_FOM_SEQ || '_' || A.MDFM_ID || '_' || A.MDFM_FOM_SEQ AS keyId,
-               A.PACT_ID AS pactId,
-               A.PACT_TP_CD AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MED_DEPT_CD AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
-               ROW_NUMBER() OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
-               NULL AS note,
-               A.MDFM_ID AS mdfmId,
-               A.MDFM_FOM_SEQ AS mdfmFomSeq,
-               A.MDRC_ID AS ,
-               A.MDRC_FOM_SEQ AS mdrcFomSeq,
-               NULL AS examKey,
-               NULL AS pacsImgIptnCd,
-               NULL AS accsId,
-               NULL AS recType,
-               NULL AS geneExmYn,
-               CASE WHEN A.MDRC_WRT_STS_CD <![CDATA[>]]> 10 THEN 'Y' END AS mdrcWrtStsCdYn,
-               NULL AS opExptRegId
+        A.MDFM_CLS_CD AS recordDetailType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType,
+        CASE
+        WHEN A.MDFM_CLS_CD IN ('D009', 'D020', 'D035')
+        THEN (SELECT Z.MDFM_NM FROM ODS.S_MRFMFORM Z WHERE Z.MDFM_ID = A.MDFM_ID AND Z.MDFM_FOM_SEQ = A.MDFM_FOM_SEQ)
+        ELSE (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD)
+        END AS itemNm,
+        CASE
+        WHEN A.MDFM_CLS_CD IN ('D001', 'D002', 'D003', 'D004', 'D031') THEN TO_CHAR(A.MED_DT::DATETIME)
+        ELSE TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD HH24:MI:SS')
+        END AS writingDate,
+        A.WRTR_DEPT_CD AS writingDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
+        A.WRT_STF_NO AS writerStfNo,
+        (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
+        A.MDRC_ID || '_' || A.MDRC_FOM_SEQ || '_' || A.MDFM_ID || '_' || A.MDFM_FOM_SEQ AS keyId,
+        A.PACT_ID AS pactId,
+        A.PACT_TP_CD AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MED_DEPT_CD AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
+        ROW_NUMBER() OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
+        NULL AS note,
+        A.MDFM_ID AS mdfmId,
+        A.MDFM_FOM_SEQ AS mdfmFomSeq,
+        A.MDRC_ID AS mdrcId,
+        A.MDRC_FOM_SEQ AS mdrcFomSeq,
+        NULL AS examKey,
+        NULL AS pacsImgIptnCd,
+        NULL AS accsId,
+        NULL AS recType,
+        NULL AS geneExmYn,
+        CASE WHEN A.MDRC_WRT_STS_CD <![CDATA[>]]> 10 THEN 'Y' END AS mdrcWrtStsCdYn,
+        NULL AS opExptRegId
         FROM ODS.S_MRDDRECM A
         WHERE A.PT_NO = #{ptNo}
         AND A.MDFM_CLS_CD NOT IN ('D005', 'D006', 'D007', 'D010', 'D011')
@@ -67,33 +67,33 @@
 
     <select id="getSurgeryRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'DR' AS recordType,
-               A.MDFM_CLS_CD AS recordDetailType,
-               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType,
-               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemNm,
-               TO_CHAR(NVL(B.OP_DTM, A.MDF_REC_DTM), 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
-               A.WRTR_DEPT_CD AS writingDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
-               A.WRT_STF_NO AS writerStfNo,
-               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
-               NULL AS keyId,
-               A.PACT_ID AS pactId,
-               A.PACT_TP_CD AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MED_DEPT_CD AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
-               ROW_NUMBER() OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
-               NULL AS note,
-               A.MDFM_ID AS mdfmId,
-               A.MDFM_FOM_SEQ AS mdfmFomSeq,
-               A.MDRC_ID AS ,
-               A.MDRC_FOM_SEQ AS mdrcFomSeq,
-               NULL AS examKey,
-               NULL AS pacsImgIptnCd,
-               NULL AS accsId,
-               NULL AS recType,
-               NULL AS geneExmYn,
-               CASE WHEN A.MDRC_WRT_STS_CD <![CDATA[>]]> 10 THEN 'Y' END AS mdrcWrtStsCdYn,
-               NULL AS opExptRegId
+        A.MDFM_CLS_CD AS recordDetailType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemNm,
+        TO_CHAR(NVL(B.OP_DTM, A.MDF_REC_DTM), 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
+        A.WRTR_DEPT_CD AS writingDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
+        A.WRT_STF_NO AS writerStfNo,
+        (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
+        NULL AS keyId,
+        A.PACT_ID AS pactId,
+        A.PACT_TP_CD AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MED_DEPT_CD AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
+        ROW_NUMBER() OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
+        NULL AS note,
+        A.MDFM_ID AS mdfmId,
+        A.MDFM_FOM_SEQ AS mdfmFomSeq,
+        A.MDRC_ID AS mdrcId,
+        A.MDRC_FOM_SEQ AS mdrcFomSeq,
+        NULL AS examKey,
+        NULL AS pacsImgIptnCd,
+        NULL AS accsId,
+        NULL AS recType,
+        NULL AS geneExmYn,
+        CASE WHEN A.MDRC_WRT_STS_CD <![CDATA[>]]> 10 THEN 'Y' END AS mdrcWrtStsCdYn,
+        NULL AS opExptRegId
         FROM ODS.S_MRDDRECM A
         INNER JOIN ODS.S_MRDDRONE B ON A.MDRC_ID = B.MDRC_ID AND A.MDRC_FOM_SEQ = B.MDRC_FOM_SEQ
         WHERE A.PT_NO = #{ptNo}
@@ -117,33 +117,33 @@
 
     <select id="getDischargeRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'DR' AS recordType,
-               A.MDFM_CLS_CD AS recordDetailType,
-               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType,
-               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemNm,
-               TO_CHAR(NVL(B.DS_DT, A.MDF_REC_DTM), 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
-               A.WRTR_DEPT_CD AS writingDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
-               A.WK_STF_NO AS writerStfNo,
-               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
-               NULL AS keyId,
-               A.PACT_ID AS pactId,
-               A.PACT_TP_CD AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MED_DEPT_CD AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
-               ROW_NUMBER() OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
-               NULL AS note,
-               A.MDFM_ID AS mdfmId,
-               A.MDFM_FOM_SEQ AS mdfmFomSeq,
-               A.MDRC_ID AS ,
-               A.MDRC_FOM_SEQ AS mdrcFomSeq,
-               NULL AS examKey,
-               NULL AS pacsImgIptnCd,
-               NULL AS accsId,
-               NULL AS recType,
-               NULL AS geneExmYn,
-               CASE WHEN A.MDRC_WRT_STS_CD <![CDATA[>]]> 10 THEN 'Y' END AS mdrcWrtStsCdYn,
-               NULL AS opExptRegId
+        A.MDFM_CLS_CD AS recordDetailType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemNm,
+        TO_CHAR(NVL(B.DS_DT, A.MDF_REC_DTM), 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
+        A.WRTR_DEPT_CD AS writingDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
+        A.WK_STF_NO AS writerStfNo,
+        (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
+        NULL AS keyId,
+        A.PACT_ID AS pactId,
+        A.PACT_TP_CD AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MED_DEPT_CD AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
+        ROW_NUMBER() OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
+        NULL AS note,
+        A.MDFM_ID AS mdfmId,
+        A.MDFM_FOM_SEQ AS mdfmFomSeq,
+        A.MDRC_ID AS mdrcId,
+        A.MDRC_FOM_SEQ AS mdrcFomSeq,
+        NULL AS examKey,
+        NULL AS pacsImgIptnCd,
+        NULL AS accsId,
+        NULL AS recType,
+        NULL AS geneExmYn,
+        CASE WHEN A.MDRC_WRT_STS_CD <![CDATA[>]]> 10 THEN 'Y' END AS mdrcWrtStsCdYn,
+        NULL AS opExptRegId
         FROM ODS.S_MRDDRECM A
         LEFT OUTER JOIN (SELECT Q.PT_NO AS PT_NO
         , Q.PACT_ID AS PACT_ID
@@ -184,36 +184,36 @@
 
     <select id="getRequestRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'DR' AS recordType,
-               A.MDFM_CLS_CD AS recordDetailType,
-               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType,
-               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemNm,
-               CASE
-                   WHEN A.MDFM_CLS_CD IN ('D001', 'D002', 'D003', 'D004', 'D031') THEN TO_CHAR(A.MED_DT::DATETIME)
-                   ELSE TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD HH24:MI:SS')
-               END AS writingDate,
-               A.WRTR_DEPT_CD AS writingDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
-               A.WRT_STF_NO AS writerStfNo,
-               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
-               NULL AS keyId,
-               A.PACT_ID AS pactId,
-               A.PACT_TP_CD AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MED_DEPT_CD AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
-               ROW_NUMBER() OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
-               NULL AS note,
-               A.MDFM_ID AS mdfmId,
-               A.MDFM_FOM_SEQ AS mdfmFomSeq,
-               A.MDRC_ID AS ,
-               A.MDRC_FOM_SEQ AS mdrcFomSeq,
-               NULL AS examKey,
-               NULL AS pacsImgIptnCd,
-               NULL AS accsId,
-               NULL AS recType,
-               NULL AS geneExmYn,
-               CASE WHEN A.MDRC_WRT_STS_CD <![CDATA[>]]> 10 THEN 'Y' END AS mdrcWrtStsCdYn,
-               NULL AS opExptRegId
+        A.MDFM_CLS_CD AS recordDetailType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = A.MDFM_CLS_DTL_CD) AS itemNm,
+        CASE
+        WHEN A.MDFM_CLS_CD IN ('D001', 'D002', 'D003', 'D004', 'D031') THEN TO_CHAR(A.MED_DT::DATETIME)
+        ELSE TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD HH24:MI:SS')
+        END AS writingDate,
+        A.WRTR_DEPT_CD AS writingDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_DEPT_CD) AS writingDeptNm,
+        A.WRT_STF_NO AS writerStfNo,
+        (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO) AS writerNm,
+        NULL AS keyId,
+        A.PACT_ID AS pactId,
+        A.PACT_TP_CD AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MED_DEPT_CD AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MED_DEPT_CD) AS ptMedDeptNm,
+        ROW_NUMBER() OVER (PARTITION BY TO_CHAR(A.MDF_REC_DTM, 'YYYY-MM-DD') ORDER BY A.REC_DTM DESC) AS sortSeq,
+        NULL AS note,
+        A.MDFM_ID AS mdfmId,
+        A.MDFM_FOM_SEQ AS mdfmFomSeq,
+        A.MDRC_ID AS mdrcId,
+        A.MDRC_FOM_SEQ AS mdrcFomSeq,
+        NULL AS examKey,
+        NULL AS pacsImgIptnCd,
+        NULL AS accsId,
+        NULL AS recType,
+        NULL AS geneExmYn,
+        CASE WHEN A.MDRC_WRT_STS_CD <![CDATA[>]]> 10 THEN 'Y' END AS mdrcWrtStsCdYn,
+        NULL AS opExptRegId
         FROM ODS.S_MRDDRECM A
         WHERE A.PT_NO = #{ptNo}
         AND A.MDFM_CLS_CD IN
@@ -234,33 +234,33 @@
 
     <select id="getAnesthesiaRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'DR' AS recordType,
-               B.MDFM_CLS_CD AS recordDetailType,
-               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = B.MDFM_CLS_DTL_CD) AS itemType,
-               (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = B.MDFM_CLS_DTL_CD) AS itemNm,
-               TO_CHAR(A.OP_EXPT_DT, 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
-               NULL AS writingDeptCd,
-               NULL AS writingDeptNm,
-               B.LSH_STF_NO AS writerStfNo,
-               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = B.LSH_STF_NO) AS writerNm,
-               NULL AS keyId,
-               NULL AS pactId,
-               NULL AS pactTpCd,
-               NULL AS pactTpNm,
-               NULL AS ptMedDeptCd,
-               NULL AS ptMedDeptNm,
-               ROW_NUMBER() OVER (PARTITION BY A.OP_EXPT_DT ORDER BY A.OP_EXPT_DT DESC) AS sortSeq,
-               NULL AS note,
-               1 AS mdfmId,
-               1 AS mdfmFomSeq,
-               NULL AS ,
-               NULL AS mdrcFomSeq,
-               NULL AS examKey,
-               NULL AS pacsImgIptnCd,
-               NULL AS accsId,
-               NULL AS recType,
-               NULL AS geneExmYn,
-               'Y' AS mdrcWrtStsCdYn,
-               A.OP_EXPT_REG_ID AS opExptRegId
+        B.MDFM_CLS_CD AS recordDetailType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = B.MDFM_CLS_DTL_CD) AS itemType,
+        (SELECT Z.COMN_CD_NM FROM ODS.S_CCCCCSTE Z WHERE Z.COMN_GRP_CD = 'RDO062' AND Z.COMN_CD = B.MDFM_CLS_DTL_CD) AS itemNm,
+        TO_CHAR(A.OP_EXPT_DT, 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
+        NULL AS writingDeptCd,
+        NULL AS writingDeptNm,
+        B.LSH_STF_NO AS writerStfNo,
+        (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = B.LSH_STF_NO) AS writerNm,
+        NULL AS keyId,
+        NULL AS pactId,
+        NULL AS pactTpCd,
+        NULL AS pactTpNm,
+        NULL AS ptMedDeptCd,
+        NULL AS ptMedDeptNm,
+        ROW_NUMBER() OVER (PARTITION BY A.OP_EXPT_DT ORDER BY A.OP_EXPT_DT DESC) AS sortSeq,
+        NULL AS note,
+        1 AS mdfmId,
+        1 AS mdfmFomSeq,
+        NULL AS mdrcId,
+        NULL AS mdrcFomSeq,
+        NULL AS examKey,
+        NULL AS pacsImgIptnCd,
+        NULL AS accsId,
+        NULL AS recType,
+        NULL AS geneExmYn,
+        'Y' AS mdrcWrtStsCdYn,
+        A.OP_EXPT_REG_ID AS opExptRegId
         FROM ODS.S_MRDDRARD A
         INNER JOIN ODS.S_MRDDRAFE B ON A.OP_EXPT_REG_ID = B.OP_EXPT_REG_ID AND B.AFCHG_ANRM_REC_VAL_ID IS NULL
         INNER JOIN ODS.S_MOOOPPAM C ON C.OP_EXPT_REG_ID = A.OP_EXPT_REG_ID
@@ -280,31 +280,31 @@
 
     <select id="getOrderRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'OR' AS recordType,
-               'OR' AS recordDetailType,
-               '처방' AS itemType,
-               '처방' || '(' || TO_CHAR(A.ORD_DT, 'YYYY-MM-DD') || ')' AS itemNm,
-               TO_CHAR(A.ORD_DT, 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
-               A.PT_HME_DEPT_CD AS writingDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_HME_DEPT_CD) AS writingDeptNm,
-               NULL AS writerStfNo,
-               NULL AS writerNm,
-               NULL AS keyId,
-               NULL AS pactId,
-               A.MED_PACT_TP_CD AS pactTpCd,
-               DECODE(A.MED_PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               NULL AS sortSeq,
-               NULL AS note,
-               1 AS mdfmId,
-               1 AS mdfmFomSeq,
-               NULL AS ,
-               NULL AS mdrcFomSeq,
-               NULL AS examKey,
-               NULL AS pacsImgIptnCd,
-               NULL AS accsId,
-               NULL AS recType,
-               NULL AS geneExmYn,
-               NULL AS mdrcWrtStsCdYn,
-               NULL AS opExptRegId
+        'OR' AS recordDetailType,
+        '처방' AS itemType,
+        '처방' || '(' || TO_CHAR(A.ORD_DT, 'YYYY-MM-DD') || ')' AS itemNm,
+        TO_CHAR(A.ORD_DT, 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
+        A.PT_HME_DEPT_CD AS writingDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_HME_DEPT_CD) AS writingDeptNm,
+        NULL AS writerStfNo,
+        NULL AS writerNm,
+        NULL AS keyId,
+        NULL AS pactId,
+        A.MED_PACT_TP_CD AS pactTpCd,
+        DECODE(A.MED_PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        NULL AS sortSeq,
+        NULL AS note,
+        1 AS mdfmId,
+        1 AS mdfmFomSeq,
+        NULL AS mdrcId,
+        NULL AS mdrcFomSeq,
+        NULL AS examKey,
+        NULL AS pacsImgIptnCd,
+        NULL AS accsId,
+        NULL AS recType,
+        NULL AS geneExmYn,
+        NULL AS mdrcWrtStsCdYn,
+        NULL AS opExptRegId
         FROM ODS.S_MOOORPTD A
         WHERE A.PT_NO = #{ptNo}
         AND A.ORD_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
@@ -337,7 +337,7 @@
                NULL AS note,
                1 AS mdfmId,
                1 AS mdfmFomSeq,
-               NULL AS ,
+               NULL AS mdrcId,
                NULL AS mdrcFomSeq,
                M.IPTN_NO AS examKey,
                NULL AS pacsImgIptnCd,
@@ -362,8 +362,8 @@
                'EX_PATHOLOGY'                                              AS recordDetailType,
                '병리검사'                                                  AS itemType,
                CASE
-                   WHEN A.MAIN_PKRG_NM IS NULL THEN A.EXM_CTG_NM
-                   ELSE A.EXM_CTG_NM || ' ' || A.MAIN_PKRG_NM
+                   WHEN A.MAIN_PKRG_NM IS NULL THEN B.EXM_CTG_NM
+                   ELSE B.EXM_CTG_NM || ' ' || A.MAIN_PKRG_NM
                    END AS itemNm,
                TO_CHAR(A.ACPT_DTM, 'YYYY-MM-DD HH24:MI:SS')                AS writingDate,
                A.MED_DEPT_CD                                               AS writingDeptCd,
@@ -380,7 +380,7 @@
                NULL                                                        AS note,
                1                                                           AS mdfmId,
                1                                                           AS mdfmFomSeq,
-               NULL                                                        AS ,
+               NULL                                                        AS mdrcId,
                NULL                                                        AS mdrcFomSeq,
                A.PTHL_NO                                                   AS examKey,
                NULL                                                        AS pacsImgIptnCd,
@@ -389,17 +389,14 @@
                NULL                                                        AS geneExmYn,
                NULL                                                        AS mdrcWrtStsCdYn,
                NULL                                                        AS opExptRegId
-        FROM (
-                SELECT *
-                FROM ODS.S_MSEPMPMD A
-                JOIN ODS.S_MSELMCTC B ON A.EXM_CTG_CD = B.EXM_CTG_CD
-                WHERE A.PT_NO = #{ptNo}
-                  AND A.ACPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
-                  AND A.PLEX_PRGR_STS_CD IN ('N', 'D', 'C')
-             ) A
-        INNER JOIN ODS.S_MSELMCED C ON A.SPCM_NO = C.SPCM_NO
-        INNER JOIN ODS.S_MOOOREXM D ON C.ORD_ID = D.ORD_ID
-        WHERE D.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', D.PACT_TP_CD, #{pactTpCd})
+        FROM ODS.S_MSEPMPMD A
+                 INNER JOIN ODS.S_MSELMCTC B ON A.EXM_CTG_CD = B.EXM_CTG_CD
+                 INNER JOIN ODS.S_MSELMCED C ON A.SPCM_NO = C.SPCM_NO
+                 INNER JOIN ODS.S_MOOOREXM D ON C.ORD_ID = D.ORD_ID
+        WHERE A.PT_NO = #{ptNo}
+          AND A.ACPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+          AND A.PLEX_PRGR_STS_CD IN ('N', 'D', 'C')
+          AND D.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', D.PACT_TP_CD, #{pactTpCd})
     </select>
 
     <select id="getExamSpecimenRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
@@ -422,7 +419,7 @@
                         NULL                                                        AS note,
                         1                                                           AS mdfmId,
                         1                                                           AS mdfmFomSeq,
-                        NULL                                                        AS ,
+                        NULL                                                        AS mdrcId,
                         NULL                                                        AS mdrcFomSeq,
                         A.SPCM_NO                                                   AS examKey,
                         NULL                                                        AS pacsImgIptnCd,
@@ -459,7 +456,7 @@
                NULL                                                        AS note,
                NULL                                                        AS mdfmId,
                NULL                                                        AS mdfmFomSeq,
-               NULL                                                        AS ,
+               NULL                                                        AS mdrcId,
                NULL                                                        AS mdrcFomSeq,
                M.IPTN_NO                                                   AS examKey,
                DECODE(M.PACS_IMG_IPTN_YN, 'Y', DECODE((SELECT Z.USE_YN FROM ODS.S_MSERMZED Z WHERE Z.ORD_CD = M.ORD_CD AND Z.EXCP_CTG_CD = '007'), 'Y', 'C', 'P'), '') AS pacsImgIptnCd,
@@ -488,7 +485,7 @@
                    WHEN INSTR(A.MTD_DEPT_CD, '/') != 0
                    THEN SUBSTR(A.MTD_DEPT_CD, 0, INSTR(A.MTD_DEPT_CD, '/') - 1)
                    ELSE A.MTD_DEPT_CD
-               END AS writingDeptCd,
+                   END AS writingDeptCd,
                C.DEPT_NM AS writingDeptNm,
                NULL AS writerStfNo,
                NULL AS writerNm,
@@ -502,7 +499,7 @@
                NULL AS note,
                1 AS mdfmId,
                1 AS mdfmFomSeq,
-               NULL AS ,
+               NULL AS mdrcId,
                NULL AS mdrcFomSeq,
                REGEXP_REPLACE(A.IMG_SV_ADDR_NM, '\\', '/') AS examKey,
                A.IMG_SV_ADDR_NM AS examKeyOrign,
@@ -513,13 +510,13 @@
                NULL AS mdrcWrtStsCdYn,
                NULL AS opExptRegId
         FROM ODS.S_MSMCSMTM A
-        LEFT OUTER JOIN ODS.S_MSMCSOCC B
-        ON A.SCAN_FORM_CD = B.ODF_PAGE_CD
-        LEFT OUTER JOIN ODS.S_PDEDBMSM C
-        ON A.MTD_DEPT_CD = C.DEPT_CD
+                 LEFT OUTER JOIN ODS.S_MSMCSOCC B
+                                 ON A.SCAN_FORM_CD = B.ODF_PAGE_CD
+                 LEFT OUTER JOIN ODS.S_PDEDBMSM C
+                                 ON A.MTD_DEPT_CD = C.DEPT_CD
         WHERE A.PT_NO = #{ptNo}
-        AND A.ORD_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
-        AND NVL(A.SCAN_TP_CD, 'A') NOT IN ('M', 'O')
+          AND A.ORD_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+          AND NVL(A.SCAN_TP_CD, 'A') NOT IN ('M', 'O')
         ORDER BY writingDate DESC, A.BRCD_SEQ
     </select>
 
@@ -543,90 +540,6 @@
                         NULL                                                        AS note,
                         1                                                           AS mdfmId,
                         1                                                           AS mdfmFomSeq,
-                        NULL                                                        AS ,
-                        NULL                                                        AS mdrcFomSeq,
-                        NULL                                                        AS examKey,
-                        NULL                                                        AS pacsImgIptnCd,
-                        NULL                                                        AS accsId,
-                        NULL                                                        AS recType,
-                        NULL                                                        AS geneExmYn,
-                        NULL                                                        AS mdrcWrtStsCdYn,
-                        NULL                                                        AS opExptRegId
-        FROM ODS.S_MRNNRVAD A
---         INNER JOIN ODS.S_MRNNRVAE B ON A.CLCO_REC_ITEM_ID = B.CLCO_REC_ITEM_ID
-        WHERE PT_NO = #{ptNo}
-          AND A.CLCO_REC_WRT_PATH_TP_CD = '01'
-          AND A.UITM_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
-          AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
-        ORDER BY writingDate DESC
-    </select>
-
-    <select id="getNrInpatientRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
-        SELECT 'NR'                                                                  AS recordType,
-               'NR_INPATIENT'                                                        AS recordDetailType,
-               C.NREC_CLS_NM                                                         AS itemType,
-               B.NREC_FORM_NM                                                        AS itemNm,
-               TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')                       AS writingDate,
-               A.WRTR_PLWK_DEPT_CD                                                   AS writingDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_PLWK_DEPT_CD) AS writingDeptNm,
-               A.FSR_STF_NO                                                          AS writerStfNo,
-               (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.FSR_STF_NO) AS writerStfNm,
-               A.NREC_ID                                                             AS keyId,
-               A.PACT_ID                                                             AS pactId,
-               A.PACT_TP_CD                                                          AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL)     AS pactTpNm,
-               A.PT_MTD_DEPT_CD                                                      AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-               1                                                                     AS sortSeq,
-               NULL                                                                  AS note,
-               1                                                                     AS mdfmId,
-               1                                                                     AS mdfmFomSeq,
-               NULL                                                                  AS ,
-               NULL                                                                  AS mdrcFomSeq,
-               NULL                                                                  AS examKey,
-               NULL                                                                  AS pacsImgIptnCd,
-               NULL                                                                  AS accsId,
-               NULL                                                                  AS recType,
-               NULL                                                                  AS geneExmYn,
-               NULL                                                                  AS mdrcWrtStsCdYn,
-               NULL                                                                  AS opExptRegId
-        FROM ODS.S_MRNNRFAD A
-                 INNER JOIN ODS.S_MRNNRCBC B
-                            ON A.NREC_FORM_CD = B.NREC_FORM_CD
-                                AND B.NREC_CLS_CD = '01'
-                                AND B.LST_YN = 'Y'
-                 INNER JOIN ODS.S_MRNNRCAC C
-                            ON B.NREC_CLS_CD = C.NREC_CLS_CD
-                                AND C.LST_YN = 'Y'
-        WHERE A.PT_NO = #{ptNo}
-          AND A.LST_YN = 'Y'
-          AND A.REC_WRT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
-          AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
-          <if test="deptType == 'MEDICAL'">AND A.PT_MTD_DEPT_CD = #{deptCd}</if>
-          <if test="deptType == 'WRITER'">AND A.WRTR_PLWK_DEPT_CD = #{deptCd}</if>
-        order by writingDate desc
-    </select>
-
-    <select id="getNrExecuteRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
-        SELECT DISTINCT 'NR' AS recordType,
-                        'NR_EXECUTE'                                                AS recordDetailType,
-                        '간호활동수행기록'                                          AS itemType,
-                        '간호활동수행기록' || '(' || A.UITM_DT || ')'               AS itemNm,
-                        TO_CHAR(A.UITM_DT, 'YYYY-MM-DD HH24:MI:SS')                 AS writingDate,
-                        NULL                                                        AS writingDeptCd,
-                        NULL                                                        AS writingDeptNm,
-                        NULL                                                        AS writerStfNo,
-                        NULL                                                        As writerStfNm,
-                        A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.UITM_DT          AS keyId,
-                        A.PACT_ID                                                   AS pactId,
-                        A.PACT_TP_CD                                                AS pactTpCd,
-                        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-                        NULL                                                        AS ptMedDeptCd,
-                        NULL                                                        AS ptMedDeptNm,
-                        1                                                           AS sortSeq,
-                        NULL                                                        AS note,
-                        1                                                           AS mdfmId,
-                        1                                                           AS mdfmFomSeq,
                         NULL                                                        AS mdrcId,
                         NULL                                                        AS mdrcFomSeq,
                         NULL                                                        AS examKey,
@@ -636,6 +549,91 @@
                         NULL                                                        AS geneExmYn,
                         NULL                                                        AS mdrcWrtStsCdYn,
                         NULL                                                        AS opExptRegId
+        FROM ODS.S_MRNNRVAD A
+                 INNER JOIN ODS.S_MRNNRVAE B
+                            ON A.CLCO_REC_ITEM_ID = B.CLCO_REC_ITEM_ID
+        WHERE PT_NO = #{ptNo}
+          AND A.CLCO_REC_WRT_PATH_TP_CD = '01'
+          AND A.UITM_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+          AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
+        ORDER BY writingDate DESC
+    </select>
+
+    <select id="getNrInpatientRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
+        SELECT 'NR'                                                                  AS recordType,
+        'NR_INPATIENT'                                                        AS recordDetailType,
+        C.NREC_CLS_NM                                                         AS itemType,
+        B.NREC_FORM_NM                                                        AS itemNm,
+        TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')                       AS writingDate,
+        A.WRTR_PLWK_DEPT_CD                                                   AS writingDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_PLWK_DEPT_CD) AS writingDeptNm,
+        A.FSR_STF_NO                                                          AS writerStfNo,
+        (SELECT Z.STF_NM FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.FSR_STF_NO) AS writerStfNm,
+        A.NREC_ID                                                             AS keyId,
+        A.PACT_ID                                                             AS pactId,
+        A.PACT_TP_CD                                                          AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL)     AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                                      AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        1                                                                     AS sortSeq,
+        NULL                                                                  AS note,
+        1                                                                     AS mdfmId,
+        1                                                                     AS mdfmFomSeq,
+        NULL                                                                  AS mdrcId,
+        NULL                                                                  AS mdrcFomSeq,
+        NULL                                                                  AS examKey,
+        NULL                                                                  AS pacsImgIptnCd,
+        NULL                                                                  AS accsId,
+        NULL                                                                  AS recType,
+        NULL                                                                  AS geneExmYn,
+        NULL                                                                  AS mdrcWrtStsCdYn,
+        NULL                                                                  AS opExptRegId
+        FROM ODS.S_MRNNRFAD A
+        INNER JOIN ODS.S_MRNNRCBC B
+        ON A.NREC_FORM_CD = B.NREC_FORM_CD
+        AND B.NREC_CLS_CD = '01'
+        AND B.LST_YN = 'Y'
+        INNER JOIN ODS.S_MRNNRCAC C
+        ON B.NREC_CLS_CD = C.NREC_CLS_CD
+        AND C.LST_YN = 'Y'
+        WHERE A.PT_NO = #{ptNo}
+        AND A.LST_YN = 'Y'
+        AND A.REC_WRT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+        AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
+        <if test="deptType == 'MEDICAL'">AND A.PT_MTD_DEPT_CD = #{deptCd}</if>
+        <if test="deptType == 'WRITER'">AND A.WRTR_PLWK_DEPT_CD = #{deptCd}</if>
+        order by writingDate desc
+    </select>
+
+    <select id="getNrExecuteRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
+        SELECT DISTINCT 'NR' AS recordType,
+        'NR_EXECUTE'                                                AS recordDetailType,
+        '간호활동수행기록'                                          AS itemType,
+        '간호활동수행기록' || '(' || A.UITM_DT || ')'               AS itemNm,
+        TO_CHAR(A.UITM_DT, 'YYYY-MM-DD HH24:MI:SS')                 AS writingDate,
+        NULL                                                        AS writingDeptCd,
+        NULL                                                        AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        As writerStfNm,
+        A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.UITM_DT          AS keyId,
+        A.PACT_ID                                                   AS pactId,
+        A.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        NULL                                                        AS ptMedDeptCd,
+        NULL                                                        AS ptMedDeptNm,
+        1                                                           AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
         FROM ODS.S_MRNNRAAD A
         WHERE A.PT_NO = #{ptNo}
         AND A.UITM_DT::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
@@ -647,36 +645,36 @@
 
     <select id="getNrFallRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'NR'                                                        AS recordType,
-               'NR_FALL'                                                   AS recordDetailType,
-               '낙상위험도평가'                                            AS itemType,
-               '낙상위험도평가'                                            AS itemNm,
-               TO_CHAR(A.INPT_DTM, 'YYYY-MM-DD HH24:MI:SS')                AS writingDate,
-               NULL                                                        AS writingDeptCd,
-               NULL                                                        AS writingDeptNm,
-               NULL                                                        AS writerStfNo,
-               NULL                                                        AS writerStfNm,
-               A.PT_NO || '_' || A.INPT_DTM || '_' || A.WRT_SEQ            AS keyId,
-               A.PACT_ID                                                   AS pactId,
-               A.PACT_TP_CD                                                AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-               A.WRT_SEQ                                                   AS sortSeq,
-               NULL                                                        AS note,
-               1                                                           AS mdfmId,
-               1                                                           AS mdfmFomSeq,
-               NULL                                                        AS mdrcId,
-               NULL                                                        AS mdrcFomSeq,
-               NULL                                                        AS examKey,
-               NULL                                                        AS pacsImgIptnCd,
-               NULL                                                        AS accsId,
-               NULL                                                        AS recType,
-               NULL                                                        AS geneExmYn,
-               NULL                                                        AS mdrcWrtStsCdYn,
-               NULL                                                        AS opExptRegId
+        'NR_FALL'                                                   AS recordDetailType,
+        '낙상위험도평가'                                            AS itemType,
+        '낙상위험도평가'                                            AS itemNm,
+        TO_CHAR(A.INPT_DTM, 'YYYY-MM-DD HH24:MI:SS')                AS writingDate,
+        NULL                                                        AS writingDeptCd,
+        NULL                                                        AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PT_NO || '_' || A.INPT_DTM || '_' || A.WRT_SEQ            AS keyId,
+        A.PACT_ID                                                   AS pactId,
+        A.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        A.WRT_SEQ                                                   AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
         FROM ODS.S_MOPPCIED A
         WHERE A.PT_NO = #{ptNo}
-    AND A.LST_YN = 'Y'
+        AND A.LST_YN = 'Y'
         AND A.INPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
         AND A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
         <if test="deptType == 'MEDICAL'">AND A.PT_MTD_DEPT_CD = #{deptCd}</if>
@@ -686,33 +684,33 @@
 
     <select id="getNrBedsoreRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT DISTINCT 'NR'                                                   AS recordType,
-                        'NR_BEDSORE'                                           AS recordDetailType,
-                        '욕창간호기록'                                         AS itemType,
-                        '욕창간호기록'                                         AS itemNm,
-                        TO_CHAR(A.INPT_DTM, 'YYYY-MM-DD HH24:MI:SS')           AS writingDate,
-                        NULL                                                   AS writingDeptCd,
-                        NULL                                                   AS writingDeptNm,
-                        NULL                                                   AS writerStfNo,
-                        NULL                                                   AS writerStfNm,
-                        A.PT_NO || '_' || A.INPT_DTM::DATE                     AS keyId,
-                        NULL                                                   AS pactId,
-                        'I'                                                    AS pactTpCd,
-                        '입원'                                                 AS pactTpNm,
-                        A.PT_MTD_DEPT_CD                                       AS ptMedDeptCd,
-                        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-                        NULL                                                   AS sortSeq,
-                        NULL                                                   AS note,
-                        1                                                      AS mdfmId,
-                        1                                                      AS mdfmFomSeq,
-                        NULL                                                   AS mdrcId,
-                        NULL                                                   AS mdrcFomSeq,
-                        NULL                                                   AS examKey,
-                        NULL                                                   AS pacsImgIptnCd,
-                        NULL                                                   AS accsId,
-                        NULL                                                   AS recType,
-                        NULL                                                   AS geneExmYn,
-                        NULL                                                   AS mdrcWrtStsCdYn,
-                        NULL                                                   AS opExptRegId
+        'NR_BEDSORE'                                           AS recordDetailType,
+        '욕창간호기록'                                         AS itemType,
+        '욕창간호기록'                                         AS itemNm,
+        TO_CHAR(A.INPT_DTM, 'YYYY-MM-DD HH24:MI:SS')           AS writingDate,
+        NULL                                                   AS writingDeptCd,
+        NULL                                                   AS writingDeptNm,
+        NULL                                                   AS writerStfNo,
+        NULL                                                   AS writerStfNm,
+        A.PT_NO || '_' || A.INPT_DTM::DATE                     AS keyId,
+        NULL                                                   AS pactId,
+        'I'                                                    AS pactTpCd,
+        '입원'                                                 AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                       AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        NULL                                                   AS sortSeq,
+        NULL                                                   AS note,
+        1                                                      AS mdfmId,
+        1                                                      AS mdfmFomSeq,
+        NULL                                                   AS mdrcId,
+        NULL                                                   AS mdrcFomSeq,
+        NULL                                                   AS examKey,
+        NULL                                                   AS pacsImgIptnCd,
+        NULL                                                   AS accsId,
+        NULL                                                   AS recType,
+        NULL                                                   AS geneExmYn,
+        NULL                                                   AS mdrcWrtStsCdYn,
+        NULL                                                   AS opExptRegId
         FROM ODS.S_MRNNRPCD A
         WHERE A.PT_NO = #{ptNo}
         AND A.LST_YN = 'Y'
@@ -725,33 +723,33 @@
 
     <select id="getNrBedsoreEvaluationRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'NR' AS recordType,
-               'NR_BEDSORE_EVALUATION' AS recordDetailType,
-               '욕창위험도평가' AS itemType,
-               '욕창위험도평가' AS itemNm,
-               TO_CHAR(A.INPT_DTM, 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
-               NULL AS writingDeptCd,
-               NULL AS writingDeptNm,
-               NULL AS writerStfNo,
-               NULL AS writerStfNm,
-               A.PT_NO || '_' || A.INPT_DTM || '_' || A.WRT_SEQ AS keyId,
-               A.PACT_ID AS pactId,
-               A.PACT_TP_CD AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MTD_DEPT_CD AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-               A.WRT_SEQ AS sortSeq,
-               NULL AS note,
-               1 AS mdfmId,
-               1 AS mdfmFomSeq,
-               NULL AS mdrcId,
-               NULL AS mdrcFomSeq,
-               NULL AS examKey,
-               NULL AS pacsImgIptnCd,
-               NULL AS accsId,
-               NULL AS recType,
-               NULL AS geneExmYn,
-               NULL AS mdrcWrtStsCdYn,
-               NULL AS opExptRegId
+        'NR_BEDSORE_EVALUATION' AS recordDetailType,
+        '욕창위험도평가' AS itemType,
+        '욕창위험도평가' AS itemNm,
+        TO_CHAR(A.INPT_DTM, 'YYYY-MM-DD HH24:MI:SS') AS writingDate,
+        NULL AS writingDeptCd,
+        NULL AS writingDeptNm,
+        NULL AS writerStfNo,
+        NULL AS writerStfNm,
+        A.PT_NO || '_' || A.INPT_DTM || '_' || A.WRT_SEQ AS keyId,
+        A.PACT_ID AS pactId,
+        A.PACT_TP_CD AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MTD_DEPT_CD AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        A.WRT_SEQ AS sortSeq,
+        NULL AS note,
+        1 AS mdfmId,
+        1 AS mdfmFomSeq,
+        NULL AS mdrcId,
+        NULL AS mdrcFomSeq,
+        NULL AS examKey,
+        NULL AS pacsImgIptnCd,
+        NULL AS accsId,
+        NULL AS recType,
+        NULL AS geneExmYn,
+        NULL AS mdrcWrtStsCdYn,
+        NULL AS opExptRegId
         FROM ODS.S_MOPPCBED A
         WHERE A.PT_NO = #{ptNo}
         AND A.LST_YN = 'Y'
@@ -764,33 +762,33 @@
 
     <select id="getNrCheckoutRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'NR'                                                        AS recordType,
-               'NR_CHECKOUT'                                               AS recordDetailType,
-               '퇴실간호기록'                                              AS itemType,
-               '퇴실간호기록'                                              AS itemNm,
-               TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')             AS writingDate,
-               NULL                                                        AS writingDeptCd,
-               NULL                                                        AS writingDeptNm,
-               NULL                                                        AS writerStfNo,
-               NULL                                                        AS writerStfNm,
-               A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ   AS keyId,
-               A.PACT_ID                                                   AS pactId,
-               A.PACT_TP_CD                                                AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-               A.WRT_SEQ                                                   AS sortSeq,
-               NULL                                                        AS note,
-               1                                                           AS mdfmId,
-               1                                                           AS mdfmFomSeq,
-               NULL                                                        AS mdrcId,
-               NULL                                                        AS mdrcFomSeq,
-               NULL                                                        AS examKey,
-               NULL                                                        AS pacsImgIptnCd,
-               NULL                                                        AS accsId,
-               NULL                                                        AS recType,
-               NULL                                                        AS geneExmYn,
-               NULL                                                        AS mdrcWrtStsCdYn,
-               NULL                                                        AS opExptRegId
+        'NR_CHECKOUT'                                               AS recordDetailType,
+        '퇴실간호기록'                                              AS itemType,
+        '퇴실간호기록'                                              AS itemNm,
+        TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')             AS writingDate,
+        NULL                                                        AS writingDeptCd,
+        NULL                                                        AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ   AS keyId,
+        A.PACT_ID                                                   AS pactId,
+        A.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        A.WRT_SEQ                                                   AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
         FROM ODS.S_MRNNRFAD A
         WHERE A.PT_NO = #{ptNo}
         AND A.LST_YN = 'Y'
@@ -804,33 +802,33 @@
 
     <select id="getNrDischargeRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'NR'                                                        AS recordType,
-               'NR_DISCHARGE'                                              AS recordDetailType,
-               '퇴원간호기록'                                              AS itemType,
-               '퇴원간호기록'                                              AS itemNm,
-               TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')             AS writingDate,
-               NULL                                                        AS writingDeptCd,
-               NULL                                                        AS writingDeptNm,
-               NULL                                                        AS writerStfNo,
-               NULL                                                        AS writerStfNm,
-               A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ   AS keyId,
-               A.PACT_ID                                                   AS pactId,
-               A.PACT_TP_CD                                                AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-               A.WRT_SEQ                                                   AS sortSeq,
-               NULL                                                        AS note,
-               1                                                           AS mdfmId,
-               1                                                           AS mdfmFomSeq,
-               NULL                                                        AS mdrcId,
-               NULL                                                        AS mdrcFomSeq,
-               NULL                                                        AS examKey,
-               NULL                                                        AS pacsImgIptnCd,
-               NULL                                                        AS accsId,
-               NULL                                                        AS recType,
-               NULL                                                        AS geneExmYn,
-               NULL                                                        AS mdrcWrtStsCdYn,
-               NULL                                                        AS opExptRegId
+        'NR_DISCHARGE'                                              AS recordDetailType,
+        '퇴원간호기록'                                              AS itemType,
+        '퇴원간호기록'                                              AS itemNm,
+        TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')             AS writingDate,
+        NULL                                                        AS writingDeptCd,
+        NULL                                                        AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ   AS keyId,
+        A.PACT_ID                                                   AS pactId,
+        A.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        A.WRT_SEQ                                                   AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
         FROM ODS.S_MRNNRFAD A
         WHERE A.PT_NO = #{ptNo}
         AND A.LST_YN = 'Y'
@@ -844,33 +842,33 @@
 
     <select id="getNrTransferRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'NR'                                                        AS recordType,
-               'NR_TRANSFER'                                               AS recordDetailType,
-               '전과전동간호기록'                                          AS itemType,
-               '전과전동간호기록'                                          AS itemNm,
-               TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')             AS writingDate,
-               NULL                                                        AS writingDeptCd,
-               NULL                                                        AS writingDeptNm,
-               NULL                                                        AS writerStfNo,
-               NULL                                                        AS writerStfNm,
-               A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ AS keyId,
-               A.PACT_ID                                                   AS pactId,
-               A.PACT_TP_CD                                                AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-               A.WRT_SEQ                                                   AS sortSeq,
-               NULL                                                        AS note,
-               1                                                           AS mdfmId,
-               1                                                           AS mdfmFomSeq,
-               NULL                                                        AS mdrcId,
-               NULL                                                        AS mdrcFomSeq,
-               NULL                                                        AS examKey,
-               NULL                                                        AS pacsImgIptnCd,
-               NULL                                                        AS accsId,
-               NULL                                                        AS recType,
-               NULL                                                        AS geneExmYn,
-               NULL                                                        AS mdrcWrtStsCdYn,
-               NULL                                                        AS opExptRegId
+        'NR_TRANSFER'                                               AS recordDetailType,
+        '전과전동간호기록'                                          AS itemType,
+        '전과전동간호기록'                                          AS itemNm,
+        TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')             AS writingDate,
+        NULL                                                        AS writingDeptCd,
+        NULL                                                        AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ AS keyId,
+        A.PACT_ID                                                   AS pactId,
+        A.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        A.WRT_SEQ                                                   AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
         FROM ODS.S_MRNNRFAD A
         WHERE A.PT_NO = #{ptNo}
         AND A.LST_YN = 'Y'
@@ -884,33 +882,33 @@
 
     <select id="getNrStatusRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'NR'                                                        AS recordType,
-               'NR_STATUS'                                                 AS recordDetailType,
-               '수술전상태확인'                                            AS itemType,
-               '수술전상태확인'                                            AS itemNm,
-               TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')             AS writingDate,
-               NULL                                                        AS writingDeptCd,
-               NULL                                                        AS writingDeptNm,
-               NULL                                                        AS writerStfNo,
-               NULL                                                        AS writerStfNm,
-               A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ   AS keyId,
-               A.PACT_ID                                                   AS pactId,
-               A.PACT_TP_CD                                                AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-               A.WRT_SEQ                                                   AS sortSeq,
-               NULL                                                        AS note,
-               1                                                           AS mdfmId,
-               1                                                           AS mdfmFomSeq,
-               NULL                                                        AS mdrcId,
-               NULL                                                        AS mdrcFomSeq,
-               NULL                                                        AS examKey,
-               NULL                                                        AS pacsImgIptnCd,
-               NULL                                                        AS accsId,
-               NULL                                                        AS recType,
-               NULL                                                        AS geneExmYn,
-               NULL                                                        AS mdrcWrtStsCdYn,
-               NULL                                                        AS opExptRegId
+        'NR_STATUS'                                                 AS recordDetailType,
+        '수술전상태확인'                                            AS itemType,
+        '수술전상태확인'                                            AS itemNm,
+        TO_CHAR(A.REC_WRT_DTM, 'YYYY-MM-DD HH24:MI:SS')             AS writingDate,
+        NULL                                                        AS writingDeptCd,
+        NULL                                                        AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ   AS keyId,
+        A.PACT_ID                                                   AS pactId,
+        A.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        A.WRT_SEQ                                                   AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
         FROM ODS.S_MRNNRFAD A
         WHERE A.PT_NO = #{ptNo}
         AND A.LST_YN = 'Y'
@@ -924,33 +922,33 @@
 
     <select id="getNrBloodDialysisRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'NR'                                                        AS recordType,
-               'NR_BLOOD_DIALYSIS'                                         AS recordDetailType,
-               '혈액투석간호기록'                                          AS itemType,
-               '혈액투석간호기록' || ' (' || B.DLYS_IMPL_DTM || ')'        AS itemNm,
-               TO_CHAR(B.DLYS_IMPL_DTM, 'YYYY-MM-DD HH24:MI:SS')           AS writingDate,
-               B.WRTR_PLWK_DEPT_CD                                         AS writingDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = B.WRTR_PLWK_DEPT_CD) AS writingDeptNm,
-               NULL                                                        AS writerStfNo,
-               NULL                                                        AS writerStfNm,
-               A.PT_NO || '_' || B.DLYS_IMPL_DTM::DATE || '_' || B.PT_DLYS_SEQ AS keyId,
-               B.PACT_ID                                                   AS pactId,
-               B.PACT_TP_CD                                                AS pactTpCd,
-               DECODE(B.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               B.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = B.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-               NULL                                                        AS sortSeq,
-               NULL                                                        AS note,
-               1                                                           AS mdfmId,
-               1                                                           AS mdfmFomSeq,
-               NULL                                                        AS mdrcId,
-               NULL                                                        AS mdrcFomSeq,
-               NULL                                                        AS examKey,
-               NULL                                                        AS pacsImgIptnCd,
-               NULL                                                        AS accsId,
-               NULL                                                        AS recType,
-               NULL                                                        AS geneExmYn,
-               NULL                                                        AS mdrcWrtStsCdYn,
-               NULL                                                        AS opExptRegId
+        'NR_BLOOD_DIALYSIS'                                         AS recordDetailType,
+        '혈액투석간호기록'                                          AS itemType,
+        '혈액투석간호기록' || ' (' || B.DLYS_IMPL_DTM || ')'        AS itemNm,
+        TO_CHAR(B.DLYS_IMPL_DTM, 'YYYY-MM-DD HH24:MI:SS')           AS writingDate,
+        B.WRTR_PLWK_DEPT_CD                                         AS writingDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = B.WRTR_PLWK_DEPT_CD) AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PT_NO || '_' || B.DLYS_IMPL_DTM::DATE || '_' || B.PT_DLYS_SEQ AS keyId,
+        B.PACT_ID                                                   AS pactId,
+        B.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(B.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        B.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = B.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        NULL                                                        AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
         FROM ODS.S_MOMNMDPM A
         INNER JOIN ODS.S_MRNNRHBD B
         ON A.PT_NO = B.PT_NO
@@ -969,33 +967,33 @@
 
     <select id="getNrPeritonealDialysisRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT 'NR'                                                        AS recordType,
-               'NR_PERITONEAL_DIALYSIS'                                    AS recordDetailType,
-               '복막투석간호기록'                                          AS itemType,
-               '복막투석간호기록' || ' (' || A.DLYS_IMPL_DTM || ')'        AS itemNm,
-               TO_CHAR(A.DLYS_IMPL_DTM, 'YYYY-MM-DD HH24:MI:SS')           AS writingDate,
-               A.WRTR_PLWK_DEPT_CD                                         AS writingDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_PLWK_DEPT_CD) AS writingDeptNm,
-               NULL                                                        AS writerStfNo,
-               NULL                                                        AS writerStfNm,
-               A.PT_NO || '_' || A.DLYS_IMPL_DTM::DATE || '_' || A.PT_DLYS_SEQ  AS keyId,
-               A.PACT_ID                                                   AS pactId,
-               A.PACT_TP_CD                                                AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-               A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-               NULL                                                        AS sortSeq,
-               NULL                                                        AS note,
-               1                                                           AS mdfmId,
-               1                                                           AS mdfmFomSeq,
-               NULL                                                        AS mdrcId,
-               NULL                                                        AS mdrcFomSeq,
-               NULL                                                        AS examKey,
-               NULL                                                        AS pacsImgIptnCd,
-               NULL                                                        AS accsId,
-               NULL                                                        AS recType,
-               NULL                                                        AS geneExmYn,
-               NULL                                                        AS mdrcWrtStsCdYn,
-               NULL                                                        AS opExptRegId
+        'NR_PERITONEAL_DIALYSIS'                                    AS recordDetailType,
+        '복막투석간호기록'                                          AS itemType,
+        '복막투석간호기록' || ' (' || A.DLYS_IMPL_DTM || ')'        AS itemNm,
+        TO_CHAR(A.DLYS_IMPL_DTM, 'YYYY-MM-DD HH24:MI:SS')           AS writingDate,
+        A.WRTR_PLWK_DEPT_CD                                         AS writingDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.WRTR_PLWK_DEPT_CD) AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PT_NO || '_' || A.DLYS_IMPL_DTM::DATE || '_' || A.PT_DLYS_SEQ  AS keyId,
+        A.PACT_ID                                                   AS pactId,
+        A.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        NULL                                                        AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
         FROM ODS.S_MRNNRHBD A
         WHERE A.PT_NO = #{ptNo}
         AND A.DLYS_TP_CD = 'B'
@@ -1009,33 +1007,33 @@
 
     <select id="getNrNoteRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
         SELECT DISTINCT 'NR'                                                        AS recordType,
-                        'NR_NOTE'                                                   AS recordDetailType,
-                        '간호일지'                                                  AS itemType,
-                        '간호일지' || ' (' || A.INPT_DTM::DATE || ')'               AS itemNm,
-                        TO_CHAR(A.INPT_DTM, 'YYYY-MM-DD HH24:MI:SS')                AS writingDate,
-                        NULL                                                        AS writingDeptCd,
-                        NULL                                                        AS writingDeptNm,
-                        NULL                                                        AS writerStfNo,
-                        NULL                                                        AS writerStfNm,
-                        A.PT_NO || '_' || A.INPT_DTM::DATE                          AS keyId,
-                        A.PACT_ID                                                   AS pactId,
-                        A.PACT_TP_CD                                                AS pactTpCd,
-                        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
-                        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
-                        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
-                        NULL                                                        AS sortSeq,
-                        NULL                                                        AS note,
-                        1                                                           AS mdfmId,
-                        1                                                           AS mdfmFomSeq,
-                        NULL                                                        AS mdrcId,
-                        NULL                                                        AS mdrcFomSeq,
-                        NULL                                                        AS examKey,
-                        NULL                                                        AS pacsImgIptnCd,
-                        NULL                                                        AS accsId,
-                        NULL                                                        AS recType,
-                        NULL                                                        AS geneExmYn,
-                        NULL                                                        AS mdrcWrtStsCdYn,
-                        NULL                                                        AS opExptRegId
+        'NR_NOTE'                                                   AS recordDetailType,
+        '간호일지'                                                  AS itemType,
+        '간호일지' || ' (' || A.INPT_DTM::DATE || ')'               AS itemNm,
+        TO_CHAR(A.INPT_DTM, 'YYYY-MM-DD HH24:MI:SS')                AS writingDate,
+        NULL                                                        AS writingDeptCd,
+        NULL                                                        AS writingDeptNm,
+        NULL                                                        AS writerStfNo,
+        NULL                                                        AS writerStfNm,
+        A.PT_NO || '_' || A.INPT_DTM::DATE                          AS keyId,
+        A.PACT_ID                                                   AS pactId,
+        A.PACT_TP_CD                                                AS pactTpCd,
+        DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+        A.PT_MTD_DEPT_CD                                            AS ptMedDeptCd,
+        (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_MTD_DEPT_CD) AS ptMedDeptNm,
+        NULL                                                        AS sortSeq,
+        NULL                                                        AS note,
+        1                                                           AS mdfmId,
+        1                                                           AS mdfmFomSeq,
+        NULL                                                        AS mdrcId,
+        NULL                                                        AS mdrcFomSeq,
+        NULL                                                        AS examKey,
+        NULL                                                        AS pacsImgIptnCd,
+        NULL                                                        AS accsId,
+        NULL                                                        AS recType,
+        NULL                                                        AS geneExmYn,
+        NULL                                                        AS mdrcWrtStsCdYn,
+        NULL                                                        AS opExptRegId
         FROM ODS.S_MRNNRNAD A
         WHERE A.PT_NO = #{ptNo}
         AND A.LST_YN = 'Y'
@@ -1044,41 +1042,6 @@
         <if test="deptType == 'MEDICAL'">AND A.PT_MTD_DEPT_CD = #{deptCd}</if>
         <if test="deptType == 'WRITER'">AND A.WRTR_PLWK_DEPT_CD = #{deptCd}</if>
         ORDER BY writingDate DESC
-    </select>
-
-    <select id="getCrCprRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">
-        SELECT 'CR'                                                                 AS recordType,
-               'CR_CPR'                                                             AS recordDetailType,
-               'CPR발생보고서'                                                      AS itemType,
-               A.FSR_PRGM_NM                                                        AS itemNm,
-               TO_CHAR(A.FSR_DTM, 'YYYY-MM-DD HH24:MI:SS')                          AS writingDate,
-               A.PT_CLCTN_DEPT_CD                                                   AS writingDeptCd,
-               (SELECT Z.DEPT_NM FROM ODS.S_PDEDBMSM Z WHERE Z.DEPT_CD = A.PT_CLCTN_DEPT_CD) AS writingDeptNm,
-               A.FSR_STF_NO                                                         AS writerStfNo,
-               NULL                                                                 AS writerNm,
-               NULL                                                                 AS keyId,
-               A.PACT_ID                                                            AS pactId,
-               A.PACT_TP_CD                                                         AS pactTpCd,
-               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL)    AS pactTpNm,
-               NULL                                                                 AS ptMedDeptCd,
-               NULL                                                                 AS ptMedDeptNm,
-               NULL                                                                 AS sortSeq,
-               NULL                                                                 AS note,
-               1                                                                    AS mdfmId,
-               1                                                                    AS mdfmFomSeq,
-               A.CPR_ID                                                             AS mdrcId,
-               NULL                                                                 AS mdrcFomSeq,
-               NULL                                                                 AS examKey,
-               NULL                                                                 AS pacsImgIptnCd,
-               NULL                                                                 AS accsId,
-               NULL                                                                 AS recType,
-               NULL                                                                 AS geneExmYn,
-               NULL                                                                 AS mdrcWrtStsCdYn,
-               NULL                                                                 AS opExptRegId
-        FROM ODS.S_MRCCRPAD A
-        WHERE A.PT_NO = #{ptNo}
-        AND A.FSR_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
-        ORDER BY A.FSR_DTM DESC
     </select>
 
 </mapper>
