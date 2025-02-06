@@ -720,7 +720,7 @@ public class RecordServiceImpl implements RecordService {
             sj.add(PevDocumentRenderUtil.render(section.getItems(), data));
         }
 
-        return sj.toString();
+        return sj.toString().replace("\n", "").replace("\"", "'");
     }
 
     /**
