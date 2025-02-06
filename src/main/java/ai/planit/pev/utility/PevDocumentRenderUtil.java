@@ -1,27 +1,36 @@
 package ai.planit.pev.utility;
 
+import ai.planit.pev.strategy.chart.object.common.ChartElement;
 import ai.planit.pev.strategy.chart.object.common.ChartStyleItem;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
 public class PevDocumentRenderUtil {
-    public static String render(List<ChartStyleItem> items) {
+    public static String render(List<ChartStyleItem> items, List<ChartElement> values) {
         StringBuilder sb = new StringBuilder();
 
         for(ChartStyleItem item : items) {
             if (isServiceControl(item.getType())) {
-                item.setVisibility("Collapsed");
+                item.setVisibilityStr("Collapsed");
             }
         }
 
@@ -33,25 +42,25 @@ public class PevDocumentRenderUtil {
             sb.append(String.format("<div style=\"height:%spx\"></div>\n", rowGroups.get(0).y1));
         }
 
-        renderTable(rowGroups, sb);
+        renderTable(rowGroups, values, sb);
 
 
         return sb.toString();
     }
 
-    private static void renderTable(List<RowGroup> rowGroups, StringBuilder sb) {
+    private static void renderTable(List<RowGroup> rowGroups, List<ChartElement> values, StringBuilder sb) {
         int prevBottom = 0;
 
         for(RowGroup rowGroup : rowGroups) {
             List<ChartStyleItem> collapseList = rowGroup.items.stream()
-                    .filter(item -> item.getVisibility().equals("Collapsed")).collect(Collectors.toList());
+                    .filter(item -> item.getVisibilityStr().equals("Collapsed")).collect(Collectors.toList());
             if (!collapseList.isEmpty()) {
                 List<ChartStyleItem> visibleList = rowGroup.items.stream()
-                        .filter(item -> !item.getVisibility().equals("Collapsed"))
+                        .filter(item -> !item.getVisibilityStr().equals("Collapsed"))
                         .collect(Collectors.toList());
                 List<RowGroup> subRowGroups = getRowGroup(visibleList);
                 if (!subRowGroups.isEmpty()) {
-                    renderTable(subRowGroups, sb);
+                    renderTable(subRowGroups, values, sb);
                 }
                 prevBottom = rowGroup.getYPoints().stream().max(Comparator.comparingInt(a -> a)).get();
             } else {
@@ -73,26 +82,15 @@ public class PevDocumentRenderUtil {
                 }
                 prevBottom = sortedY.get(sortedY.size() - 1);
 
-                boolean hasRootId = rowGroup.getItems().stream()
-                                .anyMatch(item -> isRootId(item.getParentId()));
-
-                if (hasRootId) {
-                    sb.append(String.format("<table cellspacing=\"0\" cellpadding=\"0\" style=\"margin:%spx 0px 0px 0px; table-layout:fixed; width:%spx; border-collapse:separate\">\n",
-                            topMargin, 500));
-                    sb.append("<colgroup>");
-                    sb.append("<col style=\"width:20px;\">");
-                    sb.append("<col style=\"width:480px;\">");
-                } else {
-                    sb.append(String.format("<table cellspacing=\"0\" cellpadding=\"0\" style=\"margin:%spx 0px 0px 0px; table-layout:fixed; width:%spx; border-collapse:separate\">\n",
-                            topMargin, sortedX.get(sortedX.size() - 1)));
-                    sb.append("<colgroup>");
-                    for(int curX : sortedX) {
-                        if (Objects.nonNull(prevX)) {
-                            int width = curX - prevX.intValue();
-                            sb.append(String.format("<col style=\"width: %spx\">", width));
-                        }
-                        prevX = curX;
+                sb.append(String.format("<table cellspacing=\"0\" cellpadding=\"0\" style=\"margin:%spx 0px 0px 0px; table-layout:fixed; width:%spx; border-collapse:separate\">\n",
+                        topMargin, sortedX.get(sortedX.size() - 1)));
+                sb.append("<colgroup>");
+                for(int curX : sortedX) {
+                    if (Objects.nonNull(prevX)) {
+                        int width = curX - prevX.intValue();
+                        sb.append(String.format("<col style=\"width: %spx\">", width));
                     }
+                    prevX = curX;
                 }
 
                 sb.append("</colgroup>\n");
@@ -121,11 +119,11 @@ public class PevDocumentRenderUtil {
                             int colSpan = endColIndex - startColIndex;
                             int rowSpan = endRowIndex - startRowIndex;
 
-                            if (curItem.getVisibility().equals("Visible")) {
-                                sb.append(getCellTag(curItem, colSpan, rowSpan));
+                            if (curItem.getVisibilityStr().equals("Visible")) {
+                                sb.append(getCellTag(curItem, values, colSpan, rowSpan));
 
                             } else {
-                                sb.append(getNoneTag(colSpan, rowSpan, 0, 0, 0, 0));
+                                sb.append(getNoneTag(curItem, colSpan, rowSpan));
                             }
                         } else {
                             int left = sortedX.get(j);
@@ -149,7 +147,7 @@ public class PevDocumentRenderUtil {
                                     .orElse(null);
 
                             if (Objects.isNull(rItem)) {
-                                sb.append("<td style=\"min-height: inherit;\" />");
+                                sb.append("<td style=\"min-height: inherit;\"></td>");
                             }
                         }
 
@@ -163,7 +161,7 @@ public class PevDocumentRenderUtil {
         }
     }
 
-    private static String getCellTag(ChartStyleItem curItem, int colSpan, int rowSpan) {
+    private static String getCellTag(ChartStyleItem curItem, List<ChartElement> values, int colSpan, int rowSpan) {
         switch (curItem.getType()) {
             case "Blank":
             case "Button":
@@ -177,30 +175,188 @@ public class PevDocumentRenderUtil {
             case "RepeaterSubItem":
                 return "";
             case "None":
-                return getNoneTag(colSpan, rowSpan, 0, 0, 0, 0);
+                return getNoneTag(curItem, colSpan, rowSpan);
             case "Table":
-                return getTableTag(curItem, colSpan, rowSpan);
+                return getTableTag(curItem, values, colSpan, rowSpan);
             case "Label":
-                return getLabelTag(curItem, colSpan, rowSpan);
+                return getLabelTag(curItem, values, colSpan, rowSpan);
             case "RichTextBox":
-                return getRichTextBox(curItem, colSpan, rowSpan);
+//                return getRichTextBox(curItem, values, colSpan, rowSpan);
             case "DateTextBox":
             case "ExprTextBox":
             case "NumericTextBox":
             case "TextBox":
             case "UmAlQuraDateTextBox":
-                return getTextBoxTag(curItem, colSpan, rowSpan);
+                return getTextBoxTag(curItem, values, colSpan, rowSpan);
             case "CheckBox":
-                return getCheckBoxTag(curItem, colSpan, rowSpan);
+                return getCheckBoxTag(curItem, values, colSpan, rowSpan);
             case "RadioButton":
-                return getRadioButtonTag(curItem, colSpan, rowSpan);
+                return getRadioButtonTag(curItem, values, colSpan, rowSpan);
+            case "Image":
+                return getImageTag(curItem, values, colSpan, rowSpan);
+            case "ComboBox":
+                return getComboBoxTag(curItem, values, colSpan, rowSpan);
+            case "DataGrid":
+                return getDataGridTag(curItem, values, colSpan, rowSpan);
+            case "ImageCheckBox":
+                return getImageCheckBoxTag(curItem, values, colSpan, rowSpan);
+            case "Repeater":
+                return getRepeaterTag(curItem, values, colSpan, rowSpan);
             default:
                 return "";
 
         }
     }
 
-    private static String getRadioButtonTag(ChartStyleItem item, int colSpan, int rowSpan) {
+    private static String getRepeaterTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+        StringBuilder sb = new StringBuilder();
+        List<ChartStyleItem> items = new ArrayList<>();
+
+        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height: inherit;\" >", colSpan, rowSpan));
+
+        int currentTop = 0;
+        for(ChartStyleItem i : item.getChildren()) {
+            for(ChartStyleItem child : i.getChildren()) {
+                child.setTopValue(String.valueOf(child.getTopInt() + currentTop));
+                items.add(child);
+            }
+            currentTop += items.stream().map(ii -> ii.getTopInt() + ii.getHeightInt()).max(Comparator.comparing(ii -> ii)).orElse(0) + 5;
+        }
+
+        sb.append(render(items, values));
+
+        sb.append("</td>");
+
+        return sb.toString();
+    }
+
+    private static String getImageCheckBoxTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+        StringBuilder sb = new StringBuilder();
+
+        String text = spaceTrim(item.getText());
+        String vcAlign = getContentAlignmentChange(item.getVContentAlignment());
+        String value = getValue(item, values);
+        String imageTag = "";
+
+        if (StringUtils.isNotEmpty(value)) {
+            imageTag = String.format("<img src=\"%s\" style=\"width: 100%;\" />", value);
+        }
+
+        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; border-color:#B3B3B3; border-width: %s; border-style: solid; vertical-align:%s; font-size: %spx; font-weight: %s; font-style: %s; \"",
+                colSpan, rowSpan, getBorderWidth(item), vcAlign, item.getFontSize(), item.getFontWeight(), item.getFontStyle()));
+        sb.append(String.format("<p style=\"margin: 0px 0px 0px 0px;\"><input disabled type=\"checkbox\" %s style=\"margin-left: 1px;margin-right: 1px; margin-bottom: -2px;\"/>", StringUtils.isNotEmpty(imageTag) ? "checked" : ""));
+        sb.append(text);
+        sb.append("</p>");
+        sb.append(imageTag);
+        sb.append("</td>");
+
+        return sb.toString();
+    }
+
+    private static String getDataGridTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+        StringBuilder sb = new StringBuilder();
+
+        if (!StringUtils.isEmpty(item.getColumnSource())) {
+            List<ColumnInfo> columns = new Gson().fromJson(item.getColumnSource().replaceAll("&quot;", "\""), new TypeToken<List<ColumnInfo>>() {}.getType());
+            sb.append("<td style=\"min-height: inherit; vertical-align:top; font-size:12px; font-weight:normal; \" >\n");
+            sb.append(String.format("<table border='1' cellpadding='0' cellspacing='0' class=\"gridtable\" width='%spx' style=\"border-collapse:collapse; \" >\n", item.getWidth()));
+            sb.append("<tr height='20px'>\n");
+
+            for(ColumnInfo column : columns) {
+                int width = column.getIsWidthStar().equals("true") ? Integer.parseInt(column.getWidth()) * 100 : Integer.parseInt(column.getWidth());
+                sb.append(String.format("<th align='center' valign='middle' width='%spx' style=\"background:#D3D3D3; font-size:12px; font-weight:bold; \" >%s</th>\n", width, column.getColumnDisplayName()));
+            }
+
+            try(InputStream inputStream = new ByteArrayInputStream(getValue(item, values).getBytes())) {
+                Document document = DocumentBuilderFactory.newInstance()
+                        .newDocumentBuilder()
+                        .parse(inputStream);
+                document.getDocumentElement().normalize();
+
+                Node doc = document.getElementsByTagName("DocumentElement").item(0);
+                int colCount = 0;
+
+                for (int i = 0; i < doc.getChildNodes().getLength(); i++) {
+                    Node gridNode = doc.getChildNodes().item(i);
+                    if (gridNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element gridElement = (Element) gridNode;
+                        NodeList children = gridElement.getChildNodes();
+
+                        sb.append("<tr height='20px'>\n");
+                        for (int j = 0; j < children.getLength(); j++) {
+                            Node child = children.item(j);
+                            if (child.getNodeType() == Node.ELEMENT_NODE) {
+                                Element childElement = (Element) child;
+                                String value = childElement.getTextContent(); // 태그값
+                                sb.append(String.format("<td align='center' valign='middle'>%s</td>", value));
+                                if (i == 0) {
+                                    colCount++;
+                                }
+                            }
+                        }
+                        sb.append("</tr>\n");
+                    }
+                }
+
+                sb.append("<tr>\n");
+                for(int i = 0; i < colCount; i++) {
+                    sb.append("<td align='center' valign='middle'></td>\n");
+                }
+                sb.append("</tr>\n");
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+
+
+            sb.append("</tr>");
+
+            sb.append("</table>");
+            sb.append("</td>");
+        }
+
+        return sb.toString();
+    }
+
+    private static String getComboBoxTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+        StringBuilder sb = new StringBuilder();
+
+        String textAlign = item.getHorizontalContentAlignment();
+        if (item.getHorizontalContentAlignment().equals("Stretch")) {
+            textAlign = "Justify";
+        }
+
+        String text = spaceTrim(getValue(item, values));
+        String vcAlign = getContentAlignmentChange(item.getVerticalContentAlignment());
+
+        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; border-style: solid; border-color: #B3B3B3; border-width: %s; padding:0px; text-align:%s; vertical-align: %s; font-size: %spx; font-weight: %s; font-style:%s; \">",
+                colSpan, rowSpan, getBorderWidth(item),textAlign, vcAlign, item.getFontSize(), item.getFontWeight(), item.getFontStyle()));
+        sb.append(text);
+        sb.append("</td>");
+
+        return sb.toString();
+    }
+
+    private static String getImageTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+        StringBuilder sb = new StringBuilder();
+
+        String imageSource = getImagePath(getValue(item, values));
+
+        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; border-style: solid; border-color: #B3B3B3; border-width: %s; width:%spx; \">",
+                colSpan, rowSpan, getBorderWidth(item), item.getWidth()));
+        if (StringUtils.isNotEmpty(imageSource)) {
+            sb.append(String.format("<img src=\"%s\" align=\"absmiddle\" style=\"padding: 0px; width: 100%%;\"></img>", imageSource));
+        }
+        sb.append("</td>");
+
+        return sb.toString();
+    }
+
+    private static String getImagePath(String value) {
+        if (StringUtils.isEmpty(value)) return "";
+        return value;
+    }
+
+    private static String getRadioButtonTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         String textAlign = "";
@@ -225,13 +381,13 @@ public class PevDocumentRenderUtil {
             }
         }
 
-        String text = spaceTrim(item);
+        String text = spaceTrim(item.getText());
         String vcAlign = getContentAlignmentChange(item.getVerticalContentAlignment());
 
-        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; vertical-align:%s; font-size:%s; font-weight: %s; text-align:%s; direction:%s; \" >",
-                colSpan, rowSpan, vcAlign, item.getFontSizeInt(), item.getFontWeight(), textAlign, item.getFlowDirection().equals("RightToLeft") ? "rtl" : "ltr"));
+        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; vertical-align:%s; font-size:%s; font-weight: %s; text-align:%s; direction:%s; border-color: #B3B3B3; border-style: solid; border-width:%s;\" >",
+                colSpan, rowSpan, vcAlign, item.getFontSizeInt(), item.getFontWeight(), textAlign, item.getFlowDirection().equals("RightToLeft") ? "rtl" : "ltr", getBorderWidth(item)));
         sb.append(String.format("<p style=\"margin: 0px 0px 0px 0px; %s \">", indent));
-        sb.append(String.format("<input disabled type=\"radio\" %s style=\"margin-left: 1px;margin-right: 4px; margin-bottom: -2px;\" />", item.getValue().equals("1") ? "checked" : ""));
+        sb.append(String.format("<input type=\"radio\" %s style=\"margin-left: 1px;margin-right: 4px; margin-bottom: -2px; pointer-events: none; \" />", getValue(item, values).equals("1") ? "checked" : ""));
         sb.append(String.format("<span>%s</span>", text));
         sb.append("</p>");
         sb.append("</td>");
@@ -239,7 +395,7 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String getCheckBoxTag(ChartStyleItem item, int colSpan, int rowSpan) {
+    private static String getCheckBoxTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         String textAlign = "";
@@ -264,13 +420,13 @@ public class PevDocumentRenderUtil {
             }
         }
 
-        String text = spaceTrim(item);
+        String text = spaceTrim(item.getText());
         String vcAlign = getContentAlignmentChange(item.getVerticalContentAlignment());
 
-        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; vertical-align:%s; font-size:%s; font-weight: %s; text-align:%s; direction:%s; \" >",
-                colSpan, rowSpan, vcAlign, item.getFontSize(), item.getFontWeight(), textAlign, item.getFlowDirection().equals("RightToLeft") ? "rtl" : "ltr"));
+        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; vertical-align:%s; font-size:%s; font-weight: %s; text-align:%s; direction:%s; border-color: #B3B3B3; border-style: solid; border-width:%s;\" >",
+                colSpan, rowSpan, vcAlign, item.getFontSize(), item.getFontWeight(), textAlign, item.getFlowDirection().equals("RightToLeft") ? "rtl" : "ltr", getBorderWidth(item)));
         sb.append(String.format("<p style=\"margin: 0px 0px 0px 0px; %s \">", indent));
-        sb.append(String.format("<input disabled type=\"checkbox\" %s style=\"margin-left: 1px;margin-right: 4px; margin-bottom: -2px;\" />", item.getValue().equals("1") ? "checked" : ""));
+        sb.append(String.format("<input type=\"checkbox\" %s style=\"margin-left: 1px;margin-right: 4px; margin-bottom: -2px; pointer-events: none;\" />", getValue(item, values).equals("1") ? "checked" : ""));
         sb.append(String.format("<span>%s</span>", text));
         sb.append("</p>");
         sb.append("</td>");
@@ -278,27 +434,27 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String getTextBoxTag(ChartStyleItem item, int colSpan, int rowSpan) {
+    private static String getTextBoxTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         String text = "";
         String vcAlign = "";
 
         if (item.getType().equals("DateTextBox") || item.getType().equals("UmAlQuraDateTextBox")) {
-            text = getDateTimeToStringFormat(item);
+            text = getDateTimeToStringFormat(item, values);
         } else {
-            text = StringUtils.isEmpty(item.getValue()) ? "" : item.getValue().replace("  ", " &nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br />");
+            text = spaceTrim(getValue(item, values));
 
             if(item.getType().equals("ExprTextBox") || item.getType().equals("TextBox")) {
-                if (!StringUtils.isEmpty(item.getValue()) && !StringUtils.isEmpty(item.getSuffix()))
+                if (!StringUtils.isEmpty(text) && !StringUtils.isEmpty(item.getSuffix()))
                     text = text + item.getSuffix();
             }
         }
 
         vcAlign = getContentAlignmentChange(item.getVerticalContentAlignment());
 
-        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; border-radius: 2px; border-color: #B3B3B3; background-color: #ffffff; word-wrap: break-word;  border-style: solid; border-width: %spx %spx %spx %spx; padding:0px; text-align:%s; vertical-align: %s; font-size: %spx; font-weight: %s; font-style:%s\">",
-                colSpan, rowSpan, 1, 1, 1, 1, item.getTextAlignment(), vcAlign, item.getFontSizeInt(), item.getFontWeight(), item.getFontFamily()));
+        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; border-color: #B3B3B3; background-color: #ffffff; word-wrap: break-word;  border-style: solid; border-width: %s; padding:0px; text-align:%s; vertical-align: %s; font-size: %spx; font-weight: %s; font-style:%s\">",
+                colSpan, rowSpan, getBorderWidth(item), item.getTextAlignment(), vcAlign, item.getFontSizeInt(), item.getFontWeight(), item.getFontFamily()));
         sb.append(text);
         sb.append("</td>");
 
@@ -306,40 +462,42 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    public static String getDateTimeToStringFormat(ChartStyleItem item) {
-        String returnValue = "";
+    public static String getDateTimeToStringFormat(ChartStyleItem item, List<ChartElement> values) {
+        String returnValue = getValue(item, values);
 
-        if (StringUtils.isEmpty(item.getValue())) {
+        if (StringUtils.isEmpty(returnValue)) {
             return returnValue;
         }
 
         try {
-            // Parse the date string
-            LocalDateTime dateTime = LocalDateTime.parse(item.getValue(), DateTimeFormatter.ISO_DATE_TIME);
-            String formattedDate = "";
+            LocalDate date = LocalDate.parse(returnValue, DateTimeFormatter.ISO_LOCAL_DATE); // LocalDate로 변환
+            LocalDateTime dateTime = date.atStartOfDay(); // 00:00:00 시간 추가
 
-            // Check the control type
-            if (item.getType().equals("DateTextBox")) {
-                formattedDate = dateTime.format(DateTimeFormatter.ofPattern(item.getDateFormat(), Locale.ENGLISH));
-            } else if (item.getType().equals("UmAlQuraDateTextBox")) {
-                formattedDate = dateTime.format(DateTimeFormatter.ofPattern(item.getDateFormat(), new Locale("ar", "SA")));
-            }
-
-            returnValue = formattedDate;
-        } catch (DateTimeParseException e) {
-            return "";
+            return formatDate(item, dateTime); // 포맷 적용
+        } catch (Exception e) {
+            return returnValue;
         }
-
-        return returnValue;
     }
 
-    private static String getRichTextBox(ChartStyleItem item, int colSpan, int rowSpan) {
+    private static String formatDate(ChartStyleItem item, LocalDateTime dateTime) {
+        DateTimeFormatter formatter = null;
+
+        if (item.getType().equals("DateTextBox")) {
+            formatter = DateTimeFormatter.ofPattern(item.getDateFormat(), Locale.ENGLISH);
+        } else if (item.getType().equals("UmAlQuraDateTextBox")) {
+            formatter = DateTimeFormatter.ofPattern(item.getDateFormat(), new Locale("ar", "SA"));
+        }
+
+        return dateTime.format(formatter);
+    }
+
+    private static String getRichTextBox(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         return sb.toString();
     }
 
-    private static String getLabelTag(ChartStyleItem item, int colSpan, int rowSpan) {
+    private static String getLabelTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
         String textAlign = "";
         String indent = "";
@@ -366,7 +524,7 @@ public class PevDocumentRenderUtil {
 
         }
 
-        String text = spaceTrim(item);
+        String text = spaceTrim(item.getText());
 
         vcAlign = getContentAlignmentChange(item.getVerticalContentAlignment());
 
@@ -374,8 +532,8 @@ public class PevDocumentRenderUtil {
             sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; border-style: solid; color: #FFFFFF; border-color: #3DB5FF; border-width:0px 7px 0px 7px; text-align: center; vertical-align: middle; font-size: 16px; font-weight: Bold; direction:ltr; background-color: #3264CD; \">",
                     colSpan, rowSpan));
         } else {
-            sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; border-style: solid; border-color: %s; border-width:%spx %spx %spx %spx; text-align:%s; vertical-align: %s; font-size: %spx; font-weight: %s; font-style:%s; direction:%s; %s; \">",
-                    colSpan, rowSpan, "#000000", 0, 0, 0, 0, textAlign, vcAlign, 11, "Bold", item.getFontSizeInt(), item.getFlowDirection().equals("RightToLeft") ? "rtl" : "ltr", indent));
+            sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; border-color: #B3B3B3; border-style: solid; border-width:%s; text-align:%s; vertical-align: %s; font-size: %spx; font-weight: %s; font-style:%s; direction:%s; %s; \">",
+                    colSpan, rowSpan, getBorderWidth(item), textAlign, vcAlign, 11, "Bold", item.getFontSizeInt(), item.getFlowDirection().equals("RightToLeft") ? "rtl" : "ltr", indent));
         }
 
         sb.append(text);
@@ -384,17 +542,13 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String spaceTrim(ChartStyleItem item) {
-        String text = "";
-        if (StringUtils.isNotEmpty(item.getText())) {
-            if (!item.getText().equals(item.getText().trim()) && item.getHorizontalContentAlignment().equals("Left")) {
-                text = item.getText().trim().replace("  ", " &nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br />");
-            }
-            else
-                text = item.getText().trim().replace("  ", " &nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br />");
-        }
-
-        return text;
+    private static String spaceTrim(String text) {
+        return StringUtils.isEmpty(text) ? "" : text.trim().replace("  ", " &nbsp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("&lt;em&gt;", "<em>")
+                .replace("&lt;/em&gt;", "</em>")
+                .replace("\n", "<br />");
     }
 
     private static String getContentAlignmentChange(String contentAlign) {
@@ -419,7 +573,7 @@ public class PevDocumentRenderUtil {
         return alignment;
     }
 
-    private static String getTableTag(ChartStyleItem item, int colSpan, int rowSpan) {
+    private static String getTableTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
         List<String> colWidthInfoList = new ArrayList<>();
         List<String> rowHeightInfoList = new ArrayList<>();
@@ -429,7 +583,7 @@ public class PevDocumentRenderUtil {
             rowHeightInfoList = Arrays.asList(item.getGridInfo().split(":") [1].split("\\|\\|"));
         }
 
-        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height: inherit;\">\n", colSpan, rowSpan));
+        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height: inherit; \">\n", colSpan, rowSpan));
         sb.append(String.format("<table cellspacing=\"0\" cellpadding=\"0\" style=\"margin: 0px 0px 0px 0px; table-layout:fixed; width:%spx; border-collapse:collapse; \">", item.getWidth()));
         sb.append("<colgroup>");
 
@@ -450,10 +604,10 @@ public class PevDocumentRenderUtil {
                 if (Objects.nonNull(curItem)) {
                     int cSpan = Integer.parseInt(curItem.getColSpan());
                     int rSpan = Integer.parseInt(curItem.getRowSpan());
-                    if (curItem.getVisibility().equals("Visible")) {
-                        sb.append(getCellTag(curItem, cSpan, rSpan));
+                    if (curItem.getVisibilityStr().equals("Visible")) {
+                        sb.append(getCellTag(curItem, values, cSpan, rSpan));
                     } else {
-                        sb.append(getNoneTag(cSpan, rSpan, 0, 0, 0, 0));
+                        sb.append(getNoneTag(curItem, colSpan, rowSpan));
                     }
                 }
 
@@ -467,9 +621,24 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String getNoneTag(int colSpan, int rowSpan, int borderTop, int borderBottom, int borderRight, int borderLeft) {
-        return String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; border-style: solid; border-width:%spx %spx %spx %spx; \"></td>",
-                colSpan, rowSpan, borderTop, borderRight, borderBottom, borderLeft);
+    private static String getNoneTag(ChartStyleItem item, int colSpan, int rowSpan) {
+        return String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; border-color: #B3B3B3; word-wrap: break-word; border-style: solid; border-width:%s; \"></td>",
+                colSpan, rowSpan, getBorderWidth(item));
+    }
+
+    private static String getBorderWidth(ChartStyleItem item) {
+        if (StringUtils.isEmpty(item.getBorderThickness())) {
+            return String.format("%spx %spx %spx %spx", 1, 1, 1, 1);
+        } else {
+            String[] border = item.getBorderThickness().split(",");
+
+            if (item.getFlowDirection().equals("LeftToRight")) {
+                return String.format("%spx %spx %spx %spx", border[1], border[2], border[3], border[0]);
+
+            } else {
+                return String.format("%spx %spx %spx %spx", border[1], border[0], border[3], border[2]);
+            }
+        }
     }
 
     private static List<RowGroup> getRowGroup(List<ChartStyleItem> items) {
@@ -517,6 +686,29 @@ public class PevDocumentRenderUtil {
         return controls.contains(type);
     }
 
+    private static String getValue(ChartStyleItem item, List<ChartElement> values) {
+        return Optional.ofNullable(values.stream()
+                .filter(v -> item.getId().equals(v.getMdfmCpemNo()))
+                .map(c -> c.getContent())
+                .findAny()
+                .orElse(item.getDefaultValue())).orElse("");
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    private static class ColumnInfo {
+        @SerializedName("IsWidthStar")
+        private String isWidthStar;
+        @SerializedName("Width")
+        private String width;
+        @SerializedName("ColumnDisplayName")
+        private String columnDisplayName;
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -554,6 +746,5 @@ public class PevDocumentRenderUtil {
                 YPoints.add(yPoint);
             }
         }
-
     }
 }

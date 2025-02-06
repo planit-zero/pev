@@ -28,7 +28,7 @@
                             ELSE -1 END                                                      AS imageSeq
                  FROM ODS.S_MRFMFCID A
                           LEFT OUTER JOIN ODS.S_MRDDRECE B
-                                          ON B.MDRC_ID = #{}
+                                          ON B.MDRC_ID = #{mdrcId}
                                               AND B.MDRC_FOM_SEQ = #{mdrcFomSeq}
                                               AND A.MDFM_CPEM_ID = B.MDFM_CPEM_ID
                           LEFT OUTER JOIN ODS.S_MRDDRLFE C

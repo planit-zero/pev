@@ -15,7 +15,7 @@ public class ChartStyleItem {
     @XmlAttribute(name = "ID")
     private String id;
 
-    @XmlAttribute(name = "Parent ID")
+    @XmlAttribute(name = "ParentID")
     private String parentId;
 
     @XmlAttribute(name = "Type")
@@ -30,8 +30,11 @@ public class ChartStyleItem {
     @XmlAttribute(name = "IsSuffix")
     private String isSuffix;
 
+    @XmlAttribute(name = "ColumnSource")
+    private String columnSource;
+
     @XmlAttribute(name = "Visibility")
-    @Setter
+//    @Setter
     private String visibility;
 
     @XmlAttribute(name = "Printable")
@@ -176,6 +179,9 @@ public class ChartStyleItem {
     @Setter
     private String value;
 
+    @Setter
+    private String visibilityStr;
+
     // Children
     @XmlElement(name = "Item")
     private List<ChartStyleItem> children;
@@ -183,6 +189,10 @@ public class ChartStyleItem {
     public void setPosition(String top, String left) {
         this.top = top;
         this.left = left;
+    }
+
+    public void setTopValue(String top) {
+        this.top = top;
     }
 
     public int getIndentUnitInt() {
@@ -219,5 +229,13 @@ public class ChartStyleItem {
 
     public String getValue() {
         return StringUtils.isNotEmpty(value) ? value : Optional.ofNullable(defaultValue).orElse("");
+    }
+
+    public String getHorizontalContentAlignment() {
+        return StringUtils.isNotEmpty(horizontalContentAlignment) ? horizontalContentAlignment : "Left";
+    }
+
+    public String getVisibilityStr() {
+        return StringUtils.isNotEmpty(visibilityStr) ? visibilityStr : visibility;
     }
 }
