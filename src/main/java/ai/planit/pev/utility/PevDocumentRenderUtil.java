@@ -341,12 +341,15 @@ public class PevDocumentRenderUtil {
 
         String imageSource = getImagePath(getValue(item, values));
 
-        sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; border-style: solid; border-color: #B3B3B3; border-width: %s; width:%spx; \">",
-                colSpan, rowSpan, getBorderWidth(item), item.getWidth()));
-        if (StringUtils.isNotEmpty(imageSource)) {
+        if (StringUtils.isEmpty(imageSource)) {
+            sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; border-style: solid; border-color: #B3B3B3; border-width: 0px 0px 0px 0px; width:%spx; \"></td>",
+                    colSpan, rowSpan,item.getWidth()));
+        } else {
+            sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; border-style: solid; border-color: #B3B3B3; border-width: %s; width:%spx; \">",
+                    colSpan, rowSpan, getBorderWidth(item), item.getWidth()));
             sb.append(String.format("<img src=\"%s\" align=\"absmiddle\" style=\"padding: 0px; width: 100%%;\"></img>", imageSource));
+            sb.append("</td>");
         }
-        sb.append("</td>");
 
         return sb.toString();
     }
