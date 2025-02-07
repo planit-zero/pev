@@ -480,12 +480,6 @@ public class RecordServiceImpl implements RecordService {
 
                 dataSource = anesthesiaService.getAnesthesiaRecordData(request.getRecord().getRecordDetailType(), request.getRecord().getOpExptRegId());
             } else {
-                if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_DEPARTMENT.getType())) {
-                    return Chart.Response.builder()
-                            .htmlData(getDocumentHtml(request, session))
-                            .build();
-                }
-
                 chartContext.setChartStrategy(new MedicalChartStrategy());
                 List<MedicalData> medicalData = medicalService.getMedicalData(request.getRecord());
 
@@ -668,6 +662,11 @@ public class RecordServiceImpl implements RecordService {
 
         // 차트 조합 및 정리
         Chart.Response chart = chartContext.getChart(format, chartData.getValues(), style, applyStyle);
+
+        // 과별서식인 경우 html 형식으로 출력
+        if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_DEPARTMENT.getType())) {
+            chart.setHtmlData(getDocumentHtml(request, session));
+        }
 
         // 진료기록 이미지 추가
         if (!imageData.isEmpty()) {
