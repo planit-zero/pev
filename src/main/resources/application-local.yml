@@ -1,7 +1,7 @@
 spring:
   pid:
-#    file: /Users/junhankim/Desktop/PlanitHealthcare/pev/boot.pid
-    file: /Users/kookyungmin/test/pev/boot.pid
+    file: /Users/junhankim/Desktop/PlanitHealthcare/pev/boot.pid
+#    file: /Users/kookyungmin/test/pev/boot.pid
 server:
   port: 8080
 pev:
