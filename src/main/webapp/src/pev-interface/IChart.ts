@@ -23,6 +23,7 @@ export interface IChart {
     headerSection: IChartSection | null;
     sections: IChartSection[];
     medicalImages: string[] | null;
+    htmlData: string | null;
 }
 
 export interface IChartSection {

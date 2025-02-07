@@ -3,6 +3,8 @@ package ai.planit.pev.domain.ods.record.service;
 import ai.planit.idp.sdk.model.IdpLoginUser;
 import ai.planit.pev.core.exception.BaseException;
 import ai.planit.pev.core.exception.ErrorType;
+import ai.planit.pev.domain.image.dto.ImageDTO;
+import ai.planit.pev.domain.image.service.ImageService;
 import ai.planit.pev.domain.meta.event.dao.EventDAO;
 import ai.planit.pev.domain.meta.event.dto.Event;
 import ai.planit.pev.domain.meta.record.service.MetaRecordService;
@@ -42,19 +44,18 @@ import ai.planit.pev.strategy.chart.object.note.NoteData;
 import ai.planit.pev.strategy.chart.object.note.NoteValue;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.strategy.chart.object.picture.PictureData;
+import ai.planit.pev.utility.PevDocumentRenderUtil;
 import ai.planit.pev.utility.SessionUtil;
 import ai.planit.pev.utility.PevChartUtil;
 import ai.planit.pev.utility.PevStringUtil;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,6 +87,7 @@ public class RecordServiceImpl implements RecordService {
     private final CprService cprService;
     private final EventDAO eventDAO;
     private final NoteDAO noteDAO;
+    private final ImageService imageService;
 
     /**
      * {@inheritDoc}
@@ -653,14 +655,19 @@ public class RecordServiceImpl implements RecordService {
 
         // PID
         String pid = SessionUtil.getPid(session);
-
         // 각 사용자의 규칙
         boolean withOrigin = getWithOrigin(session);
+
         ChartData chartData = new ChartData(pid, data, withOrigin);
         if (request.getMaskingYn().equals("Y")) chartData = chartContext.getMaskedData(chartData);
 
         // 차트 조합 및 정리
         Chart.Response chart = chartContext.getChart(format, chartData.getValues(), style, applyStyle);
+
+        // 과별서식인 경우 html 형식으로 출력
+        if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_DEPARTMENT.getType())) {
+            chart.setHtmlData(getDocumentHtml(request, session));
+        }
 
         // 진료기록 이미지 추가
         if (!imageData.isEmpty()) {
@@ -670,10 +677,56 @@ public class RecordServiceImpl implements RecordService {
         return chart;
     }
 
+    //과별서식 테스트 function
+    @Override
+    public String getDocumentHtml(Chart.Request request) {
+        return getDocumentHtml(request, null);
+
+    }
+
+    private String getDocumentHtml(Chart.Request request, HttpSession session) {
+        StringJoiner sj = new StringJoiner("\n");
+        // 기록유형 포멧 불러오기
+        ChartContext chartContext = new ChartContext();
+        chartContext.setChartStrategy(new MedicalChartStrategy());
+
+        List<ChartElement> format = metaRecordService.getRecordFormatList(request.getRecord());
+        Object dataSource = medicalService.getMedicalData(request.getRecord());;
+        List<ChartStyleSection> style = getStyle(request, true);
+        List<ChartElement> data = chartContext.getChartStrategy().getData(format, dataSource)
+                .stream()
+                .filter(c -> StringUtils.isNotEmpty(c.getContent()))
+                .collect(Collectors.toList());
+        if (request.getMaskingYn().equals("Y")) {
+            String pid = Objects.nonNull(session) ? SessionUtil.getPid(session) : "MARCO";
+            // 각 사용자의 규칙
+            boolean withOrigin = Objects.nonNull(session) ? getWithOrigin(session) : true;
+            ChartData chartData = new ChartData(pid, data, withOrigin);
+            data = chartContext.getMaskedData(chartData).getValues()
+                    .stream()
+                    .map(d -> {
+                        if (d.getControlType().name().equalsIgnoreCase("ImageCheckBox") || d.getControlType().name().equalsIgnoreCase("Image")) {
+                            d.setContent(String.format("https://deview.snuh.org/masked_images/%s", imageService.getMaskedImage(ImageDTO.builder()
+                                    .refresh(false)
+                                    .url(d.getContent())
+                                    .build()).getUrl()));
+                        }
+                        return d;
+                    })
+                    .collect(Collectors.toList());
+        }
+
+        for(ChartStyleSection section : style) {
+            sj.add(PevDocumentRenderUtil.render(section.getItems(), data));
+        }
+
+        return sj.toString().replace("\n", "").replace("\"", "'");
+    }
+
     /**
      * 스타일
      */
-    private List<ChartStyleSection> getStyle(Chart.Request request, boolean applyStyle) {
+    public List<ChartStyleSection> getStyle(Chart.Request request, boolean applyStyle) {
         List<ChartStyleSection> style = new ArrayList<>();
 
         if (applyStyle) {

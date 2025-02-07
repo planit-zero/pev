@@ -1,7 +1,6 @@
 package ai.planit.pev.domain.ods.record.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 public class Record {
 
@@ -22,6 +21,9 @@ public class Record {
 
     @Getter
     @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Response {
         private String recordType;
         private String recordDetailType;

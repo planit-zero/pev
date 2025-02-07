@@ -2,10 +2,12 @@ package ai.planit.pev.strategy.chart.object.common;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 public class ChartStyleItem {
@@ -13,7 +15,7 @@ public class ChartStyleItem {
     @XmlAttribute(name = "ID")
     private String id;
 
-    @XmlAttribute(name = "Parent ID")
+    @XmlAttribute(name = "ParentID")
     private String parentId;
 
     @XmlAttribute(name = "Type")
@@ -28,7 +30,11 @@ public class ChartStyleItem {
     @XmlAttribute(name = "IsSuffix")
     private String isSuffix;
 
+    @XmlAttribute(name = "ColumnSource")
+    private String columnSource;
+
     @XmlAttribute(name = "Visibility")
+//    @Setter
     private String visibility;
 
     @XmlAttribute(name = "Printable")
@@ -69,6 +75,21 @@ public class ChartStyleItem {
 
     @XmlAttribute(name = "MaxWidth")
     private String maxWidth;
+
+    @XmlAttribute(name = "HorizontalContentAlignment")
+    private String horizontalContentAlignment;
+
+    @XmlAttribute(name = "VerticalContentAlignment")
+    private String verticalContentAlignment;
+
+    @XmlAttribute(name = "Suffix")
+    private String suffix;
+
+    @XmlAttribute(name = "DateFormat")
+    private String dateFormat;
+
+    @XmlAttribute(name = "GridInfo")
+    private String gridInfo;
 
     @XmlAttribute(name = "Height")
     private String height;
@@ -151,9 +172,15 @@ public class ChartStyleItem {
     @XmlAttribute(name = "VerticalInterval")
     private String verticalInterval;
 
+    @XmlAttribute(name = "DefaultValue")
+    private String defaultValue;
+
     // Value
     @Setter
     private String value;
+
+    @Setter
+    private String visibilityStr;
 
     // Children
     @XmlElement(name = "Item")
@@ -162,5 +189,53 @@ public class ChartStyleItem {
     public void setPosition(String top, String left) {
         this.top = top;
         this.left = left;
+    }
+
+    public void setTopValue(String top) {
+        this.top = top;
+    }
+
+    public int getIndentUnitInt() {
+        return Integer.parseInt(indentUnit);
+    }
+
+    public int getTopInt() {
+        return StringUtils.isNotEmpty(top) ? Integer.valueOf(top) : 0;
+    }
+
+    public int getLeftInt() {
+        return StringUtils.isNotEmpty(left) ? Integer.valueOf(left) : 0;
+    }
+
+    public int getWidthInt() {
+        return Integer.valueOf(width);
+    }
+
+    public int getHeightInt() {
+        return StringUtils.isEmpty(height) || "NaN".equals(height) ? getMinHeightInt(): Integer.valueOf(height);
+    }
+
+    public int getMinHeightInt() {
+        return Integer.valueOf(minHeight);
+    }
+
+    public int getYPoint() {
+        return getTopInt() + getHeightInt();
+    }
+
+    public int getFontSizeInt() {
+        return Integer.parseInt(fontSize);
+    }
+
+    public String getValue() {
+        return StringUtils.isNotEmpty(value) ? value : Optional.ofNullable(defaultValue).orElse("");
+    }
+
+    public String getHorizontalContentAlignment() {
+        return StringUtils.isNotEmpty(horizontalContentAlignment) ? horizontalContentAlignment : "Left";
+    }
+
+    public String getVisibilityStr() {
+        return StringUtils.isNotEmpty(visibilityStr) ? visibilityStr : visibility;
     }
 }

@@ -53,7 +53,8 @@ dependencies {
 ext['tomcat.version'] = '9.0.98'
 
 tasks.named('test') {
-//    useJUnitPlatform()
+    useJUnitPlatform()
+    jvmArgs '-Dspring.profiles.active=local'
     exclude '**/*'
 }
 
