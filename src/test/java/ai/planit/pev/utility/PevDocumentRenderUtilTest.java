@@ -358,7 +358,50 @@ public class PevDocumentRenderUtilTest {
 
     }
 
-    private String getExpectedResult(String str) {
+    @Test
+    public void renderTest9() {
+        String json = "{\n" +
+                "    \"maskingYn\": \"Y\",\n" +
+                "    \"record\": {\n" +
+                "        \"recordType\": \"DR\",\n" +
+                "        \"recordDetailType\": \"D020\",\n" +
+                "        \"itemType\": \"과별서식\",\n" +
+                "        \"itemNm\": \"물리치료 경과\",\n" +
+                "        \"writingDate\": \"2023-04-17 16:18:16\",\n" +
+                "        \"writingDeptCd\": \"RHTR\",\n" +
+                "        \"writingDeptNm\": \"재활의학과치료실\",\n" +
+                "        \"writerStfNo\": \"21227\",\n" +
+                "        \"writerNm\": \"성관식\",\n" +
+                "        \"keyId\": \"140141425_2_4308_6\",\n" +
+                "        \"pactId\": \"0047389186\",\n" +
+                "        \"pactTpCd\": \"I\",\n" +
+                "        \"pactTpNm\": \"입원\",\n" +
+                "        \"ptMedDeptCd\": \"IMHM\",\n" +
+                "        \"ptMedDeptNm\": \"내과(입원의학)\",\n" +
+                "        \"sortSeq\": 2,\n" +
+                "        \"note\": null,\n" +
+                "        \"mdfmId\": 4308,\n" +
+                "        \"mdfmFomSeq\": 6,\n" +
+                "        \"mdrcId\": 140141425,\n" +
+                "        \"mdrcFomSeq\": 2,\n" +
+                "        \"examKey\": null,\n" +
+                "        \"pacsImgIptnCd\": null,\n" +
+                "        \"accsId\": null,\n" +
+                "        \"recType\": null,\n" +
+                "        \"geneExmYn\": null,\n" +
+                "        \"mdrcWrtStsCdYn\": null,\n" +
+                "        \"opExptRegId\": null\n" +
+                "    }\n" +
+                "}";
+
+        Chart.Request request = new Gson().fromJson(json, Chart.Request.class);
+        String expected = getExpectedResult("result9.txt");
+        assertEquals(expected, recordService.getDocumentHtml(request)
+                .replaceAll("\u0020\r|\r", "\n"));
+
+    }
+
+        private String getExpectedResult(String str) {
         try (InputStream inputStream = PevDocumentRenderUtilTest.class.getClassLoader().getResourceAsStream("test_result" + File.separator +  str)) {
             String input = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             return input;
