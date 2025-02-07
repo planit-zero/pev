@@ -81,19 +81,32 @@ const Chart = (props: ChartProps) => {
         };
     };
 
-    const ChartSection = (section: IChartSection, sIdx: number) => {
-        return (
-            <Box
-                key={sIdx}
-                position={'relative'}
-                width={props.openModal ? '100%' : section.style ? `${section.style.width}px` : '600px'}
-                height={props.openModal ? '100%' : section.style ? `${section.style.height}px` : 'fit-content'}
-            >
-                {section.entities.map((e, idx) => {
-                    return ChartEntity(e, idx);
-                })}
-            </Box>
-        );
+    const ChartSection = (section: IChartSection, sIdx: number, htmlData: any) => {
+        if (props.record.recordDetailType === 'D020') {
+            return (
+                <Box
+                    key={sIdx}
+                    position={'relative'}
+                    width={props.openModal ? '100%' : section.style ? `${section.style.width}px` : '600px'}
+                    height={'100%'}
+                >
+                    {props.record.recordDetailType === 'D020' && <div dangerouslySetInnerHTML={{ __html: htmlData }} />}
+                </Box>
+            );
+        } else {
+            return (
+                <Box
+                    key={sIdx}
+                    position={'relative'}
+                    width={props.openModal ? '100%' : section.style ? `${section.style.width}px` : '600px'}
+                    height={props.openModal ? '100%' : section.style ? `${section.style.height}px` : 'fit-content'}
+                >
+                    {section.entities.map((e, idx) => {
+                        return ChartEntity(e, idx, htmlData);
+                    })}
+                </Box>
+            );
+        }
     };
 
     const MedicalImageSection = (path: string) => {
@@ -105,7 +118,7 @@ const Chart = (props: ChartProps) => {
         );
     };
 
-    const ChartEntity = (entity: IChartEntity, eIdx: number) => {
+    const ChartEntity = (entity: IChartEntity, eIdx: number, htmlData: string | null | undefined) => {
         if (entity.style) return StyledElementWithChildren(entity, eIdx);
         return (
             <Box key={eIdx} onClick={() => console.log('### entity', entity)}>
@@ -391,7 +404,7 @@ const Chart = (props: ChartProps) => {
         <React.Fragment>
             {getHeaderSection(props.record)}
             {props.chart?.sections.map((s, idx) => {
-                return ChartSection(s, idx);
+                return ChartSection(s, idx, props.chart?.htmlData);
             })}
             {props.chart?.medicalImages?.map((path) => {
                 return MedicalImageSection(path);
