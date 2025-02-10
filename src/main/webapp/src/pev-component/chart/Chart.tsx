@@ -90,7 +90,7 @@ const Chart = (props: ChartProps) => {
                     width={props.openModal ? '100%' : section.style ? `${section.style.width}px` : '600px'}
                     height={'100%'}
                 >
-                    {props.record.recordDetailType === 'D020' && <div dangerouslySetInnerHTML={{ __html: htmlData }} />}
+                    <div dangerouslySetInnerHTML={{ __html: htmlData }} />
                 </Box>
             );
         } else {
