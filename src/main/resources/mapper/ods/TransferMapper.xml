@@ -18,7 +18,7 @@
                         AND B.LST_YN = 'Y'
         INNER JOIN ODS.S_MRNNRIAM C
                     ON B.NR_ITEM_ID = C.NR_ITEM_ID
-        WHERE A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.REC_WRT_DTM::DATE || '_' || A.WRT_SEQ = #{keyId}
+        WHERE A.PACT_TP_CD || '_' || A.PT_NO || '_' || A.FSR_DTM || '_' || A.WRT_SEQ = #{keyId}
         AND A.NREC_FORM_CD = '501'
         AND A.LST_YN = 'Y'
         ORDER BY C.SORT_SEQ
