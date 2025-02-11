@@ -58,6 +58,8 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ai.planit.pev.domain.ods.record.constant.RecordTarget.*;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -88,6 +90,8 @@ public class RecordServiceImpl implements RecordService {
     private final EventDAO eventDAO;
     private final NoteDAO noteDAO;
     private final ImageService imageService;
+
+    private static final List<String> XML_RECORD_LIST = List.of(MEDICAL_DEPARTMENT.getType(), CERTIFICATE_REQUEST.getType());
 
     /**
      * {@inheritDoc}
@@ -288,7 +292,7 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 기능검사
-        if (examRecordTargets.contains(RecordTarget.EXAM_FUNCTION.getType())) {
+        if (examRecordTargets.contains(EXAM_FUNCTION.getType())) {
             examRecordList.addAll(recordListDAO.getExamFunctionRecordList(request));
         }
 
@@ -536,7 +540,7 @@ public class RecordServiceImpl implements RecordService {
             }
 
             // 기능검사 (과별서식)
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_DEPARTMENT.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(MEDICAL_DEPARTMENT.getType())) {
                 chartContext.setChartStrategy(new FunctionChartStrategy());
                 dataSource = functionService.getFunctionData(request.getRecord().getKeyId());
             }
@@ -664,8 +668,8 @@ public class RecordServiceImpl implements RecordService {
         // 차트 조합 및 정리
         Chart.Response chart = chartContext.getChart(format, chartData.getValues(), style, applyStyle);
 
-        // 과별서식인 경우 html 형식으로 출력
-        if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_DEPARTMENT.getType())) {
+        // XML 형식으로 조회하는 기록유형인 경우
+        if (XML_RECORD_LIST.contains(request.getRecord().getRecordDetailType())) {
             chart.setHtmlData(getDocumentHtml(request, session));
         }
 

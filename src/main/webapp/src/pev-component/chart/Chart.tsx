@@ -82,7 +82,7 @@ const Chart = (props: ChartProps) => {
     };
 
     const ChartSection = (section: IChartSection, sIdx: number, htmlData: any) => {
-        if (props.record.recordDetailType === 'D020') {
+        if (htmlData) {
             return (
                 <Box
                     key={sIdx}

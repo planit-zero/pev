@@ -224,7 +224,7 @@ public class ChartStyleItem {
     }
 
     public int getFontSizeInt() {
-        return Integer.parseInt(fontSize);
+        return fontSize.contains(".") ? (int) Double.parseDouble(fontSize) : Integer.parseInt(fontSize);
     }
 
     public String getValue() {
