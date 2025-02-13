@@ -102,7 +102,7 @@ const Chart = (props: ChartProps) => {
                     height={props.openModal ? '100%' : section.style ? `${section.style.height}px` : 'fit-content'}
                 >
                     {section.entities.map((e, idx) => {
-                        return ChartEntity(e, idx, htmlData);
+                        return ChartEntity(e, idx);
                     })}
                 </Box>
             );
@@ -118,7 +118,7 @@ const Chart = (props: ChartProps) => {
         );
     };
 
-    const ChartEntity = (entity: IChartEntity, eIdx: number, htmlData: string | null | undefined) => {
+    const ChartEntity = (entity: IChartEntity, eIdx: number) => {
         if (entity.style) return StyledElementWithChildren(entity, eIdx);
         return (
             <Box key={eIdx} onClick={() => console.log('### entity', entity)}>

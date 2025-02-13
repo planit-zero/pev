@@ -35,7 +35,6 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'com.vertica.jdbc:vertica-jdbc:11.0.2-0'
     runtimeOnly files('src/main/libs/VerticaDialect.jar')
-
     implementation 'com.oracle.ojdbc:orai18n:19.3.0.0'
     runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
 

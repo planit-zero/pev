@@ -681,7 +681,9 @@ public class RecordServiceImpl implements RecordService {
         return chart;
     }
 
-    //과별서식 테스트 function
+    /**
+     * 과별서식 테스트 function
+     */
     @Override
     public String getDocumentHtml(Chart.Request request) {
         return getDocumentHtml(request, null);
