@@ -283,7 +283,7 @@ const ChartWrapper = (props: ChartWrapperProps) => {
                         </React.Fragment>
                     );
                 })}
-            {!isObservationChart() && props.targetRecord.recordType !== 'NR' && (
+            {!isObservationChart() && props.targetRecord.recordType !== 'NR' && props.targetRecord.recordDetailType !== 'EX_FUNCTION' && (
                 <React.Fragment>
                     <Chart
                         mode={props.mode}

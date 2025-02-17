@@ -1,8 +1,6 @@
 package ai.planit.pev.domain.ods.record.service;
 
 import ai.planit.idp.sdk.model.IdpLoginUser;
-import ai.planit.pev.core.exception.BaseException;
-import ai.planit.pev.core.exception.ErrorType;
 import ai.planit.pev.domain.image.dto.ImageDTO;
 import ai.planit.pev.domain.image.service.ImageService;
 import ai.planit.pev.domain.meta.event.dao.EventDAO;
@@ -44,10 +42,9 @@ import ai.planit.pev.strategy.chart.object.note.NoteData;
 import ai.planit.pev.strategy.chart.object.note.NoteValue;
 import ai.planit.pev.strategy.chart.object.pathology.PathologyData;
 import ai.planit.pev.strategy.chart.object.picture.PictureData;
+import ai.planit.pev.utility.PevChartUtil;
 import ai.planit.pev.utility.PevDocumentRenderUtil;
 import ai.planit.pev.utility.SessionUtil;
-import ai.planit.pev.utility.PevChartUtil;
-import ai.planit.pev.utility.PevStringUtil;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -659,6 +656,7 @@ public class RecordServiceImpl implements RecordService {
 
         // PID
         String pid = SessionUtil.getPid(session);
+
         // 각 사용자의 규칙
         boolean withOrigin = getWithOrigin(session);
 
@@ -687,7 +685,6 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public String getDocumentHtml(Chart.Request request) {
         return getDocumentHtml(request, null);
-
     }
 
     private String getDocumentHtml(Chart.Request request, HttpSession session) {

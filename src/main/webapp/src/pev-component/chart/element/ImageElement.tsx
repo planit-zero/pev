@@ -46,7 +46,6 @@ const ImageElement = (props: ImageElementProps) => {
             if (!maskedImage) return ``;
             return `https://deview.snuh.org/masked_images/${maskedImage.url}`;
         } else {
-            // console.log(props.content);
             return `${props.content}`;
         }
     };

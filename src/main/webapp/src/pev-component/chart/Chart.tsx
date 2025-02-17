@@ -121,7 +121,7 @@ const Chart = (props: ChartProps) => {
     const ChartEntity = (entity: IChartEntity, eIdx: number) => {
         if (entity.style) return StyledElementWithChildren(entity, eIdx);
         return (
-            <Box key={eIdx} onClick={() => console.log('### entity', entity)}>
+            <Box key={eIdx}>
                 <Box
                     sx={{
                         fontSize: `h4.fontSize`,
@@ -145,7 +145,7 @@ const Chart = (props: ChartProps) => {
     const ChartAttribute = (attribute: IChartAttribute, aIdx: number) => {
         if (attribute.style) return StyledElementWithChildren(attribute, aIdx);
         return (
-            <Box key={aIdx} sx={{ ml: 1, mb: 1 }} onClick={() => console.log('### attribute', attribute)}>
+            <Box key={aIdx} sx={{ ml: 1, mb: 1 }}>
                 <Box
                     sx={{
                         fontSize: 'h5.fontSize',

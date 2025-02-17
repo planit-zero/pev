@@ -86,7 +86,6 @@ const RecordElement = (props: RecordElementProps) => {
     return (
         <div
             className={`record-element`}
-            onClick={() => console.log(`###`, props.item)}
             style={{
                 position: 'absolute',
                 zIndex: isNaN(Number(props.item.zIndex)) ? 0 : Number(props.item.zIndex),
