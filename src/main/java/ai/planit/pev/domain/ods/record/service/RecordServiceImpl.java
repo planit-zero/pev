@@ -689,17 +689,26 @@ public class RecordServiceImpl implements RecordService {
 
     private String getDocumentHtml(Chart.Request request, HttpSession session) {
         StringJoiner sj = new StringJoiner("\n");
-        // 기록유형 포멧 불러오기
+
         ChartContext chartContext = new ChartContext();
         chartContext.setChartStrategy(new MedicalChartStrategy());
-
+        Object dataSource = medicalService.getMedicalData(request.getRecord());
         List<ChartElement> format = metaRecordService.getRecordFormatList(request.getRecord());
-        Object dataSource = medicalService.getMedicalData(request.getRecord());;
         List<ChartStyleSection> style = getStyle(request, true);
         List<ChartElement> data = chartContext.getChartStrategy().getData(format, dataSource)
                 .stream()
                 .filter(c -> StringUtils.isNotEmpty(c.getContent()))
                 .collect(Collectors.toList());
+
+        if (request.getRecord().getRecordType().equals(EXAM_RECORD.getType())) {
+            Object examDataSource = functionService.getFunctionData(request.getRecord().getKeyId());
+            chartContext.setChartStrategy(new FunctionChartStrategy());
+            data.addAll(chartContext.getChartStrategy().getData(format, examDataSource)
+                    .stream()
+                    .filter(c -> StringUtils.isNotEmpty(c.getContent()))
+                    .collect(Collectors.toList()));
+        }
+
         if (request.getMaskingYn().equals("Y")) {
             String pid = Objects.nonNull(session) ? SessionUtil.getPid(session) : "MARCO";
             // 각 사용자의 규칙

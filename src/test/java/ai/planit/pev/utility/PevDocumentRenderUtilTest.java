@@ -401,7 +401,50 @@ public class PevDocumentRenderUtilTest {
 
     }
 
-        private String getExpectedResult(String str) {
+    @Test
+    public void renderTest10() {
+        String json = "{\n" +
+                "    \"maskingYn\": \"Y\",\n" +
+                "    \"record\": {\n" +
+                "        \"recordType\": \"EX\",\n" +
+                "        \"recordDetailType\": \"D020\",\n" +
+                "        \"itemType\": \"기능검사\",\n" +
+                "        \"itemNm\": \"상부 위장관 내시경 결과 보고서 Ⅰ\",\n" +
+                "        \"writingDate\": \"2023-12-13 15:40:03\",\n" +
+                "        \"writingDeptCd\": \"IMN\",\n" +
+                "        \"writingDeptNm\": \"신장내과\",\n" +
+                "        \"writerStfNo\": null,\n" +
+                "        \"writerNm\": null,\n" +
+                "        \"keyId\": \"992312134550716501\",\n" +
+                "        \"pactId\": \"0052760323\",\n" +
+                "        \"pactTpCd\": \"I\",\n" +
+                "        \"pactTpNm\": \"입원\",\n" +
+                "        \"ptMedDeptCd\": null,\n" +
+                "        \"ptMedDeptNm\": null,\n" +
+                "        \"sortSeq\": 0,\n" +
+                "        \"note\": null,\n" +
+                "        \"mdfmId\": 11242,\n" +
+                "        \"mdfmFomSeq\": 8,\n" +
+                "        \"mdrcId\": 0,\n" +
+                "        \"mdrcFomSeq\": 0,\n" +
+                "        \"examKey\": \"9923121345507165\",\n" +
+                "        \"pacsImgIptnCd\": \"\",\n" +
+                "        \"accsId\": null,\n" +
+                "        \"recType\": null,\n" +
+                "        \"geneExmYn\": null,\n" +
+                "        \"mdrcWrtStsCdYn\": null,\n" +
+                "        \"opExptRegId\": null\n" +
+                "    }\n" +
+                "}";
+
+        Chart.Request request = new Gson().fromJson(json, Chart.Request.class);
+        String expected = getExpectedResult("result10.txt");
+        assertEquals(expected, recordService.getDocumentHtml(request)
+                .replaceAll("\u0020\r|\r", "\n"));
+
+    }
+
+    private String getExpectedResult(String str) {
         try (InputStream inputStream = PevDocumentRenderUtilTest.class.getClassLoader().getResourceAsStream("test_result" + File.separator +  str)) {
             String input = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             return input;
