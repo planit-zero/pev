@@ -25,7 +25,6 @@ import ai.planit.pev.domain.ods.observation.service.ObservationService;
 import ai.planit.pev.domain.ods.order.service.OrderService;
 import ai.planit.pev.domain.ods.pathology.service.PathologyService;
 import ai.planit.pev.domain.ods.picture.service.PictureService;
-import ai.planit.pev.domain.ods.record.constant.RecordTarget;
 import ai.planit.pev.domain.ods.record.dao.RecordListDAO;
 import ai.planit.pev.domain.ods.record.dto.Record;
 import ai.planit.pev.domain.ods.specimen.service.SpecimenService;
@@ -125,53 +124,53 @@ public class RecordServiceImpl implements RecordService {
         List<String> searchTargetList = Arrays.asList(request.getSearchTargets());
 
         // 진료기록
-        List<String> medicalRecordTargets = searchTargetList
+        List<String> medical = searchTargetList
                 .stream()
                 .filter(target -> target.startsWith("D0"))
                 .collect(Collectors.toList());
 
-        if (!medicalRecordTargets.isEmpty()) {
-            recordList.addAll(getMedicalRecordList(request, medicalRecordTargets));
+        if (!medical.isEmpty()) {
+            recordList.addAll(getMedicalRecordList(request, medical));
         }
 
         // 처방
-        if (searchTargetList.contains(RecordTarget.ORDER_RECORD.getType())) {
+        if (searchTargetList.contains(ORDER_RECORD.getType())) {
             recordList.addAll(recordListDAO.getOrderRecordList(request));
         }
 
         // 검사
-        List<String> examRecordTargets = searchTargetList
+        List<String> exam = searchTargetList
                 .stream()
-                .filter(target -> target.startsWith(RecordTarget.EXAM_RECORD.getType()))
+                .filter(target -> target.startsWith(EXAM_RECORD.getType()))
                 .collect(Collectors.toList());
 
-        if (!examRecordTargets.isEmpty()) {
-            recordList.addAll(getExamRecordList(request, examRecordTargets));
+        if (!exam.isEmpty()) {
+            recordList.addAll(getExamRecordList(request, exam));
         }
 
         // 간호기록
-        List<String> nrRecordTargets = searchTargetList
+        List<String> nr = searchTargetList
                 .stream()
-                .filter(target -> target.startsWith(RecordTarget.NURS_RECORD.getType()))
+                .filter(target -> target.startsWith(NURS_RECORD.getType()))
                 .collect(Collectors.toList());
 
-        if (!nrRecordTargets.isEmpty()) {
-            recordList.addAll(getNrRecordList(request, nrRecordTargets));
+        if (!nr.isEmpty()) {
+            recordList.addAll(getNrRecordList(request, nr));
         }
 
         // 스캔자료
-        if (searchTargetList.contains(RecordTarget.SCAN_RECORD.getType())) {
+        if (searchTargetList.contains(SCAN_RECORD.getType())) {
             recordList.addAll(recordListDAO.getScanRecordList(request));
         }
 
         // 특성화 기록
-        List<String> crRecordTargets = searchTargetList
+        List<String> cr = searchTargetList
                 .stream()
                 .filter(target -> target.startsWith("CR"))
                 .collect(Collectors.toList());
 
-        if (!crRecordTargets.isEmpty()) {
-            recordList.addAll(getCrRecordList(request, crRecordTargets));
+        if (!cr.isEmpty()) {
+            recordList.addAll(getCrRecordList(request, cr));
         }
 
         // 조건에 따라 여러 기록을 조회하기 때문에 모든 조회가 끝난 후 한번에 정렬한다.
@@ -189,53 +188,53 @@ public class RecordServiceImpl implements RecordService {
      * 진료기록 목록 조회
      *
      * @param request              조회할 기록 목록의 상세 조건
-     * @param medicalRecordTargets 조회할 진료기록의 상세 정보
+     * @param medical 조회할 진료기록의 상세 정보
      * @return 데이터베이스에서 조회한 진료기록의 상세 목록
      */
-    private List<Record.Response> getMedicalRecordList(Record.Request request, List<String> medicalRecordTargets) {
+    private List<Record.Response> getMedicalRecordList(Record.Request request, List<String> medical) {
         List<Record.Response> medicalRecordList = new ArrayList<>();
 
         // 진료기록 - 수술기록
-        if (medicalRecordTargets.contains(RecordTarget.MEDICAL_SURGERY.getType())) {
-            String[] queryTargets = {RecordTarget.MEDICAL_SURGERY.getType()};
+        if (medical.contains(MEDICAL_SURGERY.getType())) {
+            String[] queryTargets = {MEDICAL_SURGERY.getType()};
             request.setQueryTargets(queryTargets);
 
             medicalRecordList.addAll(recordListDAO.getSurgeryRecordList(request));
         }
 
         // 진료기록 - 퇴원기록
-        if (medicalRecordTargets.contains(RecordTarget.MEDICAL_DISCHARGE.getType())) {
-            String[] queryTargets = {RecordTarget.MEDICAL_DISCHARGE.getType()};
+        if (medical.contains(MEDICAL_DISCHARGE.getType())) {
+            String[] queryTargets = {MEDICAL_DISCHARGE.getType()};
             request.setQueryTargets(queryTargets);
 
             medicalRecordList.addAll(recordListDAO.getDischargeRecordList(request));
         }
 
         // 진료기록 - 타과의뢰
-        if (medicalRecordTargets.contains(RecordTarget.MEDICAL_REQUEST.getType())) {
-            String[] queryTargets = {RecordTarget.MEDICAL_REQUEST.getType()};
+        if (medical.contains(MEDICAL_REQUEST.getType())) {
+            String[] queryTargets = {MEDICAL_REQUEST.getType()};
             request.setQueryTargets(queryTargets);
 
             medicalRecordList.addAll(recordListDAO.getRequestRecordList(request));
         }
 
         // 진료기록 - 마취기록, 마취 전 평가
-        if (medicalRecordTargets.contains(RecordTarget.MEDICAL_ANESTHESIA.getType()) ||
-                medicalRecordTargets.contains(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType())) {
+        if (medical.contains(MEDICAL_ANESTHESIA.getType()) ||
+                medical.contains(MEDICAL_BEFORE_ANESTHESIA.getType())) {
             String[] queryTargets = {
-                    RecordTarget.MEDICAL_ANESTHESIA.getType(),
-                    RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()
+                    MEDICAL_ANESTHESIA.getType(),
+                    MEDICAL_BEFORE_ANESTHESIA.getType()
             };
 
-            if (!medicalRecordTargets.contains(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
+            if (!medical.contains(MEDICAL_ANESTHESIA.getType())) {
                 queryTargets = Arrays.stream(queryTargets)
-                        .filter(target -> !target.equals(RecordTarget.MEDICAL_ANESTHESIA.getType()))
+                        .filter(target -> !target.equals(MEDICAL_ANESTHESIA.getType()))
                         .toArray(String[]::new);
             }
 
-            if (!medicalRecordTargets.contains(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType())) {
+            if (!medical.contains(MEDICAL_BEFORE_ANESTHESIA.getType())) {
                 queryTargets = Arrays.stream(queryTargets)
-                        .filter(target -> !target.equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()))
+                        .filter(target -> !target.equals(MEDICAL_BEFORE_ANESTHESIA.getType()))
                         .toArray(String[]::new);
             }
 
@@ -245,12 +244,12 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 진료기록 - 일반
-        List<String> generalTypeList = medicalRecordTargets.stream()
-                .filter(type -> !type.equals(RecordTarget.MEDICAL_SURGERY.getType()))
-                .filter(type -> !type.equals(RecordTarget.MEDICAL_DISCHARGE.getType()))
-                .filter(type -> !type.equals(RecordTarget.MEDICAL_REQUEST.getType()))
-                .filter(type -> !type.equals(RecordTarget.MEDICAL_ANESTHESIA.getType()))
-                .filter(type -> !type.equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()))
+        List<String> generalTypeList = medical.stream()
+                .filter(type -> !type.equals(MEDICAL_SURGERY.getType()))
+                .filter(type -> !type.equals(MEDICAL_DISCHARGE.getType()))
+                .filter(type -> !type.equals(MEDICAL_REQUEST.getType()))
+                .filter(type -> !type.equals(MEDICAL_ANESTHESIA.getType()))
+                .filter(type -> !type.equals(MEDICAL_BEFORE_ANESTHESIA.getType()))
                 .collect(Collectors.toList());
 
         if (!generalTypeList.isEmpty()) {
@@ -267,98 +266,98 @@ public class RecordServiceImpl implements RecordService {
      * 검사기록 목록 조회
      *
      * @param request           조회할 기록 목록의 상세 조건
-     * @param examRecordTargets 조회할 검사기록의 상세 정보
+     * @param exam 조회할 검사기록의 상세 정보
      * @return 데이터베이스에서 조회한 검사기록의 상세 목록
      */
-    private List<Record.Response> getExamRecordList(Record.Request request, List<String> examRecordTargets) {
+    private List<Record.Response> getExamRecordList(Record.Request request, List<String> exam) {
         List<Record.Response> examRecordList = new ArrayList<>();
 
         // 영상검사
-        if (examRecordTargets.contains(RecordTarget.EXAM_PICTURE.getType())) {
+        if (exam.contains(EXAM_PICTURE.getType())) {
             examRecordList.addAll(recordListDAO.getExamPictureRecordList(request));
         }
 
         // 병리검사
-        if (examRecordTargets.contains(RecordTarget.EXAM_PATHOLOGY.getType())) {
+        if (exam.contains(EXAM_PATHOLOGY.getType())) {
             examRecordList.addAll(recordListDAO.getExamPathologyRecordList(request));
         }
 
         // 검체검사
-        if (examRecordTargets.contains(RecordTarget.EXAM_SPECIMEN.getType())) {
+        if (exam.contains(EXAM_SPECIMEN.getType())) {
             examRecordList.addAll(recordListDAO.getExamSpecimenRecordList(request));
         }
 
         // 기능검사
-        if (examRecordTargets.contains(EXAM_FUNCTION.getType())) {
+        if (exam.contains(EXAM_FUNCTION.getType())) {
             examRecordList.addAll(recordListDAO.getExamFunctionRecordList(request));
         }
 
         return examRecordList;
     }
 
-    private List<Record.Response> getNrRecordList(Record.Request request, List<String> nrRecordTargets) {
+    private List<Record.Response> getNrRecordList(Record.Request request, List<String> nr) {
         List<Record.Response> nrRecordList = new ArrayList<>();
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_OBSERVATION.getType())) {
+        if (nr.contains(NURS_OBSERVATION.getType())) {
             nrRecordList.addAll(recordListDAO.getNrObservationRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_INPATIENT.getType())) {
+        if (nr.contains(NURS_INPATIENT.getType())) {
             nrRecordList.addAll(recordListDAO.getNrInpatientRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_EXECUTE.getType())) {
+        if (nr.contains(NURS_EXECUTE.getType())) {
             nrRecordList.addAll(recordListDAO.getNrExecuteRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_FALL.getType())) {
+        if (nr.contains(NURS_FALL.getType())) {
             nrRecordList.addAll(recordListDAO.getNrFallRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_BEDSORE.getType())) {
+        if (nr.contains(NURS_BEDSORE.getType())) {
             nrRecordList.addAll(recordListDAO.getNrBedsoreRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_BEDSORE_EVALUATION.getType())) {
+        if (nr.contains(NURS_BEDSORE_EVALUATION.getType())) {
             nrRecordList.addAll(recordListDAO.getNrBedsoreEvaluationRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_CHECKOUT.getType())) {
+        if (nr.contains(NURS_CHECKOUT.getType())) {
             nrRecordList.addAll(recordListDAO.getNrCheckoutRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_DISCHARGE.getType())) {
+        if (nr.contains(NURS_DISCHARGE.getType())) {
             nrRecordList.addAll(recordListDAO.getNrDischargeRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_TRANSFER.getType())) {
+        if (nr.contains(NURS_TRANSFER.getType())) {
             nrRecordList.addAll(recordListDAO.getNrTransferRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_STATUS.getType())) {
+        if (nr.contains(NURS_STATUS.getType())) {
             nrRecordList.addAll(recordListDAO.getNrStatusRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_BLOOD_DIALYSIS.getType())) {
+        if (nr.contains(NURS_BLOOD_DIALYSIS.getType())) {
             nrRecordList.addAll(recordListDAO.getNrBloodDialysisRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_PERITONEAL_DIALYSIS.getType())) {
+        if (nr.contains(NURS_PERITONEAL_DIALYSIS.getType())) {
             nrRecordList.addAll(recordListDAO.getNrPeritonealDialysisRecordList(request));
         }
 
-        if (nrRecordTargets.contains(RecordTarget.NURS_NOTE.getType())) {
+        if (nr.contains(NURS_NOTE.getType())) {
             nrRecordList.addAll(recordListDAO.getNrNoteRecordList(request));
         }
 
         return nrRecordList;
     }
 
-    private List<Record.Response> getCrRecordList(Record.Request request, List<String> crRecordTargets) {
+    private List<Record.Response> getCrRecordList(Record.Request request, List<String> cr) {
         List<Record.Response> crRecordList = new ArrayList<>();
 
         // CPR 발생보고서
-        if (crRecordTargets.contains(RecordTarget.CHARACTERIZATION_CPR.getType())) {
+        if (cr.contains(CHARACTERIZATION_CPR.getType())) {
             crRecordList.addAll(recordListDAO.getCrCprRecordList(request));
         }
 
@@ -378,9 +377,9 @@ public class RecordServiceImpl implements RecordService {
         List<String> imageData = new ArrayList<>();
 
         // 진료기록
-        if (request.getRecord().getRecordType().equals(RecordTarget.MEDICAL_RECORD.getType())) {
+        if (request.getRecord().getRecordType().equals(MEDICAL_RECORD.getType())) {
             // 마취 관련
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType()) || request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_BEFORE_ANESTHESIA.getType()) ) {
+            if (request.getRecord().getRecordDetailType().equals(MEDICAL_ANESTHESIA.getType()) || request.getRecord().getRecordDetailType().equals(MEDICAL_BEFORE_ANESTHESIA.getType()) ) {
                 chartContext.setChartStrategy(new AnesthesiaRecordChartStrategy(request.getRecord().getRecordDetailType()));
 
                 Record.Response anesthesiaRecord = anesthesiaService.getAnesthesiaRecord(request.getRecord().getRecordDetailType(), request.getRecord().getOpExptRegId());
@@ -417,7 +416,7 @@ public class RecordServiceImpl implements RecordService {
 
                 format.add(opNmValue);
 
-                if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_ANESTHESIA.getType())) {
+                if (request.getRecord().getRecordDetailType().equals(MEDICAL_ANESTHESIA.getType())) {
                     ChartElement stfNmEntity = new ChartElement();
 
                     stfNmEntity.setSectionId(-98);
@@ -486,7 +485,7 @@ public class RecordServiceImpl implements RecordService {
                 List<MedicalData> medicalData = medicalService.getMedicalData(request.getRecord());
 
                 // 수술기록
-                if (request.getRecord().getRecordDetailType().equals(RecordTarget.MEDICAL_SURGERY.getType())) {
+                if (request.getRecord().getRecordDetailType().equals(MEDICAL_SURGERY.getType())) {
                     List<SurgeryData> surgeryData = medicalService.getSurgeryData(request.getRecord());
                     List<MedicalData> medicalSurgeryData = MedicalData.of(surgeryData);
                     medicalData.addAll(medicalSurgeryData);
@@ -502,15 +501,15 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 처방기록
-        if (request.getRecord().getRecordDetailType().equals(RecordTarget.ORDER_RECORD.getType())) {
+        if (request.getRecord().getRecordDetailType().equals(ORDER_RECORD.getType())) {
             chartContext.setChartStrategy(new OrderChartStrategy());
             dataSource = orderService.getOrderData(session.getAttribute("pev-pid").toString(), request.getRecord());
         }
 
         // 검사기록
-        if (request.getRecord().getRecordType().equals(RecordTarget.EXAM_RECORD.getType())) {
+        if (request.getRecord().getRecordType().equals(EXAM_RECORD.getType())) {
             // 병리검사
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PATHOLOGY.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(EXAM_PATHOLOGY.getType())) {
                 chartContext.setChartStrategy(new PathologyChartStrategy());
 
                 PathologyData.Request pathologyDataRequest = new PathologyData.Request();
@@ -520,7 +519,7 @@ public class RecordServiceImpl implements RecordService {
             }
 
             // 영상검사
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_PICTURE.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(EXAM_PICTURE.getType())) {
                 chartContext.setChartStrategy(new PictureChartStrategy());
 
                 PictureData.Request pictureDataRequest = new PictureData.Request();
@@ -531,7 +530,7 @@ public class RecordServiceImpl implements RecordService {
             }
 
             // 검체검사
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.EXAM_SPECIMEN.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(EXAM_SPECIMEN.getType())) {
                 chartContext.setChartStrategy(new SpecimenChartStrategy());
                 dataSource = specimenService.getSpecimenData(session, request.getRecord());
             }
@@ -544,88 +543,88 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 스캔자료
-        if (request.getRecord().getRecordType().equals(RecordTarget.SCAN_RECORD.getType())) {
+        if (request.getRecord().getRecordType().equals(SCAN_RECORD.getType())) {
             chartContext.setChartStrategy(new ScanChartStrategy());
             dataSource = request.getRecord();
         }
 
         // 간호기록
-        if (request.getRecord().getRecordType().equals(RecordTarget.NURS_RECORD.getType())) {
+        if (request.getRecord().getRecordType().equals(NURS_RECORD.getType())) {
             // 임상관찰기록
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_OBSERVATION.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_OBSERVATION.getType())) {
                 chartContext.setChartStrategy(new ObservationChartStrategy());
                 dataSource = observationService.getObservationData(session, request.getRecord());
             }
             // 입원간호정보
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_INPATIENT.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_INPATIENT.getType())) {
                 chartContext.setChartStrategy(new InpatientChartStrategy());
                 format = inpatientService.getInpatientFormat(request.getRecord());
                 dataSource = null;
             }
             // 간호활동수행기록
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_EXECUTE.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_EXECUTE.getType())) {
                 chartContext.setChartStrategy(new ExecuteChartStrategy());
                 format = executeService.getNrExecuteFormat(request.getRecord());
                 dataSource = null;
             }
 
             // 낙상위험도평가
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_FALL.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_FALL.getType())) {
                 chartContext.setChartStrategy(new FallChartStrategy());
                 dataSource =  fallService.getFallData(request.getRecord().getKeyId());
             }
 
             // 욕창간호기록
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_BEDSORE.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_BEDSORE.getType())) {
                 chartContext.setChartStrategy(new BedsoreChartStrategy());
                 format = bedsoreService.getBedsoreFormat(request.getRecord().getKeyId());
                 dataSource = null;
             }
 
             // 욕창위험도평가
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_BEDSORE_EVALUATION.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_BEDSORE_EVALUATION.getType())) {
                 chartContext.setChartStrategy(new BedsoreEvaluationChartStrategy());
                 dataSource = bedsoreService.getBedsoreEvaluationData(request.getRecord().getKeyId());
             }
 
             // 퇴실간호기록
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_CHECKOUT.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_CHECKOUT.getType())) {
                 chartContext.setChartStrategy(new CheckoutChartStrategy());
                 dataSource = checkoutService.getNrCheckoutData(request.getRecord().getKeyId());
             }
 
             // 퇴원간호기록
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_DISCHARGE.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_DISCHARGE.getType())) {
                 chartContext.setChartStrategy(new DischargeChartStrategy());
                 dataSource = dischargeService.getNrDischargeData(request.getRecord().getKeyId());
             }
 
             // 전과전동간호기록
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_TRANSFER.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_TRANSFER.getType())) {
                 chartContext.setChartStrategy(new TransferChartStrategy());
                 dataSource = transferService.getNrTransferData(request.getRecord().getKeyId());
             }
 
             // 수술전상태확인
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_STATUS.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_STATUS.getType())) {
                 chartContext.setChartStrategy(new StatusChartStrategy());
                 dataSource = statusService.getNrStatusValueList(request.getRecord().getKeyId());
             }
 
             // 혈액투석간호기록
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_BLOOD_DIALYSIS.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_BLOOD_DIALYSIS.getType())) {
                 chartContext.setChartStrategy(new BloodDialysisChartStrategy());
                 dataSource = bloodDialysisService.getBloodDialysisData(request.getRecord().getKeyId());
             }
 
             // 복막투석간호기록
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_PERITONEAL_DIALYSIS.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_PERITONEAL_DIALYSIS.getType())) {
                 chartContext.setChartStrategy(new PeritionealDialysisChartStrategy());
                 dataSource = peritonealDialysisService.getPeritonealDialysisData(request.getRecord().getKeyId());
             }
 
             // 간호일지
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.NURS_NOTE.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(NURS_NOTE.getType())) {
                 chartContext.setChartStrategy(new NoteChartStrategy());
                 dataSource = noteService.getNoteData(request.getRecord().getKeyId());
 
@@ -639,9 +638,9 @@ public class RecordServiceImpl implements RecordService {
         }
 
         // 특성화 기록
-        if (request.getRecord().getRecordType().equals(RecordTarget.CHARACTERIZATION_RECORD.getType())) {
+        if (request.getRecord().getRecordType().equals(CHARACTERIZATION_RECORD.getType())) {
             // CPR 발생보고서
-            if (request.getRecord().getRecordDetailType().equals(RecordTarget.CHARACTERIZATION_CPR.getType())) {
+            if (request.getRecord().getRecordDetailType().equals(CHARACTERIZATION_CPR.getType())) {
                 chartContext.setChartStrategy(new CprChartStrategy());
                 dataSource = cprService.getCprData(request.getRecord());
             }
