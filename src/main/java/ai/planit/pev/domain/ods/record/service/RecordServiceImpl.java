@@ -632,7 +632,9 @@ public class RecordServiceImpl implements RecordService {
                 if (dataSource != null) {
                     NoteData noteData = (NoteData) dataSource;
                     List<String> ndrcIdList = noteData.getValueList().stream().map(NoteValue::getNdrcId).collect(Collectors.toList());
-                    imageData = noteDAO.getImagePath(ndrcIdList);
+                    if (!ndrcIdList.isEmpty()) {
+                        imageData = noteDAO.getImagePath(ndrcIdList);
+                    }
                 }
             }
         }
@@ -665,15 +667,8 @@ public class RecordServiceImpl implements RecordService {
         // 차트 조합 및 정리
         Chart.Response chart = chartContext.getChart(format, chartData.getValues(), style, applyStyle);
 
-        // XML 형식으로 조회하는 기록유형인 경우
-        if (XML_RECORD_LIST.contains(request.getRecord().getRecordDetailType())) {
-            chart.setHtmlData(getDocumentHtml(request, session));
-        }
-
-        // 진료기록 이미지 추가
-        if (!imageData.isEmpty()) {
-            chart.setMedicalImages(imageData);
-        }
+        // 차트 나머지 데이터 세팅
+        setChartData(chart, request, session, imageData);
 
         return chart;
     }
@@ -750,6 +745,21 @@ public class RecordServiceImpl implements RecordService {
         }
 
         return style;
+    }
+
+    /**
+     * 차트 나머지 데이터 세팅
+     */
+    private void setChartData(Chart.Response chart, Chart.Request request, HttpSession session, List<String> imageData) {
+        // XML 형식으로 조회하는 기록유형인 경우
+        if (XML_RECORD_LIST.contains(request.getRecord().getRecordDetailType())) {
+            chart.setHtmlData(getDocumentHtml(request, session));
+        }
+
+        // 진료기록 이미지 추가
+        if (!imageData.isEmpty()) {
+            chart.setMedicalImages(imageData);
+        }
     }
 
     /**
