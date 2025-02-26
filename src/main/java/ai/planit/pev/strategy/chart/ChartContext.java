@@ -62,8 +62,7 @@ public class ChartContext {
                 .acceptCharset(StandardCharsets.UTF_8)
                 .body(BodyInserters.fromValue(data))
                 .retrieve()
-                .onStatus(HttpStatus::is5xxServerError, response -> PevWebClientUtil.throwServerError(response, ErrorType.ANN_PROCESS_FAILED))
-                .onStatus(HttpStatus::is4xxClientError, response -> PevWebClientUtil.throwServerError(response, ErrorType.ANN_PROCESS_FAILED))
+                .onStatus(HttpStatus::isError, response -> PevWebClientUtil.throwServerError(response, ErrorType.ANN_PROCESS_FAILED))
                 .bodyToMono(ChartData.class)
                 .block();
     }

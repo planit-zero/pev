@@ -555,12 +555,14 @@ public class RecordServiceImpl implements RecordService {
                 chartContext.setChartStrategy(new ObservationChartStrategy());
                 dataSource = observationService.getObservationData(session, request.getRecord());
             }
+
             // 입원간호정보
             if (request.getRecord().getRecordDetailType().equals(NURS_INPATIENT.getType())) {
                 chartContext.setChartStrategy(new InpatientChartStrategy());
                 format = inpatientService.getInpatientFormat(request.getRecord());
                 dataSource = null;
             }
+
             // 간호활동수행기록
             if (request.getRecord().getRecordDetailType().equals(NURS_EXECUTE.getType())) {
                 chartContext.setChartStrategy(new ExecuteChartStrategy());

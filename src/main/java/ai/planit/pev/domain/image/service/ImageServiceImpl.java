@@ -25,8 +25,7 @@ public class ImageServiceImpl implements ImageService {
                 .acceptCharset(StandardCharsets.UTF_8)
                 .body(BodyInserters.fromValue(imageDTO))
                 .retrieve()
-                .onStatus(HttpStatus::is5xxServerError, response -> PevWebClientUtil.throwServerError(response, ErrorType.ANN_PROCESS_FAILED))
-                .onStatus(HttpStatus::is4xxClientError, response -> PevWebClientUtil.throwServerError(response, ErrorType.ANN_PROCESS_FAILED))
+                .onStatus(HttpStatus::isError, response -> PevWebClientUtil.throwServerError(response, ErrorType.ANN_PROCESS_FAILED))
                 .bodyToMono(ImageDTO.class)
                 .block();
     }

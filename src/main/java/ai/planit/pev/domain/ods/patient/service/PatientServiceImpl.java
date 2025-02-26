@@ -54,8 +54,7 @@ public class PatientServiceImpl implements PatientService {
                 .acceptCharset(StandardCharsets.UTF_8)
                 .body(BodyInserters.fromValue(request))
                 .retrieve()
-                .onStatus(HttpStatus::is5xxServerError, response -> PevWebClientUtil.throwServerError(response, ErrorType.CONVERT_RID_TO_PID_FAILED))
-                .onStatus(HttpStatus::is4xxClientError, response -> PevWebClientUtil.throwServerError(response, ErrorType.CONVERT_RID_TO_PID_FAILED))
+                .onStatus(HttpStatus::isError, response -> PevWebClientUtil.throwServerError(response, ErrorType.CONVERT_RID_TO_PID_FAILED))
                 .bodyToMono(String[].class)
                 .block();
 
@@ -78,8 +77,7 @@ public class PatientServiceImpl implements PatientService {
                 .acceptCharset(StandardCharsets.UTF_8)
                 .body(BodyInserters.fromValue(request))
                 .retrieve()
-                .onStatus(HttpStatus::is5xxServerError, response -> PevWebClientUtil.throwServerError(response, ErrorType.CONVERT_GID_TO_RID_FAILED))
-                .onStatus(HttpStatus::is4xxClientError, response -> PevWebClientUtil.throwServerError(response, ErrorType.CONVERT_GID_TO_RID_FAILED))
+                .onStatus(HttpStatus::isError, response -> PevWebClientUtil.throwServerError(response, ErrorType.CONVERT_GID_TO_RID_FAILED))
                 .bodyToMono(RidByGid.Response.class)
                 .block();
     }
@@ -102,8 +100,7 @@ public class PatientServiceImpl implements PatientService {
                 .acceptCharset(StandardCharsets.UTF_8)
                 .body(BodyInserters.fromValue(request))
                 .retrieve()
-                .onStatus(HttpStatus::is5xxServerError, response -> PevWebClientUtil.throwServerError(response, ErrorType.CONVERT_RID_TO_PID_FAILED))
-                .onStatus(HttpStatus::is4xxClientError, response -> PevWebClientUtil.throwServerError(response, ErrorType.CONVERT_RID_TO_PID_FAILED))
+                .onStatus(HttpStatus::isError, response -> PevWebClientUtil.throwServerError(response, ErrorType.CONVERT_RID_TO_PID_FAILED))
                 .bodyToMono(new ParameterizedTypeReference<List<PatientByIrb.Response>>(){})
                 .block();
     }
