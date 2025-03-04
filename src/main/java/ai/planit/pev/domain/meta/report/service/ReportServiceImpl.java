@@ -36,7 +36,9 @@ public class ReportServiceImpl implements ReportService {
         report.setRid(rid != null ? rid : "");
 
         reportDAO.insertReport(report);
-        reportDAO.insertReportDetail(report);
+        if (!report.getValues().isEmpty()) {
+            reportDAO.insertReportDetail(report);
+        }
     }
 
     @Override

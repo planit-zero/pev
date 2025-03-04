@@ -66,13 +66,21 @@ const ChartReport = (props: ChartReportProps) => {
 
     const handleSubmit = () => {
         if (chartReportForm.values.length === 0) {
-            setAlert({
-                type: 'warning',
-                message: '신고 내용을 작성 완료한 후 제출 버튼을 눌러주세요.'
-            });
-            return;
+            if (window.confirm('신고 내용을 작성하지 않았습니다. 그래도 제출하시겠습니까?')) {
+                handleReportSubmit();
+            } else {
+                setAlert({
+                    type: 'warning',
+                    message: '신고 내용을 작성 완료한 후 제출 버튼을 눌러주세요.'
+                });
+                return;
+            }
+        } else {
+            handleReportSubmit();
         }
+    };
 
+    const handleReportSubmit = () => {
         insertReport(chartReportForm)
             .unwrap()
             .then(() => {
