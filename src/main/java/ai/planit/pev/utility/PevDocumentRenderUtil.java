@@ -1,6 +1,6 @@
 package ai.planit.pev.utility;
 
-import ai.planit.pev.strategy.chart.object.common.ChartElement;
+import ai.planit.pev.strategy.chart.object.common.ChartDocumentValue;
 import ai.planit.pev.strategy.chart.object.common.ChartStyleItem;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -25,7 +25,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 public class PevDocumentRenderUtil {
-    public static String render(List<ChartStyleItem> items, List<ChartElement> values) {
+    public static String render(List<ChartStyleItem> items, List<ChartDocumentValue> values) {
         StringBuilder sb = new StringBuilder();
 
         for(ChartStyleItem item : items) {
@@ -48,7 +48,7 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static void renderTable(List<RowGroup> rowGroups, List<ChartElement> values, StringBuilder sb) {
+    private static void renderTable(List<RowGroup> rowGroups, List<ChartDocumentValue> values, StringBuilder sb) {
         int prevBottom = 0;
 
         for(RowGroup rowGroup : rowGroups) {
@@ -161,7 +161,7 @@ public class PevDocumentRenderUtil {
         }
     }
 
-    private static String getCellTag(ChartStyleItem curItem, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getCellTag(ChartStyleItem curItem, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         switch (curItem.getType()) {
             case "Blank":
             case "Button":
@@ -208,7 +208,7 @@ public class PevDocumentRenderUtil {
         }
     }
 
-    private static String getRepeaterTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getRepeaterTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
         List<ChartStyleItem> items = new ArrayList<>();
 
@@ -230,7 +230,7 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String getImageCheckBoxTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getImageCheckBoxTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         String text = spaceTrim(item.getText());
@@ -253,7 +253,7 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String getDataGridTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getDataGridTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         if (!StringUtils.isEmpty(item.getColumnSource())) {
@@ -317,7 +317,7 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String getComboBoxTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getComboBoxTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         String textAlign = item.getHorizontalContentAlignment();
@@ -336,7 +336,7 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String getImageTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getImageTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         String imageSource = getImagePath(getValue(item, values));
@@ -359,7 +359,7 @@ public class PevDocumentRenderUtil {
         return value;
     }
 
-    private static String getRadioButtonTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getRadioButtonTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         String textAlign = "";
@@ -398,7 +398,7 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String getCheckBoxTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getCheckBoxTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         String textAlign = "";
@@ -437,7 +437,7 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    private static String getTextBoxTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getTextBoxTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         String text = "";
@@ -465,7 +465,7 @@ public class PevDocumentRenderUtil {
         return sb.toString();
     }
 
-    public static String getDateTimeToStringFormat(ChartStyleItem item, List<ChartElement> values) {
+    public static String getDateTimeToStringFormat(ChartStyleItem item, List<ChartDocumentValue> values) {
         String returnValue = getValue(item, values);
 
         if (StringUtils.isEmpty(returnValue)) {
@@ -494,13 +494,13 @@ public class PevDocumentRenderUtil {
         return dateTime.format(formatter);
     }
 
-    private static String getRichTextBox(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getRichTextBox(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
 
         return sb.toString();
     }
 
-    private static String getLabelTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getLabelTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
         String textAlign = "";
         String indent = "";
@@ -576,7 +576,7 @@ public class PevDocumentRenderUtil {
         return alignment;
     }
 
-    private static String getTableTag(ChartStyleItem item, List<ChartElement> values, int colSpan, int rowSpan) {
+    private static String getTableTag(ChartStyleItem item, List<ChartDocumentValue> values, int colSpan, int rowSpan) {
         StringBuilder sb = new StringBuilder();
         List<String> colWidthInfoList = new ArrayList<>();
         List<String> rowHeightInfoList = new ArrayList<>();
@@ -689,13 +689,15 @@ public class PevDocumentRenderUtil {
         return controls.contains(type);
     }
 
-    private static String getValue(ChartStyleItem item, List<ChartElement> values) {
+    private static String getValue(ChartStyleItem item, List<ChartDocumentValue> values) {
         return Optional.ofNullable(values.stream()
-                .filter(v -> item.getId().equals(v.getMdfmCpemNo()))
-                .map(c -> c.getContent())
-                .findAny()
-                .orElse(item.getDefaultValue())).orElse("");
-
+                .filter(v -> !v.isUsed() && (item.getId().equals(v.getMdfmCpemNo()) || (item.getType().equals("ComboBox") && (item.getParentId() + ".0").equals(v.getParentId()))))
+                .map(v -> {
+                    v.setUsed(true);
+                    return v.getContent();
+                })
+                .findFirst().orElse(item.getDefaultValue()))
+                .orElse("");
     }
 
     @Getter
