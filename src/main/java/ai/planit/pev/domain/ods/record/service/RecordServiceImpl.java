@@ -724,8 +724,11 @@ public class RecordServiceImpl implements RecordService {
                     .collect(Collectors.toList());
         }
 
+        List<ChartDocumentValue> values = data.stream()
+                .map(d -> new ChartDocumentValue(d)).collect(Collectors.toList());
+
         for(ChartStyleSection section : style) {
-            sj.add(PevDocumentRenderUtil.render(section.getItems(), data));
+            sj.add(PevDocumentRenderUtil.render(section.getItems(), values));
         }
 
         return sj.toString().replace("\n", "").replace("\"", "'");

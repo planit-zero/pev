@@ -444,6 +444,49 @@ public class PevDocumentRenderUtilTest {
 
     }
 
+    @Test
+    public void renderTest11() {
+        String json = "{\n" +
+                "    \"maskingYn\": \"Y\",\n" +
+                "    \"record\": {\n" +
+                "        \"recordType\": \"DR\",\n" +
+                "        \"recordDetailType\": \"D020\",\n" +
+                "        \"itemType\": \"과별서식\",\n" +
+                "        \"itemNm\": \"(OT)FMA (Fugl-Meyer Assessment)\",\n" +
+                "        \"writingDate\": \"2016-08-04 16:30:21\",\n" +
+                "        \"writingDeptCd\": \"RH05\",\n" +
+                "        \"writingDeptNm\": \"작업치료실\",\n" +
+                "        \"writerStfNo\": \"21238\",\n" +
+                "        \"writerNm\": \"김보라\",\n" +
+                "        \"keyId\": \"75539965_1_4868_12\",\n" +
+                "        \"pactId\": \"MI2095858320160802\",\n" +
+                "        \"pactTpCd\": \"I\",\n" +
+                "        \"pactTpNm\": \"입원\",\n" +
+                "        \"ptMedDeptCd\": \"NR\",\n" +
+                "        \"ptMedDeptNm\": \"신경과\",\n" +
+                "        \"sortSeq\": 1,\n" +
+                "        \"note\": null,\n" +
+                "        \"mdfmId\": 4868,\n" +
+                "        \"mdfmFomSeq\": 12,\n" +
+                "        \"mdrcId\": 75539965,\n" +
+                "        \"mdrcFomSeq\": 1,\n" +
+                "        \"examKey\": null,\n" +
+                "        \"pacsImgIptnCd\": null,\n" +
+                "        \"accsId\": null,\n" +
+                "        \"recType\": null,\n" +
+                "        \"geneExmYn\": null,\n" +
+                "        \"mdrcWrtStsCdYn\": null,\n" +
+                "        \"opExptRegId\": null\n" +
+                "    }\n" +
+                "}";
+
+        Chart.Request request = new Gson().fromJson(json, Chart.Request.class);
+        String expected = getExpectedResult("result11.txt");
+        assertEquals(expected, recordService.getDocumentHtml(request)
+                .replaceAll("\u0020\r|\r", "\n"));
+
+    }
+
     private String getExpectedResult(String str) {
         try (InputStream inputStream = PevDocumentRenderUtilTest.class.getClassLoader().getResourceAsStream("test_result" + File.separator +  str)) {
             String input = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
