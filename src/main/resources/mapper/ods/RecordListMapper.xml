@@ -371,9 +371,9 @@
                NULL                                                        AS writerStfNo,
                NULL                                                        AS writerNm,
                A.PTHL_NO                                                   AS keyId,
-               D.PACT_ID                                                   AS pactId,
-               D.PACT_TP_CD                                                AS pactTpCd,
-               DECODE(D.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
+               A.PACT_ID                                                   AS pactId,
+               A.PACT_TP_CD                                                AS pactTpCd,
+               DECODE(A.PACT_TP_CD, 'I', '입원', 'O', '외래', 'E', '응급', NULL) AS pactTpNm,
                NULL                                                        AS ptMedDeptCd,
                NULL                                                        AS ptMedDeptNm,
                NULL                                                        AS sortSeq,
@@ -390,16 +390,34 @@
                NULL                                                        AS mdrcWrtStsCdYn,
                NULL                                                        AS opExptRegId
         FROM (
-                SELECT *
-                FROM ODS.S_MSEPMPMD A
-                JOIN ODS.S_MSELMCTC B ON A.EXM_CTG_CD = B.EXM_CTG_CD
-                WHERE A.PT_NO = #{ptNo}
-                  AND A.ACPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
-                  AND A.PLEX_PRGR_STS_CD IN ('N', 'D', 'C')
+                 WITH MAIN_FILTERED AS (
+                     SELECT
+                         *
+                     FROM
+                         ODS.S_MSEPMPMD A
+                             JOIN ODS.S_MSELMCTC B ON A.EXM_CTG_CD = B.EXM_CTG_CD
+                     WHERE
+                         A.PT_NO = #{ptNo}
+                       AND A.ACPT_DTM::DATE BETWEEN #{searchFromDate}::DATE AND #{searchToDate}::DATE
+                       AND A.PLEX_PRGR_STS_CD IN ('N', 'D', 'C')
+                 ),
+                      JOINED_C AS (
+                          SELECT C.SPCM_NO, C.ORD_ID
+                          FROM ODS.S_MSELMCED C
+                          WHERE C.SPCM_NO IS NOT NULL AND C.ORD_ID IS NOT NULL
+                      ),
+                      JOINED_D AS (
+                          SELECT D.ORD_ID, D.PACT_ID, D.PACT_TP_CD
+                          FROM ODS.S_MOOOREXM D
+                      )
+                 SELECT
+                     *
+                 FROM
+                     MAIN_FILTERED MF
+                         JOIN JOINED_C C ON MF.SPCM_NO = C.SPCM_NO
+                         JOIN JOINED_D D ON C.ORD_ID = D.ORD_ID
              ) A
-        INNER JOIN ODS.S_MSELMCED C ON A.SPCM_NO = C.SPCM_NO
-        INNER JOIN ODS.S_MOOOREXM D ON C.ORD_ID = D.ORD_ID
-        WHERE D.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', D.PACT_TP_CD, #{pactTpCd})
+        WHERE A.PACT_TP_CD = DECODE(#{pactTpCd}, 'ALL', A.PACT_TP_CD, #{pactTpCd})
     </select>
 
     <select id="getExamSpecimenRecordList" parameterType="ai.planit.pev.domain.ods.record.dto.Record$Request" resultType="ai.planit.pev.domain.ods.record.dto.Record$Response">

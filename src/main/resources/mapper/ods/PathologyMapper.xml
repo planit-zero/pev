@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.pathology.dao.PathologyDAO">
-    <select id="getPathologyContentList"
-            parameterType="ai.planit.pev.strategy.chart.object.pathology.PathologyData$Request"
-            resultType="ai.planit.pev.strategy.chart.object.pathology.PathologyContent">
+
+    <select id="getPathologyContentList" parameterType="ai.planit.pev.strategy.chart.object.pathology.PathologyData$Request" resultType="ai.planit.pev.strategy.chart.object.pathology.PathologyContent">
         SELECT B.PLRT_LDAT                                                           AS plrtLdat,
                A.ACPT_DTM::DATE                                                      AS acptDt,
                A.LSH_DTM::DATE                                                       AS lshDt,
@@ -15,9 +14,8 @@
                                 AND B.TMPR_SV_YN = 'N'
         WHERE A.PTHL_NO = #{pthlNo}
     </select>
-    <select id="getPathologyProcessList"
-            parameterType="ai.planit.pev.strategy.chart.object.pathology.PathologyData$Request"
-            resultType="ai.planit.pev.strategy.chart.object.pathology.PathologyProcess">
+
+    <select id="getPathologyProcessList" parameterType="ai.planit.pev.strategy.chart.object.pathology.PathologyData$Request" resultType="ai.planit.pev.strategy.chart.object.pathology.PathologyProcess">
         SELECT A.PTHL_PRO_TP_CD                                                         AS pthlProTpCd,
                (SELECT Z.COMN_CD_NM
                 FROM ODS.S_CCCCCUTE Z
@@ -27,4 +25,5 @@
         WHERE A.PTHL_NO = #{pthlNo}
           AND A.PTHL_PRO_STS_CD = 'C'
     </select>
+
 </mapper>
