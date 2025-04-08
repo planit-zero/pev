@@ -23,4 +23,6 @@ public interface MedicalService {
     List<ChartStyleSection> getChartStyleSections(ChartStyleXml.Request request);
 
     Record.Response getMedicalReplyRecord(MedicalReply.Request request);
+
+    void selectAnalyzeStatisticsTables();
 }

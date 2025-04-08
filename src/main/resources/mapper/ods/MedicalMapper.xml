@@ -233,5 +233,49 @@
         AND A.MDRC_DC_TP_CD = 'C'
         AND NOT EXISTS(SELECT 1 FROM ODS.S_CNLRRUSD Z WHERE Z.STF_NO = A.WRT_STF_NO AND Z.OCTY_TP_CD = 'Z06')
     </select>
+    
+    <select id="S_PDEDBMSM">
+        select ANALYZE_STATISTICS('ODS.S_PDEDBMSM')
+    </select>
+
+    <select id="S_MSERMAAD">
+        select ANALYZE_STATISTICS('ODS.S_MSERMAAD')
+    </select>
+
+    <select id="S_MSERMMMC">
+        select ANALYZE_STATISTICS('ODS.S_MSERMMMC')
+    </select>
+
+    <select id="S_MOOOREXM">
+        select ANALYZE_STATISTICS('ODS.S_MOOOREXM')
+    </select>
+
+    <select id="S_MSEPMPMD">
+        select ANALYZE_STATISTICS('ODS.S_MSEPMPMD')
+    </select>
+
+    <select id="S_MSELMCTC">
+        select ANALYZE_STATISTICS('ODS.S_MSELMCTC')
+    </select>
+
+    <select id="S_MSELMCED">
+        select ANALYZE_STATISTICS('ODS.S_MSELMCED')
+    </select>
+
+    <select id="S_MSELMEBM">
+        select ANALYZE_STATISTICS('ODS.S_MSELMEBM')
+    </select>
+
+    <select id="S_MSELMAID">
+        select ANALYZE_STATISTICS('ODS.S_MSELMAID')
+    </select>
+
+    <select id="S_CCOOCCSC">
+        select ANALYZE_STATISTICS('ODS.S_CCOOCCSC')
+    </select>
+
+    <select id="S_MSERMZED">
+        select ANALYZE_STATISTICS('ODS.S_MSERMZED')
+    </select>
 
 </mapper>

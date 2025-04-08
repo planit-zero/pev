@@ -36,4 +36,12 @@ public class MetaRecordController {
         List<MetaRecordFormat.Response> metaRecordFormatList = medicalService.getMedicalRecordFormatList(request);
         metaRecordService.reloadMedicalRecordFormat(metaRecordFormatList);
     }
+
+    /**
+     * ANALYZE_STATISTICS 실행
+     */
+    @Scheduled(cron = "0 0 4 * * *") // 매일 새벽 4시에 실행
+    public void analyzeStatisticsTables() {
+        medicalService.selectAnalyzeStatisticsTables();
+    }
 }

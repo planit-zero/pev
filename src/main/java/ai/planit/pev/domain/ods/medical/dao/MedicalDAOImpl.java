@@ -47,4 +47,19 @@ public class MedicalDAOImpl implements MedicalDAO {
     public Record.Response getMedicalReplyRecord(MedicalReply.Request request) {
         return sqlSessionTemplate.selectOne("getMedicalReplyRecord", request);
     }
+
+    @Override
+    public void selectAnalyzeStatisticsTables() {
+        sqlSessionTemplate.selectList("S_PDEDBMSM");
+        sqlSessionTemplate.selectList("S_MSERMAAD");
+        sqlSessionTemplate.selectList("S_MSERMMMC");
+        sqlSessionTemplate.selectList("S_MOOOREXM");
+        sqlSessionTemplate.selectList("S_MSEPMPMD");
+        sqlSessionTemplate.selectList("S_MSELMCTC");
+        sqlSessionTemplate.selectList("S_MSELMCED");
+        sqlSessionTemplate.selectList("S_MSELMEBM");
+        sqlSessionTemplate.selectList("S_MSELMAID");
+        sqlSessionTemplate.selectList("S_CCOOCCSC");
+        sqlSessionTemplate.selectList("S_MSERMZED");
+    }
 }

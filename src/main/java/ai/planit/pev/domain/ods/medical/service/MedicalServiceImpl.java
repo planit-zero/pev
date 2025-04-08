@@ -62,6 +62,11 @@ public class MedicalServiceImpl implements MedicalService {
         return chartStyleSections;
     }
 
+    @Override
+    public void selectAnalyzeStatisticsTables() {
+        medicalDAO.selectAnalyzeStatisticsTables();
+    }
+
     private ChartStyleSection getChartStyleSection(ChartStyleXml.Response chartStyleXml) {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ChartStyleSection.class);

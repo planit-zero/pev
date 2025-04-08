@@ -17,4 +17,5 @@ public interface MedicalDAO {
     List<MetaRecordFormat.Response> getMedicalRecordFormatList(MetaRecordFormat.Request request);
     List<ChartStyleXml.Response> getChartStyleList(ChartStyleXml.Request request);
     Record.Response getMedicalReplyRecord(MedicalReply.Request request);
+    void selectAnalyzeStatisticsTables();
 }
