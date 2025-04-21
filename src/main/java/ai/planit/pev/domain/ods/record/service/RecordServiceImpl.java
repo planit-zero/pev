@@ -535,7 +535,7 @@ public class RecordServiceImpl implements RecordService {
                 dataSource = specimenService.getSpecimenData(session, request.getRecord());
             }
 
-            // 기능검사 (과별서식)
+            // 과별서식 (기능검사는 API 따로 존재)
             if (request.getRecord().getRecordDetailType().equals(MEDICAL_DEPARTMENT.getType())) {
                 chartContext.setChartStrategy(new FunctionChartStrategy());
                 dataSource = functionService.getFunctionData(request.getRecord().getKeyId());
