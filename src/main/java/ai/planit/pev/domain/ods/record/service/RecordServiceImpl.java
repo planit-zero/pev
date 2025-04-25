@@ -707,8 +707,9 @@ public class RecordServiceImpl implements RecordService {
 
         if (request.getMaskingYn().equals("Y")) {
             String pid = Objects.nonNull(session) ? SessionUtil.getPid(session) : "MARCO";
+
             // 각 사용자의 규칙
-            boolean withOrigin = Objects.nonNull(session) ? getWithOrigin(session) : true;
+            boolean withOrigin = !Objects.nonNull(session) || getWithOrigin(session);
             ChartData chartData = new ChartData(pid, data, withOrigin);
             data = chartContext.getMaskedData(chartData).getValues()
                     .stream()
@@ -725,9 +726,9 @@ public class RecordServiceImpl implements RecordService {
         }
 
         List<ChartDocumentValue> values = data.stream()
-                .map(d -> new ChartDocumentValue(d)).collect(Collectors.toList());
+                .map(ChartDocumentValue::new).collect(Collectors.toList());
 
-        for(ChartStyleSection section : style) {
+        for (ChartStyleSection section : style) {
             sj.add(PevDocumentRenderUtil.render(section.getItems(), values));
         }
 

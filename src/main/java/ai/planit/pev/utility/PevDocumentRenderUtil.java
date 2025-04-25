@@ -593,6 +593,7 @@ public class PevDocumentRenderUtil {
         for(String curW : colWidthInfoList) {
             sb.append(String.format("<col style=\"width: %spx\">", curW));
         }
+
         sb.append("</colgroup>");
 
         for(int i = 0; i < rowHeightInfoList.size(); i++) {
@@ -649,11 +650,9 @@ public class PevDocumentRenderUtil {
 
         items = items.stream()
              .sorted((a, b) -> {
-                 int diff =  a.getTopInt() - b.getTopInt() > 0 ? 1
-                         : a.getTopInt() - b.getTopInt() < 0 ? -1 : 0;
+                 int diff = Integer.compare(a.getTopInt() - b.getTopInt(), 0);
                  if (diff == 0) {
-                     return a.getHeightInt() - b.getHeightInt() > 0 ? 1
-                             : a.getHeightInt() - b.getHeightInt() < 0 ? -1 : 0;
+                     return Integer.compare(a.getHeightInt() - b.getHeightInt(), 0);
                  }
                  return diff;
              })
