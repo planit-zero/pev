@@ -26,7 +26,11 @@ public class MetaRecordController {
         return ResponseEntity.ok().body(metaRecordService.getMetaRecordList());
     }
 
-    @Scheduled(cron = "0 0 3 * * *") // 매일 새벽 3시에 실행
+    /**
+     * 기록유형 포맷 적재
+     * 매일 새벽 3시에 실행
+     */
+    @Scheduled(cron = "0 0 3 * * *")
     public void reloadMedicalRecordFormat() {
         MetaRecordFormat.Request request = MetaRecordFormat.Request.builder()
                 .startDate(LocalDate.now().minusDays(1).toString())
@@ -40,7 +44,7 @@ public class MetaRecordController {
     /**
      * ANALYZE_STATISTICS 실행
      */
-    @Scheduled(cron = "0 0 4 * * *") // 매일 새벽 4시에 실행
+    @Scheduled(cron = "0 0 4 * * *")
     public void analyzeStatisticsTables() {
         medicalService.selectAnalyzeStatisticsTables();
     }
