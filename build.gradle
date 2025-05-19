@@ -54,7 +54,7 @@ ext['tomcat.version'] = '9.0.98'
 tasks.named('test') {
     useJUnitPlatform()
     jvmArgs '-Dspring.profiles.active=local'
-    exclude '**/*'
+//    exclude '**/*'
 }
 
 // plain jar 생성X
@@ -94,7 +94,7 @@ task deleteWebApp(type: Delete) {
     followSymlinks = true
 }
 
-yarnBuild.dependsOn(yarnInstall)
-copyWebApp.dependsOn(yarnBuild)
-deleteWebApp.dependsOn(copyWebApp)
-processResources.dependsOn(deleteWebApp)
+//yarnBuild.dependsOn(yarnInstall)
+//copyWebApp.dependsOn(yarnBuild)
+//deleteWebApp.dependsOn(copyWebApp)
+//processResources.dependsOn(deleteWebApp)

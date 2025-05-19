@@ -390,7 +390,7 @@ public class PevDocumentRenderUtil {
         sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; vertical-align:%s; font-size:%s; font-weight: %s; text-align:%s; direction:%s; border-color: #B3B3B3; border-style: solid; border-width:%s;\" >",
                 colSpan, rowSpan, vcAlign, item.getFontSizeInt(), item.getFontWeight(), textAlign, item.getFlowDirection().equals("RightToLeft") ? "rtl" : "ltr", getBorderWidth(item)));
         sb.append(String.format("<p style=\"margin: 0px 0px 0px 0px; %s \">", indent));
-        sb.append(String.format("<input type=\"radio\" %s style=\"margin-left: 1px;margin-right: 4px; margin-bottom: -2px; pointer-events: none; \" />", getValue(item, values).equals("1") ? "checked" : ""));
+        sb.append(String.format("<input type=\"radio\" %s style=\"margin-left: 1px;margin-right: 4px; margin-bottom: -2px; pointer-events: none; \" />", getValue(item, values).equals("1") || getValue(item, values).equals("checked") ? "checked" : ""));
         sb.append(String.format("<span>%s</span>", text));
         sb.append("</p>");
         sb.append("</td>");
@@ -429,7 +429,7 @@ public class PevDocumentRenderUtil {
         sb.append(String.format("<td colspan=\"%s\" rowspan=\"%s\" style=\"min-height:inherit; word-wrap: break-word; vertical-align:%s; font-size:%s; font-weight: %s; text-align:%s; direction:%s; border-color: #B3B3B3; border-style: solid; border-width:%s;\" >",
                 colSpan, rowSpan, vcAlign, item.getFontSize(), item.getFontWeight(), textAlign, item.getFlowDirection().equals("RightToLeft") ? "rtl" : "ltr", getBorderWidth(item)));
         sb.append(String.format("<p style=\"margin: 0px 0px 0px 0px; %s \">", indent));
-        sb.append(String.format("<input type=\"checkbox\" %s style=\"margin-left: 1px;margin-right: 4px; margin-bottom: -2px; pointer-events: none;\" />", getValue(item, values).equals("1") ? "checked" : ""));
+        sb.append(String.format("<input type=\"checkbox\" %s style=\"margin-left: 1px;margin-right: 4px; margin-bottom: -2px; pointer-events: none;\" />", getValue(item, values).equals("1") || getValue(item, values).equals("checked") ? "checked" : ""));
         sb.append(String.format("<span>%s</span>", text));
         sb.append("</p>");
         sb.append("</td>");
