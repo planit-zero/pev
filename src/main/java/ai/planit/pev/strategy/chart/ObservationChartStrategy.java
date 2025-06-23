@@ -6,11 +6,14 @@ import ai.planit.pev.strategy.chart.object.observation.ObservationContent;
 import ai.planit.pev.strategy.chart.object.observation.ObservationData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ObservationChartStrategy implements ChartStrategy {
+
+    private final static List<String> DoubleValuesKeys = Arrays.asList("Muscle Power Rt/Lt arm", "Muscle Power Rt/Lt leg", "E(eye)/V(verbal)/M(motor)");
 
     @Override
     public <T> List<ChartElement> getData(List<ChartElement> format, T source) {
@@ -53,10 +56,26 @@ public class ObservationChartStrategy implements ChartStrategy {
 
                     for (String header: headers) {
                         if (header.equals("구분")) continue;
+
                         Optional<ObservationContent> content = observationData.getContents()
                                 .stream()
                                 .filter(c -> c.getItem().equals(item) && c.getTime().equals(header))
-                                .findFirst();
+                                        .collect(Collectors.collectingAndThen(
+                                                Collectors.toList(),
+                                                list -> {
+                                                    if (list.isEmpty()) return Optional.empty();
+                                                    ObservationContent base = list.get(0);
+
+                                                    if (DoubleValuesKeys.contains(item)) {
+                                                        String mergedValue = list.stream()
+                                                                .map(ObservationContent::getValue)
+                                                                .collect(Collectors.joining("/"));
+                                                        return Optional.of(new ObservationContent(base.getItem(), base.getTime(), mergedValue));
+                                                    } else {
+                                                        return Optional.of(base);
+                                                    }
+                                                }
+                                        ));
 
                         content.ifPresentOrElse(c -> rows.add(c.getValue()), () -> rows.add(""));
                     }

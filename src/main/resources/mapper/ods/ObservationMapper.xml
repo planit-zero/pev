@@ -14,7 +14,7 @@
         WHERE A.PT_NO = #{ptNo}
           AND A.UITM_DT::DATE = #{writingDate}::DATE
           AND A.PACT_TP_CD = #{pactTpCd}
-        ORDER BY C.SORT_SEQ
+        ORDER BY C.SORT_SEQ, B.CLCO_REC_ID
     </select>
 
 </mapper>
