@@ -1,6 +1,6 @@
 #!/bin/sh
 
-server="snuhds@172.23.100.18"
+server="snuhdeview@172.23.100.18"
 serverWithPort="$server -p 9101"
 dir=/deview/pev
 TIME=$(date "+%Y-%m-%d_%H:%M")
@@ -18,7 +18,7 @@ fi;
 if [ ! -f ~/.ssh/ssh_snuh ]; then
   echo "========= ssh 설정시작 ==========";
   ssh-copy-id -i ~/.ssh/id_rsa.pub $server;
-  echo 'alias deview_prod="ssh snuhds@172.23.100.18 -p 9101"' >> ~/.zshrc;
+  echo 'alias deview_prod="ssh snuhdeview@172.23.100.18 -p 9101"' >> ~/.zshrc;
   sleep 1
   source ~/.zshrc;
   echo "========= ssh 설정 끝 ========"
@@ -35,9 +35,3 @@ ssh $serverWithPort "mv $dir/*.jar $dir/BAK/$TIME.jar"
 
 echo "======== JAR 파일 이동 ========"
 scp -P 9101 ./build/libs/*.jar $server:$dir
-
-echo "======== 서버 중지 ========"
-ssh $serverWithPort "sh $dir/stop.sh"
-
-echo "======== 서버 실행 ========"
-ssh $serverWithPort "sh $dir/start.sh"

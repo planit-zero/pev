@@ -151,6 +151,7 @@
         CASE
         WHEN MDFM_ELMT_CLS_CD = 'E' THEN 'ENTITY'
         WHEN MDFM_ELMT_CLS_CD = 'A' THEN 'ATTRIBUTE'
+        WHEN MDFM_ELMT_CLS_CD = 'AV' THEN 'ATTRIBUTE'
         WHEN MDFM_ELMT_CLS_CD = 'V' THEN 'VALUE'
         ELSE 'UNKNOWN' END                AS classType,
         CASE
