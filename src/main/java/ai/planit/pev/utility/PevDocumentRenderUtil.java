@@ -639,8 +639,10 @@ public class PevDocumentRenderUtil {
             String[] border = item.getBorderThickness().split(",");
 
             if (item.getFlowDirection().equals("LeftToRight")) {
+                if (border.length != 4) {
+                    return String.format("%spx %spx %spx %spx", border[0], border[0], border[0], border[0]);
+                }
                 return String.format("%spx %spx %spx %spx", border[1], border[2], border[3], border[0]);
-
             } else {
                 return String.format("%spx %spx %spx %spx", border[1], border[0], border[3], border[2]);
             }

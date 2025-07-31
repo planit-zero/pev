@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 @RestControllerAdvice
@@ -35,10 +36,11 @@ public class BaseExceptionHandler {
     @ExceptionHandler({Exception.class})
     protected ResponseEntity<?> handleException(Exception e) {
         // 클라이언트가 연결을 끊은 경우 로그 남기지 않고 무시
-        if (e instanceof org.apache.catalina.connector.ClientAbortException || (e.getCause() instanceof java.io.IOException && "Broken pipe".equalsIgnoreCase(e.getCause().getMessage()))) {
+        if (e instanceof ClientAbortException || (e.getCause() instanceof IOException && "Broken pipe".equalsIgnoreCase(e.getCause().getMessage()))) {
             return ResponseEntity.ok().build();
         }
 
+        e.printStackTrace();
         System.err.println(e.getMessage());
         return getResponseEntity(500, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -46,16 +48,6 @@ public class BaseExceptionHandler {
     private ResponseEntity<Error> getResponseEntity(int status, String message, HttpStatus httpStatus) {
         Error error = new Error(status, message);
         return new ResponseEntity<>(error, httpStatus);
-    }
-
-    private boolean isCausedByClientAbort(Throwable e) {
-        while (e != null) {
-            if (e instanceof ClientAbortException) {
-                return true;
-            }
-            e = e.getCause();
-        }
-        return false;
     }
 
 }
