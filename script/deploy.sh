@@ -35,3 +35,9 @@ ssh $serverWithPort "mv $dir/*.jar $dir/BAK/$TIME.jar"
 
 echo "======== JAR 파일 이동 ========"
 scp -P 9101 ./build/libs/*.jar $server:$dir
+
+echo "======== 서버 중지 ========"
+ssh $serverWithPort "sh $dir/stop.sh"
+
+echo "======== 서버 실행 ========"
+ssh $serverWithPort "sh $dir/start.sh"
