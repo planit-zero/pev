@@ -180,7 +180,7 @@ const ChartScroll = (props: ChartProps) => {
                     <Box sx={{ width: '100%', maxHeight: props.openModal ? '70vh' : '600px', overflow: 'scroll', whiteSpace: 'pre-line' }}>
                         <table className={'table-element'}>
                             <tbody>
-                                {value.content.split(';').map((c, cIdx) => {
+                                {value.content.split(';;;').map((c, cIdx) => {
                                     return (
                                         <tr key={cIdx}>
                                             {cIdx === 0 &&

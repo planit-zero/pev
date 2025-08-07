@@ -206,7 +206,7 @@ const Chart = (props: ChartProps) => {
                     >
                         <table className={props.record.recordDetailType.includes('CR_') ? 'table-element-cr' : 'table-element'}>
                             <tbody>
-                                {value.content.split(';').map((c, cIdx) => {
+                                {value.content.split(';;;').map((c, cIdx) => {
                                     return (
                                         <tr key={cIdx}>
                                             {cIdx === 0 &&

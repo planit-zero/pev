@@ -47,7 +47,7 @@ public class SpecimenChartStrategy implements ChartStrategy {
 
                 for (SpecimenResult result : specimenResults) {
                     sb.append(result.getResult());
-                    if (index < specimenResults.size()) sb.append(";");
+                    if (index < specimenResults.size()) sb.append(";;;");
                     index++;
                 }
 

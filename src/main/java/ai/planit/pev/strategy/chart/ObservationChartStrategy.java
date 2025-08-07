@@ -40,7 +40,7 @@ public class ObservationChartStrategy implements ChartStrategy {
                 headers.add(0, "구분");
 
                 sb.append(String.join("|||", headers));
-                sb.append(";");
+                sb.append(";;;");
 
                 List<String> itemList = observationData.getContents()
                         .stream()
@@ -81,7 +81,7 @@ public class ObservationChartStrategy implements ChartStrategy {
                     }
 
                     sb.append(String.join("|||", rows));
-                    if (i < itemList.size() - 1) sb.append(";");
+                    if (i < itemList.size() - 1) sb.append(";;;");
                 }
 
                 valueFormat.setContent(sb.toString());
