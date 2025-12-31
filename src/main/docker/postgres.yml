@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Meta Database (PostgreSQL) - 애플리케이션 메타데이터
+  postgres-meta:
+    image: postgres:14-alpine
+    container_name: pev-meta-db
+    environment:
+      POSTGRES_DB: pev
+      POSTGRES_USER: pev
+      POSTGRES_PASSWORD: pev_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-meta-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # H2 Database (ODS 및 IRB 대체용 - 선택사항)
+  # 실제 의료 데이터가 없는 로컬 개발 환경에서 사용
+  # h2:
+  #   image: oscarfonts/h2:latest
+  #   container_name: pev-h2-db
+  #   ports:
+  #     - "8082:8082"
+  #     - "1521:1521"
+  #   environment:
+  #     H2_OPTIONS: "-ifNotExists"
+  #   volumes:
+  #     - h2-data:/opt/h2-data
+
+volumes:
+  postgres-meta-data:
+  # h2-data:

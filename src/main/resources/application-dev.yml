@@ -1,0 +1,51 @@
+spring:
+  pid:
+    file: ./pev-dev.pid
+
+  # Meta Database - 로컬 Docker PostgreSQL
+  meta:
+    datasource:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://localhost:5432/pev
+        username: pev
+        password: pev_local
+        maximum-pool-size: 5
+        connection-timeout: 30000
+
+  # ODS Database - 로컬 Docker PostgreSQL (Vertica 대체)
+  ods:
+    datasource:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://localhost:5433/ods
+        username: ods
+        password: ods_local
+        maximum-pool-size: 10
+        connection-timeout: 30000
+
+  # IRB Database - 로컬 Docker PostgreSQL (Oracle 대체)
+  irb:
+    datasource:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://localhost:5434/irb
+        username: irb
+        password: irb_local
+        maximum-pool-size: 5
+        connection-timeout: 30000
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 30m
+
+# IDP - 병원 내부망 (VPN 필요)
+idp:
+  url: http://172.26.33.22:18020
+  service-provider: PEV
+
+pev:
+  log:
+    path: ./logs/pev.log
