@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # Meta Database (PostgreSQL) - 애플리케이션 메타데이터
+  postgres-meta:
+    image: postgres:14-alpine
+    container_name: pev-meta-db
+    environment:
+      POSTGRES_DB: pev
+      POSTGRES_USER: pev
+      POSTGRES_PASSWORD: pev_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./src/main/docker/postgres/init.sql:/docker-entrypoint-initdb.d/01-meta.sql
+      - postgres-meta-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ODS Database (PostgreSQL) - 의료 데이터 (Vertica 대체)
+  postgres-ods:
+    image: postgres:14-alpine
+    container_name: pev-ods-db
+    environment:
+      POSTGRES_DB: ods
+      POSTGRES_USER: ods
+      POSTGRES_PASSWORD: ods_local
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./src/main/docker/postgres/init-ods.sql:/docker-entrypoint-initdb.d/01-ods.sql
+      - postgres-ods-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ods"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # IRB Database (PostgreSQL) - IRB 데이터 (Oracle 대체)
+  postgres-irb:
+    image: postgres:14-alpine
+    container_name: pev-irb-db
+    environment:
+      POSTGRES_DB: irb
+      POSTGRES_USER: irb
+      POSTGRES_PASSWORD: irb_local
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./src/main/docker/postgres/init-irb.sql:/docker-entrypoint-initdb.d/01-irb.sql
+      - postgres-irb-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U irb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-meta-data:
+  postgres-ods-data:
+  postgres-irb-data:
