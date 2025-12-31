@@ -40,3 +40,4 @@ out/
 
 ### Logs ###
 logs/
+*.log
