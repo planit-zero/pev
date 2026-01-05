@@ -18,10 +18,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @org.springframework.context.annotation.Profile("dev")
 public class DevPatientServiceImpl implements PatientService {
-    private final PatientDAO patientDAO;
 
     @Override
     public Patient getPatient(HttpSession session, IdentifiedPatient.Request request) {
@@ -29,13 +27,32 @@ public class DevPatientServiceImpl implements PatientService {
         // Extract RID and convert to PT_NO directly (simplified - just use first patient)
         String pid = convertRidToPid(request);
 
-        Patient patient = patientDAO.getPatient(pid);
+        // Return mock patient data instead of calling DAO
+        Patient patient = createMockPatientData(pid);
         if (patient == null) throw new BaseException(ErrorType.PATIENT_NOT_FOUND);
 
         session.setAttribute("pev-pid", pid);
         session.setAttribute("pev-irb", request.getIrb());
         session.setAttribute("pev-rid", request.getRidList().get(0));
 
+        return patient;
+    }
+    
+    private Patient createMockPatientData(String pid) {
+        // Create mock patient based on pid
+        Patient patient = new Patient();
+        patient.setId("********"); // Masked patient number
+        
+        // Set name based on pid
+        int patientNum = Integer.parseInt(pid);
+        patient.setName("테*자" + patientNum); // Masked name
+        
+        // Set gender (alternating M/F)
+        patient.setGender(patientNum % 2 == 1 ? "M" : "F");
+        
+        // Set DOB (masked - empty string)
+        patient.setDob("");
+        
         return patient;
     }
 
