@@ -1,104 +1,44 @@
 package ai.planit.pev.domain.meta.user.service;
 
-import ai.planit.idp.sdk.constant.IdpLoginType;
-import ai.planit.idp.sdk.handler.IdpRequestHandler;
 import ai.planit.idp.sdk.model.IdpLoginUser;
-import ai.planit.idp.sdk.model.IdpResponse;
-import ai.planit.idp.sdk.option.IdpRequestOptions;
-import ai.planit.pev.core.exception.BaseException;
-import ai.planit.pev.core.exception.ErrorType;
-import ai.planit.pev.domain.meta.user.dao.UserDAO;
 import ai.planit.pev.domain.meta.user.dto.UserLogin;
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import javax.servlet.http.HttpSession;
 
-import java.util.Objects;
+import javax.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
+@org.springframework.context.annotation.Profile("!idp")
 public class UserServiceImpl implements UserService {
-    private final IdpRequestHandler<IdpLoginUser> idpRequestHandler;
-    private final UserDAO userDAO;
 
     @Override
     public void checkAccountAndSendVerificationCode(UserLogin userLogin) {
-        IdpRequestOptions options = IdpRequestOptions.builder()
-                .loginId(userLogin.getStfNo())
-                .password(userLogin.getStfPw())
-                .dbKey(userLogin.getDbKey())
-                .loginType(IdpLoginType.getIdpLoginTypeByCode(userLogin.getLoginType().toString()))
-                .build();
-
-        IdpResponse<IdpLoginUser> response = idpRequestHandler.checkAccountAndSendVerificationCode(options);
-
-        if (HttpStatus.OK != response.getStatus()) {
-            throw new RuntimeException(response.getError().getMessage());
-        }
+        // Mock implementation for dev environment
+        // No actual IDP call
     }
 
     @Override
     public void checkVerificationCodeAndLogin(HttpSession session, UserLogin userLogin) {
-        IdpRequestOptions options = IdpRequestOptions.builder()
-                .loginId(userLogin.getStfNo())
-                .password(userLogin.getStfPw())
-                .verificationCode(userLogin.getVerificationCode())
-                .dbKey(userLogin.getDbKey())
-                .loginType(IdpLoginType.getIdpLoginTypeByCode(userLogin.getLoginType().toString()))
-                .build();
-
-        IdpResponse<IdpLoginUser> response = idpRequestHandler.checkVerificationCodeAndLogin(options);
-
-        if (HttpStatus.OK != response.getStatus()) {
-            throw new RuntimeException(response.getError().getMessage());
-        }
-
-        session.setAttribute("pev-token", response.getToken());
+        // Mock implementation for dev environment
+        // Set mock token in session
+        session.setAttribute("pev-token", "mock-token-" + userLogin.getStfNo());
     }
 
     @Override
     public IdpLoginUser getIdpLoginUser(HttpSession session, String token) {
-        String currentToken = null;
-        String tokenInSession = (String) session.getAttribute("pev-token");
-
-        if (token == null && tokenInSession == null) {
-            throw new BaseException(ErrorType.IDP_TOKEN_NOT_FOUND);
-        }
-
-        if (tokenInSession != null) currentToken = tokenInSession;
-        if (token != null) currentToken = token;
-
-        IdpResponse<IdpLoginUser> response = idpRequestHandler.getIdpLoginUser(currentToken);
-
-        if (HttpStatus.OK != response.getStatus()) {
-            throw new RuntimeException(response.getError().getMessage());
-        }
-
-        if (tokenInSession == null || !tokenInSession.equals(currentToken)) {
-            session.setAttribute("pev-token", currentToken);
-            userDAO.insertLoginLog(response.getLoginUser());
-        }
-
-        Gson gson = new Gson();
-        String json = gson.toJson(response.getLoginUser());
-
-        session.setAttribute("pev-user", json);
-
-        return response.getLoginUser();
+        // Mock implementation for dev environment
+        // Return mock user
+        IdpLoginUser mockUser = new IdpLoginUser();
+        // Set basic mock data if needed
+        return mockUser;
     }
 
     @Override
     public void signOut(HttpSession session) {
-        if (Objects.isNull(session.getAttribute("pev-token"))) {
-            throw new BaseException(ErrorType.IDP_TOKEN_NOT_FOUND);
-        }
-
-        IdpResponse<IdpLoginUser> response = idpRequestHandler.logout(session.getAttribute("pev-token").toString());
-
-        if (HttpStatus.OK != response.getStatus()) {
-            throw new RuntimeException(response.getError().getMessage());
-        }
+        // Mock implementation for dev environment
+        // Clear session
+        session.removeAttribute("pev-token");
+        session.removeAttribute("pev-user");
     }
 }
