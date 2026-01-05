@@ -29,4 +29,7 @@ echo "데이터베이스 초기화 대기 중... (5초)"
 sleep 5
 echo ""
 
-# Note: bootRun은 포그라운드에서 실행되므로 Ctrl+C로 종료할 수 있습니다.
+# 3. Spring Boot 애플리케이션 실행
+echo "[3/3] Spring Boot 애플리케이션 실행 중..."
+echo "=========================================="
+./gradlew bootRun -x deleteWebApp
