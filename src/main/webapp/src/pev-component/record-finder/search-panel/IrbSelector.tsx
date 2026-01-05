@@ -19,9 +19,10 @@ const IrbSelector = (props: IrbSelectorProps) => {
     const [inputIrb, setInputIrb] = React.useState<string | null>(null);
 
     const stfNoForIrb = () => {
-        if (!info) return '66206';
-        if (!info.stfNo) return '66206';
-        if (info.stfNo && (info.stfNo === 'EVAN' || info.stfNo === 'LESLEY' || info.stfNo === 'ADMIN')) return '66206';
+        const mockid = '12345';
+        if (!info) return mockid;
+        if (!info.stfNo) return mockid;
+        if (info.stfNo && (info.stfNo === 'EVAN' || info.stfNo === 'LESLEY' || info.stfNo === 'ADMIN')) return mockid;
         return info.stfNo;
     };
 
