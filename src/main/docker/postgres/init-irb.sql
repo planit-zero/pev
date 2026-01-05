@@ -23,17 +23,33 @@ CREATE TABLE IF NOT EXISTS NCRIS.V_IRBAPPROVAL_CDW_VIEW (
 );
 
 -- ============================================
+-- IRB-환자 매핑 테이블
+-- ============================================
+
+-- IRB별 환자 매핑 테이블 (RID 목록)
+CREATE TABLE IF NOT EXISTS NCRIS.IRB_PATIENT_MAPPING (
+    IRBNO VARCHAR(50) NOT NULL,             -- IRB 번호
+    RID VARCHAR(50) NOT NULL,               -- 연구대상자 ID (Research ID)
+    PT_NO VARCHAR(20) NOT NULL,             -- 환자번호 (실제 환자번호, ODS.S_PCTPCPAM 참조)
+    REG_DTM TIMESTAMP DEFAULT NOW(),
+    PRIMARY KEY (IRBNO, RID)
+);
+
+-- ============================================
 -- 인덱스 생성
 -- ============================================
 
 CREATE INDEX idx_irb_professor ON NCRIS.V_IRBAPPROVAL_CDW_VIEW(PROFESSORID);
 CREATE INDEX idx_irb_enddt ON NCRIS.V_IRBAPPROVAL_CDW_VIEW(AVAIENDDT);
+CREATE INDEX idx_irb_patient_irbno ON NCRIS.IRB_PATIENT_MAPPING(IRBNO);
+CREATE INDEX idx_irb_patient_rid ON NCRIS.IRB_PATIENT_MAPPING(RID);
+CREATE INDEX idx_irb_patient_ptno ON NCRIS.IRB_PATIENT_MAPPING(PT_NO);
 
 -- ============================================
 -- 샘플 데이터 (선택사항)
 -- ============================================
 
--- IRB 승인 샘플 데이터 (8건)
+-- IRB 승인 샘플 데이터
 INSERT INTO NCRIS.V_IRBAPPROVAL_CDW_VIEW
 (IRBNO, RESKORNM, AVAISTARTDT, AVAIENDDT, APPROVEDT, IRBMETHOD, HUMINRMANCT, PROFESSORID)
 VALUES
@@ -46,5 +62,55 @@ VALUES
 ('IRB-2024-005', '심혈관질환 관찰 연구', '2024-04-01', '2026-03-31', '2024-03-20', '1', 150, 'DOC002'),
 ('IRB-2024-006', '응급실 환자 데이터 분석 연구', '2024-05-01', '2024-12-31', '2024-04-28', '2', 80, 'DOC001'),
 ('IRB-2024-007', '소아 성장발달 추적 연구', '2024-07-01', '2027-06-30', '2024-06-15', '1', 300, 'NUR001'),
-('IRB-2024-008', '수술 후 회복 패턴 연구 (긴급)', '2024-11-15', '2025-05-14', '2024-11-14', '3', 50, 'DOC002')
+('IRB-2024-008', '수술 후 회복 패턴 연구 (긴급)', '2024-11-15', '2025-05-14', '2024-11-14', '3', 50, 'DOC002'),
+-- stfNo=12345 전용 테스트 데이터 (5건)
+('IRB-2024-101', '당뇨병 환자 대상 신약 임상시험', '2024-01-15', '2025-01-14', '2024-01-10', '1', 150, '12345'),
+('IRB-2024-102', '고혈압 환자의 생활습관 개선 연구', '2024-02-01', '2024-12-31', '2024-01-28', '2', 320, '12345'),
+('IRB-2024-103', '암 환자 대상 면역치료 효과 분석', '2024-03-10', '2026-03-09', '2024-03-05', '1', 85, '12345'),
+('IRB-2024-104', '소아청소년 성장발달 추적조사', '2024-04-01', '2027-03-31', '2024-03-25', '2', 500, '12345'),
+('IRB-2023-205', '뇌졸중 환자 재활치료 효과 연구', '2023-12-01', '2024-11-30', '2023-11-28', '1', 200, '12345')
+ON CONFLICT DO NOTHING;
+
+
+-- ============================================
+-- IRB-환자 매핑 샘플 데이터
+-- ============================================
+
+-- IRB-2024-001: 테스트 연구 프로젝트 1 (환자 5명)
+INSERT INTO NCRIS.IRB_PATIENT_MAPPING (IRBNO, RID, PT_NO) VALUES
+('IRB-2024-001', 'RID-001-0001', '00000001'),
+('IRB-2024-001', 'RID-001-0002', '00000002'),
+('IRB-2024-001', 'RID-001-0003', '00000003'),
+('IRB-2024-001', 'RID-001-0004', '00000004'),
+('IRB-2024-001', 'RID-001-0005', '00000005')
+ON CONFLICT DO NOTHING;
+
+-- IRB-2024-002: 테스트 연구 프로젝트 2 (환자 3명)
+INSERT INTO NCRIS.IRB_PATIENT_MAPPING (IRBNO, RID, PT_NO) VALUES
+('IRB-2024-002', 'RID-002-0001', '00000001'),
+('IRB-2024-002', 'RID-002-0002', '00000003'),
+('IRB-2024-002', 'RID-002-0003', '00000005')
+ON CONFLICT DO NOTHING;
+
+-- IRB-2024-003: 테스트 연구 프로젝트 3 (환자 2명)
+INSERT INTO NCRIS.IRB_PATIENT_MAPPING (IRBNO, RID, PT_NO) VALUES
+('IRB-2024-003', 'RID-003-0001', '00000002'),
+('IRB-2024-003', 'RID-003-0002', '00000004')
+ON CONFLICT DO NOTHING;
+
+-- IRB-2024-101: 당뇨병 환자 대상 신약 임상시험 (환자 5명)
+INSERT INTO NCRIS.IRB_PATIENT_MAPPING (IRBNO, RID, PT_NO) VALUES
+('IRB-2024-101', 'RID-101-0001', '00000001'),
+('IRB-2024-101', 'RID-101-0002', '00000002'),
+('IRB-2024-101', 'RID-101-0003', '00000003'),
+('IRB-2024-101', 'RID-101-0004', '00000004'),
+('IRB-2024-101', 'RID-101-0005', '00000005')
+ON CONFLICT DO NOTHING;
+
+-- IRB-2024-102: 고혈압 환자의 생활습관 개선 연구 (환자 4명)
+INSERT INTO NCRIS.IRB_PATIENT_MAPPING (IRBNO, RID, PT_NO) VALUES
+('IRB-2024-102', 'RID-102-0001', '00000001'),
+('IRB-2024-102', 'RID-102-0002', '00000002'),
+('IRB-2024-102', 'RID-102-0003', '00000003'),
+('IRB-2024-102', 'RID-102-0004', '00000004')
 ON CONFLICT DO NOTHING;

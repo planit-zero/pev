@@ -8,11 +8,11 @@ services:
     environment:
       POSTGRES_DB: pev
       POSTGRES_USER: pev
-      POSTGRES_PASSWORD: pev_local
+      POSTGRES_PASSWORD: pev
     ports:
       - "5432:5432"
     volumes:
-      - ./src/main/docker/postgres/init.sql:/docker-entrypoint-initdb.d/01-meta.sql
+      - ./src/main/docker/postgres/init-meta.sql:/docker-entrypoint-initdb.d/01-meta.sql
       - postgres-meta-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U pev"]
@@ -27,7 +27,7 @@ services:
     environment:
       POSTGRES_DB: ods
       POSTGRES_USER: ods
-      POSTGRES_PASSWORD: ods_local
+      POSTGRES_PASSWORD: ods
     ports:
       - "5433:5432"
     volumes:
@@ -46,7 +46,7 @@ services:
     environment:
       POSTGRES_DB: irb
       POSTGRES_USER: irb
-      POSTGRES_PASSWORD: irb_local
+      POSTGRES_PASSWORD: irb
     ports:
       - "5434:5432"
     volumes:

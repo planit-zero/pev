@@ -30,7 +30,26 @@ public class UserServiceImpl implements UserService {
         // Mock implementation for dev environment
         // Return mock user
         IdpLoginUser mockUser = new IdpLoginUser();
-        // Set basic mock data if needed
+        
+        // Set mock data - extract staff number from session token if available
+        String tokenInSession = (String) session.getAttribute("pev-token");
+        String stfNo = "12345"; // Default mock staff number
+        
+        if (tokenInSession != null && tokenInSession.startsWith("mock-token-")) {
+            stfNo = tokenInSession.replace("mock-token-", "");
+        } else if (token != null && token.startsWith("mock-token-")) {
+            stfNo = token.replace("mock-token-", "");
+        }
+        
+        mockUser.setStfNo(stfNo);
+        mockUser.setStfNm("테스트사용자");
+        mockUser.setDeptCd("DEPT001");
+        mockUser.setDeptNm("플랜잇");
+        mockUser.setAuthCd("S"); // S = Super admin, or use normal user auth
+        
+        // Store user in session
+        session.setAttribute("pev-user", mockUser);
+        
         return mockUser;
     }
 

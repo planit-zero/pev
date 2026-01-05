@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@org.springframework.context.annotation.Profile("prod")
 public class PatientServiceImpl implements PatientService {
     private final PatientDAO patientDAO;
 
