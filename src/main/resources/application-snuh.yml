@@ -20,3 +20,6 @@ spring:
         jdbc-url: jdbc:postgresql://172.26.33.23:5432/pev
         username: pev
         password: planit1127!@
+idp:
+  url: http://172.26.33.22:18020
+  service-provider: PEV

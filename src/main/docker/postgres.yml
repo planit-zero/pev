@@ -8,11 +8,11 @@ services:
     environment:
       POSTGRES_DB: pev
       POSTGRES_USER: pev
-      POSTGRES_PASSWORD: pev_local
+      POSTGRES_PASSWORD: pev
     ports:
       - "5432:5432"
     volumes:
-      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/init-meta.sql:/docker-entrypoint-initdb.d/init-meta.sql
       - postgres-meta-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U pev"]
@@ -20,19 +20,45 @@ services:
       timeout: 5s
       retries: 5
 
-  # H2 Database (ODS 및 IRB 대체용 - 선택사항)
-  # 실제 의료 데이터가 없는 로컬 개발 환경에서 사용
-  # h2:
-  #   image: oscarfonts/h2:latest
-  #   container_name: pev-h2-db
-  #   ports:
-  #     - "8082:8082"
-  #     - "1521:1521"
-  #   environment:
-  #     H2_OPTIONS: "-ifNotExists"
-  #   volumes:
-  #     - h2-data:/opt/h2-data
+  # ODS Database (PostgreSQL) - 의료 기록 데이터 (로컬 개발용)
+  postgres-ods:
+    image: postgres:14-alpine
+    container_name: pev-ods-db
+    environment:
+      POSTGRES_DB: ods
+      POSTGRES_USER: ods
+      POSTGRES_PASSWORD: ods
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres/init-ods.sql:/docker-entrypoint-initdb.d/init-ods.sql
+      - postgres-ods-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ods"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # IRB Database (PostgreSQL) - IRB 데이터 (로컬 개발용)
+  postgres-irb:
+    image: postgres:14-alpine
+    container_name: pev-irb-db
+    environment:
+      POSTGRES_DB: irb
+      POSTGRES_USER: irb
+      POSTGRES_PASSWORD: irb
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./postgres/init-irb.sql:/docker-entrypoint-initdb.d/init-irb.sql
+      - postgres-irb-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U irb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres-meta-data:
-  # h2-data:
+  postgres-ods-data:
+  postgres-irb-data:

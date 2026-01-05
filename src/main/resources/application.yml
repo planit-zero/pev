@@ -1,31 +1,10 @@
 spring:
-  ods:
-    datasource:
-      hikari:
-        driver-class-name: com.vertica.jdbc.Driver
-        jdbc-url: jdbc:vertica://172.26.33.19:5433/CDW?BackupServerNode=172.26.33.20:5433,172.26.33.21:5433&ConnectionLoadBalance=1
-        username: emr
-        password: emr1127!
-  irb:
-    datasource:
-      hikari:
-        driver-class-name: oracle.jdbc.OracleDriver
-        jdbc-url: jdbc:oracle:thin:@//172.26.76.38:13625/orcl
-        username: SNUHOCS
-        password: GRtocTjqQx7@$
-  meta:
-    datasource:
-      hikari:
-        driver-class-name: org.postgresql.Driver
-        jdbc-url: jdbc:postgresql://172.26.33.23:5432/pev
-        username: pev
-        password: planit1127!@
   pid:
     file: ./pid
 server:
   port: 8080
 idp:
-  url: http://172.26.33.22:18020
+  url: http://localhost:8081
   service-provider: PEV
 pev:
   log:

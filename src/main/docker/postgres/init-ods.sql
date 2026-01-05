@@ -120,7 +120,8 @@ CREATE TABLE IF NOT EXISTS ODS.S_CCCCCSTE (
 CREATE TABLE IF NOT EXISTS ODS.S_PDEDBMSM (
     DEPT_CD VARCHAR(10) PRIMARY KEY,        -- 부서코드
     DEPT_NM VARCHAR(200),                   -- 부서명
-    USE_YN CHAR(1) DEFAULT 'Y'
+    USE_YN CHAR(1) DEFAULT 'Y',
+    SORT_SEQ INTEGER                        -- 정렬순서
 );
 
 -- 직원 마스터 (S_CNLRRUSD)
@@ -148,11 +149,11 @@ CREATE INDEX idx_mrddrecm_rec_dtm ON ODS.S_MRDDRECM(MDF_REC_DTM);
 -- ============================================
 
 -- 부서 마스터 샘플
-INSERT INTO ODS.S_PDEDBMSM (DEPT_CD, DEPT_NM) VALUES
-('DEV001', '내과'),
-('DEV002', '외과'),
-('DEV003', '소아과'),
-('DEV004', '정형외과')
+INSERT INTO ODS.S_PDEDBMSM (DEPT_CD, DEPT_NM, SORT_SEQ) VALUES
+('DEV001', '내과', 1),
+('DEV002', '외과', 2),
+('DEV003', '소아과', 3),
+('DEV004', '정형외과', 4)
 ON CONFLICT DO NOTHING;
 
 -- 직원 마스터 샘플

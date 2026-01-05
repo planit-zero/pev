@@ -6,7 +6,7 @@ spring:
         driver-class-name: org.postgresql.Driver
         jdbc-url: jdbc:postgresql://localhost:5432/pev
         username: pev
-        password: pev_local
+        password: pev 
         maximum-pool-size: 5
         connection-timeout: 30000
   ods:
@@ -15,7 +15,7 @@ spring:
         driver-class-name: org.postgresql.Driver
         jdbc-url: jdbc:postgresql://localhost:5433/ods
         username: ods
-        password: ods_local
+        password: ods
         maximum-pool-size: 10
         connection-timeout: 30000
   irb:
@@ -24,6 +24,6 @@ spring:
         driver-class-name: org.postgresql.Driver
         jdbc-url: jdbc:postgresql://localhost:5434/irb
         username: irb
-        password: irb_local
+        password: irb
         maximum-pool-size: 5
         connection-timeout: 30000
