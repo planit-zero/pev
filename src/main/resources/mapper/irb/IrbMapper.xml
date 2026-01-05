@@ -25,8 +25,8 @@
                  FROM NCRIS.V_IRBAPPROVAL_CDW_VIEW
                  WHERE 1 = 1
                    AND PROFESSORID = #{stfNo}
-                   AND ( AVAIENDDT >= TO_CHAR(sysdate, 'YYYY-MM-DD')
-                     OR (IRBMETHOD = '4' AND (AVAIENDDT >= TO_CHAR(sysdate, 'YYYY-MM-DD') OR AVAIENDDT IS NULL))))
+                   AND ( AVAIENDDT >= TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD')
+                     OR (IRBMETHOD = '4' AND (AVAIENDDT >= TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD') OR AVAIENDDT IS NULL)))) AS irb_data
         ORDER BY approvedDt
         ]]>
     </select>
