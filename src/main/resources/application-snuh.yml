@@ -20,13 +20,3 @@ spring:
         jdbc-url: jdbc:postgresql://172.26.33.23:5432/pev
         username: pev
         password: planit1127!@
-  pid:
-    file: ./pid
-server:
-  port: 8080
-idp:
-  url: http://172.26.33.22:18020
-  service-provider: PEV
-pev:
-  log:
-    path: ./logs/pev.log

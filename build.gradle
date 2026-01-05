@@ -94,6 +94,17 @@ task deleteWebApp(type: Delete) {
     followSymlinks = true
 }
 
+defaultTasks "bootRun"
+
+def profiles = "dev"
+if (project.hasProperty("prod")) {
+    profiles = "prod"
+}
+
+bootRun {
+    args = ["--spring.profiles.active=${profiles}"]
+}
+
 yarnBuild.dependsOn(yarnInstall)
 copyWebApp.dependsOn(yarnBuild)
 deleteWebApp.dependsOn(copyWebApp)

@@ -1,11 +1,29 @@
+
 spring:
-  pid:
-    file: /deview/pev/boot.pid
-server:
-  port: 8080
-  servlet:
-    session:
-      timeout: 30m
-pev:
-  log:
-    path: /deview/pev/logs/pev.log
+  meta:
+    datasource:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://localhost:5432/pev
+        username: pev
+        password: pev_local
+        maximum-pool-size: 5
+        connection-timeout: 30000
+  ods:
+    datasource:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://localhost:5433/ods
+        username: ods
+        password: ods_local
+        maximum-pool-size: 10
+        connection-timeout: 30000
+  irb:
+    datasource:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://localhost:5434/irb
+        username: irb
+        password: irb_local
+        maximum-pool-size: 5
+        connection-timeout: 30000
