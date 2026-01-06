@@ -9,18 +9,16 @@ spring:
   ods:
     datasource:
       hikari:
-        driver-class-name: com.vertica.jdbc.Driver
-        jdbc-url: jdbc:vertica://172.26.33.19:5433/CDW?BackupServerNode=172.26.33.20:5433,172.26.33.21:5433&ConnectionLoadBalance=1
-        username: emr
-        password: emr1127!
+        driver-class-name: oracle.jdbc.OracleDriver
+        jdbc-url: jdbc:oracle:thin:@172.22.101.11:1521/HSSEMRDD
+        username: CDWKYK
+        password: pltkyk2512f
   irb:
     datasource:
       hikari:
-        driver-class-name: oracle.jdbc.OracleDriver
+        driver-class-name: org.postgresql.Driver
         jdbc-url: jdbc:postgresql://localhost:5434/irb
         username: irb
         password: irb
         maximum-pool-size: 5
         connection-timeout: 30000
-  url: http://172.26.33.22:18020
-  service-provider: PEV
