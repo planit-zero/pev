@@ -2,13 +2,18 @@
 
 # DeView 개발 환경 시작 스크립트
 # PostgreSQL Docker 컨테이너를 재시작하고 Spring Boot 애플리케이션을 실행합니다.
+# 사용법: ./dev-start.sh [profile]
+# 예시: ./dev-start.sh dev
+#       ./dev-start.sh prod,cnuh
 
 set -e # 에러 발생 시 스크립트 중단
 
 DOCKER_COMPOSE_FILE="src/main/docker/postgres.yml"
+PROFILE=${1:-dev}  # 첫 번째 인자를 프로필로 사용, 없으면 dev
 
 echo "=========================================="
 echo "DeView 개발 환경 시작"
+echo "프로필: $PROFILE"
 echo "=========================================="
 echo ""
 
@@ -32,4 +37,4 @@ echo ""
 # 3. Spring Boot 애플리케이션 실행
 echo "[3/3] Spring Boot 애플리케이션 실행 중..."
 echo "=========================================="
-./gradlew bootRun -x deleteWebApp
+./gradlew bootRun -Pprofile="$PROFILE" -x deleteWebApp

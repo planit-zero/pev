@@ -96,10 +96,7 @@ task deleteWebApp(type: Delete) {
 
 defaultTasks "bootRun"
 
-def profiles = "dev"
-if (project.hasProperty("prod")) {
-    profiles = "prod"
-}
+def profiles = project.hasProperty("profile") ? project.getProperty("profile") : "dev"
 
 bootRun {
     args = ["--spring.profiles.active=${profiles}"]
