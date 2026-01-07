@@ -22,3 +22,5 @@ spring:
         password: irb
         maximum-pool-size: 5
         connection-timeout: 30000
+rid-ex:
+  url: http://localhost:28092

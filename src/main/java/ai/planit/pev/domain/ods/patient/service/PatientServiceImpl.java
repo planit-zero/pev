@@ -10,6 +10,7 @@ import ai.planit.pev.domain.ods.patient.dto.Patient;
 import ai.planit.pev.domain.ods.patient.dto.PatientByIrb;
 import ai.planit.pev.domain.ods.patient.dto.RidByGid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,11 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@org.springframework.context.annotation.Profile("prod")
 public class PatientServiceImpl implements PatientService {
     private final PatientDAO patientDAO;
 
-    private final static String RID_URL = "http://172.26.33.23:28092";
+    @Value("${rid-ex.url}")
+    private String ridUrl;
     private final static String RID_DECRYPT_API_URI = "/api/ann/identification";
     private final static String RID_IRB_RID_API_URI = "/api/ann/irb-rid";
     private final static String RID_GID_RID_API_URI = "/api/ann/rex";
@@ -48,7 +49,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     private String convertRidToPid(IdentifiedPatient.Request request) {
-        WebClient webClient = PevWebClient.getWebClient(RID_URL, ErrorType.RID_CONNECTION_TIMEOUT);
+        WebClient webClient = PevWebClient.getWebClient(ridUrl, ErrorType.RID_CONNECTION_TIMEOUT);
 
         String[] identifiedPatient = webClient.post()
                 .uri(RID_DECRYPT_API_URI)
@@ -71,7 +72,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     private RidByGid.Response convertRidByGid(RidByGid.Request request) {
-        WebClient webClient = PevWebClient.getWebClient(RID_URL, ErrorType.RID_CONNECTION_TIMEOUT);
+        WebClient webClient = PevWebClient.getWebClient(ridUrl, ErrorType.RID_CONNECTION_TIMEOUT);
 
         return webClient.post()
                 .uri(RID_GID_RID_API_URI)
@@ -94,7 +95,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     private List<PatientByIrb.Response> getPatientListByIrb(PatientByIrb.Request request) {
-        WebClient webClient = PevWebClient.getWebClient(RID_URL, ErrorType.RID_CONNECTION_TIMEOUT);
+        WebClient webClient = PevWebClient.getWebClient(ridUrl, ErrorType.RID_CONNECTION_TIMEOUT);
 
         return webClient.post()
                 .uri(RID_IRB_RID_API_URI)

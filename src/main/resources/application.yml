@@ -6,6 +6,8 @@ server:
 idp:
   url: http://localhost:8081
   service-provider: PEV
+rid-ex:
+  url: http://localhost:28092
 pev:
   log:
     path: ./logs/pev.log
