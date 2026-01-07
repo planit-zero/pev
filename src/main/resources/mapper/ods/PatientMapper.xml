@@ -2,14 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.planit.pev.domain.ods.patient.dao.PatientDAO">
     <sql id="selectPatientTable">
-        SELECT REGEXP_REPLACE(A.PT_NO, '.', '*')                 AS id,
-               REGEXP_REPLACE(A.PT_NM, '.', '*', 2)           AS name,
-               A.SEX_TP_CD                                       AS gender,
-               REGEXP_REPLACE(A.PT_BRDY_DT::VARCHAR, '.', '', 8) AS dob
-        FROM ODS.S_PCTPCPAM A
+        <!-- SELECT REGEXP_REPLACE(A.PT_NO, '.', '*')                 AS id, -->
+        <!--        REGEXP_REPLACE(A.PT_NM, '.', '*', 2)           AS name, -->
+        <!--        A.SEX_TP_CD                                       AS gender, -->
+        <!--        REGEXP_REPLACE(A.PT_BRDY_DT::VARCHAR, '.', '', 8) AS dob -->
+        <!-- FROM ODS.S_PCTPCPAM A -->
+      SELECT REGEXP_REPLACE(A.PID, '.', '*') AS id,
+              HNGNM AS name,
+              A.SEX AS gender,
+              BRTHDD AS dob
+              FROM PAM.PMCMPTBS A
     </sql>
     <select id="getPatient" parameterType="java.lang.String" resultType="Patient">
         <include refid="selectPatientTable" />
-        WHERE A.PT_NO = #{ptNo}
+        WHERE A.PID = #{ptNo}
     </select>
 </mapper>
