@@ -107,7 +107,7 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "json-server": "json-server db.json --port 3001",
-        "mock-rid-server": "json-server --watch db.json --port 28092 --middlewares json-server-middleware.js"
+        "mock-rid-server": "json-server --watch db.json --port 28092 --host 127.0.0.1 --middlewares json-server-middleware.js"
     },
     "eslintConfig": {
         "extends": [
