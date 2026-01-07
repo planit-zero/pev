@@ -9,7 +9,7 @@
 set -e # 에러 발생 시 스크립트 중단
 
 DOCKER_COMPOSE_FILE="src/main/docker/postgres.yml"
-PROFILE=${1:-dev}  # 첫 번째 인자를 프로필로 사용, 없으면 dev
+PROFILE=${1:-dev} # 첫 번째 인자를 프로필로 사용, 없으면 dev
 
 echo "=========================================="
 echo "DeView 개발 환경 시작"
@@ -35,6 +35,6 @@ sleep 5
 echo ""
 
 # 3. Spring Boot 애플리케이션 실행
-echo "[3/3] Spring Boot 애플리케이션 실행 중..."
-echo "=========================================="
-./gradlew bootRun -Pprofile="$PROFILE" -x deleteWebApp
+# echo "[3/3] Spring Boot 애플리케이션 실행 중..."
+# echo "=========================================="
+# ./gradlew bootRun -Pprofile="$PROFILE" -x deleteWebApp
