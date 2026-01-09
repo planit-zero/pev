@@ -22,6 +22,7 @@ const PatientInfo = () => {
     '& .MuiOutlinedInput-root': {
       bgcolor: '#fff',
       fontSize: '0.8rem',
+      minHeight: '30px',
       '& fieldset': {
         borderColor: '#1976d2',
       },
@@ -34,7 +35,7 @@ const PatientInfo = () => {
       }
     },
     '& .MuiOutlinedInput-input': {
-      padding: '7px 10px',
+      padding: '5px 10px',
       fontWeight: 500
     }
   };
