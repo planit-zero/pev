@@ -15,14 +15,19 @@ const PatientInfo = () => {
   };
 
   const fieldBoxStyle = {
-    mb: 0.5
+    mb: 0.5,
+    width: '100%',
+    overflow: 'hidden'
   };
 
   const inputFieldStyle = {
+    width: '100%',
+    maxWidth: '100%',
     '& .MuiOutlinedInput-root': {
       bgcolor: '#fff',
       fontSize: '0.8rem',
       minHeight: '30px',
+      width: '100%',
       '& fieldset': {
         borderColor: '#1976d2',
       },
