@@ -110,12 +110,12 @@ const RecordList = () => {
         <Table stickyHeader size="small" sx={{ '& .MuiTableCell-root': { fontSize: '0.75rem' } }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 1 }}>날짜</TableCell>
-              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 1 }}>시간</TableCell>
-              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 1 }}>유형</TableCell>
-              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 1 }}>진료과</TableCell>
-              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 1 }}>담당의</TableCell>
-              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 1 }}>내용</TableCell>
+              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 0.6, fontSize: '0.7rem' }}>날짜</TableCell>
+              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 0.6, fontSize: '0.7rem' }}>시간</TableCell>
+              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 0.6, fontSize: '0.7rem' }}>유형</TableCell>
+              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 0.6, fontSize: '0.7rem' }}>진료과</TableCell>
+              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 0.6, fontSize: '0.7rem' }}>담당의</TableCell>
+              <TableCell sx={{ bgcolor: '#f8f9fa', fontWeight: 600, color: '#37474f', py: 0.6, fontSize: '0.7rem' }}>내용</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

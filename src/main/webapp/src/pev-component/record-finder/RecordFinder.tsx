@@ -1,21 +1,125 @@
-import { Box, Grid, Paper, Typography, useTheme } from '@mui/material';
+import { Box, Grid, Paper, Typography, useTheme, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import * as React from 'react';
 import FormList from './form-list';
 import PatientInfo from './patient-info';
 import RecordList from './record-list';
 
-interface SectionBoxProps {
+interface AccordionSectionProps {
   title: string;
   color: string;
   children: React.ReactNode;
-  flex: number;
-  isLast?: boolean;
+  defaultExpanded?: boolean;
 }
 
-const SectionBox: React.FC<SectionBoxProps> = ({ title, color, children, flex, isLast = false }) => {
+const AccordionSection: React.FC<AccordionSectionProps> = ({ title, color, children, defaultExpanded = true }) => {
   return (
-    <Grid item sx={{ flex: flex }}>
-      <Box ml={1.5} mt={0.5} mb={isLast ? 1.5 : 0.5} sx={{ height: '100%' }}>
+    <Box ml={1.5} mt={0.5} mb={0.5}>
+      <Accordion
+        defaultExpanded={defaultExpanded}
+        elevation={0}
+        sx={{
+          border: '1px solid #e0e0e0',
+          borderRadius: '4px !important',
+          '&:before': { display: 'none' },
+          '& .MuiAccordionSummary-root': {
+            minHeight: 'unset',
+            bgcolor: '#f8f9fa',
+            borderBottom: '2px solid #1976d2',
+            px: 1.5,
+            py: 0.8
+          },
+          '& .MuiAccordionDetails-root': {
+            p: 1.5
+          }
+        }}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon sx={{ color: '#546e7a', fontSize: '1rem' }} />}
+          sx={{
+            minHeight: 'unset !important',
+            '&.Mui-expanded': {
+              minHeight: 'unset !important'
+            },
+            '& .MuiAccordionSummary-content': {
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.8,
+              my: '0 !important',
+              '&.Mui-expanded': {
+                my: '0 !important'
+              }
+            }
+          }}
+        >
+          <Box sx={{ width: 3, height: 14, bgcolor: color, borderRadius: '2px' }} />
+          <Typography
+            variant="body2"
+            fontWeight="600"
+            sx={{
+              fontSize: '0.8rem',
+              color: '#37474f',
+              letterSpacing: '0.3px',
+              textTransform: 'uppercase'
+            }}
+          >
+            {title}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {children}
+        </AccordionDetails>
+      </Accordion>
+    </Box>
+  );
+};
+
+interface ResizableSectionProps {
+  title: string;
+  color: string;
+  children: React.ReactNode;
+  height: number;
+  isLast?: boolean;
+  onResize?: (delta: number) => void;
+}
+
+const ResizableSection: React.FC<ResizableSectionProps> = ({ title, color, children, height, isLast = false, onResize }) => {
+  const [isDragging, setIsDragging] = React.useState(false);
+  const startYRef = React.useRef<number>(0);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isLast) return;
+    setIsDragging(true);
+    startYRef.current = e.clientY;
+    e.preventDefault();
+  };
+
+  React.useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const delta = e.clientY - startYRef.current;
+      startYRef.current = e.clientY;
+      onResize?.(delta);
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, onResize]);
+
+  return (
+    <Box sx={{ height: `${height}px`, display: 'flex', flexDirection: 'column' }}>
+      <Box ml={1.5} mt={0.5} mb={0.5} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <Paper
           elevation={0}
           sx={{
@@ -23,7 +127,7 @@ const SectionBox: React.FC<SectionBoxProps> = ({ title, color, children, flex, i
             borderColor: '#e0e0e0',
             borderRadius: '4px',
             bgcolor: '#fff',
-            height: '100%',
+            flex: 1,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden'
@@ -69,7 +173,37 @@ const SectionBox: React.FC<SectionBoxProps> = ({ title, color, children, flex, i
           </Box>
         </Paper>
       </Box>
-    </Grid>
+      {!isLast && (
+        <Box
+          onMouseDown={handleMouseDown}
+          sx={{
+            height: '8px',
+            cursor: 'ns-resize',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: isDragging ? '#1976d2' : 'transparent',
+            transition: 'background-color 0.2s',
+            '&:hover': {
+              bgcolor: '#e3f2fd'
+            },
+            '&:hover .drag-icon': {
+              opacity: 1
+            }
+          }}
+        >
+          <DragIndicatorIcon
+            className="drag-icon"
+            sx={{
+              fontSize: '1rem',
+              color: '#90a4ae',
+              opacity: 0,
+              transition: 'opacity 0.2s'
+            }}
+          />
+        </Box>
+      )}
+    </Box>
   );
 };
 
@@ -93,18 +227,38 @@ const RecordFinder = () => {
   const [currentRid, setCurrentRid] = React.useState<string | null>(null);
   const theme = useTheme();
 
+  const [containerHeight, setContainerHeight] = React.useState(window.innerHeight - 48);
+  const [recordHeight, setRecordHeight] = React.useState(0);
+
+  React.useEffect(() => {
+    const availableHeight = window.innerHeight - 48 - 8; // 48(header) + 8(padding)
+    setContainerHeight(availableHeight);
+    setRecordHeight(Math.floor(availableHeight * 0.45)); // 45% for record list
+    // formHeight will be 55%
+  }, []);
+
+  const formHeight = containerHeight - recordHeight - 16; // 16 for resizer
+
+  const handleRecordResize = (delta: number) => {
+    setRecordHeight(prev => Math.max(200, Math.min(prev + delta, containerHeight - 250)));
+  };
+
+  if (recordHeight === 0) {
+    return null; // Wait for initial height calculation
+  }
+
   return (
-    <Grid container direction="column" height={"calc(100vh - 48px)"} spacing={0.5} sx={{ flexWrap: 'nowrap', bgcolor: '#fafafa', p: 0.5 }}>
-      <SectionBox title="환자 정보" color="#1976d2" flex={1}>
+    <Box sx={{ height: "calc(100vh - 48px)", bgcolor: '#fafafa', p: 0.5, display: 'flex', flexDirection: 'column' }}>
+      <AccordionSection title="환자 정보" color="#1976d2" defaultExpanded={true}>
         <PatientInfo />
-      </SectionBox>
-      <SectionBox title="기록 목록" color="#0288d1" flex={5}>
+      </AccordionSection>
+      <ResizableSection title="기록 목록" color="#0288d1" height={recordHeight} onResize={handleRecordResize}>
         <RecordList />
-      </SectionBox>
-      <SectionBox title="서식 목록" color="#0097a7" flex={6} isLast>
+      </ResizableSection>
+      <ResizableSection title="서식 목록" color="#0097a7" height={formHeight} isLast>
         <FormList />
-      </SectionBox>
-    </Grid >
+      </ResizableSection>
+    </Box>
   );
 };
 
