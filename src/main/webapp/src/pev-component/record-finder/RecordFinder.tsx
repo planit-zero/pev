@@ -1,19 +1,19 @@
 import { Box, Grid, Paper, Typography, useTheme, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import * as React from 'react';
 import FormList from './form-list';
-import PatientInfo from './patient-info';
-import RecordList from './record-list';
+import PatientInfo, { PatientSearch } from './patient-info';
+import RecordList, { RecordListHeader } from './record-list';
 
 interface AccordionSectionProps {
   title: string;
   color: string;
   children: React.ReactNode;
   defaultExpanded?: boolean;
+  headerContent?: React.ReactNode;
 }
 
-const AccordionSection: React.FC<AccordionSectionProps> = ({ title, color, children, defaultExpanded = true }) => {
+const AccordionSection: React.FC<AccordionSectionProps> = ({ title, color, children, defaultExpanded = true, headerContent }) => {
   return (
     <Box ml={1.5} mt={0.5} mb={0.5}>
       <Accordion
@@ -36,7 +36,6 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ title, color, child
         }}
       >
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{ color: '#546e7a', fontSize: '1rem' }} />}
           sx={{
             minHeight: 'unset !important',
             '&.Mui-expanded': {
@@ -45,6 +44,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ title, color, child
             '& .MuiAccordionSummary-content': {
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'space-between',
               gap: 0.8,
               my: '0 !important',
               '&.Mui-expanded': {
@@ -53,19 +53,26 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ title, color, child
             }
           }}
         >
-          <Box sx={{ width: 3, height: 14, bgcolor: color, borderRadius: '2px' }} />
-          <Typography
-            variant="body2"
-            fontWeight="600"
-            sx={{
-              fontSize: '0.8rem',
-              color: '#37474f',
-              letterSpacing: '0.3px',
-              textTransform: 'uppercase'
-            }}
-          >
-            {title}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+            <Box sx={{ width: 3, height: 14, bgcolor: color, borderRadius: '2px' }} />
+            <Typography
+              variant="body2"
+              fontWeight="600"
+              sx={{
+                fontSize: '0.8rem',
+                color: '#37474f',
+                letterSpacing: '0.3px',
+                textTransform: 'uppercase'
+              }}
+            >
+              {title}
+            </Typography>
+          </Box>
+          {headerContent && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }} onClick={(e) => e.stopPropagation()}>
+              {headerContent}
+            </Box>
+          )}
         </AccordionSummary>
         <AccordionDetails>
           {children}
@@ -82,9 +89,10 @@ interface ResizableSectionProps {
   height: number;
   isLast?: boolean;
   onResize?: (delta: number) => void;
+  headerContent?: React.ReactNode;
 }
 
-const ResizableSection: React.FC<ResizableSectionProps> = ({ title, color, children, height, isLast = false, onResize }) => {
+const ResizableSection: React.FC<ResizableSectionProps> = ({ title, color, children, height, isLast = false, onResize, headerContent }) => {
   const [isDragging, setIsDragging] = React.useState(false);
   const startYRef = React.useRef<number>(0);
 
@@ -141,32 +149,40 @@ const ResizableSection: React.FC<ResizableSectionProps> = ({ title, color, child
               py: 0.8,
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'space-between',
               gap: 0.8
             }}
           >
-            <Box
-              sx={{
-                width: 3,
-                height: 14,
-                bgcolor: color,
-                borderRadius: '2px'
-              }}
-            />
-            <Typography
-              variant="body2"
-              fontWeight="600"
-              sx={{
-                fontSize: '0.8rem',
-                color: '#37474f',
-                letterSpacing: '0.3px',
-                textTransform: 'uppercase',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}
-            >
-              {title}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+              <Box
+                sx={{
+                  width: 3,
+                  height: 14,
+                  bgcolor: color,
+                  borderRadius: '2px'
+                }}
+              />
+              <Typography
+                variant="body2"
+                fontWeight="600"
+                sx={{
+                  fontSize: '0.8rem',
+                  color: '#37474f',
+                  letterSpacing: '0.3px',
+                  textTransform: 'uppercase',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {title}
+              </Typography>
+            </Box>
+            {headerContent && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {headerContent}
+              </Box>
+            )}
           </Box>
           <Box sx={{ p: 1.5, flex: 1, overflow: 'auto' }}>
             {children}
@@ -229,6 +245,13 @@ const RecordFinder = () => {
 
   const [containerHeight, setContainerHeight] = React.useState(window.innerHeight - 48);
   const [recordHeight, setRecordHeight] = React.useState(0);
+  const [dateRange, setDateRange] = React.useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection'
+    }
+  ]);
 
   React.useEffect(() => {
     const availableHeight = window.innerHeight - 48 - 8; // 48(header) + 8(padding)
@@ -243,16 +266,41 @@ const RecordFinder = () => {
     setRecordHeight(prev => Math.max(200, Math.min(prev + delta, containerHeight - 250)));
   };
 
+  const handleSearch = () => {
+    console.log('조회:', dateRange);
+  };
+
+  const handlePatientSearch = (patientId: string) => {
+    console.log('환자 검색:', patientId);
+  };
+
   if (recordHeight === 0) {
     return null; // Wait for initial height calculation
   }
 
   return (
     <Box sx={{ height: "calc(100vh - 48px)", bgcolor: '#fafafa', p: 0.5, display: 'flex', flexDirection: 'column' }}>
-      <AccordionSection title="환자 정보" color="#1976d2" defaultExpanded={true}>
+      <AccordionSection
+        title="환자 정보"
+        color="#1976d2"
+        defaultExpanded={true}
+        headerContent={<PatientSearch onSearch={handlePatientSearch} />}
+      >
         <PatientInfo />
       </AccordionSection>
-      <ResizableSection title="기록 목록" color="#0288d1" height={recordHeight} onResize={handleRecordResize}>
+      <ResizableSection
+        title="기록 목록"
+        color="#0288d1"
+        height={recordHeight}
+        onResize={handleRecordResize}
+        headerContent={
+          <RecordListHeader
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            onSearch={handleSearch}
+          />
+        }
+      >
         <RecordList />
       </ResizableSection>
       <ResizableSection title="서식 목록" color="#0097a7" height={formHeight} isLast>

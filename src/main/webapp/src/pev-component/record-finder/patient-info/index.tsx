@@ -1,5 +1,73 @@
+import React from 'react';
 import { Box, Grid, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+
+interface PatientSearchProps {
+  onSearch: (patientId: string) => void;
+}
+
+export const PatientSearch: React.FC<PatientSearchProps> = ({ onSearch }) => {
+  const [patientId, setPatientId] = React.useState('');
+
+  const handleSearch = () => {
+    if (patientId.trim()) {
+      onSearch(patientId);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const inputFieldStyle = {
+    width: '180px',
+    '& .MuiInput-root': {
+      fontSize: '0.75rem',
+      '&:before': {
+        borderBottom: '1px solid #1976d2'
+      },
+      '&:hover:not(.Mui-disabled):before': {
+        borderBottom: '1px solid #1976d2'
+      },
+      '&:after': {
+        borderBottom: '2px solid #1976d2'
+      }
+    },
+    '& .MuiInput-input': {
+      padding: '4px 0',
+      fontWeight: 500,
+      fontSize: '0.75rem',
+      color: '#1976d2',
+      '&::placeholder': {
+        fontSize: '0.75rem',
+        opacity: 0.6,
+        color: '#1976d2'
+      }
+    }
+  };
+
+  return (
+    <TextField
+      variant="standard"
+      placeholder="환자 등록번호 입력 후 검색"
+      value={patientId}
+      onChange={(e) => setPatientId(e.target.value)}
+      onKeyPress={handleKeyPress}
+      sx={inputFieldStyle}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton size="small" edge="end" sx={{ color: '#1976d2', padding: '2px' }} onClick={handleSearch}>
+              <SearchIcon sx={{ fontSize: '1rem' }} />
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+    />
+  );
+};
 
 const PatientInfo = () => {
   const fieldLabelStyle = {
@@ -80,33 +148,19 @@ const PatientInfo = () => {
   return (
     <Box>
       <Grid container spacing={1}>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Box sx={fieldBoxStyle}>
             <Typography sx={fieldLabelStyle}>등록번호</Typography>
-            <TextField
-              size="small"
-              fullWidth
-              placeholder="환자 등록번호 입력 후 검색"
-              sx={inputFieldStyle}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton size="small" edge="end" sx={{ color: '#1976d2' }}>
-                      <SearchIcon fontSize="small" />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <Box sx={infoTextStyle}>-</Box>
           </Box>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Box sx={fieldBoxStyle}>
             <Typography sx={fieldLabelStyle}>성명</Typography>
             <Box sx={infoTextStyle}>-</Box>
           </Box>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Box sx={fieldBoxStyle}>
             <Typography sx={fieldLabelStyle}>성별/나이</Typography>
             <Box sx={infoTextStyle}>-</Box>

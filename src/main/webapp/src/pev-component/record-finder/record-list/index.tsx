@@ -11,10 +11,12 @@ import {
   TableRow,
   Typography,
   Chip,
-  Button,
-  Popover
+  Popover,
+  IconButton,
+  TextField,
+  InputAdornment
 } from '@mui/material';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import SearchIcon from '@mui/icons-material/Search';
 import { DateRangePicker } from 'react-date-range';
 import { ko } from 'date-fns/locale';
 import 'react-date-range/dist/styles.css';
@@ -22,6 +24,103 @@ import 'react-date-range/dist/theme/default.css';
 
 type DeptFilter = '수진과' | '작성과';
 type TypeFilter = '전체' | '외래' | '입원' | '응급';
+
+interface DateRange {
+  startDate: Date;
+  endDate: Date;
+  key: string;
+}
+
+interface RecordListHeaderProps {
+  dateRange: DateRange[];
+  onDateRangeChange: (range: DateRange[]) => void;
+  onSearch: () => void;
+}
+
+export const RecordListHeader: React.FC<RecordListHeaderProps> = ({ dateRange, onDateRangeChange, onSearch }) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handleCalendarClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCalendarClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  };
+
+  const dateFieldStyle = {
+    width: '180px',
+    '& .MuiInput-root': {
+      fontSize: '0.75rem',
+      cursor: 'pointer',
+      '&:before': {
+        borderBottom: '1px solid #1976d2'
+      },
+      '&:hover:not(.Mui-disabled):before': {
+        borderBottom: '1px solid #1976d2'
+      },
+      '&:after': {
+        borderBottom: '2px solid #1976d2'
+      }
+    },
+    '& .MuiInput-input': {
+      padding: '4px 0',
+      fontWeight: 500,
+      fontSize: '0.75rem',
+      color: '#1976d2',
+      cursor: 'pointer'
+    }
+  };
+
+  return (
+    <>
+      <TextField
+        variant="standard"
+        value={`${formatDate(dateRange[0].startDate)} ~ ${formatDate(dateRange[0].endDate)}`}
+        sx={dateFieldStyle}
+        onClick={handleCalendarClick}
+        InputProps={{
+          readOnly: true,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton size="small" edge="end" sx={{ color: '#1976d2', padding: '2px' }} onClick={onSearch}>
+                <SearchIcon sx={{ fontSize: '1rem' }} />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleCalendarClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <DateRangePicker
+          ranges={dateRange}
+          onChange={(item: any) => onDateRangeChange([item.selection])}
+          locale={ko}
+          months={2}
+          direction="horizontal"
+          showMonthAndYearPickers={false}
+        />
+      </Popover>
+    </>
+  );
+};
 
 const RecordList = () => {
   const [deptFilter, setDeptFilter] = useState<DeptFilter>('수진과');
@@ -33,7 +132,6 @@ const RecordList = () => {
       key: 'selection'
     }
   ]);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleDeptChange = (_event: React.MouseEvent<HTMLElement>, newValue: DeptFilter | null) => {
     if (newValue !== null) {
@@ -47,18 +145,8 @@ const RecordList = () => {
     }
   };
 
-  const handleCalendarClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCalendarClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const handleSearch = () => {
+    console.log('조회 버튼 클릭', dateRange);
   };
 
   const toggleButtonStyle = {
@@ -76,23 +164,6 @@ const RecordList = () => {
     }
   };
 
-  const dateButtonStyle = {
-    bgcolor: '#fff',
-    border: '1px solid #1976d2',
-    borderRadius: '4px',
-    padding: '4px 10px',
-    fontSize: '0.75rem',
-    color: '#1976d2',
-    fontWeight: 500,
-    textTransform: 'none' as const,
-    height: '28px',
-    minWidth: '200px',
-    '&:hover': {
-      bgcolor: '#e3f2fd',
-      borderColor: '#1976d2'
-    }
-  };
-
   // 샘플 데이터
   const records = [
     { date: '2024-01-10', time: '14:30', type: '외래', dept: '내과', doctor: '홍길동', content: '진료기록' },
@@ -102,65 +173,6 @@ const RecordList = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      {/* 조회 조건 영역 */}
-      <Box sx={{
-        mb: 1,
-        pb: 1,
-        borderBottom: '1px solid #e0e0e0',
-        display: 'flex',
-        gap: 2,
-        alignItems: 'center',
-        flexWrap: 'wrap'
-      }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: '#1976d2', minWidth: 'fit-content' }}>
-            조회기간
-          </Typography>
-          <Button
-            onClick={handleCalendarClick}
-            sx={dateButtonStyle}
-            endIcon={<CalendarMonthIcon fontSize="small" />}
-          >
-            {formatDate(dateRange[0].startDate)} ~ {formatDate(dateRange[0].endDate)}
-          </Button>
-          <Popover
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleCalendarClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-          >
-            <DateRangePicker
-              ranges={dateRange}
-              onChange={(item: any) => setDateRange([item.selection])}
-              locale={ko}
-              months={2}
-              direction="horizontal"
-              showMonthAndYearPickers={false}
-            />
-          </Popover>
-        </Box>
-        <Button
-          variant="contained"
-          size="small"
-          sx={{
-            bgcolor: '#1976d2',
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            height: '28px',
-            px: 2,
-            textTransform: 'none',
-            '&:hover': {
-              bgcolor: '#1565c0'
-            }
-          }}
-        >
-          조회
-        </Button>
-      </Box>
-
       {/* 필터 영역 */}
       <Box sx={{ mb: 1.5, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
