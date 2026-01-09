@@ -40,10 +40,12 @@ export const PatientSearch: React.FC<PatientSearchProps> = ({ onSearch }) => {
       fontWeight: 500,
       fontSize: '0.75rem',
       color: '#1976d2',
+      textAlign: 'center',
       '&::placeholder': {
         fontSize: '0.75rem',
         opacity: 0.6,
-        color: '#1976d2'
+        color: '#1976d2',
+        textAlign: 'center'
       }
     }
   };

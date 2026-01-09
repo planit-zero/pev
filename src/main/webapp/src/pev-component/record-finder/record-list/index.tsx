@@ -74,7 +74,8 @@ export const RecordListHeader: React.FC<RecordListHeaderProps> = ({ dateRange, o
       fontWeight: 500,
       fontSize: '0.75rem',
       color: '#1976d2',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      textAlign: 'center'
     }
   };
 
