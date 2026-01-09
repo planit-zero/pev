@@ -15,7 +15,7 @@ interface SectionBoxProps {
 const SectionBox: React.FC<SectionBoxProps> = ({ title, color, children, flex, isLast = false }) => {
   return (
     <Grid item sx={{ flex: flex }}>
-      <Box ml={2} mt={1} mb={isLast ? 2 : 1} sx={{ height: '100%' }}>
+      <Box ml={1.5} mt={0.5} mb={isLast ? 1.5 : 0.5} sx={{ height: '100%' }}>
         <Paper
           elevation={0}
           sx={{
@@ -33,17 +33,17 @@ const SectionBox: React.FC<SectionBoxProps> = ({ title, color, children, flex, i
             sx={{
               bgcolor: '#f8f9fa',
               borderBottom: '2px solid #1976d2',
-              px: 2.5,
-              py: 1.2,
+              px: 1.5,
+              py: 0.8,
               display: 'flex',
               alignItems: 'center',
-              gap: 1
+              gap: 0.8
             }}
           >
             <Box
               sx={{
-                width: 4,
-                height: 16,
+                width: 3,
+                height: 14,
                 bgcolor: color,
                 borderRadius: '2px'
               }}
@@ -52,16 +52,19 @@ const SectionBox: React.FC<SectionBoxProps> = ({ title, color, children, flex, i
               variant="body2"
               fontWeight="600"
               sx={{
-                fontSize: '0.875rem',
+                fontSize: '0.8rem',
                 color: '#37474f',
                 letterSpacing: '0.3px',
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
               }}
             >
               {title}
             </Typography>
           </Box>
-          <Box sx={{ p: 2.5, flex: 1, overflow: 'auto' }}>
+          <Box sx={{ p: 1.5, flex: 1, overflow: 'auto' }}>
             {children}
           </Box>
         </Paper>
@@ -91,14 +94,14 @@ const RecordFinder = () => {
   const theme = useTheme();
 
   return (
-    <Grid container direction="column" height={"calc(100vh - 48px)"} spacing={1} sx={{ flexWrap: 'nowrap', bgcolor: '#fafafa', p: 1 }}>
-      <SectionBox title="환자 정보" color="#1976d2" flex={2}>
+    <Grid container direction="column" height={"calc(100vh - 48px)"} spacing={0.5} sx={{ flexWrap: 'nowrap', bgcolor: '#fafafa', p: 0.5 }}>
+      <SectionBox title="환자 정보" color="#1976d2" flex={1}>
         <PatientInfo />
       </SectionBox>
       <SectionBox title="기록 목록" color="#0288d1" flex={5}>
         <RecordList />
       </SectionBox>
-      <SectionBox title="서식 목록" color="#0097a7" flex={5} isLast>
+      <SectionBox title="서식 목록" color="#0097a7" flex={6} isLast>
         <FormList />
       </SectionBox>
     </Grid >
